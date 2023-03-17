@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.LogEntry;
 import at.qe.skeleton.model.demo.LogEntryType;
 import at.qe.skeleton.model.demo.UserStatus;
@@ -87,7 +87,7 @@ public class UserStatusController {
      * @param logType   The log-type for the event to collect
      */
     private void afterStatusChange(String username, UserStatus newStatus, LogEntryType logType) {
-        Userx user = this.userRepository.findFirstByUsername(username);
+        User user = this.userRepository.findFirstByUsername(username);
         // change status
         this.userStatus.get(username).setStatus(newStatus);
         // append log
@@ -102,7 +102,7 @@ public class UserStatusController {
      * @param user
      * @param type
      */
-    private void log(Userx user, LogEntryType type) {
+    private void log(User user, LogEntryType type) {
         this.actionLogs.add(new LogEntry(user, type));
     }
 
