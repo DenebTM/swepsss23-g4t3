@@ -1,6 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.User;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
 import java.util.Collection;
@@ -26,7 +26,7 @@ public class UserListController implements Serializable {
      *
      * @return
      */
-    public Collection<Userx> getUsers() {
+    public Collection<User> getUsers() {
         return userService.getAllUsers();
     }
 

@@ -1,6 +1,6 @@
 package at.qe.skeleton.model.demo;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.User;
 
 /**
  * Just combines a user and its status.
@@ -10,19 +10,19 @@ import at.qe.skeleton.model.Userx;
  */
 public class UserStatusInfo {
 
-    private Userx user;
+    private User user;
     private UserStatus status = UserStatus.OFFLINE;
 
-    public UserStatusInfo(Userx user) {
+    public UserStatusInfo(User user) {
             super();
             this.user = user;
     }
 
-    public Userx getUser() {
+    public User getUser() {
             return user;
     }
 
-    public void setUser(Userx user) {
+    public void setUser(User user) {
             this.user = user;
     }
 

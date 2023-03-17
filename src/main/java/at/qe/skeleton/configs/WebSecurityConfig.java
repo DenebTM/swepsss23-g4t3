@@ -29,8 +29,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private static final String ADMIN = UserRole.ADMIN.name();
-    private static final String MANAGER = UserRole.MANAGER.name();
-    private static final String EMPLOYEE = UserRole.EMPLOYEE.name();
+    private static final String MANAGER = UserRole.GARDENER.name();
+    private static final String EMPLOYEE = UserRole.USER.name();
 
     @Autowired
     DataSource dataSource;

@@ -24,7 +24,7 @@ import org.springframework.data.domain.Persistable;
  * course "Software Engineering" offered by the University of Innsbruck.
  */
 @Entity
-public class Userx implements Persistable<String>, Serializable, Comparable<Userx> {
+public class User implements Persistable<String>, Serializable, Comparable<User> {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,12 +33,12 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     private String username;
 
     @ManyToOne(optional = false)
-    private Userx createUser;
+    private User createUser;
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
     @ManyToOne(optional = true)
-    private Userx updateUser;
+    private User updateUser;
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
@@ -120,11 +120,11 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.roles = roles;
     }
 
-    public Userx getCreateUser() {
+    public User getCreateUser() {
         return createUser;
     }
 
-    public void setCreateUser(Userx createUser) {
+    public void setCreateUser(User createUser) {
         this.createUser = createUser;
     }
 
@@ -136,11 +136,11 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.createDate = createDate;
     }
 
-    public Userx getUpdateUser() {
+    public User getUpdateUser() {
         return updateUser;
     }
 
-    public void setUpdateUser(Userx updateUser) {
+    public void setUpdateUser(User updateUser) {
         this.updateUser = updateUser;
     }
 
@@ -164,10 +164,10 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof Userx)) {
+        if (!(obj instanceof User)) {
             return false;
         }
-        final Userx other = (Userx) obj;
+        final User other = (User) obj;
         if (!Objects.equals(this.username, other.username)) {
             return false;
         }
@@ -194,7 +194,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     }
 
 	@Override
-	public int compareTo(Userx o) {
+	public int compareTo(User o) {
 		return this.username.compareTo(o.getUsername());
 	}
 
