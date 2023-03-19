@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests to ensure that each entity's implementation of equals conforms to the
- * contract. See {@linkplain http://www.jqno.nl/equalsverifier/} for more
+ * contract. See {@linkplain {http://www.jqno.nl/equalsverifier/}} for more
  * information.
  *
  * This class is part of the skeleton project provided for students of the
