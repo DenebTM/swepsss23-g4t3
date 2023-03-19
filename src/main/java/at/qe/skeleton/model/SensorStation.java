@@ -4,7 +4,9 @@ import com.sun.faces.facelets.util.Path;
 import jakarta.persistence.*;
 
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "SENSOR_STATION")
@@ -12,6 +14,7 @@ public class SensorStation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "STATION_ID")
     private Long id;
 
     @Column(name = "CONNECTED_AP")
@@ -36,10 +39,11 @@ public class SensorStation {
     @JoinColumn(name = "USER_ID")
     private User gardener;
 
-    //TODO:should path be own class?
-    /*@Column(name = "PHOTOS")
-    @OneToMany(mappedBy = "SENSOR_STATION")
-    public List<Path> paths;*/
+    //TODO: paths are not working yet
+    /*@ElementCollection
+    @CollectionTable(name = "PATH", joinColumns = @JoinColumn(name = "STATION_ID"))
+    @Column(name = "PHOTOS")
+    public Set<Path> paths = new HashSet<>();*/
 
     public SensorStation() {
     }
