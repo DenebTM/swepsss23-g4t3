@@ -12,6 +12,7 @@ public class AccessPoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "AP_ID")
     private Long ID;
 
     @Column(name = "ROOM_NAME", nullable = false)
