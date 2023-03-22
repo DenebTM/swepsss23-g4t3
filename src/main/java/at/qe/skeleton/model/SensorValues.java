@@ -11,6 +11,14 @@ public class SensorValues {
     @Column(name = "VALUES_ID")
     private Long valuesID;
 
+    @OneToOne(mappedBy = "")
+    @JoinColumn(name = "LOWER_BOUND")
+    private AccessPoint accessPointLowerBound;
+
+    @OneToOne(mappedBy = "")
+    @JoinColumn(name = "UPPER_BOUND")
+    private AccessPoint accessPointUpperBound;
+
     @Column(name = "HUMIDITY")
     private Double humidity;
 

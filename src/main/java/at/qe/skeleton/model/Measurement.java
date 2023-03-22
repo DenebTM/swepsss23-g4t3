@@ -15,7 +15,6 @@ public class Measurement {
     @Column(name = "TIMESTAMP")
     private LocalDateTime timestamp;
 
-    @Column(name = "DATA")
     @OneToOne
     @JoinColumn(name = "VALUES_ID")
     private SensorValues sensorValues;
