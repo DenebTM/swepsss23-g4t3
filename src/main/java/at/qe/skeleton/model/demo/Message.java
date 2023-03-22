@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.Userx;
 
 /**
  * A class representing a message.
@@ -15,8 +15,8 @@ import at.qe.skeleton.model.User;
  */
 public class Message implements Comparable<Message>, Serializable {
 
-    private User from;
-    private List<User> to = new LinkedList<>();
+    private Userx from;
+    private List<Userx> to = new LinkedList<>();
     private Date timestamp = new Date();
     private String text;
 
@@ -24,19 +24,19 @@ public class Message implements Comparable<Message>, Serializable {
         // required
     }
 
-    public User getFrom() {
+    public Userx getFrom() {
         return from;
     }
 
-    public void setFrom(User from) {
+    public void setFrom(Userx from) {
         this.from = from;
     }
 
-    public List<User> getTo() {
+    public List<Userx> getTo() {
         return to;
     }
 
-    public void setTo(List<User> to) {
+    public void setTo(List<Userx> to) {
         this.to = to;
     }
 

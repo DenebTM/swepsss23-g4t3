@@ -2,7 +2,7 @@ package at.qe.skeleton.model.demo;
 
 import java.util.Date;
 
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.Userx;
 
 /**
  * A class which represents a logEntry.
@@ -12,22 +12,22 @@ import at.qe.skeleton.model.User;
  */
 public class LogEntry {
 
-    private User user;
+    private Userx userx;
     private Date timestamp = new Date();
     private LogEntryType logType;
 
-    public LogEntry(User user, LogEntryType logType) {
+    public LogEntry(Userx userx, LogEntryType logType) {
             super();
-            this.user = user;
+            this.userx = userx;
             this.logType = logType;
     }
 
-    public User getUser() {
-            return user;
+    public Userx getUser() {
+            return userx;
     }
 
-    public void setUser(User user) {
-            this.user = user;
+    public void setUser(Userx userx) {
+            this.userx = userx;
     }
 
     public Date getTimestamp() {

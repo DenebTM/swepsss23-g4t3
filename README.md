@@ -10,7 +10,7 @@ all relevant Spring Framework features enabled
 embedded Tomcat with support for JSF2
 embedded H2 in-memory database (including H2 console)
 support for PrimeFaces
-basic functionality for user management and Spring web security
+basic functionality for userx management and Spring web security
 
 Execute "mvn spring-boot:run" to start the skeleton project and connect to
 http://localhost:8080/ to access the skeleton web application. You may login

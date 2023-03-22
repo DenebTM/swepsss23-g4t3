@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import at.qe.skeleton.model.Userx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.LogEntry;
 import at.qe.skeleton.model.demo.LogEntryType;
 import at.qe.skeleton.model.demo.UserStatus;
@@ -87,11 +87,11 @@ public class UserStatusController {
      * @param logType   The log-type for the event to collect
      */
     private void afterStatusChange(String username, UserStatus newStatus, LogEntryType logType) {
-        User user = this.userRepository.findFirstByUsername(username);
+        Userx userx = this.userRepository.findFirstByUsername(username);
         // change status
         this.userStatus.get(username).setStatus(newStatus);
         // append log
-        this.log(user, logType);
+        this.log(userx, logType);
         // notify all users (application-wide)
         this.websocketManager.getUserRegistrationChannel().send("connectionUpdate");
     }
@@ -99,11 +99,11 @@ public class UserStatusController {
     /**
      * Simply appends a log-entry to the action-log.
      *
-     * @param user
+     * @param userx
      * @param type
      */
-    private void log(User user, LogEntryType type) {
-        this.actionLogs.add(new LogEntry(user, type));
+    private void log(Userx userx, LogEntryType type) {
+        this.actionLogs.add(new LogEntry(userx, type));
     }
 
     public Collection<UserStatusInfo> getUserStatusInfos() {

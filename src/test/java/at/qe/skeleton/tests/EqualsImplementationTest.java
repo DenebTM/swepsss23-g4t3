@@ -1,6 +1,6 @@
 package at.qe.skeleton.tests;
 
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.UserRole;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -18,11 +18,11 @@ public class EqualsImplementationTest {
 
     @Test
     public void testUserEqualsContract() {
-        User user1 = new User();
-        user1.setUsername("user1");
-        User user2 = new User();
-        user2.setUsername("user2");
-        EqualsVerifier.forClass(User.class).withPrefabValues(User.class, user1, user2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
+        Userx userx1 = new Userx();
+        userx1.setUsername("user1");
+        Userx userx2 = new Userx();
+        userx2.setUsername("user2");
+        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, userx1, userx2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
     }
 
     @Test
