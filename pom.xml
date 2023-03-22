@@ -96,6 +96,18 @@
             <version>3.14</version>
             <scope>test</scope>
         </dependency>
+        <!-- Dependency for JWT (JSON Web Tokens)-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.0.1</version>
+        <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
