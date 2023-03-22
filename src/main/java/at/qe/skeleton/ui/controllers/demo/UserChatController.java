@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import at.qe.skeleton.model.Userx;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.model.SelectItem;
 
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.Message;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 
@@ -42,9 +42,9 @@ public class UserChatController implements Serializable {
      */
     @PostConstruct
     public void setup() {
-        User currentUser = this.sessionInfoBean.getCurrentUser();
+        Userx currentUserx = this.sessionInfoBean.getCurrentUser();
         // get the reference once at setup, then reuse it
-        this.chatContent = this.chatController.getChatContentRef(currentUser);
+        this.chatContent = this.chatController.getChatContentRef(currentUserx);
     }
 
     /**
@@ -91,8 +91,8 @@ public class UserChatController implements Serializable {
      * @return The selectable recipients
      */
     public List<SelectItem> getPossibleRecipients() {
-        Set<User> loggedInUsers = this.chatController.getPossibleRecipients();
-        return loggedInUsers.stream().filter(u -> !u.equals(this.sessionInfoBean.getCurrentUser()))
+        Set<Userx> loggedInUserxes = this.chatController.getPossibleRecipients();
+        return loggedInUserxes.stream().filter(u -> !u.equals(this.sessionInfoBean.getCurrentUser()))
                         .map(user -> new SelectItem(user, user.getUsername())).collect(Collectors.toList());
     }
 

@@ -1,6 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
@@ -31,7 +31,7 @@ public class UserService {
      * @return
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Collection<User> getAllUsers() {
+    public Collection<Userx> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -42,43 +42,44 @@ public class UserService {
      * @return the user with the given username
      */
     @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
-    public User loadUser(String username) {
+    public Userx loadUser(String username) {
         return userRepository.findFirstByUsername(username);
     }
 
+    //TODO: insert correct links when possible
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Saves the user. This method will also set {link Userx#createDate} for new
+     * entities or {link Userx#updateDate} for updated entities. The user
+     * requesting this operation will also be stored as {link Userx#createDate}
+     * or {link Userx#updateUser} respectively.
      *
-     * @param user the user to save
+     * @param userx the user to save
      * @return the updated user
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User saveUser(User user) {
-        if (user.isNew()) {
-            user.setCreateDate(LocalDateTime.now());
-            user.setCreateUser(getAuthenticatedUser());
+    public Userx saveUser(Userx userx) {
+        if (userx.isNew()) {
+            userx.setCreateDate(LocalDateTime.now());
+            userx.setCreateUser(getAuthenticatedUser());
         } else {
-            user.setUpdateDate(LocalDateTime.now());
-            user.setUpdateUser(getAuthenticatedUser());
+            userx.setUpdateDate(LocalDateTime.now());
+            userx.setUpdateUser(getAuthenticatedUser());
         }
-        return userRepository.save(user);
+        return userRepository.save(userx);
     }
 
     /**
      * Deletes the user.
      *
-     * @param user the user to delete
+     * @param userx the user to delete
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    public void deleteUser(Userx userx) {
+        userRepository.delete(userx);
         // :TODO: write some audit log stating who and when this user was permanently deleated.
     }
 
-    private User getAuthenticatedUser() {
+    private Userx getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findFirstByUsername(auth.getName());
     }

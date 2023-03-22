@@ -21,12 +21,6 @@ public class AccessPoint {
     @Column(name = "LAST_UPDATE")
     private LocalDateTime lastUpdate;
 
-    @OneToOne(mappedBy = "LOWER_BOUND")
-    private SensorValues lowerBound;
-
-    @OneToOne(mappedBy = "UPPER_BOUND")
-    private SensorValues upperBound;
-
     public AccessPoint() {
     }
 
@@ -40,13 +34,5 @@ public class AccessPoint {
 
     public LocalDateTime getLastUpdate() {
         return lastUpdate;
-    }
-
-    public SensorValues getLowerBound() {
-        return lowerBound;
-    }
-
-    public SensorValues getUpperBound() {
-        return upperBound;
     }
 }

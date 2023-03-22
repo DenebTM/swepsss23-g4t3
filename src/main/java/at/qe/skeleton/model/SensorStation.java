@@ -1,12 +1,9 @@
 package at.qe.skeleton.model;
 
-import com.sun.faces.facelets.util.Path;
 import jakarta.persistence.*;
 
 import java.time.Duration;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "SENSOR_STATION")
@@ -35,7 +32,15 @@ public class SensorStation {
     //TODO:check join column, user class is not yet updated
     @OneToOne
     @JoinColumn(name = "USER_ID")
-    private User gardener;
+    private Userx gardener;
+
+    @ManyToOne
+    @JoinColumn(name = "VALUES_ID", insertable=false, updatable=false)
+    private SensorValues upperBound;
+
+    @ManyToOne
+    @JoinColumn(name = "VALUES_ID", insertable=false, updatable=false)
+    private SensorValues lowerBound;
 
     //TODO: paths are not working yet
     /*@ElementCollection
@@ -66,7 +71,7 @@ public class SensorStation {
         return transmissionInterval;
     }
 
-    public User getGardener() {
+    public Userx getGardener() {
         return gardener;
     }
 }

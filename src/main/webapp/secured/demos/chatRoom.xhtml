@@ -81,7 +81,7 @@
             </o:socket>
 
             <o:socket channel="messageChannel" scope="session"
-                user="#{sessionInfoBean.currentUserName}"
+                userx="#{sessionInfoBean.currentUserName}"
                 onmessage="function(m){console.log(m);}">
                 <f:ajax event="msgRecieved" execute="@all"
                     render="chatContentWindow" onevent="scrollToChatBottom" />

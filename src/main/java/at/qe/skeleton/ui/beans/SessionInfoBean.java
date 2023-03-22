@@ -1,6 +1,6 @@
 package at.qe.skeleton.ui.beans;
 
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
@@ -27,7 +27,7 @@ public class SessionInfoBean implements Serializable {
     /**
      * Attribute to cache the current user.
      */
-    private User currentUser;
+    private Userx currentUserx;
 
     /**
      * Returns the currently logged on user, null if no user is authenticated
@@ -35,15 +35,15 @@ public class SessionInfoBean implements Serializable {
      *
      * @return
      */
-    public User getCurrentUser() {
-        if (currentUser == null) {
+    public Userx getCurrentUser() {
+        if (currentUserx == null) {
             String currentUserName = getCurrentUserName();
             if (currentUserName.isEmpty()) {
                 return null;
             }
-            currentUser = userService.loadUser(currentUserName);
+            currentUserx = userService.loadUser(currentUserName);
         }
-        return currentUser;
+        return currentUserx;
     }
 
     /**

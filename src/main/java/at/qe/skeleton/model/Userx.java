@@ -4,17 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+
+import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -24,35 +15,41 @@ import org.springframework.data.domain.Persistable;
  * course "Software Engineering" offered by the University of Innsbruck.
  */
 @Entity
-public class User implements Persistable<String>, Serializable, Comparable<User> {
+public class Userx implements Persistable<String>, Serializable, Comparable<Userx> {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
     @Column(length = 100)
     private String username;
 
     @ManyToOne(optional = false)
-    private User createUser;
-    @Column(nullable = false)
+    private Userx createUserx;
+
+    @Column(nullable = false, name = "CREATE_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
+
     @ManyToOne(optional = true)
-    private User updateUser;
+    private Userx updateUserx;
+
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
+    @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "FIRST_NAME")
     private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
 
-    boolean enabled;
+    @Column(name = "LAST_NAME")
+    private String lastName;
+
+    @Id
+    @Column(name = "EMAIL")
+    private String email;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "Userx_UserRole")
+    @CollectionTable(name = "Userx_UserRole", joinColumns = @JoinColumn(name = "email"))
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
 
@@ -96,22 +93,6 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public Set<UserRole> getRoles() {
         return roles;
     }
@@ -120,12 +101,12 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
         this.roles = roles;
     }
 
-    public User getCreateUser() {
-        return createUser;
+    public Userx getCreateUser() {
+        return createUserx;
     }
 
-    public void setCreateUser(User createUser) {
-        this.createUser = createUser;
+    public void setCreateUser(Userx createUserx) {
+        this.createUserx = createUserx;
     }
 
     public LocalDateTime getCreateDate() {
@@ -136,12 +117,12 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
         this.createDate = createDate;
     }
 
-    public User getUpdateUser() {
-        return updateUser;
+    public Userx getUpdateUser() {
+        return updateUserx;
     }
 
-    public void setUpdateUser(User updateUser) {
-        this.updateUser = updateUser;
+    public void setUpdateUser(Userx updateUserx) {
+        this.updateUserx = updateUserx;
     }
 
     public LocalDateTime getUpdateDate() {
@@ -164,10 +145,10 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof User)) {
+        if (!(obj instanceof Userx)) {
             return false;
         }
-        final User other = (User) obj;
+        final Userx other = (Userx) obj;
         if (!Objects.equals(this.username, other.username)) {
             return false;
         }
@@ -194,7 +175,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     }
 
 	@Override
-	public int compareTo(User o) {
+	public int compareTo(Userx o) {
 		return this.username.compareTo(o.getUsername());
 	}
 

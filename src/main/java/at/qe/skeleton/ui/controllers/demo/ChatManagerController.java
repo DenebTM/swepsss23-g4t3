@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
+import at.qe.skeleton.model.Userx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.Message;
 import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.spring.CustomizedLogoutSuccessHandler;
@@ -38,7 +38,7 @@ public class ChatManagerController {
     private UserxRepository userRepository;
     @CDIAutowired
     private WebSocketManager websocketManager;
-    private Set<User> possibleRecipients = new ConcurrentSkipListSet<>();
+    private Set<Userx> possibleRecipients = new ConcurrentSkipListSet<>();
     private Map<String, List<Message>> chats = new ConcurrentHashMap<>();
 
     /**
@@ -49,8 +49,8 @@ public class ChatManagerController {
      * @param username
      */
     public void onLogin(String username) {
-        User user = this.userRepository.findFirstByUsername(username);
-        this.possibleRecipients.add(user);
+        Userx userx = this.userRepository.findFirstByUsername(username);
+        this.possibleRecipients.add(userx);
         this.chats.put(username, new LinkedList<>());
     }
 
@@ -62,9 +62,9 @@ public class ChatManagerController {
      * @param username
      */
     public void onLogout(String username) {
-        User user = this.userRepository.findFirstByUsername(username);
-        this.possibleRecipients.remove(user);
-        this.chats.remove(user.getUsername());
+        Userx userx = this.userRepository.findFirstByUsername(username);
+        this.possibleRecipients.remove(userx);
+        this.chats.remove(userx.getUsername());
     }
 
     /**
@@ -74,9 +74,9 @@ public class ChatManagerController {
      * @param message
      */
     public synchronized void deliver(Message message) {
-        User sender = message.getFrom();
-        List<User> recipients = message.getTo();
-        List<String> sendTo = recipients.stream().map(User::getUsername).collect(Collectors.toList());
+        Userx sender = message.getFrom();
+        List<Userx> recipients = message.getTo();
+        List<String> sendTo = recipients.stream().map(Userx::getUsername).collect(Collectors.toList());
         // don't forget the sender
         sendTo.add(sender.getUsername());
         // add to chat-content
@@ -93,25 +93,25 @@ public class ChatManagerController {
      * @param message The message to add
      * @param to      The recipient
      */
-    private void addToChatContent(Message message, User to) {
+    private void addToChatContent(Message message, Userx to) {
         this.chats.get(to.getUsername()).add(message);
     }
 
     /**
-     * Convenience-method. See {@link #addToChatContent(Message, User)}
+     * Convenience-method. See {@link #addToChatContent(Message, Userx)}
      *
      * @param message
      * @param to
      */
-    private void addToChatContent(Message message, List<User> to) {
+    private void addToChatContent(Message message, List<Userx> to) {
         to.forEach(toUser -> this.addToChatContent(message, toUser));
     }
 
-    public List<Message> getChatContentRef(User user1) {
-        return Collections.unmodifiableList(this.chats.get(user1.getUsername()));
+    public List<Message> getChatContentRef(Userx userx1) {
+        return Collections.unmodifiableList(this.chats.get(userx1.getUsername()));
     }
 
-    public Set<User> getPossibleRecipients() {
+    public Set<Userx> getPossibleRecipients() {
         return Collections.unmodifiableSet(possibleRecipients);
     }
 

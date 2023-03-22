@@ -1,6 +1,9 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import org.apache.catalina.LifecycleState;
+
+import java.util.List;
 
 @Entity
 @Table(name = "SENSOR_VALUES")
@@ -10,14 +13,6 @@ public class SensorValues {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "VALUES_ID")
     private Long valuesID;
-
-    @OneToOne(mappedBy = "")
-    @JoinColumn(name = "LOWER_BOUND")
-    private AccessPoint accessPointLowerBound;
-
-    @OneToOne(mappedBy = "")
-    @JoinColumn(name = "UPPER_BOUND")
-    private AccessPoint accessPointUpperBound;
 
     @Column(name = "HUMIDITY")
     private Double humidity;

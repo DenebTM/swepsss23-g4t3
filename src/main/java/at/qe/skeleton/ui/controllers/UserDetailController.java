@@ -1,6 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class UserDetailController implements Serializable {
     /**
      * Attribute to cache the currently displayed user
      */
-    private User user;
+    private Userx userx;
 
     /**
      * Sets the currently displayed user and reloads it form db. This user is
@@ -31,10 +31,10 @@ public class UserDetailController implements Serializable {
      * {@link #doReloadUser()}, {@link #doSaveUser()} and
      * {@link #doDeleteUser()}.
      *
-     * @param user
+     * @param userx
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Userx userx) {
+        this.userx = userx;
         doReloadUser();
     }
 
@@ -43,30 +43,30 @@ public class UserDetailController implements Serializable {
      *
      * @return
      */
-    public User getUser() {
-        return user;
+    public Userx getUser() {
+        return userx;
     }
 
     /**
      * Action to force a reload of the currently displayed user.
      */
     public void doReloadUser() {
-        user = userService.loadUser(user.getUsername());
+        userx = userService.loadUser(userx.getUsername());
     }
 
     /**
      * Action to save the currently displayed user.
      */
     public void doSaveUser() {
-        user = this.userService.saveUser(user);
+        userx = this.userService.saveUser(userx);
     }
 
     /**
      * Action to delete the currently displayed user.
      */
     public void doDeleteUser() {
-        this.userService.deleteUser(user);
-        user = null;
+        this.userService.deleteUser(userx);
+        userx = null;
     }
 
 }
