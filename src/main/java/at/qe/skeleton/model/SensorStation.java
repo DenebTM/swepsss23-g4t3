@@ -17,7 +17,6 @@ public class SensorStation {
     @Column(name = "STATION_ID")
     private Long id;
 
-    @Column(name = "CONNECTED_AP")
     @OneToOne
     @JoinColumn(name = "AP_ID")
     private AccessPoint accessPoint;
@@ -27,14 +26,13 @@ public class SensorStation {
 
     //TODO: check mappings!!!
     @Column(name = "MEASUREMENTS")
-    @OneToMany(mappedBy = "SENSOR_STATION")
+    @OneToMany
     private List<Measurement> measurements;
 
     @Column(name = "TRANSMISSION_INTERVAL", nullable = false)
     private Duration transmissionInterval;
 
     //TODO:check join column, user class is not yet updated
-    @Column(name = "GARDENER")
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User gardener;

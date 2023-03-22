@@ -21,12 +21,10 @@ public class AccessPoint {
     @Column(name = "LAST_UPDATE")
     private LocalDateTime lastUpdate;
 
-    @OneToOne
-    @JoinColumn(name = "VALUES_ID", nullable = false)
+    @OneToOne(mappedBy = "LOWER_BOUND")
     private SensorValues lowerBound;
 
-    @OneToOne
-    @JoinColumn(name = "VALUES_ID", nullable = false)
+    @OneToOne(mappedBy = "UPPER_BOUND")
     private SensorValues upperBound;
 
     public AccessPoint() {
