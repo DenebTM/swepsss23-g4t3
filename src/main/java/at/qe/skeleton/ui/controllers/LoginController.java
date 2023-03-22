@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import at.qe.skeleton.configs.jwtutils.JwtManager;
 import at.qe.skeleton.configs.jwtutils.models.LoginRequestModel;
 import at.qe.skeleton.configs.jwtutils.models.LoginResponseModel;
@@ -36,12 +35,11 @@ public class LoginController {
         String username = request.getUsername();
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username,
                 request.getPassword());
-
         try {
             // Authenticate user and set Authentication object in SecurityContext
-            org.springframework.security.core.Authentication authentification = authenticationManager
+            org.springframework.security.core.Authentication authentication = authenticationManager
                     .authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(authentification);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (DisabledException e) {
             return ResponseEntity.status(403).body("User is disabled");
         } catch (BadCredentialsException e) {
@@ -49,7 +47,6 @@ public class LoginController {
         } catch (AuthenticationCredentialsNotFoundException e) {
             return ResponseEntity.status(403).body("No authentication credentials provided");
         }
-
         // Generate and return a new JWT
         final String jwtToken = tokenManager.generateJwtToken(username);
         return ResponseEntity.ok(new LoginResponseModel(jwtToken));
