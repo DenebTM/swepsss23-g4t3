@@ -33,6 +33,13 @@ public class LoginController {
     @PostMapping("/handle-login")
     public ResponseEntity<Object> createToken(@RequestBody LoginRequestModel request) {
         String username = request.getUsername();
+        if (username == null){
+            return ResponseEntity.status(400).body("Missing body key \"username\"");
+        }
+        if (request.getPassword()== null){
+            return ResponseEntity.status(400).body("Missing body key \"password\"");
+        }
+
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username,
                 request.getPassword());
         try {
