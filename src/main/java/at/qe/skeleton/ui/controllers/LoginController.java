@@ -22,7 +22,6 @@ import at.qe.skeleton.configs.jwtutils.models.LoginResponseModel;
  * https://www.tutorialspoint.com/spring_security/spring_security_with_jwt.htm
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;

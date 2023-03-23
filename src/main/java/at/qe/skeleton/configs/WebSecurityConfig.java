@@ -76,6 +76,7 @@ public class WebSecurityConfig {
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
+        // :TODO: use proper passwordEncoder and do not store passwords in plain text
         return NoOpPasswordEncoder.getInstance();
     }
 
