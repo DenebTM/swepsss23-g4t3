@@ -23,7 +23,7 @@ import at.qe.skeleton.configs.jwtutils.JwtFilter;
  * Spring configuration for web security.
  *
  * This class is part of the skeleton project provided for students of the
- * course "Software Architecture" offered by Innsbruck University.
+ * course "Software Engineering" offered by the University of Innsbruck.
  */
 @Configuration
 @EnableWebSecurity

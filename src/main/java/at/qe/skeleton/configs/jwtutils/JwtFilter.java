@@ -47,9 +47,9 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 username = tokenManager.getUsernameFromToken(token);
             } catch (ExpiredJwtException e) {
-                // TODO: add proper logging. This is a debug message, not an error,
-                // as the user can be redirected to log in again
-                logger.info("JWT Token has expired");
+                // This is an info message, not an error, as the user should be redirected to 
+                // log in again
+                logger.info("JWT has expired");
             }
         } else {
             // If Authorization: Bearer [token] is not in the headers. This is a debug

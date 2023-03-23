@@ -54,7 +54,7 @@ public class LoginController {
             return ResponseEntity.status(403).body("No authentication credentials provided");
         }
         // Generate and return a new JWT
-        final String jwtToken = tokenManager.generateJwtToken(username);
-        return ResponseEntity.ok(new LoginResponseModel(jwtToken));
+        final String jwt = tokenManager.generateJwtToken(username);
+        return ResponseEntity.ok(new LoginResponseModel(jwt));
     }
 }
