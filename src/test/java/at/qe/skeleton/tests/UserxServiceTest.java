@@ -98,7 +98,7 @@ public class UserxServiceTest {
         toBeSavedUserx.setEmail("changed-email@whatever.wherever");
         userService.saveUser(toBeSavedUserx);
 
-        Userx freshlyLoadedUserx = userService.loadUserByEmail("susi@example.at");
+        Userx freshlyLoadedUserx = userService.loadUserByEmail("changed-email@whatever.wherever");
         Assertions.assertNotNull(freshlyLoadedUserx, "User \"" + email + "\" could not be loaded from test data source after being saved");
         Assertions.assertNotNull(freshlyLoadedUserx.getUpdateUser(), "User \"" + email + "\" does not have a updateUser defined after being saved");
         Assertions.assertEquals(adminUserx, freshlyLoadedUserx.getUpdateUser(), "User \"" + email + "\" has wrong updateUser set");
