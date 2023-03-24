@@ -76,7 +76,7 @@ public class UserService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(Userx userx) {
         userRepository.delete(userx);
-        // :TODO: write some audit log stating who and when this user was permanently deleated.
+        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 
     private Userx getAuthenticatedUser() {
