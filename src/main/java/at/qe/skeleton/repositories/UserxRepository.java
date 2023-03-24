@@ -18,6 +18,8 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
     Userx findFirstByUsername(String username);
 
+    Userx findFirstByEmail(String email);
+
     List<Userx> findByUsernameContaining(String username);
 
     @Query("SELECT u FROM Userx u WHERE CONCAT(u.firstName, ' ', u.lastName) = :wholeName")
