@@ -35,6 +35,18 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    //TODO: how to deal with principal.username or principal.email or whatever?
+    /**
+     * Loads a single user identified by its email.
+     *
+     * @param email the email to search for
+     * @return the user with the given email
+     */
+    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
+    public Userx loadUserByEmail(String email) {
+        return userRepository.findFirstByEmail(email);
+    }
+
     /**
      * Loads a single user identified by its username.
      *
@@ -42,11 +54,11 @@ public class UserService {
      * @return the user with the given username
      */
     @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
-    public Userx loadUser(String username) {
+    public Userx loadUserByName(String username) {
         return userRepository.findFirstByUsername(username);
     }
 
-    //TODO: insert correct links when possible
+    //TODO: insert correct links if possible
     /**
      * Saves the user. This method will also set {link Userx#createDate} for new
      * entities or {link Userx#updateDate} for updated entities. The user
