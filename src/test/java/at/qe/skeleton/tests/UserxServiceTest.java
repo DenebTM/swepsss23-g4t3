@@ -37,13 +37,13 @@ public class UserxServiceTest {
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 Assertions.assertNull(userx.getUpdateUser(), "User \"" + userx + "\" has a updateUser defined");
                 Assertions.assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
-            } else if ("user1".equals(userx.getUsername())) {
+            } else if ("susi".equals(userx.getUsername())) {
                 Assertions.assertTrue(userx.getRoles().contains(UserRole.GARDENER), "User \"" + userx + "\" does not have role GARDENER");
                 Assertions.assertNotNull(userx.getCreateUser(), "User \"" + userx + "\" does not have a createUser defined");
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 Assertions.assertNull(userx.getUpdateUser(), "User \"" + userx + "\" has a updateUser defined");
                 Assertions.assertNull(userx.getUpdateDate(), "User \"" + userx +"\" has a updateDate defined");
-            } else if ("user2".equals(userx.getUsername())) {
+            } else if ("max".equals(userx.getUsername())) {
                 Assertions.assertTrue(userx.getRoles().contains(UserRole.USER), "User \"" + userx + "\" does not have role USER");
                 Assertions.assertNotNull(userx.getCreateUser(), "User \"" + userx + "\" does not have a createUser defined");
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
@@ -65,20 +65,20 @@ public class UserxServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDeleteUser() {
-        String email = "susi@example.at";
-        Userx adminUserx = userService.loadUserByEmail("admin@example.at");
+        String username = "susi";
+        Userx adminUserx = userService.loadUserByName("admin");
         Assertions.assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
-        Userx toBeDeletedUserx = userService.loadUserByEmail(email);
-        Assertions.assertNotNull(toBeDeletedUserx, "User \"" + email + "\" could not be loaded from test data source");
+        Userx toBeDeletedUserx = userService.loadUserByName(username);
+        Assertions.assertNotNull(toBeDeletedUserx, "User \"" + username + "\" could not be loaded from test data source");
 
         userService.deleteUser(toBeDeletedUserx);
 
         Assertions.assertEquals(3, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
-        Userx deletedUserx = userService.loadUserByEmail(email);
-        Assertions.assertNull(deletedUserx, "Deleted User \"" + email + "\" could still be loaded from test data source via UserService.loadUser");
+        Userx deletedUserx = userService.loadUserByName(username);
+        Assertions.assertNull(deletedUserx, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUser");
 
         for (Userx remainingUserx : userService.getAllUsers()) {
-            Assertions.assertNotEquals(toBeDeletedUserx.getUsername(), remainingUserx.getUsername(), "Deleted User \"" + email + "\" could still be loaded from test data source via UserService.getAllUsers");
+            Assertions.assertNotEquals(toBeDeletedUserx.getUsername(), remainingUserx.getUsername(), "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.getAllUsers");
         }
     }
 
@@ -86,31 +86,31 @@ public class UserxServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testUpdateUser() {
-        String email = "susi@example.at";
-        Userx adminUserx = userService.loadUserByEmail("admin@example.at");
+        String username = "susi";
+        Userx adminUserx = userService.loadUserByName("admin");
         Assertions.assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
-        Userx toBeSavedUserx = userService.loadUserByEmail(email);
-        Assertions.assertNotNull(toBeSavedUserx, "User \"" + email + "\" could not be loaded from test data source");
+        Userx toBeSavedUserx = userService.loadUserByName(username);
+        Assertions.assertNotNull(toBeSavedUserx, "User \"" + username + "\" could not be loaded from test data source");
 
-        Assertions.assertNull(toBeSavedUserx.getUpdateUser(), "User \"" + email + "\" has a updateUser defined");
-        Assertions.assertNull(toBeSavedUserx.getUpdateDate(), "User \"" + email + "\" has a updateDate defined");
+        Assertions.assertNull(toBeSavedUserx.getUpdateUser(), "User \"" + username + "\" has a updateUser defined");
+        Assertions.assertNull(toBeSavedUserx.getUpdateDate(), "User \"" + username + "\" has a updateDate defined");
 
         toBeSavedUserx.setEmail("changed-email@whatever.wherever");
         userService.saveUser(toBeSavedUserx);
 
-        Userx freshlyLoadedUserx = userService.loadUserByEmail("changed-email@whatever.wherever");
-        Assertions.assertNotNull(freshlyLoadedUserx, "User \"" + email + "\" could not be loaded from test data source after being saved");
-        Assertions.assertNotNull(freshlyLoadedUserx.getUpdateUser(), "User \"" + email + "\" does not have a updateUser defined after being saved");
-        Assertions.assertEquals(adminUserx, freshlyLoadedUserx.getUpdateUser(), "User \"" + email + "\" has wrong updateUser set");
-        Assertions.assertNotNull(freshlyLoadedUserx.getUpdateDate(), "User \"" + email + "\" does not have a updateDate defined after being saved");
-        Assertions.assertEquals("changed-email@whatever.wherever", freshlyLoadedUserx.getEmail(), "User \"" + email + "\" does not have a the correct email attribute stored being saved");
+        Userx freshlyLoadedUserx = userService.loadUserByName(username);
+        Assertions.assertNotNull(freshlyLoadedUserx, "User \"" + username + "\" could not be loaded from test data source after being saved");
+        Assertions.assertNotNull(freshlyLoadedUserx.getUpdateUser(), "User \"" + username + "\" does not have a updateUser defined after being saved");
+        Assertions.assertEquals(adminUserx, freshlyLoadedUserx.getUpdateUser(), "User \"" + username + "\" has wrong updateUser set");
+        Assertions.assertNotNull(freshlyLoadedUserx.getUpdateDate(), "User \"" + username + "\" does not have a updateDate defined after being saved");
+        Assertions.assertEquals("changed-email@whatever.wherever", freshlyLoadedUserx.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testCreateUser() {
-        Userx adminUserx = userService.loadUserByEmail("admin@example.at");
+        Userx adminUserx = userService.loadUserByName("admin");
         Assertions.assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
 
         String username = "newuser";
@@ -118,7 +118,6 @@ public class UserxServiceTest {
         String fName = "New";
         String lName = "User";
         String email = "new-email@whatever.wherever";
-        String phone = "+12 345 67890";
         Userx toBeCreatedUserx = new Userx();
         toBeCreatedUserx.setUsername(username);
         toBeCreatedUserx.setPassword(password);
@@ -128,7 +127,7 @@ public class UserxServiceTest {
         toBeCreatedUserx.setRoles(Sets.newSet(UserRole.USER, UserRole.GARDENER));
         userService.saveUser(toBeCreatedUserx);
 
-        Userx freshlyCreatedUserx = userService.loadUserByEmail(email);
+        Userx freshlyCreatedUserx = userService.loadUserByName(username);
         Assertions.assertNotNull(freshlyCreatedUserx, "New user could not be loaded from test data source after being saved");
         Assertions.assertEquals(username, freshlyCreatedUserx.getUsername(), "New user could not be loaded from test data source after being saved");
         Assertions.assertEquals(password, freshlyCreatedUserx.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
@@ -146,7 +145,7 @@ public class UserxServiceTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testExceptionForEmptyUsername() {
         Assertions.assertThrows(org.springframework.orm.jpa.JpaSystemException.class, () -> {
-            Userx adminUserx = userService.loadUserByEmail("admin@example.at");
+            Userx adminUserx = userService.loadUserByName("admin");
             Assertions.assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
 
             Userx toBeCreatedUserx = new Userx();
@@ -174,38 +173,38 @@ public class UserxServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"USER"})
+    @WithMockUser(username = "susi", authorities = {"USER"})
     public void testUnauthorizedLoadUser() {
         Assertions.assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> {
-            Userx userx = userService.loadUserByEmail("admin@example.at");
+            Userx userx = userService.loadUserByName("admin");
             Assertions.fail("Call to userService.loadUser should not work without proper authorization for other users than the authenticated one");
         });
     }
 
-    @WithMockUser(username = "user1", authorities = {"USER"})
+    @WithMockUser(username = "susi", authorities = {"USER"})
     public void testAuthorizedLoadUser() {
-        String email = "susi@example.at";
-        Userx userx = userService.loadUserByEmail(email);
-        Assertions.assertEquals(email, userx.getUsername(), "Call to userService.loadUser returned wrong user");
+        String username = "susi";
+        Userx userx = userService.loadUserByName(username);
+        Assertions.assertEquals(username, userx.getUsername(), "Call to userService.loadUser returned wrong user");
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"USER"})
+    @WithMockUser(username = "susi", authorities = {"USER"})
     public void testUnauthorizedSaveUser() {
         Assertions.assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> {
-            String email = "susi@example.at";
-            Userx userx = userService.loadUserByEmail(email);
-            Assertions.assertEquals(email, userx.getEmail(), "Call to userService.loadUser returned wrong user");
+            String username = "susi";
+            Userx userx = userService.loadUserByName(username);
+            Assertions.assertEquals(username, userx.getUsername(), "Call to userService.loadUser returned wrong user");
             userService.saveUser(userx);
         });
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"USER"})
+    @WithMockUser(username = "susi", authorities = {"USER"})
     public void testUnauthorizedDeleteUser() {
         Assertions.assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> {
-            Userx userx = userService.loadUserByEmail("susi@example.at");
-            Assertions.assertEquals("user1", userx.getUsername(), "Call to userService.loadUser returned wrong user");
+            Userx userx = userService.loadUserByName("susi");
+            Assertions.assertEquals("susi", userx.getUsername(), "Call to userService.loadUser returned wrong user");
             userService.deleteUser(userx);
         });
     }

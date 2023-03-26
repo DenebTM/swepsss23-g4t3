@@ -20,43 +20,32 @@ import org.springframework.data.domain.Persistable;
 @Entity
 public class Userx implements Persistable<String>, Serializable, Comparable<Userx> {
 
-    //private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
+    @Id
     @Column(length = 100)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
     private String username;
 
     @ManyToOne(optional = false)
     private Userx createUser;
-
-    @Column(nullable = false, name = "CREATE_DATE")
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
-
     @ManyToOne(optional = true)
     private Userx updateUser;
-
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
-    @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "FIRST_NAME")
     private String firstName;
-
-    @Column(name = "LAST_NAME")
     private String lastName;
-
-    @Id
-    @Column(name = "EMAIL")
     private String email;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "User_UserRole", joinColumns = @JoinColumn(name = "email"))
-    @Column(name = "roles", nullable = false)
+    @CollectionTable(name = "Userx_UserRole")
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> roles = new HashSet<>();
+    private Set<UserRole> roles;
 
     public String getUsername() {
         return username;
@@ -110,8 +99,8 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         return createUser;
     }
 
-    public void setCreateUser(Userx createUserx) {
-        this.createUser = createUserx;
+    public void setCreateUser(Userx createUser) {
+        this.createUser = createUser;
     }
 
     public LocalDateTime getCreateDate() {
@@ -179,9 +168,10 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         return (null == createDate);
     }
 
-	@Override
-	public int compareTo(Userx o) {
-		return this.username.compareTo(o.getUsername());
-	}
+    @Override
+    public int compareTo(Userx o) {
+        return this.username.compareTo(o.getUsername());
+    }
+
 
 }
