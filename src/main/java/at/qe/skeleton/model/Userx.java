@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import org.springframework.data.domain.Persistable;
 @Entity
 public class Userx implements Persistable<String>, Serializable, Comparable<Userx> {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     @Column(length = 100)
     private String username;
@@ -50,8 +51,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "Userx_UserRole", joinColumns = @JoinColumn(name = "email"))
+    @Column(name = "roles", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> roles;
+    private Set<UserRole> roles = new HashSet<>();
 
     public String getUsername() {
         return username;
