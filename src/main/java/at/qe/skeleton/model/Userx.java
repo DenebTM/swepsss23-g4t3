@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -21,17 +23,18 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     //private static final long serialVersionUID = 1L;
 
     @Column(length = 100)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private String username;
 
     @ManyToOne(optional = false)
-    private Userx createUserx;
+    private Userx createUser;
 
     @Column(nullable = false, name = "CREATE_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
 
     @ManyToOne(optional = true)
-    private Userx updateUserx;
+    private Userx updateUser;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
@@ -50,7 +53,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     private String email;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "Userx_UserRole", joinColumns = @JoinColumn(name = "email"))
+    @CollectionTable(name = "User_UserRole", joinColumns = @JoinColumn(name = "email"))
     @Column(name = "roles", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = new HashSet<>();
@@ -104,11 +107,11 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     }
 
     public Userx getCreateUser() {
-        return createUserx;
+        return createUser;
     }
 
     public void setCreateUser(Userx createUserx) {
-        this.createUserx = createUserx;
+        this.createUser = createUserx;
     }
 
     public LocalDateTime getCreateDate() {
@@ -120,11 +123,11 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     }
 
     public Userx getUpdateUser() {
-        return updateUserx;
+        return updateUser;
     }
 
-    public void setUpdateUser(Userx updateUserx) {
-        this.updateUserx = updateUserx;
+    public void setUpdateUser(Userx updateUser) {
+        this.updateUser = updateUser;
     }
 
     public LocalDateTime getUpdateDate() {
