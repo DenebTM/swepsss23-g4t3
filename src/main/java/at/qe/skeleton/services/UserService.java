@@ -35,18 +35,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    //TODO: how to deal with principal.username or principal.email or whatever?
-    /**
-     * Loads a single user identified by its email.
-     *
-     * @param email the email to search for
-     * @return the user with the given email
-     */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
-    public Userx loadUserByEmail(String email) {
-        return userRepository.findFirstByEmail(email);
-    }
-
     /**
      * Loads a single user identified by its username.
      *
