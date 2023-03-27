@@ -47,4 +47,3 @@ sonarqube-check:
   only:
     - main
     - dev
-    - 11-get-sonarqube-working
