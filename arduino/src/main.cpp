@@ -1,7 +1,10 @@
 #include <ArduinoBLE.h>
 
-BLEService myService("fff0");
-BLEIntCharacteristic myCharacteristic("fff1", BLERead | BLEBroadcast);
+#include <station_id.h>
+
+BLEService heartbeatService("f000");
+BLEByteCharacteristic stationID("f001", BLERead | BLEBroadcast);
+uint8_t initial_id = station_id();
 
 void setup() {
   Serial.begin(9600);
@@ -11,17 +14,17 @@ void setup() {
     Serial.println("Error initializing BLE!");
   }
 
-  myService.addCharacteristic(myCharacteristic);
-  BLE.addService(myService);
-
-  BLE.setDeviceName("iPhone von S. Kurz");
-  BLE.setLocalName("iPhone von S. Kurz");
-  BLE.setAppearance(0x40);
+  heartbeatService.addCharacteristic(stationID);
+  BLE.addService(heartbeatService);
 
   Serial.print("Own address: ");
   Serial.println(BLE.address());
 
-  myCharacteristic.writeValue(17);
+  stationID.writeValue(initial_id);
+  stationID.broadcast();
+  BLE.setAdvertisedService(heartbeatService);
+  BLE.setDeviceName("iPhone von S. Kurz");
+  BLE.setLocalName("iPhone von S. Kurz");
 
   Serial.println("Beginning BLE advertising");
   if (!BLE.advertise()) {
@@ -34,18 +37,14 @@ void loop() {
   if (BLEDevice central = BLE.central()) {
     Serial.print("Connected to central: ");
     // print the central's MAC address:
-    Serial.print(central.address());
-    Serial.print(" (");
-    Serial.print(central.localName());
-    Serial.println(")");
+    Serial.println(central.address());
 
     while (central.connected()) {
-      Serial.print("Still connected");
-      Serial.print(" (");
-      Serial.print(central.localName());
-      Serial.println(")");
+      Serial.println("Still connected");
 
-      myCharacteristic.writeValue(i++);
+      uint8_t id = station_id();
+      Serial.println((unsigned long)id);
+      stationID.writeValue(id);
       delay(1000);
     }
   }
