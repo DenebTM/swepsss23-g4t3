@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ArduinoBLE.h>
 #include <ble.h>
 
 void setup() {
@@ -11,5 +10,5 @@ void setup() {
 
 void loop() {
   ble_update();
-  delay(1000);
+  delay(10);
 }
