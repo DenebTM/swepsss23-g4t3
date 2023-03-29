@@ -3,6 +3,7 @@ package at.qe.skeleton.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -21,6 +22,9 @@ public class AccessPoint {
     @Column(name = "LAST_UPDATE")
     private LocalDateTime lastUpdate;
 
+    @Column(name = "SERVER_ADDRESS")
+    private InetAddress serverAddress;
+
     public AccessPoint() {
     }
 
@@ -34,6 +38,14 @@ public class AccessPoint {
 
     public LocalDateTime getLastUpdate() {
         return lastUpdate;
+    }
+
+    public InetAddress getServerAddress() {
+        return serverAddress;
+    }
+
+    public void setServerAddress(InetAddress serverAddress) {
+        this.serverAddress = serverAddress;
     }
 
     public void setID(Long ID) {
