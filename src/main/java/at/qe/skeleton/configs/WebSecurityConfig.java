@@ -51,7 +51,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests()
                 // Allow authorized access to API routes
                 .requestMatchers("/api/**")
-                .hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                .hasAnyAuthority("ADMIN", "GARDENER", "USER")
 
                 // Allow access to all for all other requests (assets, errors, etc.)
                 .anyRequest().permitAll();
@@ -69,9 +69,8 @@ public class WebSecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
         // Configure roles and passwords via datasource
         auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from userx where username=?")
-                .authoritiesByUsernameQuery("select userx_username, roles from userx_user_role where userx_username=?")
-                .passwordEncoder(passwordEncoder());
+                .usersByUsernameQuery("select username, password, 1 from userx where username=?")
+                .authoritiesByUsernameQuery("select userx_username, roles from userx_user_role where userx_username=?");
     }
 
     @Bean

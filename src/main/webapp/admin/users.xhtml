@@ -8,56 +8,56 @@
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
         <h:form id="userForm">
-            <p:dataTable id="usersTable" var="user" value="#{userListController.users}">
+            <p:dataTable id="usersTable" var="userx" value="#{userListController.users}">
                 <p:column headerText="Username">
-                    <h:outputText value="#{user.username}"/>
+                    <h:outputText value="#{userx.username}"/>
                 </p:column>
                 <p:column headerText="First Name">
-                    <h:outputText value="#{user.firstName}"/>
+                    <h:outputText value="#{userx.firstName}"/>
                 </p:column>
                 <p:column headerText="Last Name">
-                    <h:outputText value="#{user.lastName}"/>
+                    <h:outputText value="#{userx.lastName}"/>
                 </p:column>
                 <p:column headerText="Roles">
-                    <h:outputText value="#{user.roles}" />
+                    <h:outputText value="#{userx.roles}" />
                 </p:column>
                 <p:column headerText="Enabled">
-                    <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
+                    <h:selectBooleanCheckbox value="#{userx.enabled}" disabled="true"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center">
-                    <p:commandButton update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" icon="pi pi-user-edit" title="Edit">
-                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.user}" />
+                    <p:commandButton update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" icon="pi pi-userx-edit" title="Edit">
+                        <f:setPropertyActionListener value="#{userx}" target="#{userDetailController.userx}" />
                     </p:commandButton>
                     <p:commandButton action="#{userDetailController.doDeleteUser}" icon="pi pi-trash" title="Delete" update=":userForm:usersTable">
-                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.user}" />
-                        <p:confirm header="Confirmation" message="Are you sure that you want to delete this user? You cannot undo this operation." icon="ui-icon-alert" />
+                        <f:setPropertyActionListener value="#{userx}" target="#{userDetailController.userx}" />
+                        <p:confirm header="Confirmation" message="Are you sure that you want to delete this userx? You cannot undo this operation." icon="ui-icon-alert" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
 
             <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userData" rendered="#{not empty userDetailController.user}">
+                <p:outputPanel id="userData" rendered="#{not empty userDetailController.userx}">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="username" value="Username: " />
-                        <p:inputText id="username" value="#{userDetailController.user.username}" disabled="true"/>
+                        <p:inputText id="username" value="#{userDetailController.userx.username}" disabled="true"/>
                         <p:outputLabel for="password" value="Password: " />
-                        <p:password id="password" value="#{userDetailController.user.password}" disabled="true"/>
+                        <p:password id="password" value="#{userDetailController.userx.password}" disabled="true"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="firstName" value="First Name: " />
-                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}"/>
+                        <p:inputText id="firstName" value="#{userDetailController.userx.firstName}"/>
                         <p:outputLabel for="firstName" value="Last Name: " />
-                        <p:inputText id="lastName" value="#{userDetailController.user.lastName}"/>
+                        <p:inputText id="lastName" value="#{userDetailController.userx.lastName}"/>
                         <p:outputLabel for="email" value="E-Mail: " />
-                        <p:inputText id="email" value="#{userDetailController.user.email}"/>
+                        <p:inputText id="email" value="#{userDetailController.userx.email}"/>
                         <p:outputLabel for="phone" value="Phone: " />
-                        <p:inputMask id="phone" value="#{userDetailController.user.phone}" mask="+99? 999 9999999"/>
+                        <p:inputMask id="phone" value="#{userDetailController.userx.phone}" mask="+99? 999 9999999"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="enabled" value="Enabled: " />
-                        <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.user.enabled}"/>
+                        <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.userx.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="3">
