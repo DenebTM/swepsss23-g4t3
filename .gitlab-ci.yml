@@ -11,23 +11,23 @@ stages:
 
 backend-unit-test-job:
   extends: .before_script_template
-  stage: test    
+  stage: test
   script:
     - echo "Running Spring Boot unit tests..."
     - mvn test
   allow_failure: false
   retry: 1
 
-#frontend-unit-test-job:
-#  extends: .before_script_template
-#  stage: test    
-#  script:
-#    - echo "Running React unit tests..."
-#    - cd frontend
-#    - yarn
-#    - yarn test
-#  allow_failure: false
-#  retry: 1
+frontend-unit-test-job:
+  extends: .before_script_template
+  stage: test
+  script:
+    - echo "Running React unit tests..."
+    - cd frontend
+    - yarn
+    - yarn test
+  allow_failure: false
+  retry: 1
 
 sonarqube-check:
   extends: .before_script_template
@@ -38,7 +38,7 @@ sonarqube-check:
   cache:
     key: "${CI_JOB_NAME}"
     paths:
-     - .sonar/cache
+      - .sonar/cache
   script:
     - echo "Running sonar analysis for ${SONAR_PROJECT_KEY}"
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME}" --fail-at-end verify sonar:sonar
