@@ -1,5 +1,8 @@
 #ifndef _BLE_H
 #define _BLE_H
+
+#include <cstddef>
+#include <Arduino.h>
 #include <ArduinoBLE.h>
 
 #define BLE_DEVICE_NAME "PlantHealth Greenhouse"
