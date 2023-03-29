@@ -35,4 +35,16 @@ public class AccessPoint {
     public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
+
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }
