@@ -25,6 +25,9 @@ public class AccessPoint {
     @Column(name = "SERVER_ADDRESS")
     private InetAddress serverAddress;
 
+    @Column(name = "ACTIVE")
+    private Boolean active;
+
     public AccessPoint() {
     }
 
@@ -42,6 +45,14 @@ public class AccessPoint {
 
     public InetAddress getServerAddress() {
         return serverAddress;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public void setServerAddress(InetAddress serverAddress) {
