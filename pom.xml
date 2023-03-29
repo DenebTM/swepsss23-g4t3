@@ -12,9 +12,7 @@
         "Software Engineering" offered by the University of Innsbruck.
 
         Uses Spring framework (http://spring.io) for the backend and
-        JSF (http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html)
-        for the web frontend. PrimeFaces (http://primefaces.org) is used as
-        JSF component library to prettify the frontend.
+        React (https://react.dev/) with TypeScript for the web frontend.
 
         Feel free to use this skeleton project as you see fit - but keep in
         mind that this project is primarily provided to be used for educational
@@ -70,17 +68,6 @@
             <version>${joinfaces.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.joinfaces</groupId>
-            <artifactId>primefaces-spring-boot-starter</artifactId>
-            <version>${joinfaces.version}</version>
-        </dependency>
-  
-        <dependency>
-            <groupId>org.joinfaces</groupId>
-            <artifactId>omnifaces-spring-boot-starter</artifactId>
-            <version>${joinfaces.version}</version>
-        </dependency>
 
         <!-- Special test dependencies -->
         <dependency>
