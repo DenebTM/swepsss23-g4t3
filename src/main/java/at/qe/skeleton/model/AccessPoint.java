@@ -1,10 +1,8 @@
 package at.qe.skeleton.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.net.InetAddress;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +12,7 @@ public class AccessPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AP_ID")
-    private Long ID;
+    private Long id;
 
     @Column(name = "ROOM_NAME", nullable = false)
     private String roomName;
@@ -31,8 +29,8 @@ public class AccessPoint {
     public AccessPoint() {
     }
 
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
     public String getRoomName() {
@@ -59,8 +57,8 @@ public class AccessPoint {
         this.serverAddress = serverAddress;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    public void setId(Long ID) {
+        this.id = ID;
     }
 
     public void setRoomName(String roomName) {

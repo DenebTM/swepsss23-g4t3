@@ -87,7 +87,7 @@ public class WebSecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         //Configure roles and passwords via datasource
         auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from userx where username=?")
+                .usersByUsernameQuery("select username, password, 1 from userx where username=?")
                 .authoritiesByUsernameQuery("select userx_username, roles from userx_user_role where userx_username=?");
     }
 
