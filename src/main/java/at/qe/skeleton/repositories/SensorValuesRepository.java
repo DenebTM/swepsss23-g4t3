@@ -4,5 +4,5 @@ import at.qe.skeleton.model.SensorValues;
 
 public interface SensorValuesRepository extends AbstractRepository<SensorValues, Long> {
 
-    SensorValues findFirstByValuesID(Long id);
+    SensorValues findFirstById(Long id);
 }

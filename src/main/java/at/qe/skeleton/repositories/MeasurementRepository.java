@@ -4,5 +4,5 @@ import at.qe.skeleton.model.Measurement;
 
 public interface MeasurementRepository extends AbstractRepository<Measurement, Long> {
 
-    Measurement findFirstByID(Long id);
+    Measurement findFirstById(Long id);
 }
