@@ -10,7 +10,7 @@ public class Measurement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long ID;
+    private Long id;
 
     @Column(name = "TIMESTAMP")
     private LocalDateTime timestamp;
@@ -22,8 +22,8 @@ public class Measurement {
     public Measurement() {
     }
 
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
     public LocalDateTime getTimestamp() {
