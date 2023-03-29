@@ -14,6 +14,7 @@
         "@types/react-dom": "^18.0.9",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-router-dom": "^6.9.0",
         "typescript": "^5.0.2"
     },
     "scripts": {
@@ -43,6 +44,7 @@
         "@babel/plugin-syntax-flow": "^7.14.5",
         "@babel/plugin-transform-react-jsx": "^7.14.9",
         "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+        "@typescript-eslint/eslint-plugin": "^5.43.0",
         "@typescript-eslint/parser": "^5.0.0",
         "@vitejs/plugin-react": "^3.1.0",
         "@vitest/coverage-c8": "^0.29.8",
