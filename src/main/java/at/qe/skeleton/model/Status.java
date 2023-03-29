@@ -1,6 +1,6 @@
 package at.qe.skeleton.model;
 
-public enum StationStatus {
+public enum Status {
 
     OK,
     BAD,
