@@ -1,11 +1,15 @@
 #include <ble.h>
 #include <station_id.h>
 
+// Device information
+BLEService ble_sv_devinfo("180a");
+BLEStringCharacteristic ble_ch_manufacturer("2a29", BLERead, strlen(BLE_DEVICE_MANUFACTURER));
+
 // Services
 BLEService ble_sv_heartbeat("f000");
 
 // Characteristics
-BLEByteCharacteristic ble_ch_stationID("f001", BLERead | BLEBroadcast);
+BLEByteCharacteristic ble_ch_stationID("f001", BLERead | BLENotify);
 
 uint8_t ble_val_stationID = 0;
 
@@ -20,21 +24,31 @@ void ble_disconnect_handler(BLEDevice central) {
   Serial.print("Disconnected from central");
 }
 
+void ble_devinfo_setup() {
+  BLE.setAppearance(BLE_DEVICE_APPEARANCE);
+  BLE.setDeviceName(BLE_DEVICE_NAME);
+  BLE.setLocalName(BLE_DEVICE_NAME);
+
+  ble_ch_manufacturer.writeValue(BLE_DEVICE_MANUFACTURER);
+  ble_sv_devinfo.addCharacteristic(ble_ch_manufacturer);
+  BLE.addService(ble_sv_devinfo);
+
+  ble_val_stationID = station_id();
+  ble_ch_stationID.writeValue(ble_val_stationID);
+  BLE.setAdvertisedService(ble_sv_heartbeat);
+  BLE.setAdvertisedServiceData(0xf000, &ble_val_stationID, 1);
+}
+
 
 int ble_setup() {
   if (!BLE.begin()) {
     Serial.println("Error initializing BLE!");
   }
 
+  ble_devinfo_setup();
+
   ble_sv_heartbeat.addCharacteristic(ble_ch_stationID);
   BLE.addService(ble_sv_heartbeat);
-
-  ble_val_stationID = station_id();
-  ble_ch_stationID.setValue(ble_val_stationID);
-  ble_ch_stationID.broadcast();
-  BLE.setAdvertisedService(ble_sv_heartbeat);
-  BLE.setDeviceName(BLE_DEVICE_NAME);
-  BLE.setLocalName(BLE_DEVICE_NAME);
 
   BLE.setEventHandler(BLEConnected, ble_connect_handler);
   BLE.setEventHandler(BLEDisconnected, ble_disconnect_handler);
@@ -63,11 +77,10 @@ void ble_update() {
       if (id != ble_val_stationID) {
         Serial.println("Station ID changed");
         ble_val_stationID = id;
+        ble_ch_stationID.writeValue(ble_val_stationID);
       }
       Serial.print("Current station ID: ");
       Serial.println((unsigned long)ble_val_stationID);
-
-      ble_ch_stationID.writeValue(ble_val_stationID);
     }
 
     last_timestamp = new_timestamp;
