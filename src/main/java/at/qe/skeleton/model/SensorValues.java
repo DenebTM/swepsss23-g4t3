@@ -1,9 +1,6 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
-import org.apache.catalina.LifecycleState;
-
-import java.util.List;
 
 @Entity
 @Table(name = "SENSOR_VALUES")
@@ -12,7 +9,7 @@ public class SensorValues {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "VALUES_ID")
-    private Long valuesID;
+    private Long id;
 
     @Column(name = "HUMIDITY")
     private Double humidity;
@@ -35,8 +32,8 @@ public class SensorValues {
     public SensorValues() {
     }
 
-    public Long getValuesID() {
-        return valuesID;
+    public Long getId() {
+        return id;
     }
 
     public Double getHumidity() {
