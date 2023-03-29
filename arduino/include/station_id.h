@@ -1,3 +1,6 @@
+#ifndef _STATION_ID_H
+#define _STATION_ID_H
+
 #define ID_DIP_START_PIN 5
 
 static inline uint8_t station_id() {
@@ -8,3 +11,5 @@ static inline uint8_t station_id() {
 
   return id;
 }
+
+#endif
