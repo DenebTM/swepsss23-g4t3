@@ -23,7 +23,7 @@ public class UserDetailController implements Serializable {
     /**
      * Attribute to cache the currently displayed user
      */
-    private Userx user;
+    private Userx userx;
 
     /**
      * Sets the currently displayed user and reloads it form db. This user is
@@ -31,10 +31,10 @@ public class UserDetailController implements Serializable {
      * {@link #doReloadUser()}, {@link #doSaveUser()} and
      * {@link #doDeleteUser()}.
      *
-     * @param user
+     * @param userx
      */
-    public void setUser(Userx user) {
-        this.user = user;
+    public void setUser(Userx userx) {
+        this.userx = userx;
         doReloadUser();
     }
 
@@ -44,29 +44,29 @@ public class UserDetailController implements Serializable {
      * @return
      */
     public Userx getUser() {
-        return user;
+        return userx;
     }
 
     /**
      * Action to force a reload of the currently displayed user.
      */
     public void doReloadUser() {
-        user = userService.loadUser(user.getUsername());
+        userx = userService.loadUserByName(userx.getUsername());
     }
 
     /**
      * Action to save the currently displayed user.
      */
     public void doSaveUser() {
-        user = this.userService.saveUser(user);
+        userx = this.userService.saveUser(userx);
     }
 
     /**
      * Action to delete the currently displayed user.
      */
     public void doDeleteUser() {
-        this.userService.deleteUser(user);
-        user = null;
+        this.userService.deleteUser(userx);
+        userx = null;
     }
 
 }

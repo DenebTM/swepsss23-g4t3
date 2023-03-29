@@ -1,15 +1,19 @@
 package at.qe.skeleton.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Set;
+
 /**
  * Enumeration of available user roles.
  *
- * This class is part of the skeleton project provided for students of the
- * course "Software Engineering" offered by the University of Innsbruck.
+ * Roles are to be understood as a hierarchy in this order: ADMIN, GARDENER, USER.
+ * Every role has all permissions of the following role, but not vice versa.
  */
 public enum UserRole {
 
     ADMIN,
-    MANAGER,
-    EMPLOYEE
+    GARDENER,
+    USER
 
 }

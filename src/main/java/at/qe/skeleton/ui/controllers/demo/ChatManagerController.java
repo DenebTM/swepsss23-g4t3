@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
+import at.qe.skeleton.model.Userx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.demo.Message;
 import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.spring.CustomizedLogoutSuccessHandler;
@@ -49,8 +49,8 @@ public class ChatManagerController {
      * @param username
      */
     public void onLogin(String username) {
-        Userx user = this.userRepository.findFirstByUsername(username);
-        this.possibleRecipients.add(user);
+        Userx userx = this.userRepository.findFirstByUsername(username);
+        this.possibleRecipients.add(userx);
         this.chats.put(username, new LinkedList<>());
     }
 
@@ -62,9 +62,9 @@ public class ChatManagerController {
      * @param username
      */
     public void onLogout(String username) {
-        Userx user = this.userRepository.findFirstByUsername(username);
-        this.possibleRecipients.remove(user);
-        this.chats.remove(user.getUsername());
+        Userx userx = this.userRepository.findFirstByUsername(username);
+        this.possibleRecipients.remove(userx);
+        this.chats.remove(userx.getUsername());
     }
 
     /**
@@ -107,8 +107,8 @@ public class ChatManagerController {
         to.forEach(toUser -> this.addToChatContent(message, toUser));
     }
 
-    public List<Message> getChatContentRef(Userx user1) {
-        return Collections.unmodifiableList(this.chats.get(user1.getUsername()));
+    public List<Message> getChatContentRef(Userx userx1) {
+        return Collections.unmodifiableList(this.chats.get(userx1.getUsername()));
     }
 
     public Set<Userx> getPossibleRecipients() {
