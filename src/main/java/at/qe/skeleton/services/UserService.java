@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -82,6 +83,17 @@ public class UserService {
     private Userx getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findFirstByUsername(auth.getName());
+    }
+
+    /**
+     * Function used to get the authorities (roles) of the currently logged in user
+     *
+     * @return A collection of {@link GrantedAuthority} objects for the logged in
+     *         user
+     */
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getAuthorities();
     }
 
 }
