@@ -7,12 +7,12 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 
+import { URL } from '~/common'
+import { Dashboard } from '~/components/dashboard/Dashboard'
+import { Error } from '~/components/error/Error'
+import { Login } from '~/components/login/Login'
 import { isJwtValid } from '~/helpers/jwt'
 
-import { URL } from './common'
-import { Dashboard } from './components/dashboard/Dashboard'
-import { Error } from './components/error/Error'
-import { Login } from './components/login/Login'
 import './styles/index.css'
 
 /**
