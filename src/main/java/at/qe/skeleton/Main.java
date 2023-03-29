@@ -1,7 +1,5 @@
 package at.qe.skeleton;
 
-import jakarta.faces.webapp.FacesServlet;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -34,17 +32,6 @@ public class Main extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
             SpringApplication.run(Main.class, args);
-    }
-
-    @Bean
-    public ServletRegistrationBean<FacesServlet> servletRegistrationBean() {
-            FacesServlet servlet = new FacesServlet();
-            ServletRegistrationBean<FacesServlet> servletRegistrationBean = new ServletRegistrationBean<>(servlet,
-                            "*.xhtml");
-            servletRegistrationBean.setName("Faces Servlet");
-            servletRegistrationBean.setAsyncSupported(true);
-            servletRegistrationBean.setLoadOnStartup(1);
-            return servletRegistrationBean;
     }
 
 }
