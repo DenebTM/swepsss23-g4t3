@@ -18,8 +18,8 @@ public class SensorStation {
     @JoinColumn(name = "AP_ID")
     private AccessPoint accessPoint;
 
-    @Column(name = "STATION_STATUS")
-    private StationStatus stationStatus;
+    @Column(name = "STATUS")
+    private Status status;
 
     //TODO: check mappings!!!
     @Column(name = "MEASUREMENTS")
@@ -59,8 +59,8 @@ public class SensorStation {
         return accessPoint;
     }
 
-    public StationStatus getStationStatus() {
-        return stationStatus;
+    public Status getStatus() {
+        return status;
     }
 
     public List<Measurement> getMeasurements() {
