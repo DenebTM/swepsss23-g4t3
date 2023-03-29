@@ -7,9 +7,19 @@ BLEService ble_sv_heartbeat("f000");
 // Characteristics
 BLEByteCharacteristic ble_ch_stationID("f001", BLERead | BLEBroadcast);
 
-
-BLEDevice central;
 uint8_t ble_val_stationID = 0;
+
+void ble_connect_handler(BLEDevice central) {
+  // central connected event handler
+  Serial.print("Connected to central: ");
+  Serial.println(central.address());
+}
+
+void ble_disconnect_handler(BLEDevice central) {
+  // central disconnected event handler
+  Serial.print("Disconnected from central");
+}
+
 
 int ble_setup() {
   if (!BLE.begin()) {
@@ -20,11 +30,14 @@ int ble_setup() {
   BLE.addService(ble_sv_heartbeat);
 
   ble_val_stationID = station_id();
-  ble_ch_stationID.writeValue(ble_val_stationID);
+  ble_ch_stationID.setValue(ble_val_stationID);
   ble_ch_stationID.broadcast();
   BLE.setAdvertisedService(ble_sv_heartbeat);
   BLE.setDeviceName(BLE_DEVICE_NAME);
   BLE.setLocalName(BLE_DEVICE_NAME);
+
+  BLE.setEventHandler(BLEConnected, ble_connect_handler);
+  BLE.setEventHandler(BLEDisconnected, ble_disconnect_handler);
 
   Serial.println("Beginning BLE advertising");
   if (!BLE.advertise()) {
@@ -38,29 +51,25 @@ int ble_setup() {
   return 0;
 }
 
+unsigned long last_timestamp = 0;
 void ble_update() {
-  if (!central && (central = BLE.central())) {
-    Serial.print("Connected to central: ");
-    // print the central's MAC address:
-    Serial.println(central.address());
+  BLE.poll();
 
-  }
+  unsigned long new_timestamp = millis();
+  if (new_timestamp - last_timestamp >= 1000) {
+    if (BLE.central().connected()) {
+      uint8_t id = station_id();
 
-  if (central && central.connected()) {
-    Serial.println("Still connected");
+      if (id != ble_val_stationID) {
+        Serial.println("Station ID changed");
+        ble_val_stationID = id;
+      }
+      Serial.print("Current station ID: ");
+      Serial.println((unsigned long)ble_val_stationID);
 
-    uint8_t id = station_id();
-
-    if (id != ble_val_stationID) {
-      Serial.println("Station ID changed");
-      ble_val_stationID = id;
+      ble_ch_stationID.writeValue(ble_val_stationID);
     }
-    Serial.print("Current station ID: ");
-    Serial.println((unsigned long)ble_val_stationID);
 
-    ble_ch_stationID.writeValue(ble_val_stationID);
-  }
-  else {
-    Serial.println("No connection...");
+    last_timestamp = new_timestamp;
   }
 }

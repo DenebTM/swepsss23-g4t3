@@ -5,7 +5,7 @@
 #include <Arduino.h>
 #include <ArduinoBLE.h>
 
-#define BLE_DEVICE_NAME "PlantHealth Greenhouse"
+#define BLE_DEVICE_NAME "SensorStation G4T3"
 
 // Services
 extern BLEService ble_sv_heartbeat;
