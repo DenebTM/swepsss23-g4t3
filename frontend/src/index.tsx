@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 
+import { mirageSetup } from '~/api/mirageSetup'
 import { URL } from '~/common'
 import { Dashboard } from '~/components/dashboard/Dashboard'
 import { Error } from '~/components/error/Error'
@@ -70,3 +71,4 @@ root.render(
     <RouterProvider router={router} />
   </React.StrictMode>
 )
+mirageSetup()
