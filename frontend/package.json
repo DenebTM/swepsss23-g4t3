@@ -27,6 +27,7 @@
     "scripts": {
         "setup-husky": "cd .. && husky install frontend/.husky && cd frontend && npx husky add .husky/pre-commit \"cd frontend && npx lint-staged --config config/.lintstagedrc.json\"",
         "start": "vite serve",
+        "mock": "export NODE_ENV=mock-api && vite serve",
         "lint-code": "npx eslint ./src --cache --fix --ignore-path .gitignore --ext .ts,.tsx",
         "check-types": "tsc --project tsconfig.json",
         "build": "vite build",
@@ -50,6 +51,7 @@
         "@babel/core": "^7.0.0-0",
         "@babel/plugin-syntax-flow": "^7.14.5",
         "@babel/plugin-transform-react-jsx": "^7.14.9",
+        "@faker-js/faker": "^7.6.0",
         "@trivago/prettier-plugin-sort-imports": "^4.1.1",
         "@typescript-eslint/eslint-plugin": "^5.43.0",
         "@typescript-eslint/parser": "^5.0.0",
@@ -72,6 +74,7 @@
         "jest-environment-jsdom": "^29.3.1",
         "jsdom": "^21.1.1",
         "lint-staged": "^13.0.4",
+        "miragejs": "^0.1.47",
         "prettier": "2.8.7",
         "replace-in-files-cli": "^2.0.0",
         "ts-jest": "^29.0.3",

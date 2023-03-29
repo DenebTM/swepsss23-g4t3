@@ -1,10 +1,19 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
+import { Server } from 'miragejs'
 import { vi } from 'vitest'
+import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
+import { AppRegistry } from '~/api/mirageTypes'
+
+let server: Server<AppRegistry> | undefined
+
+beforeEach(() => {
+  server = mirageSetup(MOCK_API)
+})
 
 afterEach(() => {
   vi.clearAllMocks()
+
+  if (server) {
+    server.shutdown()
+  }
 })

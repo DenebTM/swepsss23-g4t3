@@ -38,11 +38,10 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `yarn start-mock`
+### `yarn mock`
 
 Same as `yarn start`, except instead of making real calls to the backend it
-uses a fake API running inside the app itself. Useful for testing important
-functionality not yet implemented in the backend.
+uses a fake API running inside the app itself (implemented with [miragejs](https://miragejs.com/)). Useful for testing important functionality not yet implemented in the backend.
 
 ### `yarn check-types`
 

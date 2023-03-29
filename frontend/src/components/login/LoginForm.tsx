@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Box from '@mui/system/Box'
 
-import { handleLogin } from '~/api/login'
+import { handleLogin } from '~/api/endpoints/login'
 import { URL } from '~/common'
 import { setJwt } from '~/helpers/jwt'
 import { LoginResponse } from '~/models/login'
@@ -26,7 +26,7 @@ export const LoginForm: React.FC = () => {
 
   const resetError = (): void => setLoginError(null)
 
-  /* Send a login request to the backend and handle redirect or display errors if unsuccessful. */
+  /** Send a login request to the backend and handle redirect or display errors if unsuccessful. */
   const handleApiLogin = (): void => {
     if (usernameRef.current !== null && passwordRef.current !== null) {
       const username = usernameRef.current.value
