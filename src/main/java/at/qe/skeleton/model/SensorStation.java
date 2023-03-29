@@ -74,4 +74,44 @@ public class SensorStation {
     public Userx getGardener() {
         return gardener;
     }
+
+    public SensorValues getUpperBound() {
+        return upperBound;
+    }
+
+    public SensorValues getLowerBound() {
+        return lowerBound;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAccessPoint(AccessPoint accessPoint) {
+        this.accessPoint = accessPoint;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setMeasurements(List<Measurement> measurements) {
+        this.measurements = measurements;
+    }
+
+    public void setTransmissionInterval(Duration transmissionInterval) {
+        this.transmissionInterval = transmissionInterval;
+    }
+
+    public void setGardener(Userx gardener) {
+        this.gardener = gardener;
+    }
+
+    public void setUpperBound(SensorValues upperBound) {
+        this.upperBound = upperBound;
+    }
+
+    public void setLowerBound(SensorValues lowerBound) {
+        this.lowerBound = lowerBound;
+    }
 }

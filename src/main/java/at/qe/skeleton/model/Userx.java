@@ -20,7 +20,7 @@ import org.springframework.data.domain.Persistable;
 @Entity
 public class Userx implements Persistable<String>, Serializable, Comparable<Userx> {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     @Id
     @Column(length = 100)
