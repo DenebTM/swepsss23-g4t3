@@ -43,40 +43,41 @@ public class UserService {
      * @return the user with the given username
      */
     @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
-    public Userx loadUser(String username) {
+    public Userx loadUserByName(String username) {
         return userRepository.findFirstByUsername(username);
     }
 
+    //TODO: insert correct links if possible
     /**
-     * Saves the user. This method will also set {@link Userx#createDate} for new
-     * entities or {@link Userx#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link Userx#createDate}
-     * or {@link Userx#updateUser} respectively.
+     * Saves the user. This method will also set {link Userx#createDate} for new
+     * entities or {link Userx#updateDate} for updated entities. The user
+     * requesting this operation will also be stored as {link Userx#createDate}
+     * or {link Userx#updateUser} respectively.
      *
-     * @param user the user to save
+     * @param userx the user to save
      * @return the updated user
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Userx saveUser(Userx user) {
-        if (user.isNew()) {
-            user.setCreateDate(LocalDateTime.now());
-            user.setCreateUser(getAuthenticatedUser());
+    public Userx saveUser(Userx userx) {
+        if (userx.isNew()) {
+            userx.setCreateDate(LocalDateTime.now());
+            userx.setCreateUser(getAuthenticatedUser());
         } else {
-            user.setUpdateDate(LocalDateTime.now());
-            user.setUpdateUser(getAuthenticatedUser());
+            userx.setUpdateDate(LocalDateTime.now());
+            userx.setUpdateUser(getAuthenticatedUser());
         }
-        return userRepository.save(user);
+        return userRepository.save(userx);
     }
 
     /**
      * Deletes the user.
      *
-     * @param user the user to delete
+     * @param userx the user to delete
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteUser(Userx user) {
-        userRepository.delete(user);
-        // :TODO: write some audit log stating who and when this user was permanently deleated.
+    public void deleteUser(Userx userx) {
+        userRepository.delete(userx);
+        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 
     private Userx getAuthenticatedUser() {
