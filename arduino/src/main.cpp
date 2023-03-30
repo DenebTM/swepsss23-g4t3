@@ -6,13 +6,13 @@ void setup() {
   Serial.begin(9600);
   while (!Serial);
 
-  ble_setup();
+  ble::setup();
 
   led::setup();
   led::set_color(led::WHITE);
 }
 
 void loop() {
-  ble_update();
+  ble::update();
   delay(10);
 }
