@@ -9,7 +9,9 @@
 #define BLE_DEVICE_MANUFACTURER "UIBK SE G4T3"
 #define BLE_DEVICE_APPEARANCE 0x3621
 
-int ble_setup();
-void ble_update();
+namespace ble {
+  int setup();
+  void update();
+}
 
 #endif
