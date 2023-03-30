@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 
+import { mirageSetup } from '~/api/mirageSetup'
 import { URL } from '~/common'
 import { Dashboard } from '~/components/dashboard/Dashboard'
 import { Error } from '~/components/error/Error'
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
     element: <Error />,
   },
 
-  /* Routes accessible only to logged-in users*/
+  /* Routes accessible only to logged-in users */
   {
     path: URL.dashboard,
     element: <Dashboard />,
@@ -70,3 +71,4 @@ root.render(
     <RouterProvider router={router} />
   </React.StrictMode>
 )
+mirageSetup()

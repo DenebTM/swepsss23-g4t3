@@ -1,9 +1,24 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
+import { Server } from 'miragejs'
 import { vi } from 'vitest'
+import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
+import { AppRegistry } from '~/api/mirageTypes'
+
+let server: Server<AppRegistry> | undefined
+
+/** Start mirage server to mock the backend before each test */
+beforeEach(() => {
+  server = mirageSetup(MOCK_API)
+})
+
+/** Teardown after each test */
+afterEach(() => {
+  vi.clearAllMocks()
+
+  if (server) {
+    server.shutdown()
+  }
+})
 
 /** Mock for  react-router-dom navigation function as this can not be run during tests. */
 export const NAVIGATE_MOCK = vi.fn()
@@ -21,7 +36,3 @@ export const NAVIGATE_MOCK = vi.fn()
 vi.mock('react-router-dom', () => ({
   useNavigate: () => NAVIGATE_MOCK,
 }))
-
-afterEach(() => {
-  vi.clearAllMocks()
-})
