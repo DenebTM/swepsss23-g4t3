@@ -11,16 +11,22 @@ import { Endpoints } from '../mirageTypes'
 const LOGIN_URI = `${API_DEV_URL}/handle-login`
 const LOGOUT_URI = `${API_DEV_URL}/logout`
 
+/** Hard-code a secret for the mocked JWT */
+const SECRET = base64url.decode('zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI')
+/** Convert token expiry timestamp from milliseconds to seconds for consistency with backend and set expiry to 1 hour  */
+const token_exp = Math.round(Date.now() / 1000 + 60 * 60)
+
 /**
  * Generate a JWT for mocking the login and logout functions.
  * Uses a different secret and algorithm to the backend as this function is only used for simple local tests.
  */
-const secret = base64url.decode('zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI')
 const FAKE_JWT = await new CompactSign(
-  new TextEncoder().encode(JSON.stringify({ authorities: 'ADMIN' }))
+  new TextEncoder().encode(
+    JSON.stringify({ authorities: 'ADMIN', exp: token_exp })
+  )
 )
   .setProtectedHeader({ alg: 'HS256' })
-  .sign(secret)
+  .sign(SECRET)
 
 /**
  * @param username The username of the user to log in
