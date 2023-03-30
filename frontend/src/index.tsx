@@ -12,15 +12,17 @@ import { URL } from '~/common'
 import { Dashboard } from '~/components/dashboard/Dashboard'
 import { Error } from '~/components/error/Error'
 import { Login } from '~/components/login/Login'
+import { SnackbarProvider } from '~/contexts/SnackbarProvider'
 import { isJwtValid } from '~/helpers/jwt'
 
+import { MessageSnackbars } from './components/page/MessageSnackbars'
 import './styles/index.css'
 
 /**
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
  */
 const loginLoader: LoaderFunction = () => {
-  if (isJwtValid()) {
+  if (isJwtValid() !== null) {
     return redirect(URL.dashboard)
   }
 
@@ -31,7 +33,7 @@ const loginLoader: LoaderFunction = () => {
  * Page loader to check whether the user is signed in with a valid token, and redirect to login page otherwise.
  */
 const authorizationLoader: LoaderFunction = () => {
-  if (!isJwtValid()) {
+  if (isJwtValid() === null) {
     return redirect(URL.login)
   }
 
@@ -68,7 +70,10 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <SnackbarProvider>
+      <MessageSnackbars />
+      <RouterProvider router={router} />
+    </SnackbarProvider>
   </React.StrictMode>
 )
 mirageSetup()
