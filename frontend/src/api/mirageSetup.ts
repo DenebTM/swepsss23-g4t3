@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { createServer, Response, Server } from 'miragejs'
+import { createServer, Server } from 'miragejs'
 import { API_DEV_URL } from '~/common'
 
 import { endpoints, loginEndpoints } from './endpoints'
@@ -28,11 +28,6 @@ export const mirageSetup = (
     factories,
     seeds(server) {
       server.createList('user', faker.datatype.number({ min: 2, max: 18 }))
-    },
-
-    routes() {
-      // Create login and logout routes separately due to htme not having the /api prefix
-      this.post(`${API_DEV_URL}/handle-login`, () => new Response(200, {}))
     },
   })
 
