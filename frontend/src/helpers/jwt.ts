@@ -37,7 +37,7 @@ export const setJwt = (jwt: string): void => {
  * @returns a {@link JWTPayload} if the token can be deoded and has not expired, `null` otherwise.
  */
 export const isJwtValid = (jwt?: string | null): JWTPayload | null => {
-  // If not given as ana rugment, load JWT from cookies
+  // If not given as an argument, load JWT from cookies
   if (typeof jwt === 'undefined') jwt = getJwt()
 
   if (jwt !== null) {

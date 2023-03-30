@@ -22,7 +22,7 @@ For development testing, run `yarn start` in a new terminal (to reload the front
 
 ## Available Scripts
 
-When the backend is stared with `mvn spring-boot:run` then the frontend is available at [localhost:8080](http://localhost:8080). Several scripts are defined in the [`package.json`](package.json) to aid development, which are detailed below.
+When the backend is started with `mvn spring-boot:run` then the frontend is available at [localhost:8080](http://localhost:8080). Several scripts are defined in the [`package.json`](package.json) to aid development, which are detailed below.
 
 - ##### `yarn start`
 
