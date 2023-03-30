@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { Factory, ModelInstance, Server } from 'miragejs'
 import { AccessPoint } from '~/models/accessPoint'
-import { SensorValues } from '~/models/measurement'
+import { Measurement, SensorValues } from '~/models/measurement'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
 import { Username, UserRole } from '~/models/user'
 
-import { AppRegistry } from '../mirageTypes'
+import { AfterCreate, AppRegistry } from '../mirageTypes'
 
 /**
  * Factory to generate a fake {@link SensorStation}.
@@ -16,12 +16,8 @@ export const sensorStationFactory = Factory.extend<
   Omit<
     SensorStation,
     'accessPoint' | 'gardeners' | 'lowerBound' | 'measurements' | 'upperBound'
-  > & {
-    afterCreate: (
-      sensorStation: ModelInstance<SensorStation>,
-      server: Server<AppRegistry>
-    ) => void
-  }
+  > &
+    AfterCreate<SensorStation>
 >({
   id(i: number) {
     return i
@@ -59,12 +55,16 @@ export const sensorStationFactory = Factory.extend<
     const ap: ModelInstance<AccessPoint> = server.create('accessPoint')
 
     // Cerate measurements
-    server.createList('measurement', faker.datatype.number({ min: 0, max: 20 }))
+    const measurements = server.createList(
+      'measurement',
+      faker.datatype.number({ min: 0, max: 8 })
+    ) as ModelInstance<Measurement>[]
 
     // Update sensorStation object
     sensorStation.update({
       gardeners: gardenerIds,
       lowerBound: lowerBound.attrs,
+      measurements: measurements.map((m) => m.attrs),
       upperBound: upperBound.attrs,
       accessPoint: ap.attrs.name,
     })

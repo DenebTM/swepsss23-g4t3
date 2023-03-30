@@ -1,4 +1,4 @@
-import { Registry, Server } from 'miragejs'
+import { ModelInstance, Registry, Server } from 'miragejs'
 import Schema from 'miragejs/orm/schema'
 
 import { factories } from './mirageFactories'
@@ -16,4 +16,14 @@ export type EndpointReg = (server: Server) => void
 /** Interface for an object containing functions to register endpoints indexed by path. */
 export interface Endpoints {
   [key: string]: EndpointReg
+}
+
+/**
+ * interface for the `afterCallback` method of a mirage factory to create an entity of type `E`.
+ */
+export interface AfterCreate<E extends object> {
+  afterCreate: (
+    sensorStation: ModelInstance<E>,
+    server: Server<AppRegistry>
+  ) => void
 }
