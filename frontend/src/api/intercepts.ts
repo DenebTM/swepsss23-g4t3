@@ -1,9 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 
-import { URL } from '~/common'
+import { API_DEV_URL, URL } from '~/common'
 import { getJwt } from '~/helpers/jwt'
-
-export const API_BASE_URL = 'http://localhost:8080'
 
 /**
  * Represents the input types of the axios functions axios.get and axios.delete
@@ -57,7 +55,7 @@ const axiosWrapper = async <R extends RestVariant, T = unknown, D = unknown>(
   arg2: WrapperArg2<R, D>,
   arg3: WrapperArg3<R, D> = undefined
 ): Promise<T> => {
-  const apiUrl = `${API_BASE_URL}/api${url}`
+  const apiUrl = `${API_DEV_URL}/api${url}`
   // Return axios response data
   return axiosFun(apiUrl, arg2, arg3)
     .then((res: AxiosResponse<T, D>) => res.data)

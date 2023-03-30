@@ -18,7 +18,7 @@ interface PageWrapperProps {
 
 /**
  * Wrapper component with page padding.
- * Renders page contents wrapped with padding. Shows a loading indicator if pending is set to true.
+ * Renders page contents wrapped with padding. Shows a loading indicator if `pending` is set to true.
  */
 export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
   return (
