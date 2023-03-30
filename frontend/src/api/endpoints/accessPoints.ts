@@ -5,7 +5,7 @@ import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 import { AppSchema, EndpointReg } from '../mirageTypes'
 
 /** URI for access points */
-const ACCESS_POINTS = '/access-points'
+export const ACCESS_POINTS = '/access-points'
 
 /**
  * GET /api/access-points

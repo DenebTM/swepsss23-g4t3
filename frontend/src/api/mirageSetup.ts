@@ -33,21 +33,17 @@ export const mirageSetup = (
 
   // Register internal endpoints with /api namespace
   server.namespace = 'api'
-  Object.values(endpoints).map((route) => {
-    route(server)
-  })
+  Object.values(endpoints).map((route) => route(server))
 
   // Register other routes
   server.namespace = ''
-  Object.values(loginEndpoints).map((route) => {
-    route(server)
-  })
+  Object.values(loginEndpoints).map((route) => route(server))
 
   // Allow all other requests to pass through mirage
   server.passthrough()
 
   // Use the below for debugging
-  // console.log({server})
+  // console.log({ server })
   // console.log({ dump: server.db.dump() })
 
   return server
