@@ -1,4 +1,5 @@
 #include <Arduino.h>
+
 #include <ble.h>
 #include <led.h>
 
@@ -9,7 +10,7 @@ void setup() {
   ble::setup();
 
   led::setup();
-  led::set_color(led::WHITE);
+  led::set_color(led::RED);
 }
 
 void loop() {

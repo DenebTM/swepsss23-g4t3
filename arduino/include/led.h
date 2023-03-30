@@ -16,7 +16,7 @@ namespace led {
     RED = LED_RED_MAX << 16,
     GREEN = LED_GREEN_MAX << 8,
     BLUE = LED_BLUE_MAX,
-    YELLOW = RED | GREEN,
+    YELLOW = RED | (GREEN >> 3),
     CYAN = BLUE | GREEN,
     PURPLE = RED | BLUE,
     WHITE = RED | GREEN | BLUE
