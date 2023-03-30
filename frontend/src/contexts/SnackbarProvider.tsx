@@ -19,7 +19,7 @@ interface SnackbarProviderProps {
 }
 
 /**
- * Wrapper component to allow setting snackbar errors in child components
+ * Wrapper component to allow setting snackbar errors in child components.
  */
 const SnackbarProvider: React.FC<SnackbarProviderProps> = (props) => {
   const [snackbarState, dispatch] = useReducer<
@@ -39,7 +39,7 @@ const SnackbarProvider: React.FC<SnackbarProviderProps> = (props) => {
     [dispatch]
   )
 
-  /** Dispatch action to remove a message to the reducer */
+  /** Dispatch action to remove a message from the reducer */
   const removeMessage = useCallback(
     (messageId: MessageId) => {
       const action: RemoveMessageAction = {

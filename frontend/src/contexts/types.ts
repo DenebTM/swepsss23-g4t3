@@ -3,10 +3,10 @@ export interface SnackbarState {
   /** The number of milliseconds to autohide the snackbar after */
   autoHideDuration: number
   /**
-   * The highest message ID assigned. Used to assign new IDs to new messages.
-   * If enough messages are generated in one browser window that an overflow is created then we have other problems.
-   * */
-  highestMessageId: number
+   * The message ID to assign to the next message: incremented by 1 for each new message.
+   * If enough messages are generated in one browser window to cause integer overflow then we have other problems.
+   */
+  nextMessageId: number
   /** Messages inside the Context */
   messages: MessageState[]
 }

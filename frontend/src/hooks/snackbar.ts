@@ -17,6 +17,7 @@ export const useRemoveSnackbarMessage = (): ((
   return removeMessage
 }
 
+/** Reset all messages in the error context (currently unused) */
 export const useResetSnackbarMessages = (): (() => void) => {
   const { resetMessages } = React.useContext(SnackbarContext)
   return resetMessages

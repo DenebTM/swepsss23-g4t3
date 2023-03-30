@@ -21,13 +21,13 @@ export const snackbarReducer: Reducer<SnackbarState, SnackbarReducerAction> = (
         ...snackbarState,
         messages: [
           ...snackbarState.messages,
-          { ...action.payload, id: snackbarState.highestMessageId },
+          { ...action.payload, id: snackbarState.nextMessageId },
         ],
-        highestMessageId: snackbarState.highestMessageId + 1, // Increment highestMessageId by 1
+        nextMessageId: snackbarState.nextMessageId + 1, // Increment nextMessageId by 1
       }
     }
 
-    /** Remove a message from the state */
+    /** Remove a single message from the state */
     case ReducerActions.REMOVE_MESSAGE: {
       return {
         ...snackbarState,
