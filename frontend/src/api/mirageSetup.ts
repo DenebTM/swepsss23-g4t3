@@ -1,8 +1,7 @@
-import { faker } from '@faker-js/faker'
 import { createServer, Server } from 'miragejs'
 import { API_DEV_URL } from '~/common'
 
-import { endpoints, loginEndpoints } from './endpoints'
+import { createSeedData, endpoints, loginEndpoints } from './endpoints'
 import { factories } from './mirageFactories'
 import { models } from './mirageModels'
 import { AppRegistry } from './mirageTypes'
@@ -26,9 +25,7 @@ export const mirageSetup = (
   const server = createServer({
     models,
     factories,
-    seeds(server) {
-      server.createList('user', faker.datatype.number({ min: 2, max: 18 }))
-    },
+    seeds: createSeedData,
   })
 
   server.logging = true // Whether or not to log all requests

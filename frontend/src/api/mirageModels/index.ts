@@ -1,10 +1,13 @@
 import { Model } from 'miragejs'
 import { ModelDefinition } from 'miragejs/-types'
+import { AccessPoint } from '~/models/accessPoint'
 import { User } from '~/models/user'
 
-const UserModel: ModelDefinition<User> = Model.extend({})
+const _UserModel: ModelDefinition<User> = Model.extend({})
+const _AccessPointModel: ModelDefinition<AccessPoint> = Model.extend({})
 
-/** Models for the mocked API to know what types of entities to expect. */
+/** Models so that the mocked API knows what types of entities to expect. */
 export const models = {
-  user: UserModel,
+  user: _UserModel,
+  accessPoint: _AccessPointModel,
 }
