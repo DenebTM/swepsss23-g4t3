@@ -1,3 +1,4 @@
+import { accessPointFactory } from './accessPointFactory'
 import { userFactory } from './user'
 
 export * from './user'
@@ -7,4 +8,5 @@ export * from './user'
  */
 export const factories = {
   user: userFactory,
+  accessPoint: accessPointFactory,
 }
