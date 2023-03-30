@@ -33,16 +33,19 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
+    @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "FIRST_NAME")
     private String firstName;
+    @Column(name = "LAST_NAME")
     private String lastName;
+    @Column(name = "EMAIL")
     private String email;
 
-    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "Userx_UserRole")
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> roles;
+    @Column(name = "USER_ROLE")
+    private UserRole userRole;
 
     public String getUsername() {
         return username;
@@ -84,12 +87,12 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.email = email;
     }
 
-    public Set<UserRole> getRoles() {
-        return roles;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public void setRoles(Set<UserRole> roles) {
-        this.roles = roles;
+    public void setUserRole(UserRole roles) {
+        this.userRole = roles;
     }
 
     public Userx getCreateUser() {

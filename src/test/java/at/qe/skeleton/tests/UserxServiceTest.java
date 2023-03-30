@@ -32,25 +32,25 @@ public class UserxServiceTest {
         Assertions.assertEquals(4, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
         for (Userx userx : userService.getAllUsers()) {
             if ("admin".equals(userx.getUsername())) {
-                Assertions.assertTrue(userx.getRoles().contains(UserRole.ADMIN), "User \"" + userx + "\" does not have role ADMIN");
+                Assertions.assertSame(userx.getUserRole(), UserRole.ADMIN, "User \"" + userx + "\" does not have role ADMIN");
                 Assertions.assertNotNull(userx.getCreateUser(), "User \"" + userx + "\" does not have a createUser defined");
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 Assertions.assertNull(userx.getUpdateUser(), "User \"" + userx + "\" has a updateUser defined");
                 Assertions.assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
             } else if ("susi".equals(userx.getUsername())) {
-                Assertions.assertTrue(userx.getRoles().contains(UserRole.GARDENER), "User \"" + userx + "\" does not have role GARDENER");
+                Assertions.assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
                 Assertions.assertNotNull(userx.getCreateUser(), "User \"" + userx + "\" does not have a createUser defined");
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 Assertions.assertNull(userx.getUpdateUser(), "User \"" + userx + "\" has a updateUser defined");
                 Assertions.assertNull(userx.getUpdateDate(), "User \"" + userx +"\" has a updateDate defined");
             } else if ("max".equals(userx.getUsername())) {
-                Assertions.assertTrue(userx.getRoles().contains(UserRole.USER), "User \"" + userx + "\" does not have role USER");
+                Assertions.assertSame(userx.getUserRole(), UserRole.USER, "User \"" + userx + "\" does not have role USER");
                 Assertions.assertNotNull(userx.getCreateUser(), "User \"" + userx + "\" does not have a createUser defined");
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 Assertions.assertNull(userx.getUpdateUser(), "User \"" + userx + "\" has a updateUser defined");
                 Assertions.assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
             } else  if ("elvis".equals(userx.getUsername())) {
-                Assertions.assertTrue(userx.getRoles().contains(UserRole.ADMIN), "User \"" + userx + "\" does not have role ADMIN");
+                Assertions.assertSame(userx.getUserRole(), UserRole.ADMIN, "User \"" + userx + "\" does not have role ADMIN");
                 Assertions.assertNotNull(userx.getCreateUser(), "User \"" + userx + "\" does not have a createUser defined");
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 Assertions.assertNull(userx.getUpdateUser(), "User \"" + userx + "\" has a updateUser defined");
@@ -124,7 +124,7 @@ public class UserxServiceTest {
         toBeCreatedUserx.setFirstName(fName);
         toBeCreatedUserx.setLastName(lName);
         toBeCreatedUserx.setEmail(email);
-        toBeCreatedUserx.setRoles(Sets.newSet(UserRole.USER, UserRole.GARDENER));
+        toBeCreatedUserx.setUserRole(UserRole.GARDENER);
         userService.saveUser(toBeCreatedUserx);
 
         Userx freshlyCreatedUserx = userService.loadUserByName(username);
@@ -134,8 +134,7 @@ public class UserxServiceTest {
         Assertions.assertEquals(fName, freshlyCreatedUserx.getFirstName(), "User \"" + username + "\" does not have a the correct firstName attribute stored being saved");
         Assertions.assertEquals(lName, freshlyCreatedUserx.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
         Assertions.assertEquals(email, freshlyCreatedUserx.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
-        Assertions.assertTrue(freshlyCreatedUserx.getRoles().contains(UserRole.GARDENER), "User \"" + username + "\" does not have role GARDENER");
-        Assertions.assertTrue(freshlyCreatedUserx.getRoles().contains(UserRole.USER), "User \"" + username + "\" does not have role USER");
+        Assertions.assertSame(freshlyCreatedUserx.getUserRole(), UserRole.GARDENER, "User \"" + username + "\" does not have role GARDENER");
         Assertions.assertNotNull(freshlyCreatedUserx.getCreateUser(), "User \"" + username + "\" does not have a createUser defined after being saved");
         Assertions.assertEquals(adminUserx, freshlyCreatedUserx.getCreateUser(), "User \"" + username + "\" has wrong createUser set");
         Assertions.assertNotNull(freshlyCreatedUserx.getCreateDate(), "User \"" + username + "\" does not have a createDate defined after being saved");
