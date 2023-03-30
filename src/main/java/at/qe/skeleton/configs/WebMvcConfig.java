@@ -11,7 +11,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * Redirects frontend pages to "/"
-     * Needed to so that React router works with Spring Boot
+     * Needed so that React router works with Spring Boot
      * Requires 'spring.mvc.pathmatch.matching-strategy=ant-path-matcher' in application.properties
      * Source:https://stackoverflow.com/questions/39331929/spring-catch-all-route-for-index-html/42998817#42998817
      */
