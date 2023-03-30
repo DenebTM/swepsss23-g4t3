@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 
+import { base64url, CompactSign } from 'jose'
 import { Response, Server } from 'miragejs'
 import { handleAxiosError } from '~/api/intercepts'
 import { API_DEV_URL } from '~/common'
@@ -8,9 +9,12 @@ import { LoginResponse } from '~/models/login'
 const LOGIN_URI = `${API_DEV_URL}/handle-login`
 const LOGOUT_URI = `${API_DEV_URL}/logout`
 
-// qqjf TODO replace with a generated JWT
-const FAKE_JWT =
-  'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY4MDE1NDkwMiwiaWF0IjoxNjgwMTE4OTAyLCJhdXRob3JpdGllcyI6WyJBRE1JTiIsIkVNUExPWUVFIl19.RkBDL-0HMIFRmosOv-tCCAVuR33KUZQwLLM1gBwps0k8WbzMajShhNrwk5TlraKbJ_YV2DxZkt3tlMK3FFGodg'
+const secret = base64url.decode('zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI')
+const FAKE_JWT = new CompactSign(
+  new TextEncoder().encode(JSON.stringify({ authorities: 'ADMIN' }))
+)
+  .setProtectedHeader({ alg: 'HS256' })
+  .sign(secret)
 
 export const handleLogin = (
   username: string,
