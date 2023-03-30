@@ -7,11 +7,12 @@ import { factories } from './mirageFactories'
 import { models } from './mirageModels'
 import { AppRegistry } from './mirageTypes'
 
+/** Parameter telling {@link mirageSetup} to mock the API if passed as an argument. */
 export const MOCK_API = 'MOCK_API'
 
-/*
+/**
  * Function to set up a mocked REST API server using Mirage.
- * Only works if environment variable NODE_ENV is true or if the argument enviroment is set to MOCK_API.
+ * Only works if environment variable NODE_ENV is true or if the argument enviroment is set to {@link MOCK_API}.
  * Source: https://stephencharlesweiss.com/miragejs-typescript-setup
  * Reads the desired environment
  */

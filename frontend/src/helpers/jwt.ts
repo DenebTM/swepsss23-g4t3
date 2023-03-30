@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie'
 import { AUTH_JWT } from '~/common'
 
 /**
- * Load the saved JWT cookie with key `AUTH_JWT`
+ * Load the saved JWT cookie with key {@link AUTH_JWT}
  * @returns The currently set JWT if it exists, otherwise null
  */
 export const getJwt = (): string | null => {
@@ -13,7 +13,7 @@ export const getJwt = (): string | null => {
 }
 
 /**
- * Save the given JWT as a cookie with key `AUTH_JWT`
+ * Save the given JWT as a cookie with key {@link AUTH_JWT}
  * @param jwt The token to save as a cookie
  */
 export const setJwt = (jwt: string): void => {
@@ -34,7 +34,7 @@ export const setJwt = (jwt: string): void => {
 /**
  * Checks the JWT token stored in cookies or provided via `jwt` for validity.
  * @param jwt optional; a specific token to check. If undefined then the JWT will be loaded from local cookies..
- * @returns a `JWTPayload` if the token can be deoded and has not expired, `null` otherwise.
+ * @returns a {@link JWTPayload} if the token can be deoded and has not expired, `null` otherwise.
  */
 export const isJwtValid = (jwt?: string | null): JWTPayload | null => {
   // If not given as ana rugment, load JWT from cookies
@@ -53,7 +53,7 @@ export const isJwtValid = (jwt?: string | null): JWTPayload | null => {
 }
 
 /**
- * Delete the saved JWT cookie with key `AUTH_JWT` (if it exists)
+ * Delete the saved JWT cookie with key {@link AUTH_JWT} (if it exists)
  */
 export const deleteJwt = (): void => {
   const cookies = new Cookies()

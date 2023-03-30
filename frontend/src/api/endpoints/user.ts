@@ -2,7 +2,7 @@ import { Response, Server } from 'miragejs'
 import { _get } from '~/api/intercepts'
 import { User } from '~/models/user'
 
-import { AppSchema } from '../mirageTypes'
+import { AppSchema, EndpointReg } from '../mirageTypes'
 
 /**
  * GET /api/users
@@ -13,7 +13,7 @@ export const getUsers = async (): Promise<User[]> => {
 }
 
 /** Mocked users functions */
-export const mockedUsers = (server: Server) => {
+export const mockedUsers: EndpointReg = (server: Server) => {
   server.get(`/users`, (schema: AppSchema, request) => {
     const users = schema.all('user')
     return new Response(200, {}, users.models)
