@@ -16,7 +16,7 @@ const LOGOUT_URI = `${API_DEV_URL}/logout`
  * Uses a different secret and algorithm to the backend as this function is only used for simple local tests.
  */
 const secret = base64url.decode('zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI')
-const FAKE_JWT = new CompactSign(
+const FAKE_JWT = await new CompactSign(
   new TextEncoder().encode(JSON.stringify({ authorities: 'ADMIN' }))
 )
   .setProtectedHeader({ alg: 'HS256' })
