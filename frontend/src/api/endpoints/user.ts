@@ -5,7 +5,7 @@ import { User } from '~/models/user'
 import { AppSchema, EndpointReg } from '../mirageTypes'
 
 /** URI for users routes */
-const USERS = '/users'
+export const USERS = '/users'
 
 /**
  * GET /api/users

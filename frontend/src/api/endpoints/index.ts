@@ -2,20 +2,30 @@ import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
 import { AppRegistry, Endpoints } from '~/api/mirageTypes'
 
-import { mockedAccessPointReqs } from './accessPoints'
+import { ACCESS_POINTS, mockedAccessPointReqs } from './accessPoints'
 import { mockedLoginEndpoints } from './login'
-import { mockedUserReqs } from './user'
+import { mockedSensorStationReqs, SENSOR_STATIONS } from './sensorStations'
+import { mockedUserReqs, USERS } from './user'
 
 /** All endpoints mocked by mirage */
 export const endpoints: Endpoints = {
-  users: mockedUserReqs,
-  'access-points': mockedAccessPointReqs,
+  [USERS]: mockedUserReqs,
+  [ACCESS_POINTS]: mockedAccessPointReqs,
+  [SENSOR_STATIONS]: mockedSensorStationReqs,
 }
 
 /** Initialise all seed data used by mirage */
-export const createSeedData = (server: Server): Server<AppRegistry> => {
-  server.createList('user', faker.datatype.number({ min: 2, max: 18 }))
-  server.createList('accessPoint', faker.datatype.number({ min: 1, max: 3 }))
+export const createSeedData = (
+  server: Server<AppRegistry>
+): Server<AppRegistry> => {
+  // Create users who are not gardeners for any sensor station
+  server.createList('user', faker.datatype.number({ min: 2, max: 5 }))
+
+  // Create access points not attached to any sensor station
+  server.createList('accessPoint', faker.datatype.number({ min: 0, max: 2 }))
+
+  // Create sensor stations (and the associated gardeners, access points, and measurements)
+  server.createList('sensorStation', faker.datatype.number({ min: 1, max: 3 }))
 
   return server
 }
