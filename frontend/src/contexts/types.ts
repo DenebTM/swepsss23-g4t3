@@ -51,19 +51,19 @@ interface BaseReducerAction {
 }
 
 /** Action to remove a single message from the Context */
-export interface RemoveMessageAction extends BaseReducerAction {
+interface RemoveMessageAction extends BaseReducerAction {
   actionType: typeof ReducerActions.REMOVE_MESSAGE
   payload: MessageId
 }
 
 /** Action to add a single message to the Context */
-export interface AddMessageAction extends BaseReducerAction {
+interface AddMessageAction extends BaseReducerAction {
   actionType: typeof ReducerActions.ADD_MESSAGE
   payload: Message
 }
 
 /** Action to delete all messages */
-export interface ResetMessageAction extends BaseReducerAction {
+interface ResetMessageAction extends BaseReducerAction {
   actionType: typeof ReducerActions.RESET_MESSAGES
 }
 

@@ -3,13 +3,10 @@ import React, { Reducer, useCallback, useMemo, useReducer } from 'react'
 import { initialSnackbarState, SnackbarContext } from './SnackbarContext'
 import { snackbarReducer } from './snackbarReducer'
 import {
-  AddMessageAction,
   ISnackbarContext,
   Message,
   MessageId,
   ReducerActions,
-  RemoveMessageAction,
-  ResetMessageAction,
   SnackbarReducerAction,
   SnackbarState,
 } from './types'
@@ -29,35 +26,32 @@ const SnackbarProvider: React.FC<SnackbarProviderProps> = (props) => {
 
   /** Dispatch action to add a message to the reducer */
   const addMessage = useCallback(
-    (message: Message) => {
-      const action: AddMessageAction = {
+    (message: Message) =>
+      dispatch({
         payload: message,
         actionType: ReducerActions.ADD_MESSAGE,
-      }
-      return dispatch(action)
-    },
+      }),
     [dispatch]
   )
 
   /** Dispatch action to remove a message from the reducer */
   const removeMessage = useCallback(
-    (messageId: MessageId) => {
-      const action: RemoveMessageAction = {
+    (messageId: MessageId) =>
+      dispatch({
         payload: messageId,
         actionType: ReducerActions.REMOVE_MESSAGE,
-      }
-      return dispatch(action)
-    },
+      }),
     [dispatch]
   )
 
   /** Dispatch action to delete all snackbar messages */
-  const resetMessages = useCallback(() => {
-    const action: ResetMessageAction = {
-      actionType: ReducerActions.RESET_MESSAGES,
-    }
-    return dispatch(action)
-  }, [dispatch])
+  const resetMessages = useCallback(
+    () =>
+      dispatch({
+        actionType: ReducerActions.RESET_MESSAGES,
+      }),
+    [dispatch]
+  )
 
   const providerValue: ISnackbarContext = useMemo(
     () => ({
