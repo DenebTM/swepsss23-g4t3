@@ -30,6 +30,6 @@ interface LogEntity {
  */
 enum EntityType {
   USER = 'USER',
-  ACESS_POINT = 'ACESS_POINT',
+  ACCESS_POINT = 'ACCESS_POINT',
   SENSOR_STATION = 'SENSOR_STATION',
 }
