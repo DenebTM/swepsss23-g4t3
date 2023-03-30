@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     element: <Error />,
   },
 
-  /* Routes accessible only to logged-in users*/
+  /* Routes accessible only to logged-in users */
   {
     path: URL.dashboard,
     element: <Dashboard />,
