@@ -1,12 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { test, vi } from 'vitest'
+import { test } from 'vitest'
 import { Login } from '~/components/login/Login'
-
-vi.mock('react-router-dom', () => ({
-  useNavigate: () => {
-    /* do nothing */
-  },
-}))
 
 test('renders login page elements without crashing', () => {
   render(<Login />)
