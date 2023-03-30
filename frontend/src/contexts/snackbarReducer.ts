@@ -1,0 +1,53 @@
+import { Reducer } from 'react'
+
+import {
+  MessageState,
+  ReducerActions,
+  SnackbarReducerAction,
+  SnackbarState,
+} from './types'
+
+/**
+ * Reducer to update the {@link SnackbarState}
+ */
+export const snackbarReducer: Reducer<SnackbarState, SnackbarReducerAction> = (
+  snackbarState: SnackbarState,
+  action: SnackbarReducerAction
+) => {
+  switch (action.actionType) {
+    /** Add a message to the state */
+    case ReducerActions.ADD_MESSAGE: {
+      return {
+        ...snackbarState,
+        messages: [
+          ...snackbarState.messages,
+          { ...action.payload, id: snackbarState.highestMessageId },
+        ],
+        highestMessageId: snackbarState.highestMessageId + 1, // Increment highestMessageId by 1
+      }
+    }
+
+    /** Remove a message from the state */
+    case ReducerActions.REMOVE_MESSAGE: {
+      return {
+        ...snackbarState,
+        messages: snackbarState.messages.filter(
+          (m: MessageState) => m.id != action.payload
+        ),
+      }
+    }
+
+    /** Remove all messages from the state */
+    case ReducerActions.RESET_MESSAGES: {
+      return {
+        ...snackbarState,
+        messages: [],
+      }
+    }
+
+    /** Fallback case */
+    default: {
+      throw new Error('Unhandled snackbar action type')
+    }
+  }
+}
