@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests to ensure that each entity's implementation of equals conforms to the
- * contract. See {@linkplain http://www.jqno.nl/equalsverifier/} for more
+ * contract. See {@linkplain {http://www.jqno.nl/equalsverifier/}} for more
  * information.
  *
  * This class is part of the skeleton project provided for students of the
@@ -18,11 +18,11 @@ public class EqualsImplementationTest {
 
     @Test
     public void testUserEqualsContract() {
-        Userx user1 = new Userx();
-        user1.setUsername("user1");
-        Userx user2 = new Userx();
-        user2.setUsername("user2");
-        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, user1, user2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
+        Userx userx1 = new Userx();
+        userx1.setUsername("user1");
+        Userx userx2 = new Userx();
+        userx2.setUsername("user2");
+        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, userx1, userx2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
     }
 
     @Test
