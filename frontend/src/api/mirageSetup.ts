@@ -38,19 +38,19 @@ export const mirageSetup = (
   server.logging = true // Whether or not to log all requests
   server.urlPrefix = API_DEV_URL // Base URL
 
-  // Register login routes
-  for (const pathName in Object.keys(loginEndpoints)) {
-    loginEndpoints[pathName](server)
-  }
-
-  // Register other internal endpoints
+  // Register internal endpoints with /api namespace
   server.namespace = 'api'
-  for (const pathName in Object.keys(endpoints)) {
-    endpoints[pathName](server)
-  }
+  Object.values(endpoints).map((route) => {
+    route(server)
+  })
 
-  // Reset config values for all other routes else
+  // Register other routes
   server.namespace = ''
+  Object.values(loginEndpoints).map((route) => {
+    route(server)
+  })
+
+  // Allow all other requests to pass through mirage
   server.passthrough()
 
   // Use the below for debugging
