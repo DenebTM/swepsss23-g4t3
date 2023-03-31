@@ -1,6 +1,12 @@
 # PlantHealth Frontend
 
-Frontend for software engineering project, summer semester 2023.
+Frontend for Software Engineering project, summer semester 2023.
+
+## Stack
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and uses Material Components [Material UI](https://mui.com/material-ui/getting-started/overview/).
+
+[ESLint](https://eslint.org/docs/latest/) is used to enforce coding style and [Husky] automatically lints files on-stage with [Prettier](https://prettier.io/docs/en/index.html).
 
 ## Setup
 

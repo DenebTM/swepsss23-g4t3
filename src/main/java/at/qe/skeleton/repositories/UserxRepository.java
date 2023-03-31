@@ -3,6 +3,7 @@ package at.qe.skeleton.repositories;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.UserRole;
 import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
