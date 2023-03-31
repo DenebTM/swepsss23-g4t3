@@ -10,20 +10,20 @@ import at.qe.skeleton.model.Userx;
  */
 public class UserStatusInfo {
 
-    private Userx user;
+    private Userx userx;
     private UserStatus status = UserStatus.OFFLINE;
 
-    public UserStatusInfo(Userx user) {
+    public UserStatusInfo(Userx userx) {
             super();
-            this.user = user;
+            this.userx = userx;
     }
 
     public Userx getUser() {
-            return user;
+            return userx;
     }
 
-    public void setUser(Userx user) {
-            this.user = user;
+    public void setUser(Userx userx) {
+            this.userx = userx;
     }
 
     public UserStatus getStatus() {

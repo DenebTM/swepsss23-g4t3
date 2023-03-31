@@ -4,17 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+
+import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -26,7 +17,7 @@ import org.springframework.data.domain.Persistable;
 @Entity
 public class Userx implements Persistable<String>, Serializable, Comparable<Userx> {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     @Id
     @Column(length = 100)
@@ -47,9 +38,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     private String firstName;
     private String lastName;
     private String email;
-    private String phone;
-
-    boolean enabled;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "Userx_UserRole")
@@ -94,22 +82,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Set<UserRole> getRoles() {
@@ -193,9 +165,10 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         return (null == createDate);
     }
 
-	@Override
-	public int compareTo(Userx o) {
-		return this.username.compareTo(o.getUsername());
-	}
+    @Override
+    public int compareTo(Userx o) {
+        return this.username.compareTo(o.getUsername());
+    }
+
 
 }

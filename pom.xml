@@ -35,6 +35,18 @@
         <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
         <node.version>v18.12.1</node.version>
         <yarn.version>v1.22.19</yarn.version>
+
+        <!-- Allow Sonarqube to scan frontend code -->
+        <sonar.sources>src/main,frontend/src</sonar.sources>
+        <sonar.tests>src/test,frontend/src/tests</sonar.tests>
+        <sonar.test.inclusions>src/test/**/*.java,frontend/src/tests/**/*.test.ts*</sonar.test.inclusions>
+        <sonar.testExecutionReportPaths>frontend/sonar-report.xml</sonar.testExecutionReportPaths>
+
+        <sonar.exclusions>frontend/src/tests</sonar.exclusions>
+        <sonar.coverage.exclusions>src/test,frontend/src/tests</sonar.coverage.exclusions>
+
+        <sonar.typescript.tsconfigPath>frontend/tsconfig.json</sonar.typescript.tsconfigPath>
+        <sonar.javascript.lcov.reportPaths>frontend/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
     </properties>
 
     <dependencies>

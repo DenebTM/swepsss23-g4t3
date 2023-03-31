@@ -12,22 +12,22 @@ import at.qe.skeleton.model.Userx;
  */
 public class LogEntry {
 
-    private Userx user;
+    private Userx userx;
     private Date timestamp = new Date();
     private LogEntryType logType;
 
-    public LogEntry(Userx user, LogEntryType logType) {
+    public LogEntry(Userx userx, LogEntryType logType) {
             super();
-            this.user = user;
+            this.userx = userx;
             this.logType = logType;
     }
 
     public Userx getUser() {
-            return user;
+            return userx;
     }
 
-    public void setUser(Userx user) {
-            this.user = user;
+    public void setUser(Userx userx) {
+            this.userx = userx;
     }
 
     public Date getTimestamp() {
