@@ -11,7 +11,7 @@ public class Measurement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @Column(name = "TIMESTAMP")
     private LocalDateTime timestamp;
@@ -30,7 +30,7 @@ public class Measurement {
         this.sensorStation = sensorStation;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
