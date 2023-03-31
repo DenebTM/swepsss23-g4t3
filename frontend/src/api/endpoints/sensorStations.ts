@@ -20,7 +20,7 @@ export const getSensorStations = async (): Promise<SensorStation[]> => {
  * Get a single access point by ID
  * @returns The fetched access point
  */
-export const getAccessPoint = async (
+export const getSensorStation = async (
   sensorStationUuid: SensorStationUuid
 ): Promise<SensorStation> => {
   return _get(`${SENSOR_STATIONS}/${sensorStationUuid}`)
