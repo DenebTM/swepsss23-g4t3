@@ -60,11 +60,10 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
 
     if (sensorStation) {
       const oldGardeners: Username[] = sensorStation.attrs.gardeners
-
       sensorStation.update({
         gardeners: [username, ...(oldGardeners as string[])],
       })
-      return success(sensorStation)
+      return success(sensorStation.attrs)
     } else {
       return notFound(`sensor station ${uuid}`)
     }
@@ -78,16 +77,13 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
 
     // Deliberately does not check if user was in the gardeners
     if (sensorStation) {
-      const oldGardeners: unknown = sensorStation.attrs.gardeners
-      if (Array.isArray(oldGardeners)) {
-        sensorStation.update({
-          gardeners: (oldGardeners as string[]).filter((g) => g !== username),
-        })
-      } else {
-        sensorStation.update({ gardeners: [] })
-      }
+      const oldGardeners: Username[] = sensorStation.attrs.gardeners
+      sensorStation.update({
+        gardeners: (oldGardeners as string[]).filter((g) => g !== username),
+      })
+      return success(sensorStation.attrs)
+    } else {
+      return notFound(`sensor station ${uuid}`)
     }
-
-    return notFound('sensor station gardener')
   })
 }
