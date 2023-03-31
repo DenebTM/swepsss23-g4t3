@@ -29,7 +29,7 @@ interface SidebarElement {
   adminOnly?: boolean
   label: string
   url: string
-  icon: JSX.Element
+  icon?: JSX.Element
 }
 
 /** Values to render at the top of the sidebar */
@@ -59,7 +59,12 @@ const topSidebarVals = (
     label: 'Admin Home',
     url: URL.adminHome,
     icon: <AdminPanelSettingsIcon />,
-    childNodes: [],
+    childNodes: [
+      { label: 'Users', url: URL.manageUsers },
+      { label: 'Access Points', url: URL.manageAccessPoints },
+      { label: 'Greenhouses', url: URL.manageGreenhouses },
+      { label: 'Logs', url: URL.adminLogs },
+    ],
   },
 ]
 
@@ -137,18 +142,22 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
                     {el.icon}
                   </SidebarListItem>
                   {el.childNodes &&
-                    el.childNodes.map((child) => (
-                      <SidebarListItem
-                        key={child.label}
-                        label={child.label}
-                        open={props.open}
-                        onClick={() => navigate(child.url)}
-                        selected={pathname === child.url}
-                        variant="small"
-                      >
-                        {props.open ? null : child.icon}
-                      </SidebarListItem>
-                    ))}
+                    el.childNodes.map(
+                      (child) =>
+                        /** Render child elements in the sidebar only if open or if the child has an icon defined*/
+                        (props.open || child.icon) && (
+                          <SidebarListItem
+                            key={child.label}
+                            label={child.label}
+                            open={props.open}
+                            onClick={() => navigate(child.url)}
+                            selected={pathname === child.url}
+                            variant="small"
+                          >
+                            {props.open ? null : child.icon}
+                          </SidebarListItem>
+                        )
+                    )}
                 </Fragment>
               )
           )}
