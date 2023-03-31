@@ -41,8 +41,14 @@ export const URL = {
   greenhouseView: (
     sensorStationId: SensorStationUuid,
     view: SensorStationView
-  ) =>
-    `/${GREENHOUSES_ROOT}/${sensorStationId}?${GREENHOUSE_VIEW_QUERY}=${view}`,
+  ) => {
+    const pathBase = `/${GREENHOUSES_ROOT}/${sensorStationId}`
+    if (view === SensorStationView.GRAPHICAL) {
+      return pathBase
+    } else {
+      return `${pathBase}?${GREENHOUSE_VIEW_QUERY}=${view}`
+    }
+  },
 
   /** The login page */
   login: '/login',

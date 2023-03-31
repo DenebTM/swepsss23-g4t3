@@ -1,17 +1,26 @@
+import { cancelable } from 'cancelable-promise'
+import { Fragment, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import HomeIcon from '@mui/icons-material/Home'
+import LocalFloristIcon from '@mui/icons-material/LocalFlorist'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import YardIcon from '@mui/icons-material/Yard'
+import Badge from '@mui/material/Badge'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
-import { URL } from '~/common'
+import { getSensorStations } from '~/api/endpoints/sensorStations'
+import { SensorStationView, URL } from '~/common'
+import { Message, MessageType } from '~/contexts/types'
 import { deleteJwt } from '~/helpers/jwt'
+import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { useIsAdmin } from '~/hooks/user'
+import { SensorStation } from '~/models/sensorStation'
+import { sidebarIconColour } from '~/styles/theme'
 
 import { SidebarListItem } from './SidebarListItem'
 
@@ -24,17 +33,24 @@ interface SidebarElement {
 }
 
 /** Values to render at the top of the sidebar */
-const topSidebarVals: (SidebarElement & {
-  childNodes?: {
-    label: string
-    url: string
-  }[]
-})[] = [
+const topSidebarVals = (
+  sensorStations: SensorStation[]
+): (SidebarElement & {
+  childNodes?: SidebarElement[]
+})[] => [
   {
     label: 'Dashboard',
     url: URL.dashboard,
     icon: <HomeIcon />,
-    childNodes: [],
+    childNodes: sensorStations.map((s) => ({
+      label: `Greenhouse ${s.id}`,
+      url: URL.greenhouseView(s.id, SensorStationView.GRAPHICAL),
+      icon: (
+        <Badge badgeContent={s.id} sx={{ color: sidebarIconColour }}>
+          <LocalFloristIcon />
+        </Badge>
+      ),
+    })),
   },
   { label: 'Getting Started', url: URL.gettingStarted, icon: <MenuBookIcon /> },
   { label: 'My Greenhouses', url: URL.myGreenhouses, icon: <YardIcon /> },
@@ -44,20 +60,6 @@ const topSidebarVals: (SidebarElement & {
     url: URL.adminHome,
     icon: <AdminPanelSettingsIcon />,
     childNodes: [],
-  },
-]
-
-/** Values to render at the bottom of the sidebar */
-const bottomSidebarVals: (SidebarElement & {
-  childNodes?: {
-    label: string
-    url: string
-  }[]
-})[] = [
-  {
-    label: 'Logout',
-    url: URL.login, // qqjf ?
-    icon: <LogoutIcon />,
   },
 ]
 
@@ -71,7 +73,39 @@ interface SidebarContentsProps {
 export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
   const navigate = useNavigate()
   const isAdmin = useIsAdmin()
+  const addSnackbarMessage = useAddSnackbarMessage()
   const { pathname } = useLocation()
+  const [sensorStations, setSensorStations] = useState<SensorStation[]>()
+  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
+
+  /**
+   * Load users from the API on component mount and set the value of {@link snackbarMessage}.
+   * qqjf should be lifted into Context.
+   */
+  useEffect(() => {
+    const ssPromise = cancelable(getSensorStations())
+    ssPromise
+      .then((data) => {
+        setSensorStations(data)
+      })
+      .catch((err: Error) =>
+        setSnackbarMessage({
+          header: 'Could not load greenhouses',
+          body: err.message,
+          type: MessageType.ERROR,
+        })
+      )
+
+    // Cancel the promise callbacks on component unmount
+    return ssPromise.cancel
+  }, [])
+
+  /** Create a new snackbar if {@link snackbarMessage} has been updated */
+  useEffect(() => {
+    if (snackbarMessage !== null) {
+      addSnackbarMessage(snackbarMessage)
+    }
+  }, [snackbarMessage])
 
   const handleLogout = (): Promise<void> =>
     logout()
@@ -87,35 +121,45 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
   return (
     <>
       <Divider />
-      <List>
-        {topSidebarVals.map(
-          (el) =>
-            isAdmin &&
-            (el.adminOnly ?? true) && (
-              <SidebarListItem
-                key={el.label}
-                label={el.label}
-                open={props.open}
-                onClick={() => navigate(el.url)}
-                selected={pathname === el.url}
-              >
-                {el.icon}
-              </SidebarListItem>
-            )
-          // qqjf add kids
-        )}
-      </List>
+      {typeof sensorStations !== 'undefined' && (
+        <List>
+          {topSidebarVals(sensorStations).map(
+            (el) =>
+              isAdmin &&
+              (el.adminOnly ?? true) && (
+                <Fragment key={el.label}>
+                  <SidebarListItem
+                    label={el.label}
+                    open={props.open}
+                    onClick={() => navigate(el.url)}
+                    selected={pathname === el.url}
+                  >
+                    {el.icon}
+                  </SidebarListItem>
+                  {el.childNodes &&
+                    el.childNodes.map((child) => (
+                      <SidebarListItem
+                        key={child.label}
+                        label={child.label}
+                        open={props.open}
+                        onClick={() => navigate(child.url)}
+                        selected={pathname === child.url}
+                        variant="small"
+                      >
+                        {props.open ? null : child.icon}
+                      </SidebarListItem>
+                    ))}
+                </Fragment>
+              )
+          )}
+        </List>
+      )}
+
       <Divider sx={{ marginTop: 'auto' }} />
-      {bottomSidebarVals.map((el) => (
-        <SidebarListItem
-          key={el.label}
-          label={el.label}
-          open={props.open}
-          onClick={handleLogout}
-        >
-          <LogoutIcon />
-        </SidebarListItem>
-      ))}
+
+      <SidebarListItem label="Logout" open={props.open} onClick={handleLogout}>
+        <LogoutIcon />
+      </SidebarListItem>
     </>
   )
 }
