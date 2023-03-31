@@ -43,7 +43,7 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
       const ssMeasurements: Measurement[] = sensorStation.attrs.measurements
       return success(ssMeasurements.length > 0 ? ssMeasurements[0] : [])
     } else {
-      return notFound('sensor station')
+      return notFound(`sensor station ${uuid}`)
     }
   })
 }
