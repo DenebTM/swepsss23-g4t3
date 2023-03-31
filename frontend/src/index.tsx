@@ -9,22 +9,22 @@ import {
 
 import { mirageSetup } from '~/api/mirageSetup'
 import { GREENHOUSES_ROOT, SS_UUID_PARAM, UPLOAD_ROOT, URL } from '~/common'
+import { ManageAccessPoints } from '~/components/admin/accessPoints/ManageAccessPoints'
+import { ManageGreenhouses } from '~/components/admin/greenhouses/ManageGreenhouses'
+import { AdminHome } from '~/components/admin/home/AdminHome'
+import { AdminLogs } from '~/components/admin/logs/AdminLogs'
+import { ManageUsers } from '~/components/admin/users/ManageUsers'
 import { Dashboard } from '~/components/dashboard/Dashboard'
+import { GettingStarted } from '~/components/gettingStarted/GettingStarted'
+import { GreenhouseView } from '~/components/greenhouses/greenhouseView/GreenhouseView'
+import { MyGreenhouses } from '~/components/greenhouses/myGreenhouses/MyGreenhouses'
 import { Login } from '~/components/login/Login'
 import { Error } from '~/components/page/error/Error'
-import { SnackbarProvider } from '~/contexts/SnackbarProvider'
+import { MessageSnackbars } from '~/components/page/MessageSnackbars'
+import { AppContext } from '~/contexts/AppContext/AppContext'
+import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
 import { isJwtValid } from '~/helpers/jwt'
-
-import { ManageAccessPoints } from './components/admin/accessPoints/ManageAccessPoints'
-import { ManageGreenhouses } from './components/admin/greenhouses/ManageGreenhouses'
-import { AdminHome } from './components/admin/home/AdminHome'
-import { AdminLogs } from './components/admin/logs/AdminLogs'
-import { ManageUsers } from './components/admin/users/ManageUsers'
-import { GettingStarted } from './components/gettingStarted/GettingStarted'
-import { GreenhouseView } from './components/greenhouses/greenhouseView/GreenhouseView'
-import { MyGreenhouses } from './components/greenhouses/myGreenhouses/MyGreenhouses'
-import { MessageSnackbars } from './components/page/MessageSnackbars'
-import './styles/index.css'
+import '~/styles/index.css'
 
 /**
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
@@ -94,8 +94,10 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <SnackbarProvider>
-      <MessageSnackbars />
-      <RouterProvider router={router} />
+      <AppContext>
+        <MessageSnackbars />
+        <RouterProvider router={router} />
+      </AppContext>
     </SnackbarProvider>
   </React.StrictMode>
 )
