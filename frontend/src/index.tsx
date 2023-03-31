@@ -10,8 +10,8 @@ import {
 import { mirageSetup } from '~/api/mirageSetup'
 import { GREENHOUSES_ROOT, SS_UUID_PARAM, UPLOAD_ROOT, URL } from '~/common'
 import { Dashboard } from '~/components/dashboard/Dashboard'
-import { Error } from '~/components/error/Error'
 import { Login } from '~/components/login/Login'
+import { Error } from '~/components/page/error/Error'
 import { SnackbarProvider } from '~/contexts/SnackbarProvider'
 import { isJwtValid } from '~/helpers/jwt'
 
