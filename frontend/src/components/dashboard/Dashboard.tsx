@@ -1,3 +1,4 @@
+import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -6,7 +7,9 @@ import Button from '@mui/material/Button'
 import { logout } from '~/api/endpoints/login'
 import { getUsers } from '~/api/endpoints/user'
 import { URL } from '~/common'
+import { Message, MessageType } from '~/contexts/types'
 import { deleteJwt } from '~/helpers/jwt'
+import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { User } from '~/models/user'
 
 /**
@@ -14,13 +17,40 @@ import { User } from '~/models/user'
  */
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate()
+  const addSnackbarMessage = useAddSnackbarMessage()
   const [users, setUsers] = useState<User[]>([])
+  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
+  /** Load users from the API on component mount and set the value of {@link snackbarMessage} */
   useEffect(() => {
-    getUsers()
-      .then((data) => setUsers(data))
-      .catch((err) => console.error(err))
+    const usersPromise = cancelable(getUsers())
+    usersPromise
+      .then((data) => {
+        setUsers(data)
+        setSnackbarMessage({
+          header: '',
+          body: 'Loaded users!',
+          type: MessageType.CONFIRM,
+        })
+      })
+      .catch((err: Error) =>
+        setSnackbarMessage({
+          header: 'Could not load users',
+          body: err.message,
+          type: MessageType.ERROR,
+        })
+      )
+
+    // Cancel the promise callbacks on component unmount
+    return usersPromise.cancel
   }, [])
+
+  /** Create a new snackbar if {@link snackbarMessage} has been updated */
+  useEffect(() => {
+    if (snackbarMessage !== null) {
+      addSnackbarMessage(snackbarMessage)
+    }
+  }, [snackbarMessage])
 
   const handleLogout = (): Promise<void> =>
     logout()
