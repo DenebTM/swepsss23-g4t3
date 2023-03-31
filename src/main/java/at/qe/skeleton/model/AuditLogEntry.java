@@ -3,7 +3,6 @@ package at.qe.skeleton.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity(name = "auditLogEntry")
 @Table(name = "AUDIT_LOG_ENTRY")
