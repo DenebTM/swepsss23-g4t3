@@ -21,10 +21,11 @@ import { MyGreenhouses } from '~/components/greenhouses/myGreenhouses/MyGreenhou
 import { Login } from '~/components/login/Login'
 import { Error } from '~/components/page/error/Error'
 import { MessageSnackbars } from '~/components/page/MessageSnackbars'
-import { AppContext } from '~/contexts/AppContext/AppContext'
 import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
 import { isJwtValid } from '~/helpers/jwt'
 import '~/styles/index.css'
+
+import { AppProvider } from './contexts/AppContext/AppProvider'
 
 /**
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
@@ -94,10 +95,10 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <SnackbarProvider>
-      <AppContext>
+      <AppProvider>
         <MessageSnackbars />
         <RouterProvider router={router} />
-      </AppContext>
+      </AppProvider>
     </SnackbarProvider>
   </React.StrictMode>
 )
