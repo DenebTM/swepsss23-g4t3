@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { Factory } from 'miragejs'
 import { User, UserRole } from '~/models/user'
 
-/** Factory to generate a fake User object */
+/** Factory to generate a fake {@link User} */
 export const userFactory = Factory.extend<User>({
   username(i: number) {
     return `user${i + 1}`
