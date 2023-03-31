@@ -8,7 +8,7 @@ let server: Server<AppRegistry> | undefined
 
 /** Start mirage server to mock the backend before each test */
 beforeEach(() => {
-  server = mirageSetup(MOCK_API)
+  server = mirageSetup(MOCK_API, false)
 })
 
 /** Teardown after each test */
