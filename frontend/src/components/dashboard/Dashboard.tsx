@@ -7,6 +7,7 @@ import Button from '@mui/material/Button'
 import { logout } from '~/api/endpoints/login'
 import { getUsers } from '~/api/endpoints/user'
 import { URL } from '~/common'
+import { PageWrapper } from '~/components/page/PageWrapper'
 import { Message, MessageType } from '~/contexts/types'
 import { deleteJwt } from '~/helpers/jwt'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -64,7 +65,7 @@ export const Dashboard: React.FC = () => {
       })
 
   return (
-    <div>
+    <PageWrapper>
       <h1>Dashboard</h1>
       <ul>
         {users.map((u: User) => (
@@ -75,6 +76,6 @@ export const Dashboard: React.FC = () => {
       <Button variant="contained" onClick={handleLogout}>
         Logout
       </Button>
-    </div>
+    </PageWrapper>
   )
 }
