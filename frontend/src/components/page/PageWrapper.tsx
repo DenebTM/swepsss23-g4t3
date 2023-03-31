@@ -55,7 +55,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
     </WrapperDiv>
   )
 
-  // Optionally add sidebar wrapper
+  // Show sidebar wrapper only if `props.hideSidebar` is true
   if (!(props.hideSidebar ?? false)) {
     PageContents = <Sidebar>{PageContents}</Sidebar>
   }
