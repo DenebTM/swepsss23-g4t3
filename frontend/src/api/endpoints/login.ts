@@ -1,13 +1,13 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 
 import { base64url, CompactSign } from 'jose'
-import { Response, Server } from 'miragejs'
+import { Server } from 'miragejs'
 import { handleAxiosError } from '~/api/intercepts'
 import { API_DEV_URL } from '~/common'
 import { LoginResponse } from '~/models/login'
 
 import { Endpoints } from '../mirageTypes'
-import { success } from './helpers'
+import { success, unauthorised } from './helpers'
 
 const LOGIN_URI = `${API_DEV_URL}/handle-login`
 const LOGOUT_URI = `${API_DEV_URL}/logout`
@@ -67,10 +67,11 @@ export const mockedLoginEndpoints: Endpoints = {
       const body: { username: string; password: string } = JSON.parse(
         request.requestBody
       )
+
       if (body.username === 'admin' && body.password === 'passwd') {
         return success({ token: FAKE_JWT })
       } else {
-        return new Response(401, {}, { message: 'Unauthorised user' })
+        return unauthorised()
       }
     })
   },
