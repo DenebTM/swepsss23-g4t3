@@ -13,7 +13,7 @@ import { LoginForm } from './LoginForm'
  */
 export const Login: React.FC = () => {
   return (
-    <PageWrapper>
+    <PageWrapper hideSidebar>
       <Container maxWidth="sm" sx={{ paddingTop: 10 }} disableGutters>
         <Paper
           sx={{
