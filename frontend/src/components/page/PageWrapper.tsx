@@ -7,6 +7,7 @@ import { useUserRole } from '~/hooks/user'
 import { UserRole } from '~/models/user'
 
 import { AccessDenied } from './error/AccessDenied'
+import { Sidebar } from './Sidebar/Sidebar'
 
 const WrapperDiv = styled('div')({
   display: 'flex',
@@ -37,7 +38,7 @@ interface PageWrapperProps {
 export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
   const userRole = useUserRole()
 
-  return (
+  let PageContents = (
     <WrapperDiv>
       {props.requiredRole && userRole !== props.requiredRole ? (
         <AccessDenied />
@@ -53,4 +54,11 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
       )}
     </WrapperDiv>
   )
+
+  // Optionally add sidebar wrapper
+  if (!(props.hideSidebar ?? false)) {
+    PageContents = <Sidebar>{PageContents}</Sidebar>
+  }
+
+  return PageContents
 }
