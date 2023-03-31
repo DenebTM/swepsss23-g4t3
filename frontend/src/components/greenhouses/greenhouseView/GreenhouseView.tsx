@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { GREENHOUSE_VIEW_QUERY, SensorStationView } from '~/common'
+import {
+  GREENHOUSE_VIEW_QUERY,
+  SensorStationView,
+  SS_UUID_PARAM,
+} from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GreenhouseGallery } from './gallery/GreenhouseGallery'
@@ -20,10 +24,10 @@ export const GreenhouseView: React.FC = () => {
 
   /** Get sensor station UUID from URL params */
   useEffect(() => {
-    if (typeof params.sensorStationId !== 'undefined') {
-      setUuid(Number(params.sensorStationId))
+    if (typeof params[SS_UUID_PARAM] !== 'undefined') {
+      setUuid(Number(params[SS_UUID_PARAM]))
     }
-  }, [params.sensorStationId])
+  }, [params[SS_UUID_PARAM]])
 
   /** Get page view from seach (query) params */
   useEffect(() => {

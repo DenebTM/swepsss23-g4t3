@@ -12,6 +12,9 @@ export const UPLOAD_ROOT = 'upload'
 /** The key of the query parameter for the {@link SensorStationView} */
 export const GREENHOUSE_VIEW_QUERY = 'view'
 
+/** The param name of the sensor station ID in sensor station routes */
+export const SS_UUID_PARAM = 'sensorStationId'
+
 /** Paths for all frontend URLs */
 export const URL = {
   /** Path for admin home */
