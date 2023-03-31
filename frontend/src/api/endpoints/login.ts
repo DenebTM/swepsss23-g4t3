@@ -7,6 +7,7 @@ import { API_DEV_URL } from '~/common'
 import { LoginResponse } from '~/models/login'
 
 import { Endpoints } from '../mirageTypes'
+import { success } from './helpers'
 
 const LOGIN_URI = `${API_DEV_URL}/handle-login`
 const LOGOUT_URI = `${API_DEV_URL}/logout`
@@ -60,19 +61,22 @@ export const logout = async (): Promise<void> => {
  * Mocked login and logout functions. Currently hardcodes acceptable login credentials.
  */
 export const mockedLoginEndpoints: Endpoints = {
+  /** Mock {@link handleLogin} */
   'handle-login': (server: Server) => {
     server.post(LOGIN_URI, (schema, request) => {
       const body: { username: string; password: string } = JSON.parse(
         request.requestBody
       )
       if (body.username === 'admin' && body.password === 'passwd') {
-        return new Response(200, {}, { token: FAKE_JWT })
+        return success({ token: FAKE_JWT })
       } else {
         return new Response(401, {}, { message: 'Unauthorised user' })
       }
     })
   },
+
+  /** Mock {@link logout} */
   logout: (server: Server) => {
-    server.post(LOGOUT_URI, () => new Response(200, {}, {}))
+    server.post(LOGOUT_URI, () => success())
   },
 }
