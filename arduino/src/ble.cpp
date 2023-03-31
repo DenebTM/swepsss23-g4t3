@@ -8,16 +8,21 @@
 namespace ble {
   // Device information
   BLEService sv_devinfo("180a");
-  BLEStringCharacteristic ch_manufacturer("2a29", BLERead, strlen(BLE_DEVICE_MANUFACTURER));
+  BLEStringCharacteristic ch_manufacturer(BLE_UUID_MANUFACTURER_NAME,
+                                          BLERead,
+                                          strlen(BLE_DEVICE_MANUFACTURER));
 
   // Services
-  // [to be added]
+  // [TODO: add]
 
   // Characteristics
-  BLEByteCharacteristic ch_stationID("f001", BLERead | BLENotify);
+  BLEByteCharacteristic ch_stationID(BLE_UUID_STATION_ID, BLERead | BLENotify);
 
+  // runtime values transmitted via BLE
+  uint8_t val_stationID = station_id();
 
-  uint8_t val_stationID = 0;
+  // runtime values received via BLE
+  // [TODO: add]
 
   // set up how the sensor station appears to other BLE devices
   void devinfo_setup() {
@@ -31,17 +36,19 @@ namespace ble {
     ble::val_stationID = station_id();
     ble::ch_stationID.writeValue(ble::val_stationID);
     ble::sv_devinfo.addCharacteristic(ble::ch_stationID);
-
+    
     BLE.addService(ble::sv_devinfo);
 
+    // include current station ID in BLE advertising data
     BLE.setAdvertisedService(ble::sv_devinfo);
-    BLE.setAdvertisedServiceData(0x180a, &ble::val_stationID, 1);
+    BLE.setAdvertisedServiceData(strtol(BLE_UUID_DEVINFO, NULL, 16),
+                                 &ble::val_stationID, 1);
   }
 
   void connect_event_handler(BLEDevice central) {
     String new_mac = central.address();
 
-    // currently pairing; remember connecting access point
+    // currently in pairing mode; pair with connecting access point
     if (is_pairing) {
       paired_mac = new_mac;
 
