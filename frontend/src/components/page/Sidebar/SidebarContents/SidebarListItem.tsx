@@ -8,11 +8,14 @@ import ListItemText from '@mui/material/ListItemText'
 import { Tooltip } from '@component-lib/Tooltip'
 
 interface SidebarListItemProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   label: string
   open: boolean
   onClick?: (() => Promise<void>) | (() => void)
-  selected?: boolean // True if the sidebar page is currently open
+  /** True if the sidebar page is currently open */
+  selected?: boolean
+  /** Reduce ListItem padding if variant is 'small' */
+  variant?: 'small'
 }
 
 /**
@@ -43,7 +46,10 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
   }
 
   return (
-    <ListItem disablePadding sx={{ display: 'block' }}>
+    <ListItem
+      disablePadding
+      sx={{ display: 'block', marginTop: 0, marginBottom: 0 }}
+    >
       <Tooltip
         title={props.open ? '' : props.label}
         placement="right"
@@ -56,7 +62,7 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
           disabled={buttonDisabled}
           onClick={handleButtonClick}
           sx={{
-            minHeight: 48,
+            minHeight: props.variant === 'small' ? 24 : 48, // qqjf move into theme
             justifyContent: props.open ? 'initial' : 'center',
             px: 2.5,
             '&.Mui-disabled': {
