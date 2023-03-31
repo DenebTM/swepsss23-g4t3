@@ -5,14 +5,14 @@ import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 import { AppSchema, EndpointReg } from '../mirageTypes'
 
 /** URI for access points */
-export const ACCESS_POINTS = '/access-points'
+export const ACCESS_POINTS_URI = '/access-points'
 
 /**
  * GET /api/access-points
  * @returns All access points in the database
  */
 export const getAccessPoints = async (): Promise<AccessPoint[]> => {
-  return _get(ACCESS_POINTS)
+  return _get(ACCESS_POINTS_URI)
 }
 
 /**
@@ -23,12 +23,12 @@ export const getAccessPoints = async (): Promise<AccessPoint[]> => {
 export const getAccessPoint = async (
   accessPointId: AccessPointId
 ): Promise<AccessPoint> => {
-  return _get(`${ACCESS_POINTS}/${accessPointId}`)
+  return _get(`${ACCESS_POINTS_URI}/${accessPointId}`)
 }
 
 /** Mocked access point functions */
 export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
-  server.get(ACCESS_POINTS, (schema: AppSchema, request) => {
+  server.get(ACCESS_POINTS_URI, (schema: AppSchema, request) => {
     const accessPoints = schema.all('accessPoint')
     return new Response(200, {}, accessPoints.models)
   })
