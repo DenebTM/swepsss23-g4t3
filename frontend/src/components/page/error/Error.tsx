@@ -1,6 +1,8 @@
 import React from 'react'
 import { useRouteError } from 'react-router-dom'
 
+import { PageWrapper } from '~/components/page/PageWrapper'
+
 interface ErrorProps {
   message?: string
 }
@@ -27,10 +29,10 @@ export const Error: React.FC<ErrorProps> = (props) => {
   }
 
   return (
-    <div>
+    <PageWrapper>
       <h1>TODO: error page</h1>
       {Boolean(props.message) && <p>{props.message}</p>}
       <p>{getErrorMessage(error)}</p>
-    </div>
+    </PageWrapper>
   )
 }
