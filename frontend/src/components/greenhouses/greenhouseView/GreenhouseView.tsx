@@ -31,14 +31,13 @@ export const GreenhouseView: React.FC = () => {
 
   /** Get page view from seach (query) params */
   useEffect(() => {
-    switch (search.get(GREENHOUSE_VIEW_QUERY)) {
+    const sensorStationView = search.get(GREENHOUSE_VIEW_QUERY)
+    switch (sensorStationView) {
       case SensorStationView.GALLERY:
-        setView(SensorStationView.GALLERY)
-        break
       case SensorStationView.TABLE:
-        setView(SensorStationView.TABLE)
+        setView(sensorStationView)
         break
-      default: // Cover null case
+      default: // Cover null and empty string case
         setView(SensorStationView.GRAPHICAL)
     }
   }, [search])
