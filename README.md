@@ -7,9 +7,7 @@ by providing a suitable starting point.
 It utilizes Spring Boot and is configured as a Maven web application project with:
 
 all relevant Spring Framework features enabled
-embedded Tomcat with support for JSF2
 embedded H2 in-memory database (including H2 console)
-support for PrimeFaces
 basic functionality for userx management and Spring web security
 
 Execute "mvn spring-boot:run" to start the skeleton project and connect to
