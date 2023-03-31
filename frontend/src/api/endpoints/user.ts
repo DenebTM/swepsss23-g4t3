@@ -6,14 +6,14 @@ import { AppSchema, EndpointReg } from '../mirageTypes'
 import { notFound, success } from './helpers'
 
 /** URI for users routes */
-export const USERS = '/users'
+export const USERS_URI = '/users'
 
 /**
  * GET /api/users
  * @returns All users in the database
  */
 export const getUsers = async (): Promise<User[]> => {
-  return _get(USERS)
+  return _get(USERS_URI)
 }
 
 /**
@@ -22,7 +22,7 @@ export const getUsers = async (): Promise<User[]> => {
  * @returns All users in the database
  */
 export const getUser = async (username: Username): Promise<User> => {
-  return _get(`${USERS}/${username}`)
+  return _get(`${USERS_URI}/${username}`)
 }
 
 /**
@@ -30,26 +30,26 @@ export const getUser = async (username: Username): Promise<User> => {
  * DEL /api/users/${username}
  */
 export const deleteUser = async (username: Username): Promise<void> => {
-  return _delete(`${USERS}/${username}`)
+  return _delete(`${USERS_URI}/${username}`)
 }
 
 /** Mocked users functions */
 export const mockedUserReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getUsers} */
-  server.get(USERS, (schema: AppSchema, request) => {
+  server.get(USERS_URI, (schema: AppSchema, request) => {
     const users = schema.all('user')
     return success(users.models)
   })
 
   /** Mock {@link getUser} */
-  server.get(`${USERS}/:username`, (schema: AppSchema, request) => {
+  server.get(`${USERS_URI}/:username`, (schema: AppSchema, request) => {
     const username: Username = request.params.username
     const user = schema.findBy('user', { username: username })
     return user ? success(user.attrs) : notFound(`user ${username}`)
   })
 
   /** Mock {@link deleteUser} */
-  server.delete(`${USERS}/:username`, (schema: AppSchema, request) => {
+  server.delete(`${USERS_URI}/:username`, (schema: AppSchema, request) => {
     const username: Username = request.params.username
     const user = schema.findBy('user', { username: username })
     if (user) {

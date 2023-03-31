@@ -6,7 +6,7 @@ import { Timestamp } from '~/models/timestamp'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
 import { notFound, success } from '../helpers'
-import { SENSOR_STATIONS } from './sensorStations'
+import { SENSOR_STATIONS_URI } from './sensorStations'
 
 /** URI component for routes related to sensor station measurements */
 const MEASUREMENTS = 'measurements'
@@ -20,11 +20,11 @@ export const getSensorStationMeasurements = async (
   from?: Timestamp,
   to?: Timestamp
 ): Promise<Measurement[]> => {
-  return _get(`${SENSOR_STATIONS}/${sensorStationUuid}/${MEASUREMENTS}`)
+  return _get(`${SENSOR_STATIONS_URI}/${sensorStationUuid}/${MEASUREMENTS}`)
 }
 
 /** Path to get sensor station measurements for mocked routes */
-export const MEASUREMENT_PATH = `${SENSOR_STATIONS}/:uuid/${MEASUREMENTS}`
+export const MEASUREMENT_PATH = `${SENSOR_STATIONS_URI}/:uuid/${MEASUREMENTS}`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationMeasurementReqs: EndpointReg = (

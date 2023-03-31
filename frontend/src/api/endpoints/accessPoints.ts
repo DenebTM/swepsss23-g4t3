@@ -6,14 +6,14 @@ import { AppSchema, EndpointReg } from '../mirageTypes'
 import { notFound, success } from './helpers'
 
 /** URI for access points */
-export const ACCESS_POINTS = '/access-points'
+export const ACCESS_POINTS_URI = '/access-points'
 
 /**
  * GET /api/access-points
  * @returns All access points in the database
  */
 export const getAccessPoints = async (): Promise<AccessPoint[]> => {
-  return _get(ACCESS_POINTS)
+  return _get(ACCESS_POINTS_URI)
 }
 
 /**
@@ -24,7 +24,7 @@ export const getAccessPoints = async (): Promise<AccessPoint[]> => {
 export const getAccessPoint = async (
   accessPointId: AccessPointId
 ): Promise<AccessPoint> => {
-  return _get(`${ACCESS_POINTS}/${accessPointId}`)
+  return _get(`${ACCESS_POINTS_URI}/${accessPointId}`)
 }
 
 /**
@@ -34,19 +34,19 @@ export const getAccessPoint = async (
 export const deleteAccessPoint = async (
   accessPointId: AccessPointId
 ): Promise<void> => {
-  return _delete(`${ACCESS_POINTS}/${accessPointId}`)
+  return _delete(`${ACCESS_POINTS_URI}/${accessPointId}`)
 }
 
 /** Mocked access point functions */
 export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getAccessPoints} */
-  server.get(ACCESS_POINTS, (schema: AppSchema, request) => {
+  server.get(ACCESS_POINTS_URI, (schema: AppSchema, request) => {
     const accessPoints = schema.all('accessPoint')
     return success(accessPoints.models)
   })
 
   /** Mock {@link getAccessPoint} */
-  server.get(`${ACCESS_POINTS}/:name`, (schema: AppSchema, request) => {
+  server.get(`${ACCESS_POINTS_URI}/:name`, (schema: AppSchema, request) => {
     const apName: AccessPointId = request.params.name
     const accessPoint = schema.findBy('accessPoint', { name: apName })
 
@@ -54,7 +54,7 @@ export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
   })
 
   /** Mock {@link deleteAccessPoint} */
-  server.delete(`${ACCESS_POINTS}/:name`, (schema: AppSchema, request) => {
+  server.delete(`${ACCESS_POINTS_URI}/:name`, (schema: AppSchema, request) => {
     const apName: AccessPointId = request.params.name
     const accessPoint = schema.findBy('accessPoint', { name: apName })
     if (accessPoint) {

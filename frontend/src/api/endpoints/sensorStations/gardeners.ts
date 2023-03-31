@@ -5,7 +5,7 @@ import { Username, UserRole } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
 import { notFound, success, unauthorised } from '../helpers'
-import { SENSOR_STATIONS } from './sensorStations'
+import { SENSOR_STATIONS_URI } from './sensorStations'
 
 /** Part of URI path corresponding to sensor gardeners */
 const GARDENERS = 'gardeners'
@@ -19,7 +19,7 @@ export const assignGardener = async (
   username: Username
 ): Promise<void> => {
   return _post(
-    `${SENSOR_STATIONS}/${sensorStationUuid}/${GARDENERS}/${username}`
+    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS}/${username}`
   )
 }
 
@@ -32,12 +32,12 @@ export const removeGardener = async (
   username: Username
 ): Promise<void> => {
   return _delete(
-    `${SENSOR_STATIONS}/${sensorStationUuid}/${GARDENERS}/${username}`
+    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS}/${username}`
   )
 }
 
 /** Path to update sensor station gardeners for mocked routes */
-export const GARDENER_PATH = `${SENSOR_STATIONS}/:uuid/${GARDENERS}/:username`
+export const GARDENER_PATH = `${SENSOR_STATIONS_URI}/:uuid/${GARDENERS}/:username`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationGardenerReqs: EndpointReg = (
