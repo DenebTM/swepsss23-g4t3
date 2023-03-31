@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
 import { AppRegistry, Endpoints } from '~/api/mirageTypes'
 
-import { ACCESS_POINTS, mockedAccessPointReqs } from './accessPoints'
+import { ACCESS_POINTS_URI, mockedAccessPointReqs } from './accessPoints'
 import { mockedLoginEndpoints } from './login'
 import {
   GARDENER_PATH,
@@ -14,15 +14,15 @@ import {
 } from './sensorStations/measurements'
 import {
   mockedSensorStationReqs,
-  SENSOR_STATIONS,
+  SENSOR_STATIONS_URI,
 } from './sensorStations/sensorStations'
-import { mockedUserReqs, USERS } from './user'
+import { mockedUserReqs, USERS_URI } from './user'
 
 /** All endpoints mocked by mirage */
 export const endpoints: Endpoints = {
-  [USERS]: mockedUserReqs,
-  [ACCESS_POINTS]: mockedAccessPointReqs,
-  [SENSOR_STATIONS]: mockedSensorStationReqs,
+  [USERS_URI]: mockedUserReqs,
+  [ACCESS_POINTS_URI]: mockedAccessPointReqs,
+  [SENSOR_STATIONS_URI]: mockedSensorStationReqs,
   [GARDENER_PATH]: mockedSensorStationGardenerReqs,
   [MEASUREMENT_PATH]: mockedSensorStationMeasurementReqs,
 }
