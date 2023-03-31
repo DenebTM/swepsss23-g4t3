@@ -1,9 +1,12 @@
 package at.qe.skeleton.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "SENSOR_STATION")
@@ -11,20 +14,23 @@ public class SensorStation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "STATION_ID")
+    @Column(name = "SS_ID")
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "AP_ID")
     private AccessPoint accessPoint;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     private Status status;
 
-    //TODO: check mappings!!!
-    @Column(name = "MEASUREMENTS")
-    @OneToMany
-    private List<Measurement> measurements;
+    @JsonBackReference
+    @OneToMany(mappedBy = "sensorStation",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    private Set<Measurement> measurements = new HashSet<>();
 
     @Column(name = "TRANSMISSION_INTERVAL", nullable = false)
     private Duration transmissionInterval;
@@ -34,12 +40,12 @@ public class SensorStation {
     @JoinColumn(name = "USER_ID")
     private Userx gardener;
 
-    @ManyToOne
-    @JoinColumn(name = "VALUES_ID", insertable=false, updatable=false)
+    @OneToOne
+    @JoinColumn(name = "UPPER_VALUES_ID")
     private SensorValues upperBound;
 
-    @ManyToOne
-    @JoinColumn(name = "VALUES_ID", insertable=false, updatable=false)
+    @OneToOne
+    @JoinColumn(name = "LOWER_VALUES_ID")
     private SensorValues lowerBound;
 
     //TODO: paths are not working yet
@@ -63,7 +69,7 @@ public class SensorStation {
         return status;
     }
 
-    public List<Measurement> getMeasurements() {
+    public Set<Measurement> getMeasurements() {
         return measurements;
     }
 
@@ -95,7 +101,7 @@ public class SensorStation {
         this.status = status;
     }
 
-    public void setMeasurements(List<Measurement> measurements) {
+    public void setMeasurements(Set<Measurement> measurements) {
         this.measurements = measurements;
     }
 
