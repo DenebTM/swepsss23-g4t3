@@ -20,6 +20,7 @@ import { ManageGreenhouses } from './components/admin/greenhouses/ManageGreenhou
 import { AdminHome } from './components/admin/home/AdminHome'
 import { AdminLogs } from './components/admin/logs/AdminLogs'
 import { ManageUsers } from './components/admin/users/ManageUsers'
+import { GettingStarted } from './components/gettingStarted/GettingStarted'
 import { GreenhouseView } from './components/greenhouses/greenhouseView/GreenhouseView'
 import { MyGreenhouses } from './components/greenhouses/myGreenhouses/MyGreenhouses'
 import { MessageSnackbars } from './components/page/MessageSnackbars'
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
   authRoute(URL.adminHome, <AdminHome />),
   authRoute(URL.adminLogs, <AdminLogs />),
   authRoute(URL.dashboard, <Dashboard />),
+  authRoute(URL.gettingStarted, <GettingStarted />),
   authRoute(`/${GREENHOUSES_ROOT}/:${SS_UUID_PARAM}`, <GreenhouseView />),
   authRoute(URL.manageAccessPoints, <ManageAccessPoints />),
   authRoute(URL.manageGreenhouses, <ManageGreenhouses />),

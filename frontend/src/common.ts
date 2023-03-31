@@ -29,6 +29,9 @@ export const URL = {
   /** Main dashboard page */
   dashboard: '/',
 
+  /** Getting started instructions page */
+  gettingStarted: '/getting-started',
+
   /**
    *  Page showing information about a single sensor station.
    * @param sensorStationId The UUID of the sensor station
