@@ -1,6 +1,6 @@
 # PlantHealth Frontend
 
-Frontend for softawre engineering project, summer semester 2023.
+Frontend for Software Engineering project, summer semester 2023.
 
 ## Stack
 
