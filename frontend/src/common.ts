@@ -57,7 +57,7 @@ export const URL = {
   manageUsers: `/${ADMIN_ROOT}/users`,
 
   /** My greenhouses page showing sensor stations assigned to the logged-in user */
-  myGreenhouses: `${GREENHOUSES_ROOT}`,
+  myGreenhouses: `/${GREENHOUSES_ROOT}`,
 
   /**
    * The page to upload photos for a single sensor station.
