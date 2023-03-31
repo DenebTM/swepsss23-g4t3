@@ -17,7 +17,8 @@ public class SensorStation {
     @Column(name = "SS_ID")
     private Long id;
 
-    @OneToOne
+    @JsonIgnore
+    @ManyToOne(optional = false)
     @JoinColumn(name = "AP_ID")
     private AccessPoint accessPoint;
 

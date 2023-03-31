@@ -1,9 +1,12 @@
 package at.qe.skeleton.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.net.InetAddress;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ACCESS_POINT")
@@ -25,6 +28,13 @@ public class AccessPoint {
 
     @Column(name = "ACTIVE")
     private Boolean active;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "accessPoint",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    private Set<SensorStation> sensorStations = new HashSet<>();
 
     public AccessPoint() {
     }
