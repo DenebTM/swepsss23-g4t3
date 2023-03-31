@@ -19,7 +19,7 @@ interface SidebarListItemProps {
 }
 
 /**
- * ListItem for each icon and link in the Sidebar
+ * ListItem for each icon and link in the Sidebar. Can be a child of `SidebarElement` or `SidebarContents`.
  * Shows only icon if `props.open` is false, otherwise shows the icon and `props.label`
  */
 export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
