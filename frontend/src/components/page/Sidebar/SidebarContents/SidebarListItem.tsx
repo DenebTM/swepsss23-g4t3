@@ -48,7 +48,12 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
   return (
     <ListItem
       disablePadding
-      sx={{ display: 'block', marginTop: 0, marginBottom: 0 }}
+      sx={{
+        display: 'block',
+        marginTop: 0,
+        marginBottom: 0,
+        background: props.selected ?? false ? 'cyan' : '', // qqjf TODO move into theme
+      }}
     >
       <Tooltip
         title={props.open ? '' : props.label}
