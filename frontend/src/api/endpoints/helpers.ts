@@ -8,3 +8,6 @@ export const success = (body: object = {}): Response =>
 /** Return a {@link Response} with no headers, a message about the given entity, and a 404 not found error code */
 export const notFound = (entity: string): Response =>
   new Response(404, {}, `${entity} not found`)
+
+/** Return a {@link Response} with no headers, a message about the given entity, and a 401 unauthorised code */
+export const unauthorised = (): Response => unauthorised()

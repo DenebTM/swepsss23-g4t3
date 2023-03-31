@@ -45,11 +45,7 @@ export const mockedUserReqs: EndpointReg = (server: Server) => {
   server.get(`${USERS}/:username`, (schema: AppSchema, request) => {
     const username: Username = request.params.username
     const user = schema.findBy('user', { username: username })
-    if (user) {
-      return success(user.attrs)
-    } else {
-      return notFound('user')
-    }
+    return user ? success(user.attrs) : notFound('user')
   })
 
   /** Mock {@link deleteUser} */
