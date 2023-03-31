@@ -50,7 +50,9 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
     const uuid: SensorStationUuid = Number(request.params.uuid)
     const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
 
-    return sensorStation ? sensorStation.attrs : notFound('sensor station')
+    return sensorStation
+      ? sensorStation.attrs
+      : notFound(`sensor station ${uuid}`)
   })
 
   /** Mock {@link deleteSensorStation} */
@@ -62,7 +64,7 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
       sensorStation.destroy()
       return success()
     } else {
-      return notFound('sensor station')
+      return notFound(`sensor station ${uuid}`)
     }
   })
 }

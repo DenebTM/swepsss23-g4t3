@@ -50,7 +50,7 @@ export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
     const apName: AccessPointId = request.params.name
     const accessPoint = schema.findBy('accessPoint', { name: apName })
 
-    return accessPoint ? accessPoint.attrs : notFound('access point')
+    return accessPoint ? accessPoint.attrs : notFound(`access point ${apName}`)
   })
 
   /** Mock {@link deleteAccessPoint} */
@@ -61,7 +61,7 @@ export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
       accessPoint.destroy()
       return success()
     } else {
-      return notFound('access point')
+      return notFound(`access point ${apName}`)
     }
   })
 }
