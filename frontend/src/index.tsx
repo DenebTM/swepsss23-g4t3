@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 
 import { mirageSetup } from '~/api/mirageSetup'
-import { GREENHOUSES_ROOT, UPLOAD_ROOT, URL } from '~/common'
+import { GREENHOUSES_ROOT, SS_UUID_PARAM, UPLOAD_ROOT, URL } from '~/common'
 import { Dashboard } from '~/components/dashboard/Dashboard'
 import { Error } from '~/components/error/Error'
 import { Login } from '~/components/login/Login'
@@ -65,7 +65,7 @@ const router = createBrowserRouter([
     loader: loginLoader,
   },
   {
-    path: `/${UPLOAD_ROOT}/:sensorStationId`,
+    path: `/${UPLOAD_ROOT}/:${SS_UUID_PARAM}`,
     element: <Error />,
     errorElement: <Error />,
   },
@@ -78,7 +78,7 @@ const router = createBrowserRouter([
   authRoute(URL.adminHome, <AdminHome />),
   authRoute(URL.adminLogs, <AdminLogs />),
   authRoute(URL.dashboard, <Dashboard />),
-  authRoute(`/${GREENHOUSES_ROOT}/:sensorStationId`, <GreenhouseView />),
+  authRoute(`/${GREENHOUSES_ROOT}/:${SS_UUID_PARAM}`, <GreenhouseView />),
   authRoute(URL.manageAccessPoints, <ManageAccessPoints />),
   authRoute(URL.manageGreenhouses, <ManageGreenhouses />),
   authRoute(URL.manageUsers, <ManageUsers />),

@@ -1,7 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { render, screen } from '@testing-library/react'
 import { test, vi } from 'vitest'
-import { GREENHOUSE_VIEW_QUERY, SensorStationView } from '~/common'
+import {
+  GREENHOUSE_VIEW_QUERY,
+  SensorStationView,
+  SS_UUID_PARAM,
+} from '~/common'
 import { GreenhouseView } from '~/components/greenhouses/greenhouseView/GreenhouseView'
 
 /** Mocked UUID for testing */
@@ -12,7 +16,7 @@ test('render GreenhouseGraphicalView inside GreenhouseView without search params
     useSearchParams: (): [URLSearchParams] => [
       new URLSearchParams([]), // Mock empty search params
     ],
-    useParams: () => ({ sensorStationId: sensorStationUuid }),
+    useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
   }))
 
   render(<GreenhouseView />)
@@ -31,7 +35,7 @@ test('render GreenhouseGraphicalView inside GreenhouseView when the ?view search
         [GREENHOUSE_VIEW_QUERY, SensorStationView.GRAPHICAL],
       ]),
     ],
-    useParams: () => ({ sensorStationId: sensorStationUuid }),
+    useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
   }))
 
   render(<GreenhouseView />)
