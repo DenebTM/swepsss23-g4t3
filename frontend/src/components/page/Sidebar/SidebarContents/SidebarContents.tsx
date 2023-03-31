@@ -1,5 +1,3 @@
-import { cancelable } from 'cancelable-promise'
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
@@ -13,11 +11,9 @@ import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
-import { getSensorStations } from '~/api/endpoints/sensorStations'
 import { SensorStationView, URL } from '~/common'
-import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { deleteJwt } from '~/helpers/jwt'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
 import { sidebarIconColour } from '~/styles/theme'
 
@@ -67,38 +63,7 @@ interface SidebarContentsProps {
  */
 export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
   const navigate = useNavigate()
-  const addSnackbarMessage = useAddSnackbarMessage()
-  const [sensorStations, setSensorStations] = useState<SensorStation[]>()
-  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
-
-  /**
-   * Load users from the API on component mount and set the value of {@link snackbarMessage}.
-   * qqjf should be lifted into Context.
-   */
-  useEffect(() => {
-    const ssPromise = cancelable(getSensorStations())
-    ssPromise
-      .then((data) => {
-        setSensorStations(data)
-      })
-      .catch((err: Error) =>
-        setSnackbarMessage({
-          header: 'Could not load greenhouses',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
-      )
-
-    // Cancel the promise callbacks on component unmount
-    return ssPromise.cancel
-  }, [])
-
-  /** Create a new snackbar if {@link snackbarMessage} has been updated */
-  useEffect(() => {
-    if (snackbarMessage !== null) {
-      addSnackbarMessage(snackbarMessage)
-    }
-  }, [snackbarMessage])
+  const sensorStations = useSensorStations()
 
   const handleLogout = (): Promise<void> =>
     logout()
@@ -114,7 +79,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
   return (
     <>
       <Divider />
-      {typeof sensorStations !== 'undefined' && (
+      {sensorStations && (
         <List>
           {topSidebarVals(sensorStations).map((el) => (
             <SidebarElement key={el.label} {...el} open={props.open} />
