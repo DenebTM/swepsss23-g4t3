@@ -9,6 +9,9 @@ const ADMIN_ROOT = 'admin'
 /** The root path for photo upload */
 export const UPLOAD_ROOT = 'upload'
 
+/** The key of the query parameter for the {@link SensorStationView} */
+export const GREENHOUSE_VIEW_QUERY = 'view'
+
 /** Paths for all frontend URLs */
 export const URL = {
   /** Path for admin home */
@@ -32,7 +35,8 @@ export const URL = {
   greenhouseView: (
     sensorStationId: SensorStationUuid,
     view: SensorStationView
-  ) => `/${GREENHOUSES_ROOT}/${sensorStationId}${view}`,
+  ) =>
+    `/${GREENHOUSES_ROOT}/${sensorStationId}?${GREENHOUSE_VIEW_QUERY}=${view}`,
 
   /** The login page */
   login: '/login',
@@ -59,14 +63,15 @@ export const URL = {
     `/${UPLOAD_ROOT}/${sensorStationId}`,
 }
 
-/** Enum for the URL parameters controlling the view of a single sensor station */
+/** Enum for the URL parameters controlling the view of a single sensor station.
+ */
 export enum SensorStationView {
-  /** The graphical view of sensor station information */
+  /** The graphical view of sensor station information. */
   GRAPHICAL = '',
   /** The tabuler view of sensor station data */
-  TABLE = '?view=table',
+  TABLE = 'table',
   /** The gallery for a given sensor station */
-  GALLERY = '?view=gallery',
+  GALLERY = 'gallery',
 }
 
 /** The key of JWT authorisation cookie */
