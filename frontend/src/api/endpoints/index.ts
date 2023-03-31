@@ -9,6 +9,10 @@ import {
   mockedSensorStationGardenerReqs,
 } from './sensorStations/gardeners'
 import {
+  MEASUREMENT_PATH,
+  mockedSensorStationMeasurementReqs,
+} from './sensorStations/measurements'
+import {
   mockedSensorStationReqs,
   SENSOR_STATIONS,
 } from './sensorStations/sensorStations'
@@ -20,6 +24,7 @@ export const endpoints: Endpoints = {
   [ACCESS_POINTS]: mockedAccessPointReqs,
   [SENSOR_STATIONS]: mockedSensorStationReqs,
   [GARDENER_PATH]: mockedSensorStationGardenerReqs,
+  [MEASUREMENT_PATH]: mockedSensorStationMeasurementReqs,
 }
 
 /** Initialise all seed data used by mirage */
