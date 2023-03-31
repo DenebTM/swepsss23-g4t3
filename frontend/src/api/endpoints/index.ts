@@ -4,7 +4,14 @@ import { AppRegistry, Endpoints } from '~/api/mirageTypes'
 
 import { ACCESS_POINTS, mockedAccessPointReqs } from './accessPoints'
 import { mockedLoginEndpoints } from './login'
-import { mockedSensorStationReqs, SENSOR_STATIONS } from './sensorStations'
+import {
+  GARDENER_PATH,
+  mockedSensorStationGardenerReqs,
+} from './sensorStations/gardeners'
+import {
+  mockedSensorStationReqs,
+  SENSOR_STATIONS,
+} from './sensorStations/sensorStations'
 import { mockedUserReqs, USERS } from './user'
 
 /** All endpoints mocked by mirage */
@@ -12,6 +19,7 @@ export const endpoints: Endpoints = {
   [USERS]: mockedUserReqs,
   [ACCESS_POINTS]: mockedAccessPointReqs,
   [SENSOR_STATIONS]: mockedSensorStationReqs,
+  [GARDENER_PATH]: mockedSensorStationGardenerReqs,
 }
 
 /** Initialise all seed data used by mirage */
