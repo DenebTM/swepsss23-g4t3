@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Duration;
@@ -34,10 +35,13 @@ public class SensorStation {
     @Column(name = "TRANSMISSION_INTERVAL", nullable = false)
     private Duration transmissionInterval;
 
-    //TODO:check join column, user class is not yet updated
-    @OneToOne
-    @JoinColumn(name = "USER_ID")
-    private Userx gardener;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
+    @JoinTable(name = "GARDENER_SS",
+            joinColumns = @JoinColumn(name = "SS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "USERNAME"))
+    private Set<Userx> gardeners;
 
     @OneToOne
     @JoinColumn(name = "UPPER_VALUES_ID")
@@ -76,10 +80,6 @@ public class SensorStation {
         return transmissionInterval;
     }
 
-    public Userx getGardener() {
-        return gardener;
-    }
-
     public SensorValues getUpperBound() {
         return upperBound;
     }
@@ -108,15 +108,19 @@ public class SensorStation {
         this.transmissionInterval = transmissionInterval;
     }
 
-    public void setGardener(Userx gardener) {
-        this.gardener = gardener;
-    }
-
     public void setUpperBound(SensorValues upperBound) {
         this.upperBound = upperBound;
     }
 
     public void setLowerBound(SensorValues lowerBound) {
         this.lowerBound = lowerBound;
+    }
+
+    public Set<Userx> getGardeners() {
+        return gardeners;
+    }
+
+    public void setGardeners(Set<Userx> gardeners) {
+        this.gardeners = gardeners;
     }
 }

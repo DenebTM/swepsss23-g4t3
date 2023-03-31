@@ -14,8 +14,8 @@ public class AccessPoint {
     @Column(name = "AP_ID")
     private Long id;
 
-    @Column(name = "ROOM_NAME", nullable = false)
-    private String roomName;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
     @Column(name = "LAST_UPDATE")
     private LocalDateTime lastUpdate;
@@ -33,8 +33,8 @@ public class AccessPoint {
         return id;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public String getName() {
+        return name;
     }
 
     public LocalDateTime getLastUpdate() {
@@ -61,8 +61,8 @@ public class AccessPoint {
         this.id = ID;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setLastUpdate(LocalDateTime lastUpdate) {

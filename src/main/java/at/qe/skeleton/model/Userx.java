@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
@@ -40,6 +43,11 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @CollectionTable(name = "Userx_UserRole")
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToMany(mappedBy = "gardeners", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<SensorStation> assignedSS;
 
     public String getUsername() {
         return username;
@@ -103,6 +111,14 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Set<SensorStation> getAssignedSS() {
+        return assignedSS;
+    }
+
+    public void setAssignedSS(Set<SensorStation> assignedSS) {
+        this.assignedSS = assignedSS;
     }
 
     @Override

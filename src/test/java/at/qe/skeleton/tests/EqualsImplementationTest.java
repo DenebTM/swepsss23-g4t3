@@ -22,7 +22,7 @@ public class EqualsImplementationTest {
         userx1.setUsername("user1");
         Userx userx2 = new Userx();
         userx2.setUsername("user2");
-        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, userx1, userx2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
+        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, userx1, userx2).suppress(Warning.STRICT_INHERITANCE).verify();
     }
 
     @Test
