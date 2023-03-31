@@ -16,11 +16,10 @@ namespace ble {
   // Characteristics
   BLEByteCharacteristic ch_stationID("f001", BLERead | BLENotify);
 
-  uint8_t val_stationID = 0;
-  unsigned long last_update_timestamp = 0;
-  unsigned long pairing_mode_timestamp = 0;
-  volatile bool entering_pairing_mode = false;
 
+  uint8_t val_stationID = 0;
+
+  // set up how the sensor station appears to other BLE devices
   void devinfo_setup() {
     BLE.setAppearance(BLE_DEVICE_APPEARANCE);
     BLE.setDeviceName(BLE_DEVICE_NAME);
@@ -39,12 +38,12 @@ namespace ble {
     BLE.setAdvertisedServiceData(0x180a, &ble::val_stationID, 1);
   }
 
-  void connect_handler(BLEDevice central) {
+  void connect_event_handler(BLEDevice central) {
     String new_mac = central.address();
 
     // currently pairing; remember connecting access point
     if (is_pairing) {
-      paired_mac = central.address();
+      paired_mac = new_mac;
 
       Serial.print("Paired with access point: ");
       Serial.println(paired_mac);
@@ -69,7 +68,7 @@ namespace ble {
     }
   }
 
-  void disconnect_handler(BLEDevice central) {
+  void disconnect_event_handler(BLEDevice central) {
     String new_mac = central.address();
 
     if (new_mac.equals(paired_mac)) {
@@ -80,6 +79,13 @@ namespace ble {
     }
   }
 
+
+  /// Pairing mode
+  unsigned long pairing_mode_timestamp = 0;
+  static volatile bool is_pairing = false;
+  volatile bool entering_pairing_mode = false;
+
+  // runs on press of button 0; signals to enter pairing mode next time `update` is run
   void pair_isr() {
     // rudimentary de-bounce
     if (is_pairing) {
@@ -89,7 +95,7 @@ namespace ble {
   }
 
   void enter_pairing_mode() {
-    ble::paired_mac = String("");
+    ble::paired_mac = BLE_NO_PAIRED_DEVICE;
     if (BLEDevice current_central = BLE.central()) {
       current_central.disconnect();
     }
@@ -124,12 +130,17 @@ int ble::setup() {
 
   ble::devinfo_setup();
 
-  BLE.setEventHandler(BLEConnected, ble::connect_handler);
-  BLE.setEventHandler(BLEDisconnected, ble::disconnect_handler);
+  BLE.setEventHandler(BLEConnected, ble::connect_event_handler);
+  BLE.setEventHandler(BLEDisconnected, ble::disconnect_event_handler);
 
   return 0;
 }
 
+/**
+ * intended to be run as part of the main loop
+ * 
+ * checks for new BLE device events and whether to enter or leave pairing mode
+ */
 void ble::update() {
   if (ble::entering_pairing_mode) {
     ble::is_pairing = true;
@@ -138,14 +149,17 @@ void ble::update() {
     ble::enter_pairing_mode();
   }
 
-  if (ble::is_pairing && (millis() >= ble::pairing_mode_timestamp + PAIRING_MODE_TIMEOUT_MSEC)) {
+  if (ble::is_pairing && (millis() >= pairing_mode_timestamp + BLE_PAIRING_MODE_TIMEOUT_MSEC)) {
     ble::exit_pairing_mode();
   }
 
+  // check for new BLE events (connect, disconnect, etc.)
   BLE.poll();
 
-  unsigned long new_timestamp = millis();
-  if (new_timestamp - ble::last_update_timestamp >= 1000) {
+  // log something to the Serial console once a second
+  static unsigned long last_log_timestamp;
+  unsigned long current_timestamp = millis();
+  if (current_timestamp - last_log_timestamp >= 1000) {
     if (BLE.central().connected()) {
       uint8_t id = station_id();
 
@@ -158,6 +172,6 @@ void ble::update() {
       Serial.println((unsigned long)ble::val_stationID);
     }
 
-    ble::last_update_timestamp = new_timestamp;
+    last_log_timestamp = current_timestamp;
   }
 }
