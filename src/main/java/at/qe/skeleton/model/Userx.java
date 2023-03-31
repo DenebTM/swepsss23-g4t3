@@ -23,13 +23,10 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @Column(length = 100)
     private String username;
 
-    @ManyToOne(optional = false)
-    private Userx createUser;
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
-    @ManyToOne(optional = true)
-    private Userx updateUser;
+
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
@@ -92,28 +89,12 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.roles = roles;
     }
 
-    public Userx getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Userx createUser) {
-        this.createUser = createUser;
-    }
-
     public LocalDateTime getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
-    }
-
-    public Userx getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Userx updateUser) {
-        this.updateUser = updateUser;
     }
 
     public LocalDateTime getUpdateDate() {
