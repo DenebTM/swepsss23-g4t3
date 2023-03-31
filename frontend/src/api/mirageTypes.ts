@@ -19,7 +19,7 @@ export interface Endpoints {
 }
 
 /**
- * interface for the `afterCallback` method of a mirage factory to create an entity of type `E`.
+ * Interface for the `afterCallback` method of a mirage factory to create an entity of type `E`.
  */
 export interface AfterCreate<E extends object> {
   afterCreate: (

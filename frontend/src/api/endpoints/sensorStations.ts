@@ -4,7 +4,7 @@ import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
 
-/** URI for access points */
+/** URI for sensor stations */
 export const SENSOR_STATIONS = '/sensor-stations'
 
 /**
