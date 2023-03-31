@@ -37,7 +37,7 @@ export const GreenhouseView: React.FC = () => {
       case SensorStationView.TABLE:
         setView(sensorStationView)
         break
-      default: // Cover null and empty string case
+      default: // Cover null, empty string, and invalid values
         setView(SensorStationView.GRAPHICAL)
     }
   }, [search])
