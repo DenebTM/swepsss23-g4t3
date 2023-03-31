@@ -1,6 +1,10 @@
 package at.qe.skeleton.configs.jwtutils;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Set;
+
+import at.qe.skeleton.model.UserRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,8 +68,8 @@ public class JwtFilter extends OncePerRequestFilter {
             if (tokenManager.validateJwtToken(token, userx)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         username, null,
-                        // Convert the list of user roles to a list of granted authorities
-                        userx.getRoles().stream().map(r -> new SimpleGrantedAuthority(r.name())).toList());
+                        // Convert the user role to a granted authority
+                        Set.of(new SimpleGrantedAuthority(userx.getUserRole().toString())));
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
