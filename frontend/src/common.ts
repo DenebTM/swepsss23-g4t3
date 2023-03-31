@@ -33,7 +33,7 @@ export const URL = {
   gettingStarted: '/getting-started',
 
   /**
-   *  Page showing information about a single sensor station.
+   * Pages showing information about a single sensor station.
    * @param sensorStationId The UUID of the sensor station
    * @param view Whether to show the graphical, table, or gallery view. Should be a value in enum {@link SensorStationView}.
    * @returns The relative path to the page
@@ -60,7 +60,7 @@ export const URL = {
   myGreenhouses: `/${GREENHOUSES_ROOT}`,
 
   /**
-   * The page to upload photos for a single sensor station.
+   * Page for uploading photos for a single sensor station.
    * qqjf to do: encrypt the sensor station UUID for security
    * @param sensorStationId The UUID of the sensor station
    * @returns The relative path to the page
