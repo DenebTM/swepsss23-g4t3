@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.SensorStation;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
@@ -92,6 +93,10 @@ public class UserService {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getAuthorities();
+    }
+
+    public Collection<SensorStation> getAssignedSS(Userx gardener) {
+        return gardener.getAssignedSS();
     }
 
 }

@@ -41,6 +41,4 @@ public class SensorStationRestController implements BaseRestController{
         return ResponseEntity.status(HttpStatus.OK).body(ss);
     }
 
-    // /users/user1/sensor-stations
-
 }
