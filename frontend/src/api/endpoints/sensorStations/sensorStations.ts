@@ -2,8 +2,8 @@ import { Server } from 'miragejs'
 import { _delete, _get } from '~/api/intercepts'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
-import { AppSchema, EndpointReg } from '../mirageTypes'
-import { notFound, success } from './helpers'
+import { AppSchema, EndpointReg } from '../../mirageTypes'
+import { notFound, success } from '../helpers'
 
 /** URI for sensor stations */
 export const SENSOR_STATIONS = '/sensor-stations'
