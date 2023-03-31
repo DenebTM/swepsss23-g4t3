@@ -26,6 +26,7 @@ export const MessageSnackbars: React.FC<Record<string, never>> = (props) => {
         bottom: 0,
         right: SNACKBAR_SPACING,
         left: 'auto',
+        zIndex: 1400, // Show in front of main page body. qqjf change to theme.zIndex.snackbar after theme definition.
       }}
     >
       {snackbarState.messages.map((msg: MessageState) => (
