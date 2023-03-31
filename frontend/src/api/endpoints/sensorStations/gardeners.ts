@@ -1,10 +1,10 @@
 import { Server } from 'miragejs'
 import { _delete, _get, _post } from '~/api/intercepts'
 import { SensorStationUuid } from '~/models/sensorStation'
-import { Username } from '~/models/user'
+import { Username, UserRole } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
-import { notFound } from '../helpers'
+import { notFound, success, unauthorised } from '../helpers'
 import { SENSOR_STATIONS } from './sensorStations'
 
 /** Part of URI path corresponding to sensor gardeners */
@@ -52,21 +52,22 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
     const user = schema.findBy('user', { username: username })
     if (!user) {
       return notFound(`user ${username}`)
+    } else if (![UserRole.GARDENER, UserRole.ADMIN].includes(user.attrs.role)) {
+      return unauthorised()
     }
 
     const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
-    if (sensorStation) {
-      const oldGardeners: unknown = sensorStation.attrs.gardeners
-      if (Array.isArray(oldGardeners)) {
-        sensorStation.update({
-          gardeners: [username, ...(oldGardeners as string[])],
-        })
-      } else {
-        sensorStation.update({ gardeners: [username] })
-      }
-    }
 
-    return notFound(`sensor station ${uuid}`)
+    if (sensorStation) {
+      const oldGardeners: Username[] = sensorStation.attrs.gardeners
+
+      sensorStation.update({
+        gardeners: [username, ...(oldGardeners as string[])],
+      })
+      return success(sensorStation)
+    } else {
+      return notFound(`sensor station ${uuid}`)
+    }
   })
 
   /** Mock {@link removeGardener} */
