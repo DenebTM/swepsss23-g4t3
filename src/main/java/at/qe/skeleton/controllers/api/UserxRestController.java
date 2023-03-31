@@ -40,4 +40,24 @@ public class UserxRestController implements BaseRestController {
 
         return ResponseEntity.status(HttpStatus.OK).body(userx);
     }
+
+    /**
+     * Route to GET all sensor-stations, gardeners are assigned to
+     * @param username
+     * @return List of assigned sensor-stations
+     */
+    @GetMapping(value="/users/{username}/sensor-stations")
+    public ResponseEntity<Object> getAssignedSS(@PathVariable(value = "username") String username) {
+        Userx gardener = userService.loadUserByUsername(username);
+        // Return a 404 error if the User is not found
+        if (gardener == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with username: \"" + username + "\" not found.");
+        }
+        // Return a 403 error if a normal user tries to get list of assigned sensor-stations
+//        if (!gardener.getRole().equals(UserRole.ADMIN) || !gardener.getRole().equals(UserRole.GARDENER)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not a GARDENER, no sensor-stations can be assigned to you.");
+//        }
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAssignedSS(gardener));
+
+    }
 }
