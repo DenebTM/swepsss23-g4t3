@@ -1,6 +1,6 @@
 import { cancelable } from 'cancelable-promise'
-import { Fragment, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import HomeIcon from '@mui/icons-material/Home'
@@ -18,26 +18,16 @@ import { SensorStationView, URL } from '~/common'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { deleteJwt } from '~/helpers/jwt'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { useIsAdmin } from '~/hooks/user'
 import { SensorStation } from '~/models/sensorStation'
 import { sidebarIconColour } from '~/styles/theme'
 
+import { SidebarElement, SidebarElementWithChildren } from './SidebarElement'
 import { SidebarListItem } from './SidebarListItem'
 
-/** Type of a general element which will be rendered as a sidebark link */
-interface SidebarElement {
-  adminOnly?: boolean
-  label: string
-  url: string
-  icon: JSX.Element
-}
-
-/** Values to render at the top of the sidebar */
+/** Sidebar elements to render at the top of the sidebar */
 const topSidebarVals = (
   sensorStations: SensorStation[]
-): (SidebarElement & {
-  childNodes?: SidebarElement[]
-})[] => [
+): SidebarElementWithChildren[] => [
   {
     label: 'Dashboard',
     url: URL.dashboard,
@@ -59,7 +49,12 @@ const topSidebarVals = (
     label: 'Admin Home',
     url: URL.adminHome,
     icon: <AdminPanelSettingsIcon />,
-    childNodes: [],
+    childNodes: [
+      { label: 'Users', url: URL.manageUsers },
+      { label: 'Access Points', url: URL.manageAccessPoints },
+      { label: 'Greenhouses', url: URL.manageGreenhouses },
+      { label: 'Logs', url: URL.adminLogs },
+    ],
   },
 ]
 
@@ -68,13 +63,11 @@ interface SidebarContentsProps {
 }
 /**
  * Sidebar contents (list of icons and their onClick functionality)
- * Should be a direct child of Sidebar
+ * Should be a direct child of `Sidebar`.
  */
 export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
   const navigate = useNavigate()
-  const isAdmin = useIsAdmin()
   const addSnackbarMessage = useAddSnackbarMessage()
-  const { pathname } = useLocation()
   const [sensorStations, setSensorStations] = useState<SensorStation[]>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
@@ -123,35 +116,9 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       <Divider />
       {typeof sensorStations !== 'undefined' && (
         <List>
-          {topSidebarVals(sensorStations).map(
-            (el) =>
-              isAdmin &&
-              (el.adminOnly ?? true) && (
-                <Fragment key={el.label}>
-                  <SidebarListItem
-                    label={el.label}
-                    open={props.open}
-                    onClick={() => navigate(el.url)}
-                    selected={pathname === el.url}
-                  >
-                    {el.icon}
-                  </SidebarListItem>
-                  {el.childNodes &&
-                    el.childNodes.map((child) => (
-                      <SidebarListItem
-                        key={child.label}
-                        label={child.label}
-                        open={props.open}
-                        onClick={() => navigate(child.url)}
-                        selected={pathname === child.url}
-                        variant="small"
-                      >
-                        {props.open ? null : child.icon}
-                      </SidebarListItem>
-                    ))}
-                </Fragment>
-              )
-          )}
+          {topSidebarVals(sensorStations).map((el) => (
+            <SidebarElement key={el.label} {...el} open={props.open} />
+          ))}
         </List>
       )}
 

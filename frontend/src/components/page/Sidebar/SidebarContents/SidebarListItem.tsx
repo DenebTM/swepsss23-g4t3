@@ -19,7 +19,7 @@ interface SidebarListItemProps {
 }
 
 /**
- * ListItem for each icon and link in the Sidebar
+ * ListItem for each icon and link in the Sidebar. Can be a child of `SidebarElement` or `SidebarContents`.
  * Shows only icon if `props.open` is false, otherwise shows the icon and `props.label`
  */
 export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
@@ -48,7 +48,12 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
   return (
     <ListItem
       disablePadding
-      sx={{ display: 'block', marginTop: 0, marginBottom: 0 }}
+      sx={{
+        display: 'block',
+        marginTop: 0,
+        marginBottom: 0,
+        background: props.selected ?? false ? 'cyan' : '', // qqjf TODO move into theme
+      }}
     >
       <Tooltip
         title={props.open ? '' : props.label}
