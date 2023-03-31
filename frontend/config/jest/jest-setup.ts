@@ -32,6 +32,9 @@ export const SEARCH_PARAMS = vi.fn()
 /** Mock for react-router-dom `useRouteError` function as this can not be run during tests. */
 export const USE_ROUTE_ERROR = vi.fn()
 
+/** Mock for react-router-dom `useLocation` function as this can not be run during tests. */
+export const LOCATION_MOCK = vi.fn()
+
 /**
  * Functions like `useNavigate` and `useParams` are  incompatible with testing individual components,
  * because they expects the React routing context to be present.
@@ -55,4 +58,5 @@ vi.mock('react-router-dom', () => ({
     ]
   },
   useRouteError: () => USE_ROUTE_ERROR,
+  useLocation: () => LOCATION_MOCK,
 }))
