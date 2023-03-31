@@ -1,5 +1,4 @@
-import { JWTPayload } from 'jose'
-import { isJwtValid } from '~/helpers/jwt'
+import { getUseRoleFromJwt } from '~/helpers/jwt'
 import { UserRole } from '~/models/user'
 
 /**
@@ -8,20 +7,14 @@ import { UserRole } from '~/models/user'
  * @returns The role of the logged in user. If no role can be determined, defaults to {@link UserRole.USER}.
  */
 export const useUserRole = (): UserRole => {
-  // Load JWT from cookies
-  const jwt: JWTPayload | null = isJwtValid()
+  const role: UserRole | null = getUseRoleFromJwt()
+  return role === null ? UserRole.USER : role
+}
 
-  // Check that JWT contains a valid user role
-  if (jwt !== null && 'authorities' in jwt) {
-    const role = jwt.authorities
-    if (
-      typeof role === 'string' &&
-      Object.values(UserRole).includes(role as UserRole)
-    ) {
-      return role as UserRole
-    }
-  }
-
-  // Default case: return the role with the fewest authorities
-  return UserRole.USER
+/**
+ * Hook to decode the JWT in cookies and return a boolean of whether the logged-in user is an admin.
+ */
+export const useIsAdmin = (): boolean => {
+  const role: UserRole | null = getUseRoleFromJwt()
+  return role === UserRole.ADMIN
 }
