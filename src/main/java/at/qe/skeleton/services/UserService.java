@@ -43,7 +43,7 @@ public class UserService {
      * @return the user with the given username
      */
     @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
-    public Userx loadUserByName(String username) {
+    public Userx loadUserByUsername(String username) {
         return userRepository.findFirstByUsername(username);
     }
 
