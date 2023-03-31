@@ -47,4 +47,3 @@ sonarqube-check:
   only:
     - main
     - dev
-    - feature/integrate-react
