@@ -1,0 +1,10 @@
+{
+    "*.ts": [
+        "eslint --fix -c ./config/.eslintrc.json",
+        "prettier --write --config ./config/.prettierrc"
+    ],
+    "*.tsx": [
+        "eslint --fix -c ./config/.eslintrc.json",
+        "prettier --write --config ./config/.prettierrc"
+    ]
+}
