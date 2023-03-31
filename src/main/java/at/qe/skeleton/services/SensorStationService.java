@@ -12,7 +12,7 @@ public class SensorStationService {
     @Autowired
     SensorStationRepository ssRepository;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER)")
     public Collection<SensorStation> getAllSS() {
         return ssRepository.findAll();
     }
