@@ -1,8 +1,9 @@
-import { Response, Server } from 'miragejs'
+import { Server } from 'miragejs'
 import { _get } from '~/api/intercepts'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
+import { success } from './helpers'
 
 /** URI for sensor stations */
 export const SENSOR_STATIONS = '/sensor-stations'
@@ -28,8 +29,9 @@ export const getAccessPoint = async (
 
 /** Mocked sensor station functions */
 export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
+  /** Mock {@link getSensorStations} */
   server.get(SENSOR_STATIONS, (schema: AppSchema, request) => {
     const sensorStations = schema.all('sensorStation')
-    return new Response(200, {}, sensorStations.models)
+    return success(sensorStations.models)
   })
 }
