@@ -20,7 +20,7 @@ interface SidebarListItemProps {
 
 /**
  * ListItem for each icon and link in the Sidebar
- * Shows only icon if props.open is false, otherwise the icon and props.label
+ * Shows only icon if `props.open` is false, otherwise shows the icon and `props.label`
  */
 export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
   const [buttonDisabled, setButtonDisabled] = useState(props.selected ?? false)

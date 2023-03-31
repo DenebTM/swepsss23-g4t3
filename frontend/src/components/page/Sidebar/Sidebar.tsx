@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import MenuIcon from '@mui/icons-material/Menu'
-import ClickAwayListener from '@mui/material/ClickAwayListener'
 import CssBaseline from '@mui/material/CssBaseline'
 import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
@@ -23,12 +22,10 @@ interface SidebarProps {
   children: React.ReactNode
 }
 /**
- *
  * Collapsible sidebar component
- * Closes on click away and displays icons and links defined in SidebarContents
  */
 export const Sidebar: React.FC<SidebarProps> = (props) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   const toggleDrawerOpen = (): void => {
     setOpen((oldOpen) => !oldOpen)
@@ -37,20 +34,16 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <ClickAwayListener
-        mouseEvent="onMouseDown"
-        touchEvent="onTouchStart"
-        onClickAway={() => open && setOpen(false)}
-      >
-        <CustomDrawer open={open}>
-          <DrawerHeader sx={{ justifyContent: open ? 'flex-end' : 'center' }}>
-            <IconButton onClick={toggleDrawerOpen} color="inherit">
-              <MenuIcon />
-            </IconButton>
-          </DrawerHeader>
-          <SidebarContents open={open} />
-        </CustomDrawer>
-      </ClickAwayListener>
+
+      <CustomDrawer open={open}>
+        <DrawerHeader sx={{ justifyContent: open ? 'flex-end' : 'center' }}>
+          <IconButton onClick={toggleDrawerOpen} color="inherit">
+            <MenuIcon />
+          </IconButton>
+        </DrawerHeader>
+        <SidebarContents open={open} />
+      </CustomDrawer>
+
       <Box component="main" sx={{ flexGrow: 1 }}>
         {props.children}
       </Box>
