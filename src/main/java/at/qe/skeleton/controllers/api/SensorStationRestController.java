@@ -1,10 +1,14 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.model.SensorStation;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,6 +29,21 @@ public class SensorStationRestController implements BaseRestController{
         return ResponseEntity.ok(ssService.getAllSS());
     }
 
+    /**
+     * Route to GET a specific sensor-stations by its ID
+     * @param id
+     * @return sensor-station
+     */
+    @GetMapping(value="/sensor-stations/{uuid}")
+    public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
+        SensorStation ss = ssService.loadSSById(new Long(id));
 
+        // Return a 404 error if the sensor-station is not found
+        if (ss == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor-station with id: \"" + id + "\" not found.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(ss);
+    }
 
 }
