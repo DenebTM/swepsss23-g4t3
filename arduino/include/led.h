@@ -13,7 +13,8 @@
 #define LED_BLUE_MAX  80
 
 namespace led {
-  // some predefined 24-bit colours in 0xRRGGBB format
+  // some predefined 24-bit colours in 0xRRGGBB format, with the different
+  // brightness of each LED component pre-accounted for
   enum Color {
     OFF = 0,                                  // #000000
     RED = LED_RED_MAX << 16,                  // #ff0000
