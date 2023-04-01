@@ -1,5 +1,3 @@
-#include <Arduino.h>
-
 #include <ble.h>
 #include <buttons.h>
 #include <led.h>
@@ -23,6 +21,8 @@ namespace ble {
 
   // runtime values received via BLE
   // [TODO: add]
+
+  static volatile bool is_pairing = false;
 
   // set up how the sensor station appears to other BLE devices
   void devinfo_setup() {
@@ -89,7 +89,6 @@ namespace ble {
 
   /// Pairing mode
   unsigned long pairing_mode_timestamp = 0;
-  static volatile bool is_pairing = false;
   volatile bool entering_pairing_mode = false;
 
   // runs on press of button 0; signals to enter pairing mode next time `update` is run
