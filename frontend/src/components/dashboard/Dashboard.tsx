@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import { getUsers } from '~/api/endpoints/user'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { Message, MessageType } from '~/contexts/types'
+import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { User } from '~/models/user'
 

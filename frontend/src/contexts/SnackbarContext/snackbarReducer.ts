@@ -47,7 +47,7 @@ export const snackbarReducer: Reducer<SnackbarState, SnackbarReducerAction> = (
 
     /** Fallback case */
     default: {
-      throw new Error('Unhandled snackbar action type')
+      throw new Error('Unhandled snackbarReducer action type')
     }
   }
 }

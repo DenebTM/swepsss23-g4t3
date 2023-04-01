@@ -3,8 +3,8 @@ import React from 'react'
 import Snackbar from '@mui/material/Snackbar'
 import Box from '@mui/system/Box'
 
-import { SnackbarContext } from '~/contexts/SnackbarContext'
-import { MessageState } from '~/contexts/types'
+import { SnackbarContext } from '~/contexts/SnackbarContext/SnackbarContext'
+import { MessageState } from '~/contexts/SnackbarContext/types'
 import { useRemoveSnackbarMessage } from '~/hooks/snackbar'
 
 /**
