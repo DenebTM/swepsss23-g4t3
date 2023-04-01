@@ -1,13 +1,16 @@
-import { AccessPoint } from './accessPoint'
+import { AccessPointId } from './accessPoint'
 import { Measurement, SensorValues } from './measurement'
-import { User } from './user'
+import { Username } from './user'
+
+/** The UUID of a sensor station */
+export type SensorStationUuid = number
 
 /** Information about a single sensor station */
 export interface SensorStation {
-  id: number
-  accessPoint: AccessPoint
+  id: SensorStationUuid
+  accessPoint: AccessPointId
   aggregationPeriod: number // Transmission interval in seconds
-  gardeners: User[]
+  gardeners: Username[]
   lowerBound: SensorValues
   measurements: Measurement[]
   status: StationStatus
@@ -15,7 +18,7 @@ export interface SensorStation {
 }
 
 /** Possible status values for a {@link SensorStation} */
-enum StationStatus {
+export enum StationStatus {
   OK = 'OK',
   WARNING = 'WARNING',
   OFFLINE = 'OFFLINE',

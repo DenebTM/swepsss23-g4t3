@@ -1,10 +1,12 @@
 import { render, screen } from '@testing-library/react'
 import { test, vi } from 'vitest'
-import { Error } from '~/components/error/Error'
+import { Error } from '~/components/page/error/Error'
 
 const TEST_ERR = 'Test error message'
 vi.mock('react-router-dom', () => ({
   useRouteError: () => ({ data: TEST_ERR }),
+  useNavigate: () => vi.fn,
+  useLocation: () => vi.fn,
 }))
 
 test('renders error page and shows a caught error message', () => {
