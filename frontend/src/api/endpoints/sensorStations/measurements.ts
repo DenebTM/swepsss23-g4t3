@@ -9,7 +9,7 @@ import { notFound, success } from '../helpers'
 import { SENSOR_STATIONS_URI } from './sensorStations'
 
 /** URI component for routes related to sensor station measurements */
-const MEASUREMENTS = 'measurements'
+const MEASUREMENTS_URI = 'measurements'
 
 /**
  * GET /api/sensor-stations/{uuid}/measurements
@@ -20,11 +20,11 @@ export const getSensorStationMeasurements = async (
   from?: Timestamp,
   to?: Timestamp
 ): Promise<Measurement[]> => {
-  return _get(`${SENSOR_STATIONS_URI}/${sensorStationUuid}/${MEASUREMENTS}`)
+  return _get(`${SENSOR_STATIONS_URI}/${sensorStationUuid}/${MEASUREMENTS_URI}`)
 }
 
 /** Path to get sensor station measurements for mocked routes */
-export const MEASUREMENT_PATH = `${SENSOR_STATIONS_URI}/:uuid/${MEASUREMENTS}`
+export const MEASUREMENT_PATH = `${SENSOR_STATIONS_URI}/:uuid/${MEASUREMENTS_URI}`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationMeasurementReqs: EndpointReg = (
