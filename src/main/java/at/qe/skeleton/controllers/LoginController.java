@@ -45,9 +45,9 @@ public class LoginController {
 
         try {
             // Authenticate user and set Authentication object in SecurityContext
-            org.springframework.security.core.Authentication authentification = authenticationManager
+            org.springframework.security.core.Authentication authentication = authenticationManager
                     .authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(authentification);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (DisabledException e) {
             return ResponseEntity.status(403).body("User is disabled");
         } catch (BadCredentialsException e) {

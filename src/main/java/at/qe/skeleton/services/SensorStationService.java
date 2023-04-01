@@ -27,7 +27,7 @@ public class SensorStationService {
      * @param id the id of sensor-station to search for
      * @return the sensor-station with the given id
      */
-    public SensorStation loadSSById(Long id) {
+    public SensorStation loadSSById(Integer id) {
         return ssRepository.findFirstById(id);
     }
 

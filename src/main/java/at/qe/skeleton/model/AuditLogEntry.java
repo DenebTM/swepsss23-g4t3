@@ -10,7 +10,7 @@ public class AuditLogEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
     @Column(name = "TIMESTAMP", nullable = false)
     private LocalDateTime timestamp;
     @Column(name = "LOG_LEVEL")
@@ -23,7 +23,7 @@ public class AuditLogEntry {
     @Column(name = "DETAILS")
     private String details;
 
-    public AuditLogEntry(Long id, LocalDateTime timestamp, LogLevel level, LogEntity origin, String details) {
+    public AuditLogEntry(Integer id, LocalDateTime timestamp, LogLevel level, LogEntity origin, String details) {
         this.id = id;
         this.timestamp = timestamp;
         this.level = level;
@@ -35,7 +35,7 @@ public class AuditLogEntry {
 
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

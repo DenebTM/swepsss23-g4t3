@@ -31,7 +31,7 @@ public class AccessPointRestController {
      */
     @GetMapping(value="/access-points/{id}")
     public ResponseEntity<Object> getAPById(@PathVariable(value = "id") Integer id) {
-        AccessPoint ap = apService.loadAPById(new Long(id));
+        AccessPoint ap = apService.loadAPById(id);
 
         // Return a 404 error if the access-points is not found
         if (ap == null) {

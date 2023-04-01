@@ -15,7 +15,7 @@ public class AccessPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AP_ID")
-    private Long id;
+    private Integer id;
 
     @Column(name = "NAME", nullable = false)
     private String name;
@@ -39,7 +39,7 @@ public class AccessPoint {
     public AccessPoint() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -67,7 +67,7 @@ public class AccessPoint {
         this.serverAddress = serverAddress;
     }
 
-    public void setId(Long ID) {
+    public void setId(Integer ID) {
         this.id = ID;
     }
 
