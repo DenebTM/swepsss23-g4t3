@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { SnackbarContext } from '~/contexts/SnackbarContext'
-import { Message, MessageId } from '~/contexts/types'
+import { SnackbarContext } from '~/contexts/SnackbarContext/SnackbarContext'
+import { Message, MessageId } from '~/contexts/SnackbarContext/types'
 
 /** Returns a function to add a message to the snackbar state */
 export const useAddSnackbarMessage = (): ((message: Message) => void) => {

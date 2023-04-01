@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useContext } from 'react'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import CssBaseline from '@mui/material/CssBaseline'
 import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/system/Box'
+
+import { AppContext } from '~/contexts/AppContext/AppContext'
 
 import { CustomDrawer } from './CustomDrawer'
 import { SidebarContents } from './SidebarContents/SidebarContents'
@@ -25,23 +27,25 @@ interface SidebarProps {
  * Collapsible sidebar component
  */
 export const Sidebar: React.FC<SidebarProps> = (props) => {
-  const [open, setOpen] = useState(true)
+  const { appState, setSidebarOpen } = useContext(AppContext)
 
   const toggleDrawerOpen = (): void => {
-    setOpen((oldOpen) => !oldOpen)
+    setSidebarOpen(!appState.sidebarOpen)
   }
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
 
-      <CustomDrawer open={open}>
-        <DrawerHeader sx={{ justifyContent: open ? 'flex-end' : 'center' }}>
+      <CustomDrawer open={appState.sidebarOpen}>
+        <DrawerHeader
+          sx={{ justifyContent: appState.sidebarOpen ? 'flex-end' : 'center' }}
+        >
           <IconButton onClick={toggleDrawerOpen} color="inherit">
             <MenuIcon />
           </IconButton>
         </DrawerHeader>
-        <SidebarContents open={open} />
+        <SidebarContents open={appState.sidebarOpen} />
       </CustomDrawer>
 
       <Box component="main" sx={{ flexGrow: 1 }}>
