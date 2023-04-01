@@ -16,14 +16,23 @@ public class UserxRestController implements BaseRestController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Route to GET all users
+     * @return List of all users
+     */
     @GetMapping(value ="/users")
     public ResponseEntity<Object> getUsers() {
-        if (!userService.getAuthenticatedUser().getRoles().contains(UserRole.ADMIN)) {
+        if (!(userService.getAuthenticatedUser().getUserRole()==UserRole.ADMIN)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
         }
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    /**
+     * Route to GET a specific user by its username
+     * @param username
+     * @return userx
+     */
     @GetMapping(value="/users/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable(value = "username") String username) {
         Userx userx = userService.loadUserByUsername(username);
@@ -34,9 +43,9 @@ public class UserxRestController implements BaseRestController {
         }
 
         // Return a 403 error if a non-admin and not user itself tries to get User
-//        if (!userService.getAuthenticatedUser().getRole().equals(UserRole.ADMIN) || (userx.equals(userService.getAuthenticatedUser()))) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
-//        }
+        if (!userService.getAuthenticatedUser().getUserRole().equals(UserRole.ADMIN) || (userx.equals(userService.getAuthenticatedUser()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(userx);
     }
@@ -54,9 +63,9 @@ public class UserxRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with username: \"" + username + "\" not found.");
         }
         // Return a 403 error if a normal user tries to get list of assigned sensor-stations
-//        if (!gardener.getRole().equals(UserRole.ADMIN) || !gardener.getRole().equals(UserRole.GARDENER)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not a GARDENER, no sensor-stations can be assigned to you.");
-//        }
+        if (!(gardener.getUserRole().equals(UserRole.ADMIN) || gardener.getUserRole().equals(UserRole.GARDENER))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not a GARDENER, no sensor-stations can be assigned to you.");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAssignedSS(gardener));
 
     }
