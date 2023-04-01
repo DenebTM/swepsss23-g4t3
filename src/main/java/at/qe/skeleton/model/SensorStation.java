@@ -15,7 +15,7 @@ public class SensorStation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "SS_ID")
-    private Long id;
+    private Integer id;
 
     @JsonIgnore
     @ManyToOne(optional = false)
@@ -61,7 +61,7 @@ public class SensorStation {
     public SensorStation() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -89,7 +89,7 @@ public class SensorStation {
         return lowerBound;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

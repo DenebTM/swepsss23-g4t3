@@ -31,7 +31,7 @@ public class SensorStationRestController implements BaseRestController{
      */
     @GetMapping(value="/sensor-stations/{uuid}")
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
-        SensorStation ss = ssService.loadSSById(new Long(id));
+        SensorStation ss = ssService.loadSSById(id);
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {

@@ -26,7 +26,7 @@ public class AccessPointService {
      * @param id the id of access-point to search for
      * @return the access-point with the given id
      */
-    public AccessPoint loadAPById(Long id) {
+    public AccessPoint loadAPById(Integer id) {
         return apRepository.findFirstById(id);
     }
 
