@@ -1,5 +1,3 @@
-#include <Arduino.h>
-
 #include <led.h>
 
 void led::setup() {

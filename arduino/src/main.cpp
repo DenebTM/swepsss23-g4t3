@@ -5,6 +5,8 @@
 
 void setup() {
   Serial.begin(9600);
+  // wait for the Serial port to be initialized so that error messages during setup don't get lost
+  while (!Serial);
 
   ble::setup();
 
