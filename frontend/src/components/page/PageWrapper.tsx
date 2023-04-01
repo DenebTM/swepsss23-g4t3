@@ -3,6 +3,12 @@ import React from 'react'
 import LinearProgress from '@mui/material/LinearProgress'
 import { styled } from '@mui/material/styles'
 
+import { useUserRole } from '~/hooks/user'
+import { UserRole } from '~/models/user'
+
+import { AccessDenied } from './error/AccessDenied'
+import { Sidebar } from './Sidebar/Sidebar'
+
 const WrapperDiv = styled('div')({
   display: 'flex',
   minHeight: '100vh',
@@ -12,23 +18,47 @@ const WrapperDiv = styled('div')({
 })
 
 interface PageWrapperProps {
+  /** The body of the page */
   children: React.ReactNode
+
+  /** If hideSidebar is true then the sidebar will not be shown */
+  hideSidebar?: boolean
+
+  /** Whether to show a loading indicatior at the top of the page */
   pending?: boolean
+
+  /** Restrict viewing the page to users with a certain role */
+  requiredRole?: UserRole
 }
 
 /**
  * Wrapper component with page padding.
- * Renders page contents wrapped with padding. Shows a loading indicator if `pending` is set to true.
+ * Shows a loading indicator if `pending` is set to true.
  */
 export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
-  return (
+  const userRole = useUserRole()
+
+  let PageContents = (
     <WrapperDiv>
-      {Boolean(props.pending) && (
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-          <LinearProgress sx={{ height: 4.5 }} />
-        </div>
+      {props.requiredRole && userRole !== props.requiredRole ? (
+        <AccessDenied />
+      ) : (
+        <>
+          {Boolean(props.pending) && (
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+              <LinearProgress sx={{ height: 4.5 }} />
+            </div>
+          )}
+          {props.children}
+        </>
       )}
-      {props.children}
     </WrapperDiv>
   )
+
+  // Show sidebar wrapper only if `props.hideSidebar` is true
+  if (!(props.hideSidebar ?? false)) {
+    PageContents = <Sidebar>{PageContents}</Sidebar>
+  }
+
+  return PageContents
 }

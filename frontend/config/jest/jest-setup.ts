@@ -20,8 +20,20 @@ afterEach(() => {
   }
 })
 
-/** Mock for  react-router-dom navigation function as this can not be run during tests. */
+/** Mock for react-router-dom `useNavigate` function as this can not be run during tests. */
 export const NAVIGATE_MOCK = vi.fn()
+
+/** Mock for react-router-dom `useParams` function as this can not be run during tests. */
+export const PARAMS_MOCK = vi.fn()
+
+/** Mock for react-router-dom `useSearchParams` function as this can not be run during tests. */
+export const SEARCH_PARAMS = vi.fn()
+
+/** Mock for react-router-dom `useRouteError` function as this can not be run during tests. */
+export const USE_ROUTE_ERROR = vi.fn()
+
+/** Mock for react-router-dom `useLocation` function as this can not be run during tests. */
+export const LOCATION_MOCK = vi.fn()
 
 /**
  * Functions like `useNavigate` and `useParams` are  incompatible with testing individual components,
@@ -35,4 +47,16 @@ export const NAVIGATE_MOCK = vi.fn()
  */
 vi.mock('react-router-dom', () => ({
   useNavigate: () => NAVIGATE_MOCK,
+  useParams: () => PARAMS_MOCK,
+  useSearchParams: (): [URLSearchParams, (p: URLSearchParams) => void] => {
+    SEARCH_PARAMS()
+    return [
+      new URLSearchParams(),
+      () => {
+        /* Can manually define search params here */
+      },
+    ]
+  },
+  useRouteError: () => USE_ROUTE_ERROR,
+  useLocation: () => LOCATION_MOCK,
 }))
