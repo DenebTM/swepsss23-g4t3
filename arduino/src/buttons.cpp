@@ -1,5 +1,7 @@
 #include "buttons.h"
 
+// debounce button presses before calling the actual function
+// defined as a macro in order to avoid repeating this code three times
 #define _BUTTON_ISR(id) \
   static void isrb##id() { \
     if (!button_funcs[id]) return; \

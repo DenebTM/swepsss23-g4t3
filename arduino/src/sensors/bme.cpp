@@ -10,7 +10,7 @@ namespace sensors::bme {
 
     Serial.println("BME688 - Sensor data:");
     for (uint8_t i = 0; i < outputs.nOutputs; i++) {
-      const bsecData output  = outputs.output[i];
+      const bsecData output = outputs.output[i];
       switch (output.sensor_id) {
         case BSEC_OUTPUT_IAQ:
           Serial.println("  IAQ: " + String(output.signal));
@@ -25,6 +25,10 @@ namespace sensors::bme {
         case BSEC_OUTPUT_RAW_HUMIDITY:
           Serial.println("  Humidity: " + String(output.signal) + "%");
           break;
+        default:
+          Serial.print("Other signal (");
+          Serial.print(output.sensor_id, HEX);
+          Serial.println("): " + String(output.signal));
       }
     } 
   }
