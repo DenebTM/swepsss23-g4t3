@@ -70,7 +70,7 @@ public class WebSecurityConfig {
         // Configure roles and passwords via datasource
         auth.jdbcAuthentication().dataSource(dataSource)
                 .usersByUsernameQuery("select username, password, 1 from userx where username=?")
-                .authoritiesByUsernameQuery("select userx_username, roles from userx_user_role where userx_username=?");
+                .authoritiesByUsernameQuery("select username, user_role from userx where username=?");
     }
 
     @Bean
