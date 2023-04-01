@@ -19,7 +19,7 @@ export const sensorStationFactory = Factory.extend<
   > &
     AfterCreate<SensorStation>
 >({
-  id(i: number) {
+  uuid(i: number) {
     return i
   },
   aggregationPeriod() {

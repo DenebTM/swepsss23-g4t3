@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getSensorStations } from '~/api/endpoints/sensorStations'
+import { getSensorStations } from '~/api/endpoints/sensorStations/sensorStations'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { SnackbarContext } from '~/contexts/SnackbarContext/SnackbarContext'
 import { MessageType } from '~/contexts/SnackbarContext/types'
