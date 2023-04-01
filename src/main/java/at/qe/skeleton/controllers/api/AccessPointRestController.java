@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AccessPointRestController {
+public class AccessPointRestController implements BaseRestController {
 
     @Autowired
     private AccessPointService apService;
