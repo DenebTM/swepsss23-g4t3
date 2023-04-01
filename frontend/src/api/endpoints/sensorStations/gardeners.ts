@@ -8,7 +8,7 @@ import { notFound, success, unauthorised } from '../helpers'
 import { SENSOR_STATIONS_URI } from './sensorStations'
 
 /** Part of URI path corresponding to sensor gardeners */
-const GARDENERS = 'gardeners'
+const GARDENERS_URI = 'gardeners'
 
 /**
  * Assign a gardener (by username) to a sensor station
@@ -19,7 +19,7 @@ export const assignGardener = async (
   username: Username
 ): Promise<void> => {
   return _post(
-    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS}/${username}`
+    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS_URI}/${username}`
   )
 }
 
@@ -32,12 +32,12 @@ export const removeGardener = async (
   username: Username
 ): Promise<void> => {
   return _delete(
-    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS}/${username}`
+    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS_URI}/${username}`
   )
 }
 
 /** Path to update sensor station gardeners for mocked routes */
-export const GARDENER_PATH = `${SENSOR_STATIONS_URI}/:uuid/${GARDENERS}/:username`
+export const GARDENER_PATH = `${SENSOR_STATIONS_URI}/:uuid/${GARDENERS_URI}/:username`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationGardenerReqs: EndpointReg = (
