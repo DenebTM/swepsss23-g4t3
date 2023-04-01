@@ -65,7 +65,7 @@ export const deleteJwt = (): void => {
  * Load the JWT from cookies and return the role of the logged-in user.
  * @returns The user role if found, otherwise null
  */
-export const getUseRoleFromJwt = (): UserRole | null => {
+export const getUserRoleFromJwt = (): UserRole | null => {
   // Load JWT from cookies
   const jwt: JWTPayload | null = isJwtValid()
 
