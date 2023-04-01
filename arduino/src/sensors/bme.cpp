@@ -10,22 +10,22 @@ namespace sensors::bme {
 
     Serial.println("BME688 - Sensor data:");
     for (uint8_t i = 0; i < outputs.nOutputs; i++) {
-        const bsecData output  = outputs.output[i];
-        switch (output.sensor_id) {
-            case BSEC_OUTPUT_IAQ:
-                Serial.println("  iaq: " + String(output.signal));
-                Serial.println("    (accuracy: " + String((int) output.accuracy) + ")");
-                break;
-            case BSEC_OUTPUT_RAW_TEMPERATURE:
-                Serial.println("  temperature: " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_RAW_PRESSURE:
-                Serial.println("  air pressure: " + String(output.signal));
-                break;
-            case BSEC_OUTPUT_RAW_HUMIDITY:
-                Serial.println("  humidity: " + String(output.signal));
-                break;
-        }
+      const bsecData output  = outputs.output[i];
+      switch (output.sensor_id) {
+        case BSEC_OUTPUT_IAQ:
+          Serial.println("  iaq: " + String(output.signal));
+          Serial.println("    (accuracy: " + String((int) output.accuracy) + ")");
+          break;
+        case BSEC_OUTPUT_RAW_TEMPERATURE:
+          Serial.println("  temperature: " + String(output.signal));
+          break;
+        case BSEC_OUTPUT_RAW_PRESSURE:
+          Serial.println("  air pressure: " + String(output.signal));
+          break;
+        case BSEC_OUTPUT_RAW_HUMIDITY:
+          Serial.println("  humidity: " + String(output.signal));
+          break;
+      }
     } 
   }
 }
