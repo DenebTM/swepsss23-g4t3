@@ -27,7 +27,7 @@ public class UserxServiceTest {
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void testDatainitialization() {
+    public void testDataInitialization() {
         Assertions.assertEquals(4, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
         for (Userx userx : userService.getAllUsers()) {
             if ("admin".equals(userx.getUsername())) {
@@ -139,7 +139,7 @@ public class UserxServiceTest {
     }
 
     @Test
-    public void testUnauthenticateddLoadUsers() {
+    public void testUnauthenticatedLoadUsers() {
         Assertions.assertThrows(org.springframework.security.authentication.AuthenticationCredentialsNotFoundException.class, () -> {
             for (Userx userx : userService.getAllUsers()) {
                 Assertions.fail("Call to userService.getAllUsers should not work without proper authorization");
