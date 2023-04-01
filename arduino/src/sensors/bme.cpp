@@ -13,17 +13,17 @@ namespace sensors::bme {
       const bsecData output  = outputs.output[i];
       switch (output.sensor_id) {
         case BSEC_OUTPUT_IAQ:
-          Serial.println("  iaq: " + String(output.signal));
-          Serial.println("    (accuracy: " + String((int) output.accuracy) + ")");
+          Serial.println("  IAQ: " + String(output.signal));
+          Serial.println("    (Accuracy status: " + String((int) output.accuracy) + ")");
           break;
         case BSEC_OUTPUT_RAW_TEMPERATURE:
-          Serial.println("  temperature: " + String(output.signal));
+          Serial.println("  Temperature: " + String(output.signal) + "°C");
           break;
         case BSEC_OUTPUT_RAW_PRESSURE:
-          Serial.println("  air pressure: " + String(output.signal));
+          Serial.println("  Air Pressure: " + String(output.signal / 100) + " hPa");
           break;
         case BSEC_OUTPUT_RAW_HUMIDITY:
-          Serial.println("  humidity: " + String(output.signal));
+          Serial.println("  Humidity: " + String(output.signal) + "%");
           break;
       }
     } 
