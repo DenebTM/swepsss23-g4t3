@@ -17,6 +17,8 @@ vi.mock('react-router-dom', () => ({
     new URLSearchParams([[GREENHOUSE_VIEW_QUERY, SensorStationView.TABLE]]),
   ],
   useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
+  useNavigate: () => vi.fn,
+  useLocation: () => vi.fn,
 }))
 
 test('render GreenhouseTabularView inside GreenhouseView without crashing', async () => {

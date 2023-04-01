@@ -6,6 +6,7 @@ import {
   SensorStationView,
   SS_UUID_PARAM,
 } from '~/common'
+import { PageWrapper } from '~/components/page/PageWrapper'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GreenhouseGallery } from './gallery/GreenhouseGallery'
@@ -43,7 +44,7 @@ export const GreenhouseView: React.FC = () => {
   }, [search])
 
   return (
-    <div>
+    <PageWrapper>
       Greenhouse view for greenhouse {uuid} {view && 'with view  ' + view}
       {typeof uuid !== 'undefined' &&
         typeof view !== 'undefined' &&
@@ -57,6 +58,6 @@ export const GreenhouseView: React.FC = () => {
               return <GreenhouseGraphicalView uuid={uuid} />
           }
         })()}
-    </div>
+    </PageWrapper>
   )
 }
