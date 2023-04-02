@@ -14,6 +14,7 @@ void sensors::light::update() {
   int current_timestamp = millis();
 
   // don't try to read more than once every 200ms
+  // FIXME: use timers for this
   if (current_timestamp - last_update_timestamp < 200) { return; }
   last_update_timestamp = current_timestamp;
 
