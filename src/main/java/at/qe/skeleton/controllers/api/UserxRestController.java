@@ -51,7 +51,7 @@ public class UserxRestController implements BaseRestController {
     }
 
     /**
-     * Route to GET all sensor-stations, gardeners are assigned to
+     * Route to GET all sensor-stations gardeners are assigned to
      * @param username
      * @return List of assigned sensor-stations
      */

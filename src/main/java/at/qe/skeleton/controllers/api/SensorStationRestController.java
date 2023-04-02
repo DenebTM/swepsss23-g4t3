@@ -25,7 +25,7 @@ public class SensorStationRestController implements BaseRestController{
     }
 
     /**
-     * Route to GET a specific sensor-stations by its ID
+     * Route to GET a specific sensor-station by its ID
      * @param id
      * @return sensor-station
      */
