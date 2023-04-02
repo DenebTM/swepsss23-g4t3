@@ -34,7 +34,7 @@ void sensors::light::update() {
     if (avg <= LIGHT_VAL_20LX) {
       lx_val = map(avg, 0, LIGHT_VAL_20LX, 0, 20);
     } else if (avg <= LIGHT_VAL_50LX) {
-      lx_val = map(avg, LIGHT_VAL_200LX, LIGHT_VAL_50LX, 20, 50);
+      lx_val = map(avg, LIGHT_VAL_20LX, LIGHT_VAL_50LX, 20, 50);
     } else if (avg <= LIGHT_VAL_100LX) {
       lx_val = map(avg, LIGHT_VAL_50LX, LIGHT_VAL_100LX, 50, 100);
     // interpolate between 100 and 200, and extrapolate beyond 200
