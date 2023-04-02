@@ -1,28 +1,17 @@
 #include <sensors/light.h>
 
+#include <Ticker.h>
+
 namespace sensors::light {
   int next_sample_idx = 0;
   long samples[LIGHT_SAMPLE_COUNT] = { 0 };
-}
 
-void sensors::light::setup() {
-  pinMode(LIGHT_PIN, INPUT);
-}
+  static void do_read() {
+    samples[next_sample_idx] = analogRead(LIGHT_PIN);
+    next_sample_idx = (next_sample_idx + 1) % LIGHT_SAMPLE_COUNT;
+  }
 
-void sensors::light::update() {
-  static int last_update_timestamp;
-  int current_timestamp = millis();
-
-  // don't try to read more than once every 200ms
-  // FIXME: use timers for this
-  if (current_timestamp - last_update_timestamp < 200) { return; }
-  last_update_timestamp = current_timestamp;
-
-  samples[next_sample_idx++] = analogRead(LIGHT_PIN);
-
-  if (next_sample_idx >= LIGHT_SAMPLE_COUNT) {
-    next_sample_idx = 0;
-
+  static void do_output() {
     unsigned long long total = 0;
     for (int i = 0; i < LIGHT_SAMPLE_COUNT; i++) {
       total += samples[i];
@@ -44,4 +33,21 @@ void sensors::light::update() {
 
     Serial.println("Illuminance: " + String(lx_val) + " lx");
   }
+
+  // Software timers for reading and outputting
+  // I would use hardware timers but something™️ makes everything hang if I do
+  Ticker read_timer(do_read, LIGHT_READ_INTERVAL);
+  Ticker output_timer(do_output, LIGHT_OUTPUT_INTERVAL);
+}
+
+void sensors::light::setup() {
+  pinMode(LIGHT_PIN, INPUT);
+
+  read_timer.start();
+  output_timer.start();
+}
+
+void sensors::light::update() {
+  read_timer.update();
+  output_timer.update();
 }

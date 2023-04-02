@@ -37,7 +37,10 @@
 #define LIGHT_VAL_20LX   53
 #define LIGHT_VAL_50LX   78
 #define LIGHT_VAL_100LX 155
-#define LIGHT_VAL_200LX 248
+#define LIGHT_VAL_200LX 248.
+
+#define LIGHT_READ_INTERVAL 200
+#define LIGHT_OUTPUT_INTERVAL 1000
 
 namespace sensors::light {
   void setup();
