@@ -39,8 +39,9 @@
 #define LIGHT_VAL_100LX 155
 #define LIGHT_VAL_200LX 248.
 
-#define LIGHT_READ_INTERVAL 200
-#define LIGHT_OUTPUT_INTERVAL 1000
+// how long the sensor waits between reading and and outputting its data, in milliseconds
+#define LIGHT_READ_INTERVAL_MS 200
+#define LIGHT_OUTPUT_INTERVAL_MS 1000
 
 namespace sensors::light {
   void setup();
