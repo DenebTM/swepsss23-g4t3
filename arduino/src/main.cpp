@@ -14,6 +14,7 @@ void setup() {
 
   sensors::bme::setup();
   sensors::hygro::setup();
+  sensors::light::setup();
 
   led::setup();
   led::set_color(led::RED);
