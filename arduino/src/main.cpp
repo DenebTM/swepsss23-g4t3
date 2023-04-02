@@ -23,11 +23,11 @@ void setup() {
 }
 
 void loop() {
-  ble::update();
-
   sensors::bme::update();
   sensors::hygro::update();
   sensors::light::update();
+
+  ble::update();
 
   delay(10);
 }
