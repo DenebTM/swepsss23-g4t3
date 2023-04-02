@@ -1,7 +1,6 @@
 #include <sensors/light.h>
 
 namespace sensors::light {
-  // keep track of last `LIGHT_SAMPLE_COUNT` samples for averaging
   int next_sample_idx = 0;
   long samples[LIGHT_SAMPLE_COUNT] = { 0 };
 }

@@ -32,7 +32,7 @@
  */
 
 #define LIGHT_PIN A7
-#define LIGHT_SAMPLE_COUNT 5
+#define LIGHT_SAMPLE_COUNT 5 // keep track of this many samples for averaging
 
 #define LIGHT_VAL_20LX   53
 #define LIGHT_VAL_50LX   78
