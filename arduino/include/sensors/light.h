@@ -37,7 +37,7 @@
 #define LIGHT_VAL_20LX   53
 #define LIGHT_VAL_50LX   78
 #define LIGHT_VAL_100LX 155
-#define LIGHT_VAL_200LX 248.
+#define LIGHT_VAL_200LX 248
 
 // how long the sensor waits between reading and and outputting its data, in milliseconds
 #define LIGHT_READ_INTERVAL_MS 200
