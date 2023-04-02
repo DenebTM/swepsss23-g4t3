@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo "Enter web_server_address: "
+read web_server_address
+
+# Check if web_server_address is a valid IP address
+if ! [[ "$web_server_address" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    echo "Error: web_server_address must be a valid IP address."
+    exit 1
+fi
+
+echo "Enter initial_transfer_interval in seconds: "
+read initial_transfer_interval
+
+# Check if initial_transfer_interval is an integer
+if ! [[ "$initial_transfer_interval" =~ ^[0-9]+$ ]]; then
+    echo "Error: initial_transfer_interval must be an integer."
+    exit 1
+fi
+
+# CHeck if access_point_name is empty
+echo "Enter access_point_name: "
+read access_point_name
+
+if [ -z "$access_point_name" ]; then
+  echo "Access point name cannot be empty."
+  exit 1
+fi
+
+# Write configuration to conf.yaml
+echo "web_server_address: $web_server_address" > conf.yaml
+echo "initial_transfer_interval: $initial_transfer_interval" >> conf.yaml
+echo "access_point_name: $access_point_name" >> conf.yaml
+
+echo "Configuration complete!"

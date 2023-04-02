@@ -1,0 +1,15 @@
+.idea/
+.idea/*
+*.iml
+.vscode/
+.vscode/*
+.directory
+*.class
+
+# Backend build directory
+target/
+
+# Debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
