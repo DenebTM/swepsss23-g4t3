@@ -15,7 +15,7 @@ int sensors::hygro::read() {
 }
 
 void sensors::hygro::update() {
-  samples[(next_sample_idx++)] = read();
+  samples[next_sample_idx++] = read();
 
   if (next_sample_idx >= HYGRO_SAMPLE_COUNT) {
     next_sample_idx = 0;
