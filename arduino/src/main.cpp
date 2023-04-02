@@ -29,5 +29,5 @@ void loop() {
 
   ble::update();
 
-  delay(10);
+  delay(1);
 }
