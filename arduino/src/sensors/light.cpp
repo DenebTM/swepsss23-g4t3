@@ -11,7 +11,14 @@ void sensors::light::setup() {
 }
 
 void sensors::light::update() {
-  samples[(next_sample_idx++) % LIGHT_SAMPLE_COUNT] = analogRead(LIGHT_PIN);
+  static int last_update_timestamp;
+  int current_timestamp = millis();
+
+  // don't try to read more than once every 200ms
+  if (current_timestamp - last_update_timestamp < 200) { return; }
+  last_update_timestamp = current_timestamp;
+
+  samples[(next_sample_idx++)] = analogRead(LIGHT_PIN);
 
   if (next_sample_idx >= LIGHT_SAMPLE_COUNT) {
     next_sample_idx = 0;
