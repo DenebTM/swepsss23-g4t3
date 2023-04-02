@@ -1,7 +1,6 @@
 #include <sensors/hygro.h>
 
-namespace sensors::hygro {
-  // keep track of last `HYGRO_SAMPLE_COUNT` samples for averaging
+namespace sensors::hygro { 
   int next_sample_idx = 0;
   long samples[HYGRO_SAMPLE_COUNT] = { 0 };
 }
