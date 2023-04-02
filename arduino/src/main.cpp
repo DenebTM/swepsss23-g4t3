@@ -5,6 +5,7 @@
 #include <led.h>
 #include <sensors/bme.h>
 #include <sensors/hygro.h>
+#include <sensors/light.h>
 
 void setup() {
   Serial.begin(9600);
@@ -25,6 +26,7 @@ void loop() {
 
   sensors::bme::update();
   sensors::hygro::update();
+  sensors::light::update();
 
   delay(10);
 }
