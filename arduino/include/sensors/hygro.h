@@ -8,8 +8,9 @@
 #define HYGRO_CALIB_AIR_VALUE 850   // value read with sensor placed in empty container
 #define HYGRO_CALIB_WATER_VALUE 430 // value read with sensor fully submerged in water
 
-#define HYGRO_READ_INTERVAL 10
-#define HYGRO_OUTPUT_INTERVAL 3000
+// how long the sensor waits between reading and and outputting its data, in milliseconds
+#define HYGRO_READ_INTERVAL_MS 10
+#define HYGRO_OUTPUT_INTERVAL_MS 3000
 
 namespace sensors::hygro {
   void setup();

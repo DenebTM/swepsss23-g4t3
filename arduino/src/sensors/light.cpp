@@ -36,8 +36,8 @@ namespace sensors::light {
 
   // Software timers for reading and outputting
   // I would use hardware timers but something™️ makes everything hang if I do
-  Ticker read_timer(do_read, LIGHT_READ_INTERVAL);
-  Ticker output_timer(do_output, LIGHT_OUTPUT_INTERVAL);
+  Ticker read_timer(do_read, LIGHT_READ_INTERVAL_MS);
+  Ticker output_timer(do_output, LIGHT_OUTPUT_INTERVAL_MS);
 }
 
 void sensors::light::setup() {
