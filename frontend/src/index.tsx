@@ -7,6 +7,8 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 
+import { ThemeProvider } from '@mui/material/styles'
+
 import { mirageSetup } from '~/api/mirageSetup'
 import { GREENHOUSES_ROOT, SS_UUID_PARAM, UPLOAD_ROOT, URL } from '~/common'
 import { ManageAccessPoints } from '~/components/admin/accessPoints/ManageAccessPoints'
@@ -24,6 +26,7 @@ import { MessageSnackbars } from '~/components/page/MessageSnackbars'
 import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
 import { isJwtValid } from '~/helpers/jwt'
 import '~/styles/index.css'
+import { theme } from '~/styles/theme'
 
 import { AppProvider } from './contexts/AppContext/AppProvider'
 
@@ -94,12 +97,14 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <SnackbarProvider>
-      <AppProvider>
-        <MessageSnackbars />
-        <RouterProvider router={router} />
-      </AppProvider>
-    </SnackbarProvider>
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider>
+        <AppProvider>
+          <MessageSnackbars />
+          <RouterProvider router={router} />
+        </AppProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
   </React.StrictMode>
 )
 mirageSetup()
