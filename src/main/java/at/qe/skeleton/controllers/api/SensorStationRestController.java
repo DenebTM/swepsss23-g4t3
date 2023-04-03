@@ -16,18 +16,18 @@ public class SensorStationRestController implements BaseRestController {
     private SensorStationService ssService;
 
     /**
-     * Route to GET all sensor-stations, available for all users
-     * @return List of all sensor-stations
+     * Route to GET all sensor stations, available for all users
+     * @return List of all sensor stations
      */
     @GetMapping(value ="/sensor-stations")
     public ResponseEntity<Object> getAllSensorStations() {
-        return ResponseEntity.ok(ssService.getAllSS());
+        return ResponseEntity.status(HttpStatus.OK).body(ssService.getAllSS());
     }
 
     /**
      * Route to GET a specific sensor-station by its ID
      * @param id
-     * @return sensor-station
+     * @return sensor station
      */
     @GetMapping(value="/sensor-stations/{uuid}")
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
@@ -35,7 +35,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor-station with id: \"" + id + "\" not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station with id: \"" + id + "\" not found.");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(ss);
