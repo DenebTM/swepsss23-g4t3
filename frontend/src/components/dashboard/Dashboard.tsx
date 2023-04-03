@@ -22,7 +22,7 @@ export const Dashboard: React.FC = () => {
   const [sensorStations, setSensorStations] = useState<SensorStation[]>([])
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
-  /** Load users from the API on component mount and set the value of {@link snackbarMessage} */
+  /** Load sensor stations from the API on component mount */
   useEffect(() => {
     const ssPromise = cancelable(getSensorStations())
     loadSensorStations(ssPromise)
@@ -36,7 +36,7 @@ export const Dashboard: React.FC = () => {
     if (snackbarMessage !== null) {
       addSnackbarMessage(snackbarMessage)
     }
-  }, [snackbarMessage])
+  }, [addSnackbarMessage, snackbarMessage])
 
   /** Load sensor stations from the backend and set in state */
   const loadSensorStations = (promise: Promise<SensorStation[]>) =>
@@ -56,7 +56,7 @@ export const Dashboard: React.FC = () => {
     <PageWrapper>
       <h1>Dashboard</h1>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ width: '100%' }}>
         <Grid xs={12} md={6}>
           <DashboardCard>
             <RecentActivity />

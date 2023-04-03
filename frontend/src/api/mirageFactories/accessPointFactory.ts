@@ -4,6 +4,9 @@ import { AccessPoint } from '~/models/accessPoint'
 
 /** Factory to generate a fake {@link AccessPoint} */
 export const accessPointFactory = Factory.extend<AccessPoint>({
+  id(i: number) {
+    return i
+  },
   name(i: number) {
     return `Access Point ${i + 1}`
   },
