@@ -7,12 +7,13 @@ import { theme } from '~/styles/theme'
 interface PageHeaderProps {
   /** Contents to left-align */
   left?: React.ReactNode
-  /** C?ontents to right-align */
+  /** Contents to right-align */
   right?: React.ReactNode
 }
 
 /**
  * Reusable page header component. Should be used as the first child of {@link PageWrapper}.
+ * Displays `props.left` and `props.right` in a full-width flexbox with space between.
  */
 export const PageHeader: React.FC<PageHeaderProps> = (props) => {
   return (
