@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
+import Grid from '@mui/material/Unstable_Grid2'
 
 import { assignGardener } from '~/api/endpoints/sensorStations/gardeners'
 import { getSensorStations } from '~/api/endpoints/sensorStations/sensorStations'
@@ -12,6 +13,8 @@ import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
 import { UserRole } from '~/models/user'
+
+import { DashboardCard } from './DashboardCard'
 
 /**
  * Dashboard page
@@ -100,6 +103,18 @@ export const Dashboard: React.FC = () => {
       <Button variant="contained" onClick={assignGardenerToSs}>
         Assign a user to sensor station 0
       </Button>
+
+      <Grid container spacing={2}>
+        <Grid xs={12} md={6}>
+          <DashboardCard>Recent Activity</DashboardCard>
+        </Grid>
+        <Grid xs={12} md={6}>
+          <DashboardCard>AP and SS Statuses</DashboardCard>
+        </Grid>
+        <Grid xs={12}>
+          <DashboardCard>Dashboard graph</DashboardCard>
+        </Grid>
+      </Grid>
     </PageWrapper>
   )
 }
