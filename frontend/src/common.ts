@@ -67,7 +67,7 @@ export const URL = {
 
   /**
    * Page for uploading photos for a single sensor station.
-   * qqjf to do: encrypt the sensor station UUID for security
+   * TODO qqjf: encrypt the sensor station UUID for security
    * @param sensorStationId The UUID of the sensor station
    * @returns The relative path to the page
    */
