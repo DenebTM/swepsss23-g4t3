@@ -13,7 +13,7 @@ interface DashboardTableProps {
 export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
   return (
     <div>
-      Dashboard graph
+      Dashboard table
       {props.sensorStations.map((s: SensorStation) => (
         <li key={s.uuid}>
           {'Sensor station ' +
