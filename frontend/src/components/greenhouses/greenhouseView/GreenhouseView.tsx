@@ -11,6 +11,7 @@ import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GreenhouseGallery } from './gallery/GreenhouseGallery'
 import { GreenhouseGraphicalView } from './graphical/GreenhouseGraphicalView'
+import { GreenhouseViewHeader } from './GreenhouseHeader'
 import { GreenhouseTabularView } from './tabular/GreenhouseTabularView'
 
 /**
@@ -45,7 +46,13 @@ export const GreenhouseView: React.FC = () => {
 
   return (
     <PageWrapper>
-      Greenhouse view for greenhouse {uuid} {view && 'with view  ' + view}
+      <GreenhouseViewHeader
+        title={
+          'Greenhouse view for greenhouse ' +
+          uuid +
+          (view && 'with view  ' + view)
+        }
+      />
       {typeof uuid !== 'undefined' &&
         typeof view !== 'undefined' &&
         (() => {
