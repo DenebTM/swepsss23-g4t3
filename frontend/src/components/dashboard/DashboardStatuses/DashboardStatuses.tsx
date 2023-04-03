@@ -1,5 +1,10 @@
-import React from 'react'
+import { cancelable } from 'cancelable-promise'
+import React, { useEffect, useState } from 'react'
 
+import { getAccessPoints } from '~/api/endpoints/accessPoints'
+import { Message, MessageType } from '~/contexts/SnackbarContext/types'
+import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { AccessPoint } from '~/models/accessPoint'
 import { SensorStation } from '~/models/sensorStation'
 
 interface DashboardStatusesProps {
@@ -11,6 +16,36 @@ interface DashboardStatusesProps {
  * Component showing the statuses of access points and sensor stations in the dashboard
  */
 export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
+  const addSnackbarMessage = useAddSnackbarMessage()
+  const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
+  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
+
+  /** Load acccess points from the API on component mount */
+  useEffect(() => {
+    const apPromise = cancelable(getAccessPoints())
+    apPromise
+      .then((data) => {
+        setAccessPoints(data)
+      })
+      .catch((err: Error) =>
+        setSnackbarMessage({
+          header: 'Could not load sensor stations',
+          body: err.message,
+          type: MessageType.ERROR,
+        })
+      )
+
+    // Cancel the promise callbacks on component unmount
+    return apPromise.cancel
+  }, [])
+
+  /** Create a new snackbar if {@link snackbarMessage} has been updated */
+  useEffect(() => {
+    if (snackbarMessage !== null) {
+      addSnackbarMessage(snackbarMessage)
+    }
+  }, [snackbarMessage])
+
   return (
     <div>
       {props.sensorStations.map((s: SensorStation) => (
@@ -18,6 +53,16 @@ export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
           {'Sensor station ' + s.uuid + ' has status "' + s.status + '"'}
         </li>
       ))}
+      {accessPoints &&
+        accessPoints.map((ap: AccessPoint) => (
+          <li key={ap.id}>
+            {'Access point ' +
+              ap.name +
+              ' has active status "' +
+              ap.active +
+              '"'}
+          </li>
+        ))}
     </div>
   )
 }

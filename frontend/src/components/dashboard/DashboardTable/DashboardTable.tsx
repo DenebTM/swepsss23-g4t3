@@ -11,7 +11,6 @@ interface DashboardTableProps {
  * Table showing the most recent sensor station data in the dashboard
  */
 export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
-  console.log(props)
   return (
     <div>
       Dashboard graph

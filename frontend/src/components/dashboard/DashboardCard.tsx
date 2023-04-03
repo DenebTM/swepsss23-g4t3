@@ -13,7 +13,13 @@ interface DashboardCardProps {
  */
 export const DashboardCard: React.FC<DashboardCardProps> = (props) => {
   return (
-    <Card sx={{ height: '100%', background: 'pink' }}>
+    <Card
+      sx={{
+        height: '100%',
+        background: 'pink',
+        minHeight: '200px' /* TODO qqjf make this responsive */,
+      }}
+    >
       <CardContent>{props.children}</CardContent>
     </Card>
   )
