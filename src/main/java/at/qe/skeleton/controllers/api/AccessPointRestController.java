@@ -16,26 +16,26 @@ public class AccessPointRestController implements BaseRestController {
     private AccessPointService apService;
 
     /**
-     * Route to GET all access-points, available for all users
-     * @return List of all access-points
+     * Route to GET all access points, available for all users
+     * @return List of all access points
      */
-    @GetMapping(value ="/access-points")
+    @GetMapping(value ="/access points")
     public ResponseEntity<Object> getAllAccessPoints() {
-        return ResponseEntity.ok(apService.getAllAP());
+        return ResponseEntity.status(HttpStatus.OK).body(apService.getAllAP());
     }
 
     /**
-     * Route to GET a specific access-point by its ID
+     * Route to GET a specific access point by its ID
      * @param id
-     * @return access-point
+     * @return access point
      */
     @GetMapping(value="/access-points/{id}")
     public ResponseEntity<Object> getAPById(@PathVariable(value = "id") Integer id) {
         AccessPoint ap = apService.loadAPById(id);
 
-        // Return a 404 error if the access-points is not found
+        // Return a 404 error if the access points is not found
         if (ap == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Access-points with id: \"" + id + "\" not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Access points with id: \"" + id + "\" not found.");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(ap);

@@ -95,6 +95,11 @@ public class UserService {
         return auth.getAuthorities();
     }
 
+    /**
+     * Function used to get all sensor stations a user is assigned to
+     * @param gardener
+     * @return List of assigned sensor stations
+     */
     public Collection<SensorStation> getAssignedSS(Userx gardener) {
         return gardener.getAssignedSS();
     }

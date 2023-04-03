@@ -25,7 +25,7 @@ public class UserxRestController implements BaseRestController {
         if (!(userService.getAuthenticatedUser().getUserRole()==UserRole.ADMIN)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
         }
-        return ResponseEntity.ok(userService.getAllUsers());
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }
 
     /**
@@ -51,9 +51,9 @@ public class UserxRestController implements BaseRestController {
     }
 
     /**
-     * Route to GET all sensor-stations gardeners are assigned to
+     * Route to GET all sensor stations gardeners are assigned to
      * @param username
-     * @return List of assigned sensor-stations
+     * @return List of assigned sensor stations
      */
     @GetMapping(value="/users/{username}/sensor-stations")
     public ResponseEntity<Object> getAssignedSS(@PathVariable(value = "username") String username) {
@@ -64,7 +64,7 @@ public class UserxRestController implements BaseRestController {
         }
         // Return a 403 error if a normal user tries to get list of assigned sensor-stations
         if (!(gardener.getUserRole().equals(UserRole.ADMIN) || gardener.getUserRole().equals(UserRole.GARDENER))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not a GARDENER, no sensor-stations can be assigned to you.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not a GARDENER, no sensor stations can be assigned to you.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAssignedSS(gardener));
 

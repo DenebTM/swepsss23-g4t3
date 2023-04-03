@@ -13,18 +13,18 @@ public class AccessPointService {
     AccessPointRepository apRepository;
 
     /**
-     * Route to GET all access-points
-     * @return List of all access-points
+     * Route to GET all access points
+     * @return List of all access points
      */
     public Collection<AccessPoint> getAllAP() {
         return apRepository.findAll();
     }
 
     /**
-     * Loads a single access-point identified by its id.
+     * Loads a single access point identified by its id.
      *
-     * @param id the id of access-point to search for
-     * @return the access-point with the given id
+     * @param id the id of access point to search for
+     * @return the access point with the given id
      */
     public AccessPoint loadAPById(Integer id) {
         return apRepository.findFirstById(id);
