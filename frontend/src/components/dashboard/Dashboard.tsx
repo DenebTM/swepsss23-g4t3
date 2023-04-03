@@ -13,6 +13,9 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
 import { UserRole } from '~/models/user'
 
+import { PageHeader } from '../page/PageHeader'
+import { DashboardFilters } from './DashboardFilters'
+
 /**
  * Dashboard page
  */
@@ -81,6 +84,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <PageWrapper>
+      <PageHeader right={<DashboardFilters />} />
       <h1>Dashboard</h1>
       <h4>Sensor stations before action:</h4>
       <ul>
