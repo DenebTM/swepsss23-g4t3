@@ -15,11 +15,13 @@ public class AccessPointRestController implements BaseRestController {
     @Autowired
     private AccessPointService apService;
 
+    static final String apPATH = "/access-points";
+
     /**
      * Route to GET all access points, available for all users
      * @return List of all access points
      */
-    @GetMapping(value ="/access points")
+    @GetMapping(value = apPATH)
     public ResponseEntity<Object> getAllAccessPoints() {
         return ResponseEntity.status(HttpStatus.OK).body(apService.getAllAP());
     }
@@ -29,7 +31,7 @@ public class AccessPointRestController implements BaseRestController {
      * @param id
      * @return access point
      */
-    @GetMapping(value="/access-points/{id}")
+    @GetMapping(value=apPATH+"/{id}")
     public ResponseEntity<Object> getAPById(@PathVariable(value = "id") Integer id) {
         AccessPoint ap = apService.loadAPById(id);
 
