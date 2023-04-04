@@ -199,7 +199,7 @@ void ble::update() {
     ble::enter_pairing_mode();
   }
 
-  if (ble::is_pairing && (millis() >= pairing_mode_timestamp + BLE_PAIRING_MODE_TIMEOUT_MSEC)) {
+  if (ble::is_pairing && (millis() >= pairing_mode_timestamp + BLE_PAIRING_MODE_TIMEOUT_MS)) {
     ble::exit_pairing_mode();
   }
 

@@ -10,7 +10,7 @@
 #define BLE_DEVICE_APPEARANCE         0x3621
 
 #define BLE_NO_PAIRED_DEVICE          String("")
-#define BLE_PAIRING_MODE_TIMEOUT_MSEC 30000
+#define BLE_PAIRING_MODE_TIMEOUT_MS   30000
 
 // UUIDs for device information service
 #define BLE_UUID_DEVINFO              "180a"
@@ -27,7 +27,7 @@
 #define BLE_UUID_SOIL_MOISTURE        "f106"  // not part of BLE Environmental Sensing spec
 
 // time between each BLE sensor data update
-#define BLE_TRANSMIT_INTERVAL_MS      10000
+#define BLE_TRANSMIT_INTERVAL_MS      3000
 
 namespace ble {
   static String paired_mac = BLE_NO_PAIRED_DEVICE;
