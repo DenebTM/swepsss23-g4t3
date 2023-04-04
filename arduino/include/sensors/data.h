@@ -5,10 +5,10 @@ namespace sensors {
   struct sensor_data {
     float air_pressure;
     float air_quality;
-    int humidity;
-    int light_intensity;
-    int soil_moisture;
+    float humidity;
     float temperature; 
+    int illuminance;
+    int soil_moisture;
   };
 
   extern struct sensor_data current_data;
