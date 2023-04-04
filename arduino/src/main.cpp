@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include <mbed.h>
+using namespace std::chrono_literals;
 
 #include <ble.h>
 #include <buttons.h>
@@ -29,5 +31,6 @@ void loop() {
 
   ble::update();
 
-  delay(10);
+  // reduce power consumption
+  rtos::ThisThread::sleep_for(1ms);
 }
