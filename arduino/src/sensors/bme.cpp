@@ -1,6 +1,7 @@
 // based heavily on https://github.com/boschsensortec/Bosch-BSEC2-Library/blob/master/examples/generic_examples/basic/basic.ino
 
 #include <sensors/bme.h>
+#include <sensors/data.h>
 
 namespace sensors::bme {
   void sensorCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bsec) {
@@ -20,6 +21,7 @@ namespace sensors::bme {
           Serial.println("  Temperature: " + String(output.signal) + "°C");
           break;
         case BSEC_OUTPUT_RAW_PRESSURE:
+          sensors::current_data.air_pressure = output.signal;
           Serial.println("  Air Pressure: " + String(output.signal / 100) + " hPa");
           break;
         case BSEC_OUTPUT_RAW_HUMIDITY:

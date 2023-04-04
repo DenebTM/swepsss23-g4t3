@@ -2,22 +2,21 @@
 #include <buttons.h>
 #include <led.h>
 #include <station_id.h>
+#include <sensors/data.h>
+#include <Ticker.h>
 
 namespace ble {
-  // Device information
-  BLEService sv_devinfo("180a");
+  // Device information service
+  BLEService sv_devinfo(BLE_UUID_DEVINFO);
   BLEStringCharacteristic ch_manufacturer(BLE_UUID_MANUFACTURER_NAME,
                                           BLERead,
                                           strlen(BLE_DEVICE_MANUFACTURER));
-
-  // Services
-  // [TODO: add]
-
-  // Characteristics
   BLEByteCharacteristic ch_stationID(BLE_UUID_STATION_ID, BLERead | BLENotify);
-
-  // runtime values transmitted via BLE
   uint8_t val_stationID = station_id();
+
+  // Environmental sensing service
+  BLEService sv_environmentalSensing(BLE_UUID_ESS);
+  BLEUnsignedIntCharacteristic ch_airPressure(BLE_UUID_AIR_PRESSURE, BLERead | BLENotify);
 
   // runtime values received via BLE
   // [TODO: add]
@@ -43,6 +42,14 @@ namespace ble {
     BLE.setAdvertisedService(ble::sv_devinfo);
     BLE.setAdvertisedServiceData(strtol(BLE_UUID_DEVINFO, NULL, 16),
                                  &ble::val_stationID, 1);
+  }
+
+  // set up environmental sensing service
+  void ess_setup() {
+    ch_airPressure.writeValue(0);
+    sv_environmentalSensing.addCharacteristic(ch_airPressure);
+
+    BLE.addService(sv_environmentalSensing);
   }
 
   void connect_event_handler(BLEDevice central) {
@@ -123,6 +130,19 @@ namespace ble {
 
     led::set_color(led::RED);
   }
+
+
+  // Sensor data transmission
+  void write_sensor_data() {
+    // Sensor data format: float
+    // BLE data format: unsigned 32-bit integer with resolution of 0.1Pa
+    uint32_t val = sensors::current_data.air_pressure * 10;
+    ch_airPressure.writeValue(val);
+  }
+  
+
+  // Periodic tasks
+  Ticker write_sensor_data_timer(write_sensor_data, BLE_TRANSMIT_INTERVAL_MS);
 }
 
 
@@ -135,9 +155,12 @@ int ble::setup() {
   Serial.println("Press button 0 (rightmost) to begin pairing");
 
   ble::devinfo_setup();
+  ble::ess_setup();
 
   BLE.setEventHandler(BLEConnected, ble::connect_event_handler);
   BLE.setEventHandler(BLEDisconnected, ble::disconnect_event_handler);
+
+  ble::write_sensor_data_timer.start();
 
   return 0;
 }
@@ -161,6 +184,9 @@ void ble::update() {
 
   // check for new BLE events (connect, disconnect, etc.)
   BLE.poll();
+
+  // run timers
+  ble::write_sensor_data_timer.update();
 
   // log something to the Serial console once a second
   static unsigned long last_log_timestamp;
