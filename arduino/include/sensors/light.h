@@ -40,7 +40,7 @@
 
 // keep track of this many samples for averaging
 #define LIGHT_SAMPLE_COUNT 5
-// how long the sensor waits between reading its data, in milliseconds
+// time between samples, in milliseconds
 #define LIGHT_READ_INTERVAL_MS 200
 // output/transmit data after each full sample cycle
 #define LIGHT_OUTPUT_INTERVAL_MS LIGHT_SAMPLE_COUNT * LIGHT_READ_INTERVAL_MS
