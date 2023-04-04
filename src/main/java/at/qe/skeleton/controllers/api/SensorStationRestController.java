@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SensorStationRestController implements BaseRestController {
 
+    private static final String SS_PATH = "/sensor-stations";
     @Autowired
     private SensorStationService ssService;
 
@@ -19,9 +20,9 @@ public class SensorStationRestController implements BaseRestController {
      * Route to GET all sensor stations, available for all users
      * @return List of all sensor stations
      */
-    @GetMapping(value ="/sensor-stations")
+    @GetMapping(value = SS_PATH)
     public ResponseEntity<Object> getAllSensorStations() {
-        return ResponseEntity.status(HttpStatus.OK).body(ssService.getAllSS());
+        return ResponseEntity.ok(ssService.getAllSS());
     }
 
     /**
@@ -29,7 +30,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param id
      * @return sensor station
      */
-    @GetMapping(value="/sensor-stations/{uuid}")
+    @GetMapping(value = SS_PATH +"/{uuid}")
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
@@ -38,7 +39,7 @@ public class SensorStationRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station with id: \"" + id + "\" not found.");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(ss);
+        return ResponseEntity.ok(ss);
     }
 
 }

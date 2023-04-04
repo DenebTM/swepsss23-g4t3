@@ -16,16 +16,18 @@ public class UserxRestController implements BaseRestController {
     @Autowired
     private UserService userService;
 
+    private static final String U_PATH = "/users";
+
     /**
      * Route to GET all users
      * @return List of all users
      */
-    @GetMapping(value ="/users")
+    @GetMapping(value = U_PATH)
     public ResponseEntity<Object> getUsers() {
         if (!(userService.getAuthenticatedUser().getUserRole()==UserRole.ADMIN)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     /**
@@ -33,7 +35,7 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return userx
      */
-    @GetMapping(value="/users/{username}")
+    @GetMapping(value = U_PATH+"/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable(value = "username") String username) {
         Userx userx = userService.loadUserByUsername(username);
 
@@ -47,7 +49,7 @@ public class UserxRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(userx);
+        return ResponseEntity.ok(userx);
     }
 
     /**
@@ -55,7 +57,7 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return List of assigned sensor stations
      */
-    @GetMapping(value="/users/{username}/sensor-stations")
+    @GetMapping(value = U_PATH+"/{username}/sensor-stations")
     public ResponseEntity<Object> getAssignedSS(@PathVariable(value = "username") String username) {
         Userx gardener = userService.loadUserByUsername(username);
         // Return a 404 error if the User is not found
@@ -66,7 +68,7 @@ public class UserxRestController implements BaseRestController {
         if (!(gardener.getUserRole().equals(UserRole.ADMIN) || gardener.getUserRole().equals(UserRole.GARDENER))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not a GARDENER, no sensor stations can be assigned to you.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAssignedSS(gardener));
+        return ResponseEntity.ok(userService.getAssignedSS(gardener));
 
     }
 }
