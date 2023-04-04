@@ -28,7 +28,7 @@
  *   Then linear interpolation is used to get the LUX value from the input.
  * Unfortunately our phototransistor is complete garbage and only ever measures
  * values below 50 unless a flashlight is pressed to its face, even out in
- * daylight, so the values we read are not very useful right now. I tried tho.
+ * daylight, so the values we read are not very useful right now.
  */
 
 #define LIGHT_PIN A7
