@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
@@ -33,6 +34,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
+    @JsonIgnore
     @Column(name = "PASSWORD")
     private String password;
 
@@ -151,6 +153,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         return "at.qe.skeleton.model.User[ id=" + username + " ]";
     }
 
+    @JsonIgnore
     @Override
     public String getId() {
         return getUsername();
@@ -160,6 +163,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         setUsername(id);
     }
 
+    @JsonIgnore
     @Override
     public boolean isNew() {
         return (null == createDate);
