@@ -25,41 +25,41 @@ export interface TonalPalette {
  * https://m3.material.io/styles/color/thecolorsystem/colorroles
  */
 export interface M3Colours {
-  /** Primary colours */
+  // Primary colours
   primary: string
   onPrimary: string
   primaryContainer: string
   onPrimaryContainer: string
-  /** Secondary colours */
+  // Secondary colours
   secondary: string
   onSecondary: string
   secondaryContainer: string
   onSecondaryContainer: string
-  /** Tertiary colours */
+  // Tertiary colours
   tertiary: string
   onTertiary: string
   tertiaryContainer: string
   onTertiaryContainer: string
-  /** Error colours */
+  // Error colours
   error: string
   errorContainer: string
   onError: string
   onErrorContainer: string
-  /** Surface colours */
+  // Surface colours
   background: string
   onBackground: string
   surface: string
   onSurface: string
-  /** Surface variant colours */
+  // Surface variant colours
   surfaceVariant: string
   onSurfaceVariant: string
   outline: string
   outlineVariant: string
-  /** Inverse colours */
+  // Inverse colours
   inverseOnSurface: string
   inverseSurface: string
   inversePrimary: string
-  /** Shadows and tints */
+  // Shadows and tints
   shadow: string
   surfaceTint: string
   scrim: string
