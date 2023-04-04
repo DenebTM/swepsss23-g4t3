@@ -30,5 +30,13 @@ public class AccessPointService {
         return apRepository.findFirstById(id);
     }
 
+    /**
+     * saves an access point into database
+     * @param ap the access point to save
+     * @return the saved access point
+     */
+    public AccessPoint saveAP(AccessPoint ap) {
+        return apRepository.save(ap);
+    }
 
 }
