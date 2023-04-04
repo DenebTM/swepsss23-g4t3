@@ -12,7 +12,7 @@
 // time between samples, in milliseconds
 #define HYGRO_READ_INTERVAL_MS 10
 // output/transmit data after each full sample cycle
-#define HYGRO_OUTPUT_INTERVAL_MS HYGRO_SAMPLE_COUNT * HYGRO_READ_INTERVAL_MS
+#define HYGRO_OUTPUT_INTERVAL_MS (HYGRO_SAMPLE_COUNT * HYGRO_READ_INTERVAL_MS)
 
 namespace sensors::hygro {
   void setup();
