@@ -17,6 +17,10 @@ namespace ble {
   // Environmental sensing service
   BLEService sv_environmentalSensing(BLE_UUID_ESS);
   BLEUnsignedIntCharacteristic ch_airPressure(BLE_UUID_AIR_PRESSURE, BLERead | BLENotify);
+  BLEShortCharacteristic ch_temperature(BLE_UUID_TEMPERATURE, BLERead | BLENotify);
+  BLEUnsignedShortCharacteristic ch_humidity(BLE_UUID_HUMIDITY, BLERead | BLENotify);
+  //BLECharacteristic ch_illuminance(BLE_UUID_ILLUMINANCE, BLERead | BLENotify, 3, true);
+  BLEUnsignedShortCharacteristic ch_airQuality(BLE_UUID_AIR_QUALITY, BLERead | BLENotify);
 
   // runtime values received via BLE
   // [TODO: add]
@@ -46,8 +50,10 @@ namespace ble {
 
   // set up environmental sensing service
   void ess_setup() {
-    ch_airPressure.writeValue(0);
     sv_environmentalSensing.addCharacteristic(ch_airPressure);
+    sv_environmentalSensing.addCharacteristic(ch_temperature);
+    sv_environmentalSensing.addCharacteristic(ch_humidity);
+    sv_environmentalSensing.addCharacteristic(ch_airQuality);
 
     BLE.addService(sv_environmentalSensing);
   }
@@ -136,8 +142,23 @@ namespace ble {
   void write_sensor_data() {
     // Sensor data format: float
     // BLE data format: unsigned 32-bit integer with resolution of 0.1Pa
-    uint32_t val = sensors::current_data.air_pressure * 10;
-    ch_airPressure.writeValue(val);
+    uint32_t air_pressure = sensors::current_data.air_pressure * 10;
+    ch_airPressure.writeValue(air_pressure);
+
+    // Sensor data format: float
+    // BLE data format: signed 16-bit integer with resolution of 0.01°C
+    int16_t temperature = sensors::current_data.temperature * 100;
+    ch_temperature.writeValue(temperature);
+
+    // Sensor data format: float
+    // BLE data format: unsigned 16-bit integer with resolution of 0.01%
+    uint16_t humidity = sensors::current_data.humidity * 100;
+    ch_humidity.writeValue(humidity);
+
+    // Sensor data format: float
+    // BLE data format: unsigned 16-bit integer with resolution of 1
+    uint16_t air_quality = round(sensors::current_data.air_quality);
+    ch_airQuality.writeValue(air_quality);
   }
   
 
