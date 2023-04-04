@@ -71,7 +71,6 @@ export type PaletteMode = 'light' | 'dark'
 /**
  * Define custom colours needed for theme.
  * See Material Design 3 docs for usage: https://m3.material.io/styles/color/thecolorsystem/keycolorstones
- * Dark theme is currently not supported.
  */
 export interface M3Theme extends M3Colours {
   mode: PaletteMode
