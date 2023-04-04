@@ -5,6 +5,7 @@
 #include <led.h>
 #include <sensors/bme.h>
 #include <sensors/hygro.h>
+#include <sensors/light.h>
 
 void setup() {
   Serial.begin(9600);
@@ -13,6 +14,7 @@ void setup() {
 
   sensors::bme::setup();
   sensors::hygro::setup();
+  sensors::light::setup();
 
   led::setup();
   led::set_color(led::RED);
@@ -23,6 +25,7 @@ void setup() {
 void loop() {
   sensors::bme::update();
   sensors::hygro::update();
+  sensors::light::update();
 
   ble::update();
 
