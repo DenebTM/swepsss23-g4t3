@@ -28,24 +28,27 @@
  *   Then linear interpolation is used to get the LUX value from the input.
  * Unfortunately our phototransistor is complete garbage and only ever measures
  * values below 50 unless a flashlight is pressed to its face, even out in
- * daylight, so the values we read are not very useful right now. I tried tho.
+ * daylight, so the values we read are not very useful right now.
  */
 
 #define LIGHT_PIN A7
-#define LIGHT_SAMPLE_COUNT 5 // keep track of this many samples for averaging
 
 #define LIGHT_VAL_20LX   53
 #define LIGHT_VAL_50LX   78
 #define LIGHT_VAL_100LX 155
 #define LIGHT_VAL_200LX 248
 
-// how long the sensor waits between reading and and outputting its data, in milliseconds
+// keep track of this many samples for averaging
+#define LIGHT_SAMPLE_COUNT 15
+// time between samples, in milliseconds
 #define LIGHT_READ_INTERVAL_MS 200
-#define LIGHT_OUTPUT_INTERVAL_MS 1000
+// output/transmit data after each full sample cycle
+#define LIGHT_OUTPUT_INTERVAL_MS (LIGHT_SAMPLE_COUNT * LIGHT_READ_INTERVAL_MS)
 
 namespace sensors::light {
   void setup();
 
+  // runs internal timers; call this in the main loop
   void update();
 }
 
