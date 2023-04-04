@@ -27,41 +27,41 @@ export interface TonalPalette {
 export interface M3Colours {
   /** Primary colours */
   primary: string
-  onprimary: string
-  primarycontainer: string
-  onprimarycontainer: string
+  onPrimary: string
+  primaryContainer: string
+  onPrimaryContainer: string
   /** Secondary colours */
   secondary: string
-  onsecondary: string
-  secondarycontainer: string
-  onsecondarycontainer: string
+  onSecondary: string
+  secondaryContainer: string
+  onSecondaryContainer: string
   /** Tertiary colours */
   tertiary: string
-  ontertiary: string
-  tertiarycontainer: string
-  ontertiarycontainer: string
+  onTertiary: string
+  tertiaryContainer: string
+  onTertiaryContainer: string
   /** Error colours */
   error: string
-  errorcontainer: string
-  onerror: string
-  onerrorcontainer: string
+  errorContainer: string
+  onError: string
+  onErrorContainer: string
   /** Surface colours */
   background: string
-  onbackground: string
+  onBackground: string
   surface: string
-  onsurface: string
+  onSurface: string
   /** Surface variant colours */
-  surfacevariant: string
-  onsurfacevariant: string
+  surfaceVariant: string
+  onSurfaceVariant: string
   outline: string
-  outlinevariant: string
+  outlineVariant: string
   /** Inverse colours */
-  inverseonsurface: string
-  inversesurface: string
-  inverseprimary: string
+  inverseOnSurface: string
+  inverseSurface: string
+  inversePrimary: string
   /** Shadows and tints */
   shadow: string
-  surfacetint: string
+  surfaceTint: string
   scrim: string
 }
 
