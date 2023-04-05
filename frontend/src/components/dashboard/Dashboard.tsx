@@ -14,6 +14,9 @@ import { DashboardStatuses } from './DashboardStatuses/DashboardStatuses'
 import { DashboardTable } from './DashboardTable/DashboardTable'
 import { RecentActivity } from './RecentActivity/RecentActivity'
 
+import { PageHeader } from '../page/PageHeader'
+import { DashboardFilters } from './DashboardFilters'
+
 /**
  * Dashboard page
  */
@@ -54,6 +57,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <PageWrapper>
+      <PageHeader right={<DashboardFilters />} />
       <h1>Dashboard</h1>
 
       <Grid container spacing={2} sx={{ width: '100%' }}>
