@@ -50,6 +50,7 @@ export interface M3Colours {
   onBackground: string
   surface: string
   onSurface: string
+  surfaceLowest: string
   // Surface variant colours
   surfaceVariant: string
   onSurfaceVariant: string

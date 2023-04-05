@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/system/Box'
 
 import { AppContext } from '~/contexts/AppContext/AppContext'
+import { theme } from '~/styles/theme'
 
 import { CustomDrawer } from './CustomDrawer'
 import { SidebarContents } from './SidebarContents/SidebarContents'
@@ -34,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', background: theme.background }}>
       <CssBaseline />
 
       <CustomDrawer open={appState.sidebarOpen}>

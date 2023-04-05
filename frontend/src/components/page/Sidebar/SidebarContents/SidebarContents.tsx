@@ -15,7 +15,7 @@ import { SensorStationView, URL } from '~/common'
 import { deleteJwt } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
-import { sidebarIconColour } from '~/styles/theme'
+import { theme } from '~/styles/theme'
 
 import { SidebarElement, SidebarElementWithChildren } from './SidebarElement'
 import { SidebarListItem } from './SidebarListItem'
@@ -32,7 +32,7 @@ const topSidebarVals = (
       label: `Greenhouse ${s.uuid}`,
       url: URL.greenhouseView(s.uuid, SensorStationView.GRAPHICAL),
       icon: (
-        <Badge badgeContent={s.uuid} sx={{ color: sidebarIconColour }}>
+        <Badge badgeContent={s.uuid} sx={{ color: theme.onSurfaceVariant }}>
           <LocalFloristIcon />
         </Badge>
       ),
@@ -89,7 +89,12 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
 
       <Divider sx={{ marginTop: 'auto' }} />
 
-      <SidebarListItem label="Logout" open={props.open} onClick={handleLogout}>
+      <SidebarListItem
+        label="Logout"
+        open={props.open}
+        onClick={handleLogout}
+        selected={false}
+      >
         <LogoutIcon />
       </SidebarListItem>
     </>
