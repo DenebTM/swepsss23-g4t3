@@ -8,14 +8,14 @@ import { PageWrapper } from '~/components/page/PageWrapper'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
+import { theme } from '~/styles/theme'
 
+import { PageHeader } from '../page/PageHeader'
 import { DashboardCard } from './DashboardCard'
+import { DashboardFilters } from './DashboardFilters'
 import { DashboardStatuses } from './DashboardStatuses/DashboardStatuses'
 import { DashboardTable } from './DashboardTable/DashboardTable'
 import { RecentActivity } from './RecentActivity/RecentActivity'
-
-import { PageHeader } from '../page/PageHeader'
-import { DashboardFilters } from './DashboardFilters'
 
 /**
  * Dashboard page
@@ -58,9 +58,9 @@ export const Dashboard: React.FC = () => {
   return (
     <PageWrapper>
       <PageHeader right={<DashboardFilters />} />
-      <h1>Dashboard</h1>
+      <h2>Dashboard</h2>
 
-      <Grid container spacing={2} sx={{ width: '100%' }}>
+      <Grid container spacing={2} sx={{ padding: theme.spacing(2) }}>
         <Grid xs={12} md={6}>
           <DashboardCard>
             <RecentActivity />
