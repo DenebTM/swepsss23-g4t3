@@ -52,7 +52,7 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
         display: 'block',
         marginTop: 0,
         marginBottom: 0,
-        background: props.selected ?? false ? 'cyan' : '', // TODO qqjfmove into theme
+        background: props.selected ?? false ? 'cyan' : '', // TODO qqjf move into theme
       }}
     >
       <Tooltip
