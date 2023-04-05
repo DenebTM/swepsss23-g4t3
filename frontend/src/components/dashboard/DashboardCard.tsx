@@ -3,6 +3,8 @@ import React from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 
+import { theme } from '~/styles/theme'
+
 interface DashboardCardProps {
   /** The card contents */
   children: React.ReactNode
@@ -16,7 +18,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = (props) => {
     <Card
       sx={{
         height: '100%',
-        background: 'pink', // TODO qqjf move into theme
+        background: theme.surfaceLowest,
         minHeight: '200px', // TODO qqjf make this responsive
       }}
     >

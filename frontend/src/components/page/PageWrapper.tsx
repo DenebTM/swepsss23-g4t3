@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles'
 
 import { useUserRole } from '~/hooks/user'
 import { UserRole } from '~/models/user'
-import { sidebarWidth } from '~/styles/theme'
+import { sidebarWidth, theme } from '~/styles/theme'
 
 import { AccessDenied } from './error/AccessDenied'
 import { Sidebar } from './Sidebar/Sidebar'
@@ -17,6 +17,7 @@ const WrapperDiv = styled('div')({
   margin: '0 auto',
   flexDirection: 'column',
   width: `calc(100vw - ${sidebarWidth})`,
+  background: theme.background,
 })
 
 interface PageWrapperProps {

@@ -3,7 +3,7 @@ import { forwardRef, useEffect } from 'react'
 import MuiDrawer from '@mui/material/Drawer'
 import { CSSObject, styled, Theme } from '@mui/material/styles'
 
-import { sidebarIconColour, sidebarWidth } from '~/styles/theme'
+import { sidebarWidth, theme } from '~/styles/theme'
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: sidebarWidth,
@@ -61,7 +61,9 @@ export const CustomDrawer: React.FC<CustomDrawerProps> = forwardRef(
       <Drawer
         variant="permanent"
         open={props.open}
-        PaperProps={{ sx: { color: sidebarIconColour } }}
+        PaperProps={{
+          sx: { color: theme.onSurfaceVariant, background: theme.background },
+        }}
         ref={ref}
       >
         {props.children}

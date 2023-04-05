@@ -6,9 +6,6 @@ import { CustomColours, M3Theme } from './types'
 /** Width of non-collapsed sidebar */
 export const sidebarWidth = '200px'
 
-/** Colour of sidebar icons. TODO qqjf to move into theme */
-export const sidebarIconColour = '#777'
-
 /**
  * Allow passing custom variables into {@link createTheme} by extending the type definition.
  * See: https://mui.com/materialui/customization/theming/#customvariables
