@@ -1,6 +1,5 @@
 package at.qe.skeleton.model;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 @Entity
