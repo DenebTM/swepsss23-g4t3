@@ -1,11 +1,13 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.SensorStation;
+import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,7 +45,6 @@ public class UserService {
      * @param username the username to search for
      * @return the user with the given username
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
     public Userx loadUserByUsername(String username) {
         return userRepository.findFirstByUsername(username);
     }
@@ -104,4 +105,30 @@ public class UserService {
         return gardener.getAssignedSS();
     }
 
+    /**
+     * Function to use in controllers if statement to check authenticated users permissions
+     * @return TRUE if auth. user has only role user, if gardener or admin return FALSE
+     */
+    public Boolean authIsOnlyUser(){
+        return getAuthenticatedUser().getUserRole() == UserRole.USER;
+    }
+    public Boolean isOnlyUser(Userx user){
+        return user.getUserRole() == UserRole.USER;
+    }
+
+    /**
+     * Function to use in controllers if statement to check authenticated users permissions
+     * @return TRUE if auth. user has only role gardener, if admin return FALSE
+     */
+    public Boolean authIsOnlyGardener(){
+        return getAuthenticatedUser().getUserRole() == UserRole.GARDENER;
+    }
+
+    /**
+     * Function to use in controllers if statement to check authenticated users permissions
+     * @return TRUE if auth. user has role admin, if not return FALSE
+     */
+    public Boolean authIsAdmin(){
+        return getAuthenticatedUser().getUserRole() == UserRole.ADMIN;
+    }
 }

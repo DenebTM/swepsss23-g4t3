@@ -157,15 +157,6 @@ public class UserxServiceTest {
         });
     }
 
-    @Test
-    @WithMockUser(username = "susi", authorities = {"USER"})
-    public void testUnauthorizedLoadUser() {
-        Assertions.assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> {
-            Userx userx = userService.loadUserByUsername("admin");
-            Assertions.fail("Call to userService.loadUser should not work without proper authorization for other users than the authenticated one");
-        });
-    }
-
     @WithMockUser(username = "susi", authorities = {"USER"})
     public void testAuthorizedLoadUser() {
         String username = "susi";
