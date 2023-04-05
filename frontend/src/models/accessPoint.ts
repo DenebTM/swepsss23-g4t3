@@ -6,6 +6,7 @@ export type AccessPointId = string
 export interface AccessPoint {
   active: boolean
   lastUpdate: Timestamp
+  id: number
   name: AccessPointId
   serverAddress: string // IP address
 }

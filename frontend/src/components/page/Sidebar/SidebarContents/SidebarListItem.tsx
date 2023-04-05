@@ -52,7 +52,7 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
         display: 'block',
         marginTop: 0,
         marginBottom: 0,
-        background: props.selected ?? false ? 'cyan' : '', // qqjf TODO move into theme
+        background: props.selected ?? false ? 'cyan' : '', // TODO qqjf move into theme
       }}
     >
       <Tooltip
@@ -67,7 +67,7 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
           disabled={buttonDisabled}
           onClick={handleButtonClick}
           sx={{
-            minHeight: props.variant === 'small' ? 24 : 48, // qqjf move into theme
+            minHeight: props.variant === 'small' ? 24 : 48, // TODO qqjf move into theme
             justifyContent: props.open ? 'initial' : 'center',
             px: 2.5,
             '&.Mui-disabled': {
