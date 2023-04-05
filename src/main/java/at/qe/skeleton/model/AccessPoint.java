@@ -1,8 +1,6 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.controllers.api.views.SSView;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 import java.net.InetAddress;
@@ -15,7 +13,6 @@ import java.util.Set;
 public class AccessPoint {
 
     @Id
-    @JsonView(SSView.class)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AP_ID")
     private Integer id;

@@ -1,12 +1,10 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.controllers.api.views.SSView;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "SENSOR_VALUES")
-@JsonView(SSView.class)
 public class SensorValues {
 
     @Id
