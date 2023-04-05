@@ -1,9 +1,6 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.controllers.api.views.SSView;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -11,7 +8,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "SENSOR_STATION")
-@JsonView(SSView.class)
 public class SensorStation {
 
     @Id
@@ -19,6 +15,12 @@ public class SensorStation {
     @Column(name = "SS_ID")
     private Integer id;
 
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id"
+    )
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("apId")
     @ManyToOne(optional = false)
     @JoinColumn(name = "AP_ID")
     private AccessPoint accessPoint;

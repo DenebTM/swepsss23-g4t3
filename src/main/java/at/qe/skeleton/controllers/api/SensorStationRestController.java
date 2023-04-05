@@ -1,9 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.controllers.api.views.SSView;
 import at.qe.skeleton.model.SensorStation;
 import at.qe.skeleton.services.SensorStationService;
-import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,6 @@ public class SensorStationRestController implements BaseRestController {
      * @return List of all sensor stations
      */
     @GetMapping(value = SS_PATH)
-    @JsonView(SSView.class)
     public ResponseEntity<Object> getAllSensorStations() {
         return ResponseEntity.ok(ssService.getAllSS());
     }
@@ -34,7 +31,6 @@ public class SensorStationRestController implements BaseRestController {
      * @return sensor station
      */
     @GetMapping(value = SS_PATH +"/{uuid}")
-    @JsonView(SSView.class)
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
