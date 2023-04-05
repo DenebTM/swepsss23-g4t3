@@ -85,6 +85,7 @@ export const LoginForm: React.FC = () => {
           size="large"
           loading={loggingIn}
           loadingPosition="center"
+          color="primary"
         >
           Log in
         </LoadingButton>
