@@ -29,22 +29,8 @@ export const PageHeader: React.FC<PageHeaderProps> = (props) => {
         ...theme.mixins.toolbar,
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          placeContent: 'flex-start',
-        }}
-      >
-        {props.left}
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          placeContent: 'flex-end',
-        }}
-      >
-        {props.right}
-      </Box>
+      {props.left}
+      {props.right}
     </Box>
   )
 }
