@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
-import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,8 +34,8 @@ public class SensorStation {
             orphanRemoval = true)
     private Set<Measurement> measurements = new HashSet<>();
 
-    @Column(name = "TRANSMISSION_INTERVAL", nullable = false)
-    private Duration transmissionInterval;
+    @Column(name = "AGGREGATION_PERIOD", nullable = false)
+    private Long aggregationPeriod;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER,
@@ -79,8 +78,8 @@ public class SensorStation {
         return measurements;
     }
 
-    public Duration getTransmissionInterval() {
-        return transmissionInterval;
+    public Long getAggregationPeriod() {
+        return aggregationPeriod;
     }
 
     public SensorValues getUpperBound() {
@@ -107,8 +106,8 @@ public class SensorStation {
         this.measurements = measurements;
     }
 
-    public void setTransmissionInterval(Duration transmissionInterval) {
-        this.transmissionInterval = transmissionInterval;
+    public void setAggregationPeriod(Long aggregationPeriod) {
+        this.aggregationPeriod = aggregationPeriod;
     }
 
     public void setUpperBound(SensorValues upperBound) {
