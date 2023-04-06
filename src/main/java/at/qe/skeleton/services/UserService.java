@@ -7,7 +7,6 @@ import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
