@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class UserxRestController implements BaseRestController {
 
@@ -67,13 +70,13 @@ public class UserxRestController implements BaseRestController {
         if (gardener == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with username: \"" + username + "\" not found.");
         }
-        // Return a 403 error if you try to get list of assigned sensor stations for normal users
-        if (userService.roleIsUser(gardener)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The user with username " + username + "is not a GARDENER therefore no sensor stations can be assigned.");
-        }
         // Return a 403 error if a non admin tries to get list of assigned sensor stations for other users
         if (userService.authRoleIsGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to view sensor stations assigned to other gardeners.");
+        }
+        // Return [] if admin tries to get list of assigned sensor stations for normal users
+        if (userService.roleIsUser(gardener)) {
+            return ResponseEntity.ok(new ArrayList<>());
         }
 
         return ResponseEntity.ok(userService.getAssignedSS(gardener));
