@@ -108,10 +108,10 @@ public class UserService {
      * Function to use in controllers if statement to check authenticated users permissions
      * @return TRUE if auth. user has only role user, if gardener or admin return FALSE
      */
-    public Boolean authIsOnlyUser(){
+    public Boolean authRoleIsUser(){
         return getAuthenticatedUser().getUserRole() == UserRole.USER;
     }
-    public Boolean isOnlyUser(Userx user){
+    public Boolean roleIsUser(Userx user){
         return user.getUserRole() == UserRole.USER;
     }
 
@@ -119,7 +119,7 @@ public class UserService {
      * Function to use in controllers if statement to check authenticated users permissions
      * @return TRUE if auth. user has only role gardener, if admin return FALSE
      */
-    public Boolean authIsOnlyGardener(){
+    public Boolean authRoleIsGardener(){
         return getAuthenticatedUser().getUserRole() == UserRole.GARDENER;
     }
 
@@ -127,7 +127,7 @@ public class UserService {
      * Function to use in controllers if statement to check authenticated users permissions
      * @return TRUE if auth. user has role admin, if not return FALSE
      */
-    public Boolean authIsAdmin(){
+    public Boolean authRoleIsAdmin(){
         return getAuthenticatedUser().getUserRole() == UserRole.ADMIN;
     }
 }
