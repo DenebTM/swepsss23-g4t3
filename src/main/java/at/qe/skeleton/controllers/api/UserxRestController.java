@@ -15,15 +15,15 @@ public class UserxRestController implements BaseRestController {
     @Autowired
     private UserService userService;
 
-    private static final String U_PATH = "/users";
+    private static final String USER_PATH = "/users";
 
     /**
      * Route to GET all users
      * @return List of all users
      */
-    @GetMapping(value = U_PATH)
+    @GetMapping(value = USER_PATH)
     public ResponseEntity<Object> getUsers() {
-        if (!(userService.authIsAdmin())) {
+        if (!(userService.authRoleIsAdmin())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
         }
         return ResponseEntity.ok(userService.getAllUsers());
@@ -34,7 +34,7 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return userx
      */
-    @GetMapping(value = U_PATH+"/{username}")
+    @GetMapping(value = USER_PATH +"/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable(value = "username") String username) {
         Userx userx = userService.loadUserByUsername(username);
 
@@ -44,7 +44,7 @@ public class UserxRestController implements BaseRestController {
         }
 
         // Return a 403 error if a non-admin and not user itself tries to get User
-        if (!userService.authIsAdmin() || (userx.equals(userService.getAuthenticatedUser()))) {
+        if (!userService.authRoleIsAdmin() || (userx.equals(userService.getAuthenticatedUser()))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
         }
 
@@ -56,11 +56,11 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return List of assigned sensor stations
      */
-    @GetMapping(value = U_PATH+"/{username}/sensor-stations")
+    @GetMapping(value = USER_PATH +"/{username}/sensor-stations")
     public ResponseEntity<Object> getAssignedSS(@PathVariable(value = "username") String username) {
         Userx gardener = userService.loadUserByUsername(username);
         // Return a 403 error if a normal user tries to get list of assigned sensor stations
-        if (userService.authIsOnlyUser()){
+        if (userService.authRoleIsUser()){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to view sensor stations assigned to a gardener.");
         }
         // Return a 404 error if the user is not found
@@ -68,11 +68,11 @@ public class UserxRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with username: \"" + username + "\" not found.");
         }
         // Return a 403 error if you try to get list of assigned sensor stations for normal users
-        if (userService.isOnlyUser(gardener)) {
+        if (userService.roleIsUser(gardener)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The user with username " + username + "is not a GARDENER therefore no sensor stations can be assigned.");
         }
         // Return a 403 error if a non admin tries to get list of assigned sensor stations for other users
-        if (userService.authIsOnlyGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {
+        if (userService.authRoleIsGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to view sensor stations assigned to other gardeners.");
         }
 
