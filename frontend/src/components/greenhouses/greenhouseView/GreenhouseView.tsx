@@ -37,11 +37,7 @@ export const GreenhouseView: React.FC = () => {
   return (
     <PageWrapper>
       <GreenhouseViewHeader
-        title={
-          'Greenhouse view for greenhouse ' +
-          uuid +
-          (view && 'with view  ' + view)
-        }
+        title={'Greenhouse ' + uuid + (view && ' with view  "' + view + '"')}
       />
       {typeof uuid !== 'undefined' &&
         typeof view !== 'undefined' &&

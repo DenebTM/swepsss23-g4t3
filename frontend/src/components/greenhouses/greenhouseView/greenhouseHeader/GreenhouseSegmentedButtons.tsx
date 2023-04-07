@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
+import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import { styled } from '@mui/material/styles'
 
@@ -54,9 +57,21 @@ export const GreenhouseSegmentedButtons: React.FC = () => {
 
   /** Define buttons for all views */
   const views = [
-    { name: 'Overview', key: SensorStationView.GRAPHICAL, icon: null },
-    { name: 'Gallery', key: SensorStationView.GALLERY, icon: null },
-    { name: 'Table', key: SensorStationView.TABLE, icon: null },
+    {
+      name: 'Overview',
+      key: SensorStationView.GRAPHICAL,
+      icon: <DashboardIcon />,
+    },
+    {
+      name: 'Gallery',
+      key: SensorStationView.GALLERY,
+      icon: <ImageOutlinedIcon />,
+    },
+    {
+      name: 'Table',
+      key: SensorStationView.TABLE,
+      icon: <StorageOutlinedIcon />,
+    },
   ]
 
   /** Handle navigate to targetView on button click */
@@ -79,8 +94,9 @@ export const GreenhouseSegmentedButtons: React.FC = () => {
         {views.map((btn) => (
           <SegmentedButton
             key={btn.key}
-            selected={view === btn.key}
             onClick={() => handleNavigate(btn.key)}
+            icon={btn.icon}
+            selected={view === btn.key}
           >
             {btn.name}
           </SegmentedButton>

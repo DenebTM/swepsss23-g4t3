@@ -5,11 +5,12 @@ import Button, { ButtonProps } from '@mui/material/Button'
 import { theme } from '~/styles/theme'
 
 interface SegmentedButtonProps extends ButtonProps {
+  icon: React.ReactNode
   selected: boolean
 }
 /** Component for a single button within a group of segmented buttons */
 export const SegmentedButton: React.FC<SegmentedButtonProps> = (props) => {
-  const { selected, ...buttonProps } = props
+  const { icon, selected, ...buttonProps } = props
 
   /** Styles for a selected button segment */
   const selectedBtnStyles = {
@@ -32,6 +33,7 @@ export const SegmentedButton: React.FC<SegmentedButtonProps> = (props) => {
     <Button
       {...buttonProps}
       disabled={props.selected}
+      startIcon={props.selected ? icon : null}
       sx={props.selected ? selectedBtnStyles : unselectedBtnStyles}
     />
   )
