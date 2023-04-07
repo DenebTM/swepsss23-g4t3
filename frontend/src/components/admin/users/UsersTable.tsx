@@ -7,19 +7,18 @@ import dayjs from 'dayjs'
 import { getUsers, updateUser } from '~/api/endpoints/user'
 import { User, UserRole } from '~/models/user'
 
+/** Columns for the user managmement table */
 const columns: GridColDef<User, any, User>[] = [
   { field: 'username', headerName: 'Username', flex: 1 },
   {
     field: 'firstName',
     headerName: 'First name',
-    type: 'string',
     editable: true,
     flex: 1,
   },
   {
     field: 'lastName',
     headerName: 'Last name',
-    type: 'string',
     editable: true,
     flex: 1,
   },
@@ -32,6 +31,8 @@ const columns: GridColDef<User, any, User>[] = [
       { value: UserRole.GARDENER, label: 'GARDENER' },
       { value: UserRole.USER, label: 'USER' },
     ],
+    headerAlign: 'center',
+    align: 'center',
     editable: true,
     flex: 1,
   },
@@ -41,6 +42,8 @@ const columns: GridColDef<User, any, User>[] = [
     description: 'When the user was created',
     type: 'dateTime',
     flex: 1,
+    headerAlign: 'center',
+    align: 'center',
     valueGetter: (params: GridValueGetterParams<User, string>) =>
       dayjs(params.value).toDate(),
   },
