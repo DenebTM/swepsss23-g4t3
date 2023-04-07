@@ -23,16 +23,16 @@ with open("conf.example.yaml", "r") as f:
 
 
 
-sensordataDB = sqlite3.connect('sensordata.db')
+sensordataDB = sqlite3.connect("sensordata.db")
 sensordataCursor= sensordataDB.cursor()
 
 
 
 
 async def send_request(session):
-    async with session.get('') as response:
+    async with session.get("") as response:
         data = await response.json()
-        return data.get('connection_allowed')
+        return data.get("connection_allowed")
 
 
 async def listen_for_instructions(session):
