@@ -97,6 +97,7 @@ export const GreenhouseSegmentedButtons: React.FC = () => {
             onClick={() => handleNavigate(btn.key)}
             icon={btn.icon}
             selected={view === btn.key}
+            aria-label={'Navigate to greenhouse' + btn.key.toLowerCase()}
           >
             {btn.name}
           </SegmentedButton>
