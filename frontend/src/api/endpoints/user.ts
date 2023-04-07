@@ -1,5 +1,5 @@
 import { Server } from 'miragejs'
-import { _delete, _get } from '~/api/intercepts'
+import { _delete, _get, _put } from '~/api/intercepts'
 import { User, Username } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
@@ -26,12 +26,27 @@ export const getUser = async (username: Username): Promise<User> => {
 }
 
 /**
+ * Update a single user by username
+ * PUT /api/users/${username}
+ * @returns The updated user
+ */
+export const updateUser = async (
+  username: Username,
+  updatedUser: Partial<User>
+): Promise<User> => {
+  return _put(`${USERS_URI}/${username}`, { ...updatedUser })
+}
+
+/**
  * Delete a single user by username
  * DEL /api/users/${username}
  */
 export const deleteUser = async (username: Username): Promise<void> => {
   return _delete(`${USERS_URI}/${username}`)
 }
+
+/** Constant for mocking routes related to a single user */
+const singleUserRoute = `${USERS_URI}/:username`
 
 /** Mocked users functions */
 export const mockedUserReqs: EndpointReg = (server: Server) => {
@@ -42,19 +57,33 @@ export const mockedUserReqs: EndpointReg = (server: Server) => {
   })
 
   /** Mock {@link getUser} */
-  server.get(`${USERS_URI}/:username`, (schema: AppSchema, request) => {
+  server.get(singleUserRoute, (schema: AppSchema, request) => {
     const username: Username = request.params.username
     const user = schema.findBy('user', { username: username })
     return user ? success(user.attrs) : notFound(`user ${username}`)
   })
 
   /** Mock {@link deleteUser} */
-  server.delete(`${USERS_URI}/:username`, (schema: AppSchema, request) => {
+  server.delete(singleUserRoute, (schema: AppSchema, request) => {
     const username: Username = request.params.username
     const user = schema.findBy('user', { username: username })
     if (user) {
       user.destroy()
       return success()
+    } else {
+      return notFound(`user ${username}`)
+    }
+  })
+
+  /** Mock {@link updateUser} */
+  server.put(singleUserRoute, (schema: AppSchema, request) => {
+    const username: Username = request.params.username
+
+    const user = schema.findBy('user', { username: username })
+    if (user) {
+      const body: Partial<User> = JSON.parse(request.requestBody)
+      user.update(body)
+      return success(user.attrs)
     } else {
       return notFound(`user ${username}`)
     }

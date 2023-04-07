@@ -6,7 +6,7 @@ import { handleAxiosError } from '~/api/intercepts'
 import { API_DEV_URL } from '~/common'
 import { LoginResponse } from '~/models/login'
 
-import { Endpoints } from '../mirageTypes'
+import { AppSchema, Endpoints } from '../mirageTypes'
 import { success, unauthorised } from './helpers'
 
 const LOGIN_URI = `${API_DEV_URL}/handle-login`
@@ -63,7 +63,7 @@ export const logout = async (): Promise<void> => {
 export const mockedLoginEndpoints: Endpoints = {
   /** Mock {@link handleLogin} */
   'handle-login': (server: Server) => {
-    server.post(LOGIN_URI, (schema, request) => {
+    server.post(LOGIN_URI, (schema: AppSchema, request) => {
       const body: { username: string; password: string } = JSON.parse(
         request.requestBody
       )
