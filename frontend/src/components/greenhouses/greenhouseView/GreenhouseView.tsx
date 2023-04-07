@@ -39,11 +39,7 @@ export const GreenhouseView: React.FC = () => {
       {
         typeof uuid !== 'undefined' && typeof view !== 'undefined' && (
           <>
-            <GreenhouseViewHeader
-              title={'Greenhouse ' + uuid}
-              uuid={uuid}
-              view={view}
-            />
+            <GreenhouseViewHeader view={view} uuid={uuid} />
             {(() => {
               switch (view) {
                 case SensorStationView.GALLERY:
