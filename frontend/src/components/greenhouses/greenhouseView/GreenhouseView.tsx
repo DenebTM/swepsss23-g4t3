@@ -36,21 +36,25 @@ export const GreenhouseView: React.FC = () => {
 
   return (
     <PageWrapper>
-      <GreenhouseViewHeader
-        title={'Greenhouse ' + uuid + (view && ' with view  "' + view + '"')}
-      />
-      {typeof uuid !== 'undefined' &&
-        typeof view !== 'undefined' &&
-        (() => {
-          switch (view) {
-            case SensorStationView.GALLERY:
-              return <GreenhouseGallery uuid={uuid} />
-            case SensorStationView.TABLE:
-              return <GreenhouseTabularView uuid={uuid} />
-            default:
-              return <GreenhouseGraphicalView uuid={uuid} />
-          }
-        })()}
+      {typeof uuid !== 'undefined' && typeof view !== 'undefined' && (
+        <>
+          <GreenhouseViewHeader
+            title={'Greenhouse ' + uuid}
+            uuid={uuid}
+            view={view}
+          />
+          {(() => {
+            switch (view) {
+              case SensorStationView.GALLERY:
+                return <GreenhouseGallery uuid={uuid} />
+              case SensorStationView.TABLE:
+                return <GreenhouseTabularView uuid={uuid} />
+              default:
+                return <GreenhouseGraphicalView uuid={uuid} />
+            }
+          })()}
+        </>
+      )}
     </PageWrapper>
   )
 }
