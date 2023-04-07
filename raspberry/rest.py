@@ -3,6 +3,7 @@ import yaml
 import aiohttp
 import requests
 import json
+import time
 from bleak import BleakScanner, BleakClient
 from bleak.exc import BleakError
 import sqlite3
@@ -83,11 +84,20 @@ async def search_for_sensorstations():
 
 
 async def read_and_send_sensorvalues(sensorstation):
-    pass
+    async with BleakClient(sensorstation.address) as client:
+        while True:
+            air_pressure = int.from_bytes(await client.read_gatt_char(air_pressure_uuid), "little", signed=False)/1000
+            sensordataCursor.execute("INSERT INTO sensordata (sensors_station_name, air_pressure, datetime) VALUES (?, ?, ?)", (sensorstation.name, air_pressure, int(time.time())))
+            sensordataDB.commit()
+            print(air_pressure)
+            print(sensorstation.name)
+            await asyncio.sleep(10)
+        pass
 
-async def connection_to_sensorstation(sensorstation, interval):
-    pass
-
+async def spawn_sensorstation_tasks(sensorstations):
+    for sensorstation in sensorstations:
+        asyncio.create_task(read_and_send_sensorvalues(sensorstation["name"]))
+    
 
 async def update_sensorstations(json_data):
     data = json.loads(json_data)
@@ -98,7 +108,7 @@ async def update_sensorstations(json_data):
         transmisstioninterval = sensor["transmissioninterval"]
         humidity_max = sensor["thresholds"]["humidity_max"]
         humidity_min = sensor["thresholds"]["humidity_max"]
-
+    #write it to database
     pass
 
 async def check_values_for_threshholds():
