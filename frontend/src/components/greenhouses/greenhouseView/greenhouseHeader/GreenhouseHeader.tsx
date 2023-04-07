@@ -1,11 +1,15 @@
 import React from 'react'
 
+import { SensorStationView } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
+import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GreenhouseSegmentedButtons } from './GreenhouseSegmentedButtons'
 
 interface GreenhouseViewHeaderProps {
   title: string
+  uuid: SensorStationUuid
+  view: SensorStationView
 }
 
 /**
@@ -17,7 +21,7 @@ export const GreenhouseViewHeader: React.FC<GreenhouseViewHeaderProps> = (
   return (
     <PageHeader
       left={<h3>{props.title}</h3>}
-      right={<GreenhouseSegmentedButtons />}
+      right={<GreenhouseSegmentedButtons uuid={props.uuid} view={props.view} />}
     />
   )
 }
