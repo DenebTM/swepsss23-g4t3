@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/sensorStations'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { Image } from '~/models/image'
+import { Photo } from '~/models/photo'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GalleryImageList } from './GalleryImageList'
@@ -18,7 +18,7 @@ interface GreenhouseGalleryProps {
  */
 export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
   const addSnackbarMessage = useAddSnackbarMessage()
-  const [images, setImages] = useState<Image[]>()
+  const [photos, setPhotos] = useState<Photo[]>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
   /** Load images from the API on component mount */
@@ -26,7 +26,7 @@ export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
     const photoPromise = cancelable(getSensorStationPhotos(props.uuid))
     photoPromise
       .then((data) => {
-        setImages(data)
+        setPhotos(data)
       })
       .catch((err: Error) =>
         setSnackbarMessage({
@@ -47,5 +47,15 @@ export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
     }
   }, [snackbarMessage])
 
-  return <>{images && <GalleryImageList images={images} uuid={props.uuid} />}</>
+  return (
+    <>
+      {photos && (
+        <GalleryImageList
+          photos={photos}
+          setPhotos={setPhotos}
+          uuid={props.uuid}
+        />
+      )}
+    </>
+  )
 }

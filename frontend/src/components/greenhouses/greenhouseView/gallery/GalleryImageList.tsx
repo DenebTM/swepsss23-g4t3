@@ -1,18 +1,19 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import Box from '@mui/material/Box'
 import ImageList from '@mui/material/ImageList'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import { Image } from '~/models/image'
+import { Photo } from '~/models/photo'
 import { SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 import { ImageListItem } from './ImageListItem/ImageListItem'
 
 interface GalleryImageListProps {
-  images: Image[]
+  photos: Photo[]
+  setPhotos: Dispatch<SetStateAction<Photo[] | undefined>>
   uuid: SensorStationUuid
 }
 
@@ -27,17 +28,18 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
 
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
-      {props.images.length > 0 ? (
+      {props.photos.length > 0 ? (
         <ImageList
           variant="masonry"
           cols={breakSm ? 1 : breakMd ? 2 : 3}
           gap={4}
         >
-          {props.images.map((im) => (
+          {props.photos.map((im) => (
             <ImageListItem
               key={im.url}
-              image={im}
               alt={`Photograph of a plant for greenhouse ${props.uuid}`}
+              photo={im}
+              setPhotos={props.setPhotos}
             />
           ))}
         </ImageList>
