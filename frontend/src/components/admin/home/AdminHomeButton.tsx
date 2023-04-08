@@ -47,10 +47,14 @@ export const AdminHomeButton: React.FC<AdminHomeButtonProps> = (props) => {
             height: '100%',
           }}
         >
-          <Typography color={theme.onSurface} variant="body1">
+          <Typography color={theme.onSurface} variant="body1" align="left">
             {props.title}
           </Typography>
-          <Typography color={theme.onSurfaceVariant} variant="body2">
+          <Typography
+            color={theme.onSurfaceVariant}
+            variant="body2"
+            align="left"
+          >
             {props.description}
           </Typography>
         </Box>
