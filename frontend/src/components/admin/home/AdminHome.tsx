@@ -1,7 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import AddIcon from '@mui/icons-material/Add'
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
+import TocOutlinedIcon from '@mui/icons-material/TocOutlined'
+import WifiOutlinedIcon from '@mui/icons-material/WifiOutlined'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import Grid from '@mui/material/Unstable_Grid2'
 
@@ -33,19 +37,19 @@ export const AdminHome: React.FC = () => {
     {
       title: 'Manage Access Points',
       description: 'Add and remove access points',
-      icon: <PersonOutlineOutlinedIcon fontSize={iconFontSize} />,
+      icon: <WifiOutlinedIcon fontSize={iconFontSize} />,
       onClick: () => navigate(URL.manageAccessPoints),
     },
     {
       title: 'Audit Log',
       description: 'View filterable logs for events and errors',
-      icon: <PersonOutlineOutlinedIcon fontSize={iconFontSize} />,
+      icon: <TocOutlinedIcon fontSize={iconFontSize} />,
       onClick: () => navigate(URL.adminLogs),
     },
     {
       title: 'Add Greenhouses',
       description: 'Connect a new greenhouse',
-      icon: <PersonOutlineOutlinedIcon fontSize={iconFontSize} />,
+      icon: <AddIcon fontSize={iconFontSize} />,
       onClick: () =>
         addSnackbarMessage({
           header: 'Not Implemented',
@@ -56,7 +60,7 @@ export const AdminHome: React.FC = () => {
     {
       title: 'Manage Greenhouses',
       description: 'Print QR codes and assign gardeners to greenhouses',
-      icon: <PersonOutlineOutlinedIcon fontSize={iconFontSize} />,
+      icon: <HomeOutlinedIcon fontSize={iconFontSize} />,
       onClick: () => navigate(URL.manageGreenhouses),
     },
   ]
