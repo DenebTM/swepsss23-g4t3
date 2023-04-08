@@ -13,12 +13,15 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { theme } from '~/styles/theme'
 
 interface DeleteDialogProps {
-  /** Function to run after successful deletion */
+  /** Function to run after successful deletion. */
   afterDelete?: () => void
   /** A short description of the entity to be deleted. Will be displayed in the dialog title. */
   entityName: string
+  /** Function to (asynchronously) delete the entity. */
   handleDelete: () => Promise<void>
+  /** Only show the dialog if `open` is true. */
   open: boolean
+  /** Used to close the dialog on clickaway or after an action is complete, */
   setOpen: Dispatch<SetStateAction<boolean>>
 }
 
@@ -32,6 +35,7 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
   const handleClose = () => {
     props.setOpen(false)
   }
+
   /** Set a loading state, delete the entity, and catch errors if needed */
   const handleDelete = () => {
     setDeletePending(true)

@@ -21,9 +21,7 @@ interface DeleteUserCellProps {
 export const DeleteUserCell: React.FC<DeleteUserCellProps> = (props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
-  /** Update a single user */
-  const handleDeleteUser = () => deleteUser(props.username)
-
+  /** Open the delete dialog when the delete icon is clicked on */
   const handleIconClick = (e: React.MouseEvent) => {
     e.stopPropagation() // Prevent selecting the cell on click
     setDeleteDialogOpen(true)
@@ -50,7 +48,7 @@ export const DeleteUserCell: React.FC<DeleteUserCellProps> = (props) => {
         open={deleteDialogOpen}
         setOpen={setDeleteDialogOpen}
         entityName={props.username}
-        handleDelete={handleDeleteUser}
+        handleDelete={() => deleteUser(props.username)}
       />
     </>
   )
