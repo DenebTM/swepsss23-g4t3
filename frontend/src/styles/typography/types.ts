@@ -17,14 +17,26 @@ export interface TypographyScale {
   large: FontDetails
 }
 
+/** Custom typography variants for the MUI Typography component */
+export type TypographyVariant =
+  | 'displayLarge'
+  | 'displayMedium'
+  | 'displaySmall'
+  | 'headlineLarge'
+  | 'headlineMedium'
+  | 'headlineSmall'
+  | 'titleLarge'
+  | 'titleMedium'
+  | 'titleSmall'
+  | 'labelLarge'
+  | 'labelMedium'
+  | 'labelSmall'
+  | 'bodyLarge'
+  | 'bodyMedium'
+  | 'bodySmall'
+
 /**
  * Interface for the typography tokens defined for M3 typography:
  * https://m3.material.io/styles/typography/type-scale-tokens
  */
-export interface TypographyTokens {
-  display: TypographyScale
-  headline: TypographyScale
-  title: TypographyScale
-  label: TypographyScale
-  body: TypographyScale
-}
+export type TypographyTokens = Record<TypographyVariant, FontDetails>
