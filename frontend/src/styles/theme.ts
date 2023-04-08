@@ -3,19 +3,31 @@ import { createTheme } from '@mui/material/styles'
 import { customColors, getM3Tokens } from './colours/themeColours'
 import { CustomColours, M3Theme, PaletteMode } from './colours/types'
 import { typographyTheme } from './typography/themeTypography'
-
-/** Width of non-collapsed sidebar */
-export const sidebarWidth = '200px'
+import { TypographyVariant } from './typography/types'
 
 /**
  * Allow passing custom variables into {@link createTheme} by extending the type definition.
  * See: https://mui.com/materialui/customization/theming/#customvariables
  */
 declare module '@mui/material/styles' {
+  // Add custom colours and typography variants to the Theme
   interface Theme extends M3Theme, CustomColours {}
-  // allow configuration using `createTheme`
+  type TypographyVariants = Record<TypographyVariant, React.CSSProperties>
+
+  // Allow configuring colours and typography using `createTheme`
   interface ThemeOptions extends M3Theme, CustomColours {}
+  type TypographyVariantsOptions = Partial<
+    Record<TypographyVariant, React.CSSProperties>
+  >
 }
+
+/** Allow passing custom {@link TypographyVariant} values to the MUI Typography component */
+declare module '@mui/material/Typography' {
+  type TypographyPropsVariantOverrides = Record<TypographyVariant, true>
+}
+
+/** Width of non-collapsed sidebar */
+export const sidebarWidth = '200px'
 
 /** Generate MUI theme according to palette mode */
 const generateTheme = (mode: PaletteMode) => {
@@ -25,7 +37,7 @@ const generateTheme = (mode: PaletteMode) => {
     ...tokens,
     ...customColors,
 
-    // Add M3 theme to
+    // Add M3 theme to default MUI palette
     palette: {
       primary: { main: tokens.primary },
       secondary: { main: tokens.secondary },
@@ -36,24 +48,29 @@ const generateTheme = (mode: PaletteMode) => {
 /** Padding for input chips, filter chips, and buttons */
 const chipPadding = '14px 14px'
 
+/** Label style for buttons and chips */
+const chipTypography = typographyTheme.labelLarge
+
 /** Custom MUI theme */
 export const theme = createTheme({
   ...generateTheme('light'),
-  // Override default typography styles
   typography: {
-    h1: { ...typographyTheme.display.large },
-    h2: { ...typographyTheme.display.medium },
-    h3: { ...typographyTheme.display.small },
-    h4: { ...typographyTheme.headline.large },
-    h5: { ...typographyTheme.headline.medium },
-    h6: { ...typographyTheme.headline.small },
-    subtitle1: { ...typographyTheme.title.large },
-    subtitle2: { ...typographyTheme.title.medium },
-    body1: { ...typographyTheme.body.large },
-    body2: { ...typographyTheme.body.medium },
-    caption: { ...typographyTheme.label.small },
-    button: { ...typographyTheme.label.large },
-    overline: { ...typographyTheme.label.small },
+    // Add M3 typography variants
+    ...typographyTheme,
+    // Override default typography variants with M3 styles
+    h1: { ...typographyTheme.displayLarge },
+    h2: { ...typographyTheme.displayMedium },
+    h3: { ...typographyTheme.displaySmall },
+    h4: { ...typographyTheme.headlineLarge },
+    h5: { ...typographyTheme.headlineMedium },
+    h6: { ...typographyTheme.headlineSmall },
+    subtitle1: { ...typographyTheme.titleLarge },
+    subtitle2: { ...typographyTheme.titleMedium },
+    body1: { ...typographyTheme.bodyLarge },
+    body2: { ...typographyTheme.bodyMedium },
+    caption: { ...typographyTheme.labelSmall },
+    button: { ...chipTypography },
+    overline: { ...typographyTheme.labelSmall },
   },
   // Component overrides
   components: {
@@ -61,20 +78,25 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          ...typographyTheme.label.large,
+          ...chipTypography,
           padding: chipPadding,
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: { ...typographyTheme.label.large },
+        root: { ...chipTypography },
         input: { padding: chipPadding },
       },
     },
     MuiInputLabel: {
       styleOverrides: {
-        root: { ...typographyTheme.label.large },
+        root: { ...chipTypography },
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        root: { ...chipTypography },
       },
     },
   },

@@ -144,9 +144,19 @@ const title: TypographyScale = {
  * M3 typography theme. Exported from https://m3.material.io/theme-builder#/custom
  */
 export const typographyTheme: TypographyTokens = {
-  display: display,
-  headline: headline,
-  title: title,
-  label: label,
-  body: body,
+  displayLarge: display.large,
+  displayMedium: display.medium,
+  displaySmall: display.small,
+  headlineLarge: headline.large,
+  headlineMedium: headline.medium,
+  headlineSmall: headline.small,
+  titleLarge: title.large,
+  titleMedium: title.medium,
+  titleSmall: title.small,
+  labelLarge: label.large,
+  labelMedium: label.medium,
+  labelSmall: label.small,
+  bodyLarge: body.large,
+  bodyMedium: body.medium,
+  bodySmall: body.small,
 }
