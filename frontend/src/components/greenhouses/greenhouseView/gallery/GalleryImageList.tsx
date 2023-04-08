@@ -1,0 +1,53 @@
+import * as React from 'react'
+
+import Box from '@mui/material/Box'
+import ImageList from '@mui/material/ImageList'
+import ImageListItem from '@mui/material/ImageListItem'
+import Typography from '@mui/material/Typography'
+import useMediaQuery from '@mui/material/useMediaQuery'
+
+import { Image } from '~/models/image'
+import { SensorStationUuid } from '~/models/sensorStation'
+import { theme } from '~/styles/theme'
+
+interface GalleryImageListProps {
+  images: Image[]
+  uuid: SensorStationUuid
+}
+
+/**
+ * Display a list of images in a grid format.
+ * See https://mui.com/material-ui/react-image-list/ for more information.
+ * The number of columsn is set dynamically according to the current screen width.
+ */
+export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
+  const breakSm = useMediaQuery(theme.breakpoints.down('sm'))
+  const breakMd = useMediaQuery(theme.breakpoints.down('md'))
+
+  return (
+    <Box sx={{ width: '100%', height: '100%' }}>
+      {props.images.length > 0 ? (
+        <ImageList
+          variant="masonry"
+          cols={breakSm ? 1 : breakMd ? 2 : 3}
+          gap={4}
+        >
+          {props.images.map((imageUrl) => (
+            <ImageListItem key={imageUrl}>
+              <img
+                src={`${imageUrl}?w=248&fit=crop&auto=format`}
+                srcSet={`${imageUrl}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                alt={`Photograph of a plant for greenhouse ${props.uuid}`}
+                loading="lazy"
+              />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      ) : (
+        <Typography variant="bodyLarge" color="onSurface" component="p">
+          No photos to display.
+        </Typography>
+      )}
+    </Box>
+  )
+}
