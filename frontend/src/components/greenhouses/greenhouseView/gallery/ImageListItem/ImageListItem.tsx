@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import MuiImageListItem from '@mui/material/ImageListItem'
 
 import { useUserRole } from '~/hooks/user'
-import { Image } from '~/models/image'
+import { Photo } from '~/models/photo'
 import { UserRole } from '~/models/user'
 
 import { DeleteImageBar } from './DeleteImageBar'
 
 interface ImageListItemProps {
-  /** Image alt-text */
+  /** Photo alt-text */
   alt: string
   /** URL to the images */
-  image: Image
+  photo: Photo
+  /** Update photos in the state of the parent compoentns */
+  setPhotos: Dispatch<SetStateAction<Photo[] | undefined>>
 }
 
 /**
@@ -31,19 +33,20 @@ export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
 
   return (
     <MuiImageListItem
-      sx={{
-        background: 'blue',
-      }}
       onMouseOver={handleShowItemBar}
       onMouseOut={() => setShowItemBar(false)}
     >
       <img
-        src={`${props.image.url}?w=248&fit=crop&auto=format`}
-        srcSet={`${props.image.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+        src={`${props.photo.url}?w=248&fit=crop&auto=format`}
+        srcSet={`${props.photo.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
         alt={props.alt}
         loading="lazy"
       />
-      <DeleteImageBar image={props.image} show={showItemBar} />
+      <DeleteImageBar
+        photo={props.photo}
+        setPhotos={props.setPhotos}
+        show={showItemBar}
+      />
     </MuiImageListItem>
   )
 }
