@@ -5,6 +5,8 @@ import Fade from '@mui/material/Fade'
 import IconButton from '@mui/material/IconButton'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 
+import { Tooltip } from '@component-lib/Tooltip'
+import dayjs from 'dayjs'
 import { Image } from '~/models/image'
 import { theme } from '~/styles/theme'
 
@@ -21,23 +23,25 @@ export const DeleteImageBar: React.FC<DeleteImageBarProps> = (props) => {
   return (
     <Fade in={props.show}>
       <ImageListItemBar
-        title="Delete photo"
+        title={`Uploaded: ${dayjs(props.image.uploaded).format('YYYY-MM-DD')}`}
         actionIcon={
-          <IconButton
-            size="small"
-            sx={{
-              color: theme.onErrorContainer,
-              background: theme.errorContainer,
-              '&:hover': {
-                background: theme.ref.error[80],
-                transition: theme.transitions.create('background'),
-              },
-              marginRight: 1,
-            }}
-            aria-label={`Delete photo ${props.image}`}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <Tooltip arrow title="Delete photo">
+            <IconButton
+              size="small"
+              sx={{
+                color: theme.onErrorContainer,
+                background: theme.errorContainer,
+                '&:hover': {
+                  background: theme.ref.error[80],
+                  transition: theme.transitions.create('background'),
+                },
+                marginRight: 1,
+              }}
+              aria-label={`Delete photo ${props.image}`}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         }
       />
     </Fade>

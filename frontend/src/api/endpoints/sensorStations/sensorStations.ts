@@ -99,13 +99,16 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
       // Generate a list of random URLs to example images
       const fakeImages: Image[] = []
       for (let i = 0; i < faker.datatype.number({ min: 0, max: 15 }); i++) {
-        fakeImages.push(
-          faker.image.nature(
+        fakeImages.push({
+          url: faker.image.nature(
             faker.datatype.number({ min: 300, max: 900 }),
             faker.datatype.number({ min: 200, max: 600 }),
             true
-          )
-        )
+          ),
+          uploaded: faker.date
+            .between('2023-03-29T00:00:00.000Z', '2023-03-30T00:00:00.000Z')
+            .toISOString(),
+        })
       }
 
       return success(fakeImages)

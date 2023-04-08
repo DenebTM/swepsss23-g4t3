@@ -31,7 +31,6 @@ export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
 
   return (
     <MuiImageListItem
-      key={props.image}
       sx={{
         background: 'blue',
       }}
@@ -39,8 +38,8 @@ export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
       onMouseOut={() => setShowItemBar(false)}
     >
       <img
-        src={`${props.image}?w=248&fit=crop&auto=format`}
-        srcSet={`${props.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+        src={`${props.image.url}?w=248&fit=crop&auto=format`}
+        srcSet={`${props.image.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
         alt={props.alt}
         loading="lazy"
       />
