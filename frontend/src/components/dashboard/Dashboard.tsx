@@ -1,6 +1,7 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
+import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import { getSensorStations } from '~/api/endpoints/sensorStations/sensorStations'
@@ -58,7 +59,9 @@ export const Dashboard: React.FC = () => {
   return (
     <PageWrapper>
       <PageHeader right={<DashboardFilters />} />
-      <h2>Dashboard</h2>
+      <Typography variant="headlineLarge" color="onSurface" component="h1">
+        Dashboard
+      </Typography>
 
       <Grid container spacing={2} sx={{ padding: theme.spacing(2) }}>
         <Grid xs={12} md={6}>

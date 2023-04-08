@@ -21,9 +21,18 @@ declare module '@mui/material/styles' {
   >
 }
 
+/**
+ * Define a separate type equal to the original `TypographyPropsVariantOverrides` inside @mui/material/Typography,
+ * as otherwise TypeScript (rightly) complains about circular references. This is needed so that TypeScript recognises that
+ * this is a correct extension of `TypographyPropsVariantOverrides`.
+ */
+type BaseTypographyPropsVariantOverrides = object
+
 /** Allow passing custom {@link TypographyVariant} values to the MUI Typography component */
 declare module '@mui/material/Typography' {
-  type TypographyPropsVariantOverrides = Record<TypographyVariant, true>
+  interface TypographyPropsVariantOverrides
+    extends Record<TypographyVariant, true>,
+      BaseTypographyPropsVariantOverrides {}
 }
 
 /** Width of non-collapsed sidebar */
