@@ -33,10 +33,10 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
           cols={breakSm ? 1 : breakMd ? 2 : 3}
           gap={4}
         >
-          {props.images.map((imageUrl) => (
+          {props.images.map((im) => (
             <ImageListItem
-              key={imageUrl}
-              image={imageUrl}
+              key={im.url}
+              image={im}
               alt={`Photograph of a plant for greenhouse ${props.uuid}`}
             />
           ))}
