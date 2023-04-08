@@ -1,14 +1,15 @@
-import * as React from 'react'
+import React from 'react'
 
 import Box from '@mui/material/Box'
 import ImageList from '@mui/material/ImageList'
-import ImageListItem from '@mui/material/ImageListItem'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { Image } from '~/models/image'
 import { SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
+
+import { ImageListItem } from './ImageListItem/ImageListItem'
 
 interface GalleryImageListProps {
   images: Image[]
@@ -33,14 +34,11 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
           gap={4}
         >
           {props.images.map((imageUrl) => (
-            <ImageListItem key={imageUrl}>
-              <img
-                src={`${imageUrl}?w=248&fit=crop&auto=format`}
-                srcSet={`${imageUrl}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                alt={`Photograph of a plant for greenhouse ${props.uuid}`}
-                loading="lazy"
-              />
-            </ImageListItem>
+            <ImageListItem
+              key={imageUrl}
+              image={imageUrl}
+              alt={`Photograph of a plant for greenhouse ${props.uuid}`}
+            />
           ))}
         </ImageList>
       ) : (
