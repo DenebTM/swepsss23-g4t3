@@ -26,9 +26,10 @@ export const Login: React.FC = () => {
           }}
         >
           <Typography
-            variant="h4"
+            variant="headlineLarge"
             align="center"
-            color="textSecondary"
+            color="onSurface"
+            component="h1"
             gutterBottom
           >
             Log in
