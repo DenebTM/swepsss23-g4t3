@@ -17,7 +17,7 @@ interface PageWrapperProps {
   /** If hideSidebar is true then the sidebar will not be shown */
   hideSidebar?: boolean
 
-  /** Restrict viewing the page to users with a certain role */
+  /** Restrict viewing the page to users with certain roles */
   requiredRoles?: UserRole[]
 }
 

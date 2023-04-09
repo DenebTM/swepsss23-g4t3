@@ -5,8 +5,16 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
-import { Value } from './EditableCell/SliderCell'
 import { EditRowButton } from './EditRowButton'
+
+/**
+ * Interface for a range of values.
+ * Use to store a lower and upper bound for greenhouse sensor values.
+ */
+export interface ValueRange {
+  lower: number
+  upper: number
+}
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
@@ -27,7 +35,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
-export interface EditableCellProps<V extends Value | number> {
+export interface EditableCellProps<V extends ValueRange | number> {
   editing: boolean
   rowValue: V
   setRowValue: Dispatch<SetStateAction<V>>
@@ -35,14 +43,14 @@ export interface EditableCellProps<V extends Value | number> {
   typographyProps: TypographyTypeMap['props']
 }
 
-interface EditableTableRowProps<V extends Value | number> {
+interface EditableTableRowProps<V extends ValueRange | number> {
   /** Aria label of the title Typography element */
   ariaLabel: string
   /** Show editable view if true */
   editing: boolean
   /** The component to render the editable cell of the row */
   editableCell: React.FC<EditableCellProps<V>>
-  /** Maximum supported value */
+  /** Save the updated row value */
   saveRow: (newValue: V) => Promise<void>
   /** Enter editing state */
   startEditing: () => void
@@ -53,10 +61,12 @@ interface EditableTableRowProps<V extends Value | number> {
   /** The initial value of the editable values in the table row */
   value: V
 }
+
 /**
  * Table row that shows an editable cell to modify greenhouse settings.
+ * @param V Set to {@link ValueRange} for a range of numeric values and `number` for a single of number.
  */
-export const EditableTableRow = <V extends Value | number>(
+export const EditableTableRow = <V extends ValueRange | number>(
   props: EditableTableRowProps<V>
 ): JSX.Element => {
   const [rowValue, setRowValue] = useState<V>(props.value)
