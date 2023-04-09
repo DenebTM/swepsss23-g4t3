@@ -5,10 +5,7 @@ import Input, { InputProps } from '@mui/material/Input'
 import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Unstable_Grid2'
 
-export interface Value {
-  lower: number
-  upper: number
-}
+import { ValueRange } from '~/common'
 
 interface SliderCellProps {
   /** aria label of row title field */
@@ -18,11 +15,11 @@ interface SliderCellProps {
   /** Minimum supported value */
   min: number
   /** The current metric value */
-  rowValue: Value
+  rowValue: ValueRange
   /** Save updated boundary values */
   saveRow: () => Promise<void>
   /** The current metric value */
-  setRowValue: Dispatch<SetStateAction<Value>>
+  setRowValue: Dispatch<SetStateAction<ValueRange>>
   /** Increment steps for the input fields */
   step: number
 }
@@ -68,7 +65,7 @@ export const SliderCell: React.FC<SliderCellProps> = (props) => {
             onChange={(e) =>
               props.setRowValue((oldValue) => ({
                 ...oldValue,
-                min: Number(e.target.value),
+                lower: Number(e.target.value),
               }))
             }
             {...inputProps}
@@ -84,12 +81,12 @@ export const SliderCell: React.FC<SliderCellProps> = (props) => {
         <Grid xs={3}>
           <Input
             value={props.rowValue.upper}
-            onChange={(e) =>
+            onChange={(e) => {
               props.setRowValue((oldValue) => ({
                 ...oldValue,
-                max: Number(e.target.value),
+                upper: Number(e.target.value),
               }))
-            }
+            }}
             {...inputProps}
           />
         </Grid>

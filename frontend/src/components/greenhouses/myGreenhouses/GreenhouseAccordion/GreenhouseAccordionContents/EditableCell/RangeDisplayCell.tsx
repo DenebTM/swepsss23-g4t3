@@ -2,9 +2,8 @@ import React from 'react'
 
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
+import { ValueRange } from '~/common'
 import { theme } from '~/styles/theme'
-
-import { Value } from './SliderCell'
 
 interface RangeDisplayCellProps {
   /** Display props applied to all child typography components */
@@ -12,7 +11,7 @@ interface RangeDisplayCellProps {
   /** The unit of the values in the cell */
   unit: string
   /** The current values to display */
-  value: Value
+  value: ValueRange
 }
 
 /**
@@ -29,7 +28,7 @@ export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
         display="inline-block"
         width={rangeValueWidth}
       >
-        {props.value.lower} {props.unit}
+        {props.value.lower.toFixed(1)} {props.unit}
       </Typography>
       <Typography
         {...props.typographyProps}
@@ -43,7 +42,7 @@ export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
         display="inline-block"
         width={rangeValueWidth}
       >
-        {props.value.upper} {props.unit}
+        {props.value.upper.toFixed(1)} {props.unit}
       </Typography>
     </>
   )

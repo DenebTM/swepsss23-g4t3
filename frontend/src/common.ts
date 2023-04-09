@@ -94,3 +94,12 @@ export const API_DEV_URL = 'http://localhost:8080'
 
 /** Key value for greenhouse settings related to the aggregation period */
 export const aggregationPeriod = 'aggregationPeriod'
+
+/**
+ * Interface for a range of values.
+ * Use to store a lower and upper bound for greenhouse sensor values.
+ */
+export interface ValueRange {
+  lower: number
+  upper: number
+}
