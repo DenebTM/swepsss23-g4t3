@@ -26,7 +26,6 @@ export const PageHeader: React.FC<PageHeaderProps> = (props) => {
         flexDirection: 'row',
         alignItems: 'center',
         background: theme.background,
-        alignItems: 'center',
         // Keep the header the same size as the sidebar header
         ...theme.mixins.toolbar,
       }}
