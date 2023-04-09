@@ -33,6 +33,11 @@ export const GreenhouseAccordion: React.FC<GreenhouseAccordionProps> = (
       expanded={props.expanded}
       onChange={handleChange(props.sensorStation.uuid)}
       TransitionProps={{ unmountOnExit: true }}
+      sx={{
+        '&.Mui-expanded:last-of-type': {
+          marginBottom: theme.spacing(2), // Add space after the last expanded accordion
+        },
+      }}
     >
       <GreenhouseAccordionSummary sensorStation={props.sensorStation} />
       <AccordionDetails
