@@ -5,7 +5,6 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { theme } from '~/styles/theme'
 
 import { LoginForm } from './LoginForm'
 
@@ -22,13 +21,13 @@ export const Login: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             padding: 4,
-            background: theme.surfaceLowest,
           }}
         >
           <Typography
-            variant="h4"
+            variant="headlineLarge"
             align="center"
-            color="textSecondary"
+            color="onSurface"
+            component="h1"
             gutterBottom
           >
             Log in

@@ -9,6 +9,9 @@ import {
 
 import { ThemeProvider } from '@mui/material/styles'
 
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
 import { mirageSetup } from '~/api/mirageSetup'
 import { GREENHOUSES_ROOT, SS_UUID_PARAM, UPLOAD_ROOT, URL } from '~/common'
 import { ManageAccessPoints } from '~/components/admin/accessPoints/ManageAccessPoints'
