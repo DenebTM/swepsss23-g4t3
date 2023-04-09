@@ -14,7 +14,7 @@ interface SidebarListItemProps {
   open: boolean
   onClick?: (() => Promise<void>) | (() => void)
   /** Whether the list item is corresponds tothe current page */
-  selected: boolean
+  selected?: boolean
   /** Reduce ListItem padding if variant is 'small' */
   variant?: 'small'
 }
