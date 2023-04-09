@@ -80,8 +80,8 @@ void ble::update() {
   BLE.poll();
 
   // run timers etc
-  pairing::update();
   envsense_update();
+  pairing::update();
 
   // log something to the Serial console once a second
   static unsigned long last_log_timestamp;
