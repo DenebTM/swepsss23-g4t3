@@ -11,7 +11,7 @@ interface RangeDisplayCellProps {
   typographyProps: TypographyTypeMap['props']
   /** The unit of the values in the cell */
   unit: string
-  /** */
+  /** The current values to display */
   value: Value
 }
 
