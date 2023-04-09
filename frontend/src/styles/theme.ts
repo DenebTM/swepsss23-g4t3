@@ -50,6 +50,18 @@ const generateTheme = (mode: PaletteMode) => {
     palette: {
       primary: { main: tokens.primary },
       secondary: { main: tokens.secondary },
+      error: { main: tokens.onErrorContainer },
+      warning: { main: customColors.warn },
+      info: { main: tokens.onSurface },
+      success: { main: tokens.primary },
+      text: {
+        primary: tokens.onSurface,
+        secondary: tokens.onSurfaceVariant,
+        disabled: tokens.onSurfaceVariant,
+        hint: tokens.onSurfaceVariant,
+      },
+      divider: tokens.outlineVariant,
+      background: { default: tokens.background, paper: tokens.surfaceBright },
     },
   }
 }
