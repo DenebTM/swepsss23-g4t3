@@ -13,7 +13,7 @@
 #define BLE_PAIRING_MODE_TIMEOUT_MS   30000
 
 namespace ble {
-  static String paired_mac = BLE_NO_PAIRED_DEVICE;
+  extern String paired_mac;
 
   int setup();
   void update();

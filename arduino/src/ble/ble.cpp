@@ -10,6 +10,8 @@
 #include <Ticker.h>
 
 namespace ble {
+  String paired_mac = BLE_NO_PAIRED_DEVICE;
+
   void connect_event_handler(BLEDevice central) {
     String new_mac = central.address();
 
