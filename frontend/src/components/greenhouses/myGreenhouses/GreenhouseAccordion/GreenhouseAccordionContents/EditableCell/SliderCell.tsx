@@ -5,32 +5,24 @@ import Input, { InputProps } from '@mui/material/Input'
 import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Unstable_Grid2'
 
-import { SensorValues } from '~/models/measurement'
-import { SensorStation } from '~/models/sensorStation'
-
 export interface Value {
   lower: number
   upper: number
 }
 
 interface SliderCellProps {
-  /** Save updated value */
-  handleSaveValue: (
-    lower: number,
-    upper: number
-  ) => Promise<SensorStation | void>
   /** aria label of row title field */
   labelledBy: string
   /** Maximum supported value */
   max: number
   /** Minimum supported value */
   min: number
+  /** Save updated boundary values */
+  saveRow: (newValue: Value) => Promise<void>
   /** Increment steps for the input fields */
   step: number
-  /** The current mertric value */
+  /** The current metric value */
   value: Value
-  /** Key inside the {@link SensorValues} objects of the sensor station */
-  valueKey: keyof SensorValues
 }
 
 /**
@@ -56,11 +48,10 @@ export const SliderCell: React.FC<SliderCellProps> = (props) => {
 
   /** Save the updated value on keypress */
   const handleKeyPress: React.KeyboardEventHandler = (e) =>
-    e.key === 'Enter' && props.handleSaveValue(value.lower, value.upper)
+    e.key === 'Enter' && props.saveRow(value)
 
   /** Save the updated value on slider blur */
-  const handleBlur: React.FocusEventHandler = (e) =>
-    props.handleSaveValue(value.lower, value.upper)
+  const handleBlur: React.FocusEventHandler = (e) => props.saveRow(value)
 
   /** Props for the input elements displaying the current slider values */
   const inputProps: Partial<InputProps> = {

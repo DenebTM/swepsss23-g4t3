@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
 
-import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
+import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
+import { aggregationPeriod } from '~/common'
+import { MessageType } from '~/contexts/SnackbarContext/types'
+import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
-import { GreenhouseEditableCell } from './EditableCell/GreenhouseEditableCell'
-import { EditRowButton } from './EditRowButton'
+import { GreenhouseEditableRangeCell } from './EditableCell/GreenhouseEditableRangeCell'
+import { Value } from './EditableCell/SliderCell'
+import { EditableCellProps, EditableTableRow } from './EditableTableRow'
 
 interface TableRow {
   title: string
@@ -74,25 +77,6 @@ const tableRows: TableRow[] = [
   },
 ]
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.body}`]: {
-    borderTop: '1px solid',
-    borderBottom: '1px solid',
-    borderColor: theme.outlineVariant,
-  },
-}))
-
-/** Padding applied to the sides of table rows in theme.spacing units */
-const tableRowPadding = 4
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '>td:first-of-type': {
-    paddingLeft: theme.spacing(tableRowPadding),
-  },
-  '>td:last-of-type': {
-    paddingRight: theme.spacing(tableRowPadding),
-  },
-}))
-
 interface GreenhouseAccordionContentsProps {
   sensorStation: SensorStation
 }
@@ -103,9 +87,11 @@ interface GreenhouseAccordionContentsProps {
 export const GreenhouseAccordionContents: React.FC<
   GreenhouseAccordionContentsProps
 > = (props) => {
+  const addSnackbarMessage = useAddSnackbarMessage()
+
   /** Store the key of the row that is currently being edited in the state (otherwise `false`)*/
   const [editing, setEditing] = useState<
-    keyof SensorValues | 'aggregationPeriod' | false
+    keyof SensorValues | typeof aggregationPeriod | false
   >(false)
 
   const typographyProps: TypographyTypeMap['props'] = {
@@ -113,49 +99,102 @@ export const GreenhouseAccordionContents: React.FC<
     variant: 'bodyMedium',
   }
 
+  /**
+   * Save updated boundary values value in the backend
+   * We could check that the value hasn't been updated to reduce calls to the backend.
+   * but left it simple for now.
+   */
+  const handleSaveBoundaryValue = (
+    valueKey: keyof SensorValues,
+    lower: number,
+    upper: number
+  ): Promise<void> =>
+    handleSaveRow(
+      updateSensorStation(props.sensorStation.uuid, {
+        lowerBound: {
+          ...props.sensorStation.lowerBound,
+          [valueKey]: lower,
+        },
+        upperBound: {
+          ...props.sensorStation.upperBound,
+          [valueKey]: upper,
+        },
+      })
+    )
+
+  /** Handle saving updated aggregation period or sensor range */
+  const handleSaveRow = (
+    ssUpdatePromise: Promise<SensorStation>
+  ): Promise<void> =>
+    ssUpdatePromise
+      .then((updatedSs) => {
+        // Update sensor station in state
+        console.log('updated')
+      })
+      .catch((err: Error) => {
+        addSnackbarMessage({
+          header: 'Could not load save updated value',
+          body: err.message,
+          type: MessageType.ERROR,
+        })
+      })
+      .finally(() => {
+        setEditing(false)
+        return Promise.resolve()
+      })
+
   return (
     <TableContainer>
       <Table sx={{ width: '100%' }} aria-label="greenhouse settings table">
         <TableBody>
           {tableRows.map((row: TableRow) => {
-            const { title, valueKey, ...editableCellProps } = row
-            const ariaLabel = `title-${valueKey}`
+            const ariaLabel = `title-${row.valueKey}`
             return (
-              <StyledTableRow key={valueKey}>
-                <StyledTableCell>
-                  <Typography {...typographyProps} aria-label={ariaLabel}>
-                    {title}
-                  </Typography>
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <GreenhouseEditableCell
+              <EditableTableRow<Value>
+                key={row.valueKey}
+                ariaLabel={ariaLabel}
+                editableCell={(editableCellProps: EditableCellProps<Value>) => (
+                  <GreenhouseEditableRangeCell
                     labelledBy={ariaLabel}
-                    editing={editing === valueKey}
                     sensorStation={props.sensorStation}
-                    typographyProps={typographyProps}
-                    valueKey={valueKey}
+                    {...row}
                     {...editableCellProps}
                   />
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <EditRowButton onClick={() => setEditing(valueKey)} />
-                </StyledTableCell>
-              </StyledTableRow>
+                )}
+                editing={editing === row.valueKey}
+                saveRow={(v: Value) =>
+                  handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
+                }
+                startEditing={() => setEditing(row.valueKey)}
+                title={row.title}
+                typographyProps={typographyProps}
+                value={{
+                  lower: props.sensorStation.lowerBound[row.valueKey],
+                  upper: props.sensorStation.upperBound[row.valueKey],
+                }}
+              />
             )
           })}
-          <StyledTableRow>
-            <StyledTableCell>
-              <Typography {...typographyProps}>Aggregation Period</Typography>
-            </StyledTableCell>
-            <StyledTableCell align="center">
+          <EditableTableRow<number>
+            ariaLabel={`title-aggregationPeriod`}
+            editableCell={(editableCellProps: EditableCellProps<number>) => (
               <Typography {...typographyProps}>
                 {props.sensorStation.aggregationPeriod} seconds
               </Typography>
-            </StyledTableCell>
-            <StyledTableCell align="right">
-              <EditRowButton onClick={() => setEditing('aggregationPeriod')} />
-            </StyledTableCell>
-          </StyledTableRow>
+            )}
+            editing={editing === aggregationPeriod}
+            saveRow={(aggregationPeriod: number) =>
+              handleSaveRow(
+                updateSensorStation(props.sensorStation.uuid, {
+                  aggregationPeriod: aggregationPeriod,
+                })
+              )
+            }
+            startEditing={() => setEditing(aggregationPeriod)}
+            title="Aggregation Period"
+            typographyProps={typographyProps}
+            value={props.sensorStation.aggregationPeriod}
+          />
         </TableBody>
       </Table>
     </TableContainer>
