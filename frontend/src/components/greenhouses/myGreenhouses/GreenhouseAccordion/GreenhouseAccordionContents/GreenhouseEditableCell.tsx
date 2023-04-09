@@ -4,11 +4,13 @@ import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
+import { theme } from '~/styles/theme'
 
 interface GreenhouseEditableCellProps {
-  valueKey: keyof SensorValues
+  editing: boolean
   sensorStation: SensorStation
   typographyProps: TypographyTypeMap['props']
+  valueKey: keyof SensorValues
 }
 /**
  * Contents of an expanded greenhoes accordion.
@@ -17,16 +19,30 @@ interface GreenhouseEditableCellProps {
 export const GreenhouseEditableCell: React.FC<GreenhouseEditableCellProps> = (
   props
 ) => {
-  console.log(props)
+  const rangeValueWidth = '42%'
 
   return (
     <>
-      <Typography {...props.typographyProps}>
+      <Typography
+        {...props.typographyProps}
+        align="right"
+        display="inline-block"
+        width={rangeValueWidth}
+      >
         {props.sensorStation.lowerBound[props.valueKey]}
       </Typography>
-      <Typography {...props.typographyProps}>&#8212;</Typography>
-
-      <Typography {...props.typographyProps}>
+      <Typography
+        {...props.typographyProps}
+        sx={{ margin: theme.spacing(0, 1) }}
+      >
+        &#8212;
+      </Typography>
+      <Typography
+        {...props.typographyProps}
+        align="left"
+        display="inline-block"
+        width={rangeValueWidth}
+      >
         {props.sensorStation.upperBound[props.valueKey]}
       </Typography>
     </>
