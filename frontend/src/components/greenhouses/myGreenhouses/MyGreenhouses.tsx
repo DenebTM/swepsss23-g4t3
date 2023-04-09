@@ -34,6 +34,7 @@ export const MyGreenhouses: React.FC = () => {
       {sensorStations &&
         sensorStations.map((s) => (
           <GreenhouseAccordion
+            key={s.uuid}
             expanded={expanded === s.uuid}
             sensorStation={s}
             setExpanded={setExpanded}

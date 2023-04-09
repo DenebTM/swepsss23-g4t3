@@ -2,23 +2,23 @@ import React from 'react'
 
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
-import { SensorValues } from '~/models/measurement'
-import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
-interface GreenhouseEditableCellProps {
-  editing: boolean
-  sensorStation: SensorStation
+import { Value } from './SliderCell'
+
+interface RangeDisplayCellProps {
+  /** Display props applied to all child typography components */
   typographyProps: TypographyTypeMap['props']
-  valueKey: keyof SensorValues
+  /** The unit of the values in the cell */
+  unit: string
+  /** */
+  value: Value
 }
+
 /**
- * Contents of an expanded greenhoes accordion.
- * Shows options to update greenhouse boundary values and transmission interval.
+ * Display the current range of an editable greenhouse metric range.
  */
-export const GreenhouseEditableCell: React.FC<GreenhouseEditableCellProps> = (
-  props
-) => {
+export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
   const rangeValueWidth = '42%'
 
   return (
@@ -29,7 +29,7 @@ export const GreenhouseEditableCell: React.FC<GreenhouseEditableCellProps> = (
         display="inline-block"
         width={rangeValueWidth}
       >
-        {props.sensorStation.lowerBound[props.valueKey]}
+        {props.value.lower} {props.unit}
       </Typography>
       <Typography
         {...props.typographyProps}
@@ -43,7 +43,7 @@ export const GreenhouseEditableCell: React.FC<GreenhouseEditableCellProps> = (
         display="inline-block"
         width={rangeValueWidth}
       >
-        {props.sensorStation.upperBound[props.valueKey]}
+        {props.value.upper} {props.unit}
       </Typography>
     </>
   )
