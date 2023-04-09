@@ -18,7 +18,7 @@ interface PageWrapperProps {
   hideSidebar?: boolean
 
   /** Restrict viewing the page to users with a certain role */
-  requiredRole?: UserRole
+  requiredRoles?: UserRole[]
 }
 
 /**
@@ -51,7 +51,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
           flexDirection: 'column',
         }}
       >
-        {props.requiredRole && userRole !== props.requiredRole ? (
+        {props.requiredRoles && !props.requiredRoles.includes(userRole) ? (
           <AccessDenied />
         ) : (
           props.children
