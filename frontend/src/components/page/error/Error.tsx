@@ -30,7 +30,7 @@ export const Error: React.FC<ErrorProps> = (props) => {
 
   return (
     <PageWrapper hideSidebar>
-      <h1>TODO: error page</h1>
+      <h2>To add: error page</h2>
       {Boolean(props.message) && <p>{props.message}</p>}
       <p>{getErrorMessage(error)}</p>
     </PageWrapper>
