@@ -6,6 +6,8 @@ import { User, UserRole } from '~/models/user'
 
 import { UsersTable } from './UsersTable'
 
+import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
+
 /**
  * User managment page for admins
  */
@@ -14,7 +16,7 @@ export const ManageUsers: React.FC = () => {
 
   return (
     <PageWrapper requiredRole={UserRole.ADMIN}>
-      <PageHeader />
+      <PageHeader left={<AdminBreadcrumbs currentPageName="Manage Users" />} />
       Manage users
       <UsersTable setUsers={setUsers} users={users} />
     </PageWrapper>
