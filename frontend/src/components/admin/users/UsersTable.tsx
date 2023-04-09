@@ -75,27 +75,23 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       headerAlign: 'center',
       align: 'center',
       sortable: false,
-      renderCell: (params: GridRenderCellParams<User, any, User>) => {
-        return (
-          <DeleteUserCell
-            setUsers={props.setUsers}
-            username={params.row.username}
-          />
-        )
-      },
+      renderCell: (params: GridRenderCellParams<User, any, User>) => (
+        <DeleteUserCell
+          setUsers={props.setUsers}
+          username={params.row.username}
+        />
+      ),
     },
   ]
 
   return (
-    <>
-      <DataGrid<User, any, User>
-        columns={columns}
-        getRowId={(row: User) => row.username}
-        processRowUpdate={handleUpdateUser}
-        rows={props.users}
-        setRows={props.setUsers}
-        fetchRows={getUsers}
-      />
-    </>
+    <DataGrid<User, any, User>
+      columns={columns}
+      getRowId={(row: User) => row.username}
+      processRowUpdate={handleUpdateUser}
+      rows={props.users}
+      setRows={props.setUsers}
+      fetchRows={getUsers}
+    />
   )
 }
