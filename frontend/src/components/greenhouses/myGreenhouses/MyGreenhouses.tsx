@@ -19,7 +19,7 @@ export const MyGreenhouses: React.FC = () => {
   const [expanded, setExpanded] = useState<SensorStationUuid | false>(false)
 
   return (
-    <PageWrapper requiredRoles={[UserRole.GARDENER, UserRole.ADMIN]}>
+    <PageWrapper requiredRoles={[UserRole.ADMIN, UserRole.GARDENER]}>
       <PageHeader
         left={
           <Typography
