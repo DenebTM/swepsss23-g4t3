@@ -38,7 +38,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
       }}
     >
       <CssBaseline />
-      {!(props.hideSidebar ?? false) && <Sidebar />}
+      {!props.hideSidebar && <Sidebar />}
 
       <Box
         component="main"
