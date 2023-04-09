@@ -62,6 +62,7 @@ namespace ble {
 
     devinfo_setup();
     envsense_setup();
+    senswarn_setup();
     pairing::setup();
 
     BLE.setEventHandler(BLEConnected, connect_event_handler);
