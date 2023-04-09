@@ -2,6 +2,7 @@
 #include <ble/pairing.h>
 #include <ble/sv_devinfo.h>
 #include <ble/sv_envsense.h>
+#include <ble/sv_senswarn.h>
 
 #include <buttons.h>
 #include <led.h>
