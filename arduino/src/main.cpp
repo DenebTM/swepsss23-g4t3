@@ -2,7 +2,7 @@
 #include <mbed.h>
 using namespace std::chrono_literals;
 
-#include <ble.h>
+#include <ble/ble.h>
 #include <buttons.h>
 #include <led.h>
 #include <sensors/bme.h>
