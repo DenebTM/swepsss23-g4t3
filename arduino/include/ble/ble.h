@@ -12,9 +12,6 @@
 #define BLE_NO_PAIRED_DEVICE          String("")
 #define BLE_PAIRING_MODE_TIMEOUT_MS   30000
 
-// time between each BLE sensor data update
-#define BLE_TRANSMIT_INTERVAL_MS      3000
-
 namespace ble {
   static String paired_mac = BLE_NO_PAIRED_DEVICE;
 

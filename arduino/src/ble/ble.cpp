@@ -89,10 +89,6 @@ namespace ble {
 
     led::set_color(led::RED);
   }
-  
-
-  // Periodic tasks
-  Ticker write_sensor_data_timer(write_sensor_data, BLE_TRANSMIT_INTERVAL_MS);
 }
 
 
@@ -109,8 +105,6 @@ int ble::setup() {
 
   BLE.setEventHandler(BLEConnected, ble::connect_event_handler);
   BLE.setEventHandler(BLEDisconnected, ble::disconnect_event_handler);
-
-  ble::write_sensor_data_timer.start();
 
   return 0;
 }
@@ -135,8 +129,8 @@ void ble::update() {
   // check for new BLE events (connect, disconnect, etc.)
   BLE.poll();
 
-  // run timers
-  ble::write_sensor_data_timer.update();
+  // run timers etc
+  envsense_update();
 
   // log something to the Serial console once a second
   static unsigned long last_log_timestamp;

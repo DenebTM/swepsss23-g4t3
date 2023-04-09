@@ -1,4 +1,7 @@
 #include <ble/sv_envsense.h>
+
+#include <Ticker.h>
+
 #include <sensors/data.h>
 
 namespace ble {
@@ -10,6 +13,9 @@ namespace ble {
   BLEUnsignedShortCharacteristic ch_airQuality(BLE_UUID_AIR_QUALITY, BLERead | BLENotify);
   BLEUnsignedCharCharacteristic ch_soilMoisture(BLE_UUID_SOIL_MOISTURE, BLERead | BLENotify);
 
+  // Periodic tasks
+  Ticker write_sensor_data_timer(write_sensor_data, BLE_ENVSENSE_TRANSMIT_INTERVAL_MS);
+
   // set up environmental sensing service
   void envsense_setup() {
     sv_envsense.addCharacteristic(ch_airPressure);
@@ -20,6 +26,12 @@ namespace ble {
     sv_envsense.addCharacteristic(ch_soilMoisture);
 
     BLE.addService(sv_envsense);
+
+    write_sensor_data_timer.start();
+  }
+
+  void envsense_update() {
+    write_sensor_data_timer.update();
   }
 
   // Sensor data transmission
