@@ -89,12 +89,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
 
       <Divider sx={{ marginTop: 'auto' }} />
 
-      <SidebarListItem
-        label="Logout"
-        open={props.open}
-        onClick={handleLogout}
-        selected={false}
-      >
+      <SidebarListItem label="Logout" open={props.open} onClick={handleLogout}>
         <LogoutIcon />
       </SidebarListItem>
     </>
