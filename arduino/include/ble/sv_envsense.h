@@ -12,6 +12,9 @@
 #define BLE_UUID_AIR_QUALITY          "f105"  // not part of BLE Environmental Sensing spec
 #define BLE_UUID_SOIL_MOISTURE        "f106"  // not part of BLE Environmental Sensing spec
 
+// time between each BLE sensor data update
+#define BLE_ENVSENSE_TRANSMIT_INTERVAL_MS 3000
+
 namespace ble {
   extern BLEService sv_envsense;
   extern BLEUnsignedIntCharacteristic ch_airPressure;
@@ -22,6 +25,7 @@ namespace ble {
   extern BLEUnsignedCharCharacteristic ch_soilMoisture;
 
   void envsense_setup();
+  void envsense_update();
   void write_sensor_data();
 }
 
