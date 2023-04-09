@@ -59,12 +59,14 @@ const generateTheme = (mode: PaletteMode) => {
         secondary: tokens.onSurfaceVariant,
         disabled: tokens.onSurfaceVariant,
         hint: tokens.onSurfaceVariant,
+        outline: tokens.outline,
       },
       divider: tokens.outlineVariant,
       background: { default: tokens.background, paper: tokens.surfaceBright },
       // Add custom colour options
       onSurface: tokens.onSurface,
       onSurfaceVariant: tokens.onSurfaceVariant,
+      outline: tokens.outline,
     },
 
     // Component overrides
@@ -100,6 +102,15 @@ const generateTheme = (mode: PaletteMode) => {
       MuiListItemText: {
         styleOverrides: {
           root: { ...chipTypography },
+        },
+      },
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            '&:before': {
+              backgroundColor: tokens.outlineVariant,
+            },
+          },
         },
       },
     },
