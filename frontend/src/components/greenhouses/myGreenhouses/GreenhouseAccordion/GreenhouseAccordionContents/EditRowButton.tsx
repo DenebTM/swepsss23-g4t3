@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 import { theme } from '~/styles/theme'
 
 interface EditRowButtonProps {
-  onClick: React.MouseEventHandler<HTMLDivElement>
+  onClick: React.MouseEventHandler<HTMLButtonElement>
 }
 /**
  * Clickable cell to trigger editing the current row of the greenhouses accordion.
@@ -16,6 +16,7 @@ export const EditRowButton: React.FC<EditRowButtonProps> = (props) => {
     <Button
       size="small"
       variant="text"
+      onClick={props.onClick}
       endIcon={<EditIcon />}
       sx={{ color: theme.onSurfaceVariant }}
     >

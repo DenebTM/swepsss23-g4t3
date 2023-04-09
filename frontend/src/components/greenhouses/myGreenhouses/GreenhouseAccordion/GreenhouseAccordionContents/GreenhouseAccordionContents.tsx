@@ -11,22 +11,67 @@ import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
+import { GreenhouseEditableCell } from './EditableCell/GreenhouseEditableCell'
 import { EditRowButton } from './EditRowButton'
-import { GreenhouseEditableCell } from './GreenhouseEditableCell'
 
 interface TableRow {
   title: string
-  key: keyof SensorValues
+  valueKey: keyof SensorValues
   unit: string
+  min: number
+  max: number
+  step: number
 }
 
 const tableRows: TableRow[] = [
-  { title: 'Temperature', key: 'temperature', unit: '°C' },
-  { title: 'Soil Moisture', key: 'soilMoisture', unit: '%' },
-  { title: 'Light', key: 'lightIntensity', unit: 'lx' },
-  { title: 'Air Pressure', key: 'airPressure', unit: 'hPa' },
-  { title: 'Humidity', key: 'humidity', unit: '%' },
-  { title: 'Air Quality', key: 'airQuality', unit: '' },
+  {
+    title: 'Temperature',
+    valueKey: 'temperature',
+    unit: '°C',
+    min: 0,
+    max: 0,
+    step: 0.1,
+  },
+  {
+    title: 'Soil Moisture',
+    valueKey: 'soilMoisture',
+    unit: '%',
+    min: 0,
+    max: 0,
+    step: 0.1,
+  },
+  {
+    title: 'Light',
+    valueKey: 'lightIntensity',
+    unit: 'lx',
+    min: 0,
+    max: 0,
+    step: 0.1,
+  },
+  {
+    title: 'Air Pressure',
+    valueKey: 'airPressure',
+    unit: 'hPa',
+    min: 0,
+    max: 0,
+    step: 0.1,
+  },
+  {
+    title: 'Humidity',
+    valueKey: 'humidity',
+    unit: '%',
+    min: 0,
+    max: 0,
+    step: 0.1,
+  },
+  {
+    title: 'Air Quality',
+    valueKey: 'airQuality',
+    unit: '',
+    min: 0,
+    max: 0,
+    step: 0.1,
+  },
 ]
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -40,10 +85,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 /** Padding applied to the sides of table rows in theme.spacing units */
 const tableRowPadding = 4
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '>td:first-child': {
+  '>td:first-of-type': {
     paddingLeft: theme.spacing(tableRowPadding),
   },
-  '>td:last-child': {
+  '>td:last-of-type': {
     paddingRight: theme.spacing(tableRowPadding),
   },
 }))
@@ -72,24 +117,32 @@ export const GreenhouseAccordionContents: React.FC<
     <TableContainer>
       <Table sx={{ width: '100%' }} aria-label="greenhouse settings table">
         <TableBody>
-          {tableRows.map((row: TableRow) => (
-            <StyledTableRow key={row.key}>
-              <StyledTableCell>
-                <Typography {...typographyProps}>{row.title}</Typography>
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                <GreenhouseEditableCell
-                  editing={editing === row.key}
-                  sensorStation={props.sensorStation}
-                  typographyProps={typographyProps}
-                  valueKey={row.key}
-                />
-              </StyledTableCell>
-              <StyledTableCell align="right">
-                <EditRowButton onClick={() => setEditing(row.key)} />
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {tableRows.map((row: TableRow) => {
+            const { title, valueKey, ...editableCellProps } = row
+            const ariaLabel = `title-${valueKey}`
+            return (
+              <StyledTableRow key={valueKey}>
+                <StyledTableCell>
+                  <Typography {...typographyProps} aria-label={ariaLabel}>
+                    {title}
+                  </Typography>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <GreenhouseEditableCell
+                    labelledBy={ariaLabel}
+                    editing={editing === valueKey}
+                    sensorStation={props.sensorStation}
+                    typographyProps={typographyProps}
+                    valueKey={valueKey}
+                    {...editableCellProps}
+                  />
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <EditRowButton onClick={() => setEditing(valueKey)} />
+                </StyledTableCell>
+              </StyledTableRow>
+            )
+          })}
           <StyledTableRow>
             <StyledTableCell>
               <Typography {...typographyProps}>Aggregation Period</Typography>
