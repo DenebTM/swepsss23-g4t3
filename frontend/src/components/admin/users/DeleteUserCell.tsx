@@ -21,7 +21,7 @@ interface DeleteUserCellProps {
 export const DeleteUserCell: React.FC<DeleteUserCellProps> = (props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
-  /** Open the delete dialog when the delete icon is clicked on */
+  /** Open the delete dialog when the delete icon is clicked */
   const handleIconClick = (e: React.MouseEvent) => {
     e.stopPropagation() // Prevent selecting the cell on click
     setDeleteDialogOpen(true)
