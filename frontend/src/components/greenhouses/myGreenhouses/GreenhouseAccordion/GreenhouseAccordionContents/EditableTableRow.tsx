@@ -71,7 +71,7 @@ export const EditableTableRow = <V extends ValueRange | number>(
           {props.title}
         </Typography>
       </StyledTableCell>
-      <StyledTableCell align="center">
+      <StyledTableCell align="center" width="50%">
         {props.editableCell({
           editing: props.editing,
           rowValue: rowValue,
