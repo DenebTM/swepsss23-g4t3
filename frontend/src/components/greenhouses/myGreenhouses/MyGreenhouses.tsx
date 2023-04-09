@@ -6,6 +6,7 @@ import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStationUuid } from '~/models/sensorStation'
+import { UserRole } from '~/models/user'
 
 import { GreenhouseAccordion } from './GreenhouseAccordion/GreenhouseAccordion'
 
@@ -18,7 +19,7 @@ export const MyGreenhouses: React.FC = () => {
   const [expanded, setExpanded] = useState<SensorStationUuid | false>(false)
 
   return (
-    <PageWrapper>
+    <PageWrapper requiredRoles={[UserRole.ADMIN, UserRole.GARDENER]}>
       <PageHeader
         left={
           <Typography

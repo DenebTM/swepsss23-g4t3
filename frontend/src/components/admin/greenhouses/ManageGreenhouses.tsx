@@ -11,7 +11,7 @@ import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
  */
 export const ManageGreenhouses: React.FC = () => {
   return (
-    <PageWrapper requiredRole={UserRole.ADMIN}>
+    <PageWrapper requiredRoles={[UserRole.ADMIN]}>
       <PageHeader
         left={<AdminBreadcrumbs currentPageName="Manage Greenhouses" />}
       />
