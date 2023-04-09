@@ -9,7 +9,7 @@ interface GreenhouseAccordionContentsProps {
 }
 
 /**
- * Contents of an expanded greenhoes accordion.
+ * Contents of an expanded greenhouse accordion.
  * Shows options to update greenhouse boundary values and transmission interval.
  */
 export const GreenhouseAccordionContents: React.FC<
