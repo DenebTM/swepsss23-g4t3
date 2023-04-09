@@ -16,14 +16,6 @@
 #define BLE_ENVSENSE_TRANSMIT_INTERVAL_MS 3000
 
 namespace ble {
-  extern BLEService sv_envsense;
-  extern BLEUnsignedIntCharacteristic ch_airPressure;
-  extern BLEShortCharacteristic ch_temperature;
-  extern BLEUnsignedShortCharacteristic ch_humidity;
-  extern BLECharacteristic ch_illuminance;
-  extern BLEUnsignedShortCharacteristic ch_airQuality;
-  extern BLEUnsignedCharCharacteristic ch_soilMoisture;
-
   void envsense_setup();
   void envsense_update();
   void write_sensor_data();
