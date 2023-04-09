@@ -61,7 +61,7 @@ interface EditableTableRowProps<V extends ValueRange | number> {
 }
 
 /**
- * Table row that shows an editable cell to modify greenhouse settings.#
+ * Table row that shows an editable cell to modify greenhouse settings.
  * @param V Set to {@link ValueRange} for a range of numeric values and `number` for a single of number.
  */
 export const EditableTableRow = <V extends ValueRange | number>(
