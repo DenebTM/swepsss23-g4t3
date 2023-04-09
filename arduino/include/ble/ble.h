@@ -15,7 +15,16 @@
 namespace ble {
   extern String paired_mac;
 
+  /**
+   * Initializes various internal variables, timers, services, etc.
+   * intended to be run as part of the startup sequence
+   */
   int setup();
+
+  /**
+   * checks for new BLE device events and whether to enter or leave pairing mode
+   * intended to be run as part of the main loop
+   */
   void update();
 }
 

@@ -52,53 +52,50 @@ namespace ble {
       led::set_color(led::YELLOW);
     }
   }
-}
 
 
-int ble::setup() {
-  if (!BLE.begin()) {
-    Serial.println("Error initializing BLE!");
-  }
-
-  devinfo_setup();
-  envsense_setup();
-  pairing::setup();
-
-  BLE.setEventHandler(BLEConnected, connect_event_handler);
-  BLE.setEventHandler(BLEDisconnected, disconnect_event_handler);
-
-  return 0;
-}
-
-/**
- * intended to be run as part of the main loop
- * 
- * checks for new BLE device events and whether to enter or leave pairing mode
- */
-void ble::update() {
-  // check for new BLE events (connect, disconnect, etc.)
-  BLE.poll();
-
-  // run timers etc
-  envsense_update();
-  pairing::update();
-
-  // log something to the Serial console once a second
-  static unsigned long last_log_timestamp;
-  unsigned long current_timestamp = millis();
-  if (current_timestamp - last_log_timestamp >= 1000) {
-    if (BLE.central().connected()) {
-      uint8_t id = station_id();
-
-      if (id != ble::val_stationID) {
-        Serial.println("Station ID changed");
-        ble::val_stationID = id;
-        ble::ch_stationID.writeValue(ble::val_stationID);
-      }
-      Serial.print("Current station ID: ");
-      Serial.println((unsigned long)ble::val_stationID);
+  int setup() {
+    if (!BLE.begin()) {
+      Serial.println("Error initializing BLE!");
     }
 
-    last_log_timestamp = current_timestamp;
+    devinfo_setup();
+    envsense_setup();
+    pairing::setup();
+
+    BLE.setEventHandler(BLEConnected, connect_event_handler);
+    BLE.setEventHandler(BLEDisconnected, disconnect_event_handler);
+
+    return 0;
+  }
+
+  void update() {
+    // check for new BLE events (connect, disconnect, etc.)
+    BLE.poll();
+
+    // run timers etc
+    envsense_update();
+    pairing::update();
+
+    // log something to the Serial console once a second
+    static unsigned long last_log_timestamp;
+    unsigned long current_timestamp = millis();
+    if (current_timestamp - last_log_timestamp >= 1000) {
+      if (BLE.central().connected()) {
+        uint8_t id = station_id();
+
+        if (id != val_stationID) {
+          Serial.println("Station ID changed");
+          val_stationID = id;
+          ch_stationID.writeValue(val_stationID);
+        }
+        Serial.print("Current station ID: ");
+        Serial.println((unsigned long)val_stationID);
+      }
+
+      last_log_timestamp = current_timestamp;
+    }
   }
 }
+
+
