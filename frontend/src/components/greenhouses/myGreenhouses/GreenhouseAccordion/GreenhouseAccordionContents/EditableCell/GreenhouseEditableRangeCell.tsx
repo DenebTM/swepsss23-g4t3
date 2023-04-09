@@ -1,12 +1,14 @@
 import React from 'react'
 
+import { ValueRange } from '~/common'
 import { SensorStation } from '~/models/sensorStation'
 
 import { EditableCellProps } from '../EditableTableRow'
 import { RangeDisplayCell } from './RangeDisplayCell'
-import { SliderCell, Value } from './SliderCell'
+import { SliderCell } from './SliderCell'
 
-interface GreenhouseEditableRangeCellProps extends EditableCellProps<Value> {
+interface GreenhouseEditableRangeCellProps
+  extends EditableCellProps<ValueRange> {
   /** aria label of row title field */
   labelledBy: string
   /** Maximum supported value */

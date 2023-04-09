@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
 import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
-import { aggregationPeriod } from '~/common'
+import { aggregationPeriod, ValueRange } from '~/common'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -14,7 +14,6 @@ import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
 import { GreenhouseEditableRangeCell } from './EditableCell/GreenhouseEditableRangeCell'
-import { Value } from './EditableCell/SliderCell'
 import { EditableCellProps, EditableTableRow } from './EditableTableRow'
 
 /**
@@ -173,10 +172,12 @@ export const GreenhouseAccordionContents: React.FC<
           {tableRows.map((row: GreenhouseMetricRange) => {
             const ariaLabel = `title-${row.valueKey}`
             return (
-              <EditableTableRow<Value>
+              <EditableTableRow<ValueRange>
                 key={row.valueKey}
                 ariaLabel={ariaLabel}
-                editableCell={(editableCellProps: EditableCellProps<Value>) => (
+                editableCell={(
+                  editableCellProps: EditableCellProps<ValueRange>
+                ) => (
                   <GreenhouseEditableRangeCell
                     labelledBy={ariaLabel}
                     sensorStation={props.sensorStation}
@@ -185,7 +186,7 @@ export const GreenhouseAccordionContents: React.FC<
                   />
                 )}
                 editing={editing === row.valueKey}
-                saveRow={(v: Value) =>
+                saveRow={(v: ValueRange) =>
                   handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
                 }
                 startEditing={() => setEditing(row.valueKey)}
