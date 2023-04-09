@@ -1,7 +1,7 @@
 import { TypographyScale, TypographyTokens } from './types'
 
 /**
- * M3 typography tokkends for display typography. See:
+ * M3 typography tokens for display typography. See:
  * https://m3.material.io/styles/typography/type-scale-tokens#40fc37f8-3269-4aa3-9f28-c6113079ac5d
  */
 const display: TypographyScale = {
@@ -29,7 +29,7 @@ const display: TypographyScale = {
 }
 
 /**
- * M3 typography tokkends for headlines typography. See:
+ * M3 typography tokens for headlines typography. See:
  * https://m3.material.io/styles/typography/type-scale-tokens#40fc37f8-3269-4aa3-9f28-c6113079ac5d
  */
 const headline: TypographyScale = {
@@ -57,7 +57,7 @@ const headline: TypographyScale = {
 }
 
 /**
- * M3 typography tokkends for body typography. See:
+ * M3 typography tokens for body typography. See:
  * https://m3.material.io/styles/typography/type-scale-tokens#40fc37f8-3269-4aa3-9f28-c6113079ac5d
  */
 const body: TypographyScale = {
@@ -85,7 +85,7 @@ const body: TypographyScale = {
 }
 
 /**
- * M3 typography tokkends for label typography. See:
+ * M3 typography tokens for label typography. See:
  * https://m3.material.io/styles/typography/type-scale-tokens#40fc37f8-3269-4aa3-9f28-c6113079ac5d
  */
 const label: TypographyScale = {
@@ -113,7 +113,7 @@ const label: TypographyScale = {
 }
 
 /**
- * M3 typography tokkends for title typography. See:
+ * M3 typography tokens for title typography. See:
  * https://m3.material.io/styles/typography/type-scale-tokens#40fc37f8-3269-4aa3-9f28-c6113079ac5d
  */
 const title: TypographyScale = {
