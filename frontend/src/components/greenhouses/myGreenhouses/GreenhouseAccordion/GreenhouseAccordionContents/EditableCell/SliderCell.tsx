@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import Box from '@mui/material/Box'
 import Input, { InputProps } from '@mui/material/Input'
@@ -17,46 +17,37 @@ interface SliderCellProps {
   max: number
   /** Minimum supported value */
   min: number
+  /** The current metric value */
+  rowValue: Value
   /** Save updated boundary values */
-  saveRow: (newValue: Value) => Promise<void>
+  saveRow: () => Promise<void>
+  /** The current metric value */
+  setRowValue: Dispatch<SetStateAction<Value>>
   /** Increment steps for the input fields */
   step: number
-  /** The current metric value */
-  value: Value
 }
 
 /**
  * Cell with slider and input fields to update greenhouse boundary values.
  */
 export const SliderCell: React.FC<SliderCellProps> = (props) => {
-  const [value, setValue] = useState<Value>({
-    lower: props.value.lower,
-    upper: props.value.upper,
-  })
-
   /** Update value in state on slider change */
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     if (Array.isArray(newValue) && newValue.length >= 2) {
-      setValue({ lower: newValue[0], upper: newValue[1] })
+      props.setRowValue({ lower: newValue[0], upper: newValue[1] })
     }
-  }
-
-  /** Update the value in state if updated in the input fields */
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //setValue(event.target.value === '' ? '' : Number(event.target.value))
   }
 
   /** Save the updated value on keypress */
   const handleKeyPress: React.KeyboardEventHandler = (e) =>
-    e.key === 'Enter' && props.saveRow(value)
+    e.key === 'Enter' && props.saveRow()
 
   /** Save the updated value on slider blur */
-  const handleBlur: React.FocusEventHandler = (e) => props.saveRow(value)
+  const handleBlur: React.FocusEventHandler = (e) => props.saveRow()
 
   /** Props for the input elements displaying the current slider values */
   const inputProps: Partial<InputProps> = {
     size: 'small',
-    onChange: handleInputChange,
     onKeyPress: handleKeyPress,
     onBlur: handleBlur,
     inputProps: {
@@ -72,17 +63,35 @@ export const SliderCell: React.FC<SliderCellProps> = (props) => {
     <Box sx={{ width: '100%' }}>
       <Grid container spacing={2} alignItems="center">
         <Grid xs={3}>
-          <Input value={value.lower} {...inputProps} />
+          <Input
+            value={props.rowValue.lower}
+            onChange={(e) =>
+              props.setRowValue((oldValue) => ({
+                ...oldValue,
+                min: Number(e.target.value),
+              }))
+            }
+            {...inputProps}
+          />
         </Grid>
         <Grid xs={6}>
           <Slider
-            value={Object.values(value)}
+            value={Object.values(props.rowValue)}
             onChange={handleSliderChange}
             aria-labelledby={props.labelledBy}
           />
         </Grid>
         <Grid xs={3}>
-          <Input value={value.upper} {...inputProps} />
+          <Input
+            value={props.rowValue.upper}
+            onChange={(e) =>
+              props.setRowValue((oldValue) => ({
+                ...oldValue,
+                max: Number(e.target.value),
+              }))
+            }
+            {...inputProps}
+          />
         </Grid>
       </Grid>
     </Box>

@@ -26,12 +26,24 @@ const AppProvider: React.FC<AppProviderProps> = (props) => {
 
   /** Dispatch action to set sensor stations in the reducer */
   const setSensorStations = useCallback(
-    (sensorStations: SensorStation[]) =>
+    (
+      newOrUpdateValue:
+        | SensorStation[]
+        | ((oldValue: SensorStation[] | null) => SensorStation[])
+    ) => {
+      let newSs: SensorStation[]
+      if (Array.isArray(newOrUpdateValue)) {
+        newSs = newOrUpdateValue
+      } else {
+        newSs = newOrUpdateValue(appState.sensorStations.data)
+      }
+
       dispatch({
-        payload: sensorStations,
+        payload: newSs,
         actionType: AppReducerActions.SET_SENSOR_STATIONS,
-      }),
-    [dispatch]
+      })
+    },
+    [dispatch, appState.sensorStations]
   )
 
   /** Dispatch action to set whether the sidebar is open in the reducer */

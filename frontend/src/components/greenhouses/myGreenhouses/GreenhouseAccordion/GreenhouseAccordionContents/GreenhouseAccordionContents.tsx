@@ -8,6 +8,7 @@ import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
 import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { aggregationPeriod } from '~/common'
+import { AppContext } from '~/contexts/AppContext/AppContext'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorValues } from '~/models/measurement'
@@ -87,6 +88,7 @@ interface GreenhouseAccordionContentsProps {
 export const GreenhouseAccordionContents: React.FC<
   GreenhouseAccordionContentsProps
 > = (props) => {
+  const { setSensorStations } = React.useContext(AppContext)
   const addSnackbarMessage = useAddSnackbarMessage()
 
   /** Store the key of the row that is currently being edited in the state (otherwise `false`)*/
@@ -128,8 +130,16 @@ export const GreenhouseAccordionContents: React.FC<
   ): Promise<void> =>
     ssUpdatePromise
       .then((updatedSs) => {
-        // Update sensor station in state
-        console.log('updated')
+        // Update sensor station in app context
+        setSensorStations((oldValue) => {
+          if (oldValue === null) {
+            return []
+          } else {
+            return oldValue.map((s) =>
+              s.uuid === props.sensorStation.uuid ? updatedSs : s
+            )
+          }
+        })
       })
       .catch((err: Error) => {
         addSnackbarMessage({

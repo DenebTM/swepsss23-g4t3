@@ -34,9 +34,10 @@ export const GreenhouseEditableRangeCell: React.FC<
       labelledBy={props.labelledBy}
       max={props.max}
       min={props.min}
+      rowValue={props.rowValue}
       saveRow={props.saveRow}
+      setRowValue={props.setRowValue}
       step={props.step}
-      value={props.rowValue}
     />
   ) : (
     <RangeDisplayCell
