@@ -9,7 +9,7 @@ import { UserRole } from '~/models/user'
  */
 export const AdminHome: React.FC = () => {
   return (
-    <PageWrapper requiredRole={UserRole.ADMIN}>
+    <PageWrapper requiredRoles={[UserRole.ADMIN]}>
       <PageHeader />
       Admin home
     </PageWrapper>
