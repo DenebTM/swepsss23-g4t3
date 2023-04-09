@@ -91,3 +91,6 @@ export const AUTH_JWT = 'AUTH_JWT'
 
 /** URL of the backend */
 export const API_DEV_URL = 'http://localhost:8080'
+
+/** Key value for greenhouse settings related to the aggregation period */
+export const aggregationPeriod = 'aggregationPeriod'
