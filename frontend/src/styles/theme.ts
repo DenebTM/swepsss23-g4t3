@@ -1,13 +1,10 @@
 import { createTheme } from '@mui/material/styles'
 
 import { customColors, getM3Tokens } from './themeColours'
-import { CustomColours, M3Theme } from './types'
+import { CustomColours, M3Theme, PaletteMode } from './types'
 
 /** Width of non-collapsed sidebar */
 export const sidebarWidth = '200px'
-
-/** Colour of sidebar icons. TODO qqjf to move into theme */
-export const sidebarIconColour = '#777'
 
 /**
  * Allow passing custom variables into {@link createTheme} by extending the type definition.
@@ -19,8 +16,18 @@ declare module '@mui/material/styles' {
   interface ThemeOptions extends M3Theme, CustomColours {}
 }
 
+/** Generate MUI theme according to palette mode */
+const generateTheme = (mode: PaletteMode) => {
+  const tokens = getM3Tokens(mode)
+  return {
+    ...tokens,
+    ...customColors,
+    palette: {
+      primary: { main: tokens.primary },
+      secondary: { main: tokens.secondary },
+    },
+  }
+}
+
 /** Custom MUI theme */
-export const theme = createTheme({
-  ...getM3Tokens('light'),
-  ...customColors,
-})
+export const theme = createTheme(generateTheme('light'))
