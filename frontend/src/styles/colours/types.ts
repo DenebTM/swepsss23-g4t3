@@ -64,6 +64,8 @@ export interface M3Colours {
   shadow: string
   surfaceTint: string
   scrim: string
+  // Alternative colours: https://m3.material.io/styles/color/the-color-system/color-roles#82db4b8f-240d-4d7b-b06d-58f3ee65159c
+  surfaceBright: string
 }
 
 /** Types for specifying whether to use a light or dark theme */

@@ -162,6 +162,7 @@ const lightTheme: M3Colours = {
   surfaceTint: '#246c2c',
   outlineVariant: '#c2c9bd',
   scrim: '#000000',
+  surfaceBright: neutral[100],
 }
 
 /**
@@ -200,6 +201,7 @@ const darkTheme: M3Colours = {
   surfaceTint: '#8ed88b',
   outlineVariant: '#424940',
   scrim: '#000000',
+  surfaceBright: neutral[25],
 }
 
 /**
