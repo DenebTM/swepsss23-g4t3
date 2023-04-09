@@ -1,4 +1,5 @@
 #include <ble/ble.h>
+#include <ble/pairing.h>
 #include <ble/sv_devinfo.h>
 #include <ble/sv_envsense.h>
 
@@ -9,19 +10,17 @@
 #include <Ticker.h>
 
 namespace ble {
-  static volatile bool is_pairing = false;
-
   void connect_event_handler(BLEDevice central) {
     String new_mac = central.address();
 
     // currently in pairing mode; pair with connecting access point
-    if (is_pairing) {
+    if (pairing::mode::active) {
       paired_mac = new_mac;
 
       Serial.print("Paired with access point: ");
       Serial.println(paired_mac);
 
-      is_pairing = false;
+      pairing::mode::active = false;
       led::set_color(led::GREEN);
     }
 
@@ -51,44 +50,6 @@ namespace ble {
       led::set_color(led::YELLOW);
     }
   }
-
-
-  /// Pairing mode
-  unsigned long pairing_mode_timestamp = 0;
-  volatile bool entering_pairing_mode = false;
-
-  // runs on press of button 0; signals to enter pairing mode next time `update` is run
-  void pair_isr() {
-    // rudimentary de-bounce
-    if (is_pairing) {
-      return;
-    }
-    entering_pairing_mode = true;
-  }
-
-  void enter_pairing_mode() {
-    ble::paired_mac = BLE_NO_PAIRED_DEVICE;
-    if (BLEDevice current_central = BLE.central()) {
-      current_central.disconnect();
-    }
-
-    if (BLE.advertise()) {
-      Serial.print("Ready to pair! Station address: ");
-      Serial.println(BLE.address());
-
-      led::set_color(led::BLUE);
-    } else {
-      Serial.println("BLE advertising failed!");
-    }
-  }
-
-  void exit_pairing_mode() {
-    Serial.println("Pairing timed out.");
-    ble::is_pairing = false;
-    BLE.stopAdvertise();
-
-    led::set_color(led::RED);
-  }
 }
 
 
@@ -97,14 +58,12 @@ int ble::setup() {
     Serial.println("Error initializing BLE!");
   }
 
-  buttons::setup(0, ble::pair_isr);
-  Serial.println("Press button 0 (rightmost) to begin pairing");
+  devinfo_setup();
+  envsense_setup();
+  pairing::setup();
 
-  ble::devinfo_setup();
-  ble::envsense_setup();
-
-  BLE.setEventHandler(BLEConnected, ble::connect_event_handler);
-  BLE.setEventHandler(BLEDisconnected, ble::disconnect_event_handler);
+  BLE.setEventHandler(BLEConnected, connect_event_handler);
+  BLE.setEventHandler(BLEDisconnected, disconnect_event_handler);
 
   return 0;
 }
@@ -115,21 +74,11 @@ int ble::setup() {
  * checks for new BLE device events and whether to enter or leave pairing mode
  */
 void ble::update() {
-  if (ble::entering_pairing_mode) {
-    ble::is_pairing = true;
-    ble::entering_pairing_mode = false;
-    ble::pairing_mode_timestamp = millis();
-    ble::enter_pairing_mode();
-  }
-
-  if (ble::is_pairing && (millis() >= pairing_mode_timestamp + BLE_PAIRING_MODE_TIMEOUT_MS)) {
-    ble::exit_pairing_mode();
-  }
-
   // check for new BLE events (connect, disconnect, etc.)
   BLE.poll();
 
   // run timers etc
+  pairing::update();
   envsense_update();
 
   // log something to the Serial console once a second
