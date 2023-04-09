@@ -1,8 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 
-import Box from '@mui/material/Box'
-import Input, { InputProps } from '@mui/material/Input'
 import Slider from '@mui/material/Slider'
+import TextField, { TextFieldProps } from '@mui/material/TextField'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import { ValueRange } from '~/common'
@@ -39,14 +38,11 @@ export const SliderCell: React.FC<SliderCellProps> = (props) => {
   const handleKeyPress: React.KeyboardEventHandler = (e) =>
     e.key === 'Enter' && props.saveRow()
 
-  /** Save the updated value on slider blur */
-  const handleBlur: React.FocusEventHandler = (e) => props.saveRow()
-
   /** Props for the input elements displaying the current slider values */
-  const inputProps: Partial<InputProps> = {
+  const inputProps: Partial<TextFieldProps> = {
     size: 'small',
+    variant: 'standard',
     onKeyPress: handleKeyPress,
-    onBlur: handleBlur,
     inputProps: {
       step: props.step,
       min: props.min,
@@ -54,43 +50,58 @@ export const SliderCell: React.FC<SliderCellProps> = (props) => {
       type: 'number',
       'aria-labelledby': props.labelledBy,
     },
-    sx: { width: '100%' },
+    type: 'number',
+    InputLabelProps: {
+      shrink: true,
+    },
+    fullWidth: true,
   }
+
   return (
-    <Box sx={{ width: '100%' }}>
-      <Grid container spacing={2} alignItems="center">
-        <Grid xs={3}>
-          <Input
-            value={props.rowValue.lower}
-            onChange={(e) =>
-              props.setRowValue((oldValue) => ({
-                ...oldValue,
-                lower: Number(e.target.value),
-              }))
-            }
-            {...inputProps}
-          />
-        </Grid>
-        <Grid xs={6}>
-          <Slider
-            value={Object.values(props.rowValue)}
-            onChange={handleSliderChange}
-            aria-labelledby={props.labelledBy}
-          />
-        </Grid>
-        <Grid xs={3}>
-          <Input
-            value={props.rowValue.upper}
-            onChange={(e) => {
-              props.setRowValue((oldValue) => ({
-                ...oldValue,
-                upper: Number(e.target.value),
-              }))
-            }}
-            {...inputProps}
-          />
-        </Grid>
+    <Grid container spacing={2} alignItems="center">
+      <Grid xs={12} sm={3}>
+        <TextField
+          label="Min"
+          value={props.rowValue.lower}
+          onChange={(e) =>
+            props.setRowValue((oldValue) => ({
+              ...oldValue,
+              lower: Number(e.target.value),
+            }))
+          }
+          error={
+            props.rowValue.upper <= props.rowValue.lower ||
+            props.rowValue.lower < props.min
+          }
+          {...inputProps}
+        />
       </Grid>
-    </Box>
+      <Grid xs={12} sm={6}>
+        <Slider
+          value={Object.values(props.rowValue)}
+          onChange={handleSliderChange}
+          aria-labelledby={props.labelledBy}
+          max={props.max}
+          min={props.min}
+        />
+      </Grid>
+      <Grid xs={12} sm={3}>
+        <TextField
+          label="Max"
+          value={props.rowValue.upper}
+          onChange={(e) =>
+            props.setRowValue((oldValue) => ({
+              ...oldValue,
+              upper: Number(e.target.value),
+            }))
+          }
+          error={
+            props.rowValue.upper <= props.rowValue.lower ||
+            props.rowValue.upper > props.max
+          }
+          {...inputProps}
+        />
+      </Grid>
+    </Grid>
   )
 }

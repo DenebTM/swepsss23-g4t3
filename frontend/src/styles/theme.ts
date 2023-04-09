@@ -54,7 +54,7 @@ const generateTheme = (mode: PaletteMode) => {
     palette: {
       primary: { main: tokens.primary },
       secondary: { main: tokens.secondary },
-      error: { main: tokens.onErrorContainer },
+      error: { main: tokens.error },
       warning: { main: customColors.warn },
       info: { main: tokens.onSurface },
       success: { main: tokens.primary },
