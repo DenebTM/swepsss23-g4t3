@@ -90,7 +90,7 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
 
     if (sensorStation) {
       sensorStation.update(newParams)
-      return success()
+      return success(sensorStation.attrs)
     } else {
       return notFound(`sensor station ${uuid}`)
     }

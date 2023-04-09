@@ -31,7 +31,7 @@ export interface EditableCellProps<V extends Value | number> {
   editing: boolean
   rowValue: V
   setRowValue: Dispatch<SetStateAction<V>>
-  saveRow: (newValue: V) => Promise<void>
+  saveRow: () => Promise<void>
   typographyProps: TypographyTypeMap['props']
 }
 
@@ -73,7 +73,7 @@ export const EditableTableRow = <V extends Value | number>(
           editing: props.editing,
           rowValue: rowValue,
           setRowValue: setRowValue,
-          saveRow: props.saveRow,
+          saveRow: () => props.saveRow(rowValue),
           typographyProps: props.typographyProps,
         })}
       </StyledTableCell>
