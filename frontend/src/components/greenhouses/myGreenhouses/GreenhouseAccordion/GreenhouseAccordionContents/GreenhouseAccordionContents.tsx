@@ -127,7 +127,7 @@ export const GreenhouseAccordionContents: React.FC<
                 ariaLabel={ariaLabel}
                 editableCell={(
                   editableCellProps: EditableCellProps<ValueRange>
-                ) => <div>Editable cell</div>}
+                ) => <div>Editable cell for {row.valueKey}</div>}
                 editing={editing === row.valueKey}
                 saveRow={(v: ValueRange) =>
                   handleSaveRow(/** qqjf TODO actually update the values here */)
