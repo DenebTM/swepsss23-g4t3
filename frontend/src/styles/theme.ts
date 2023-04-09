@@ -66,6 +66,43 @@ const generateTheme = (mode: PaletteMode) => {
       onSurface: tokens.onSurface,
       onSurfaceVariant: tokens.onSurfaceVariant,
     },
+
+    // Component overrides
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            textTransform: 'none' as const,
+            ...chipTypography,
+            padding: chipPadding,
+          },
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            ...chipTypography,
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: tokens.outline,
+            },
+          },
+          input: { padding: chipPadding },
+          notchedOutline: {
+            borderColor: tokens.outlineVariant,
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: { ...chipTypography },
+        },
+      },
+      MuiListItemText: {
+        styleOverrides: {
+          root: { ...chipTypography },
+        },
+      },
+    },
   }
 }
 
@@ -95,33 +132,5 @@ export const theme = createTheme({
     caption: { ...typographyTheme.labelSmall },
     button: { ...chipTypography },
     overline: { ...typographyTheme.labelSmall },
-  },
-  // Component overrides
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-          ...chipTypography,
-          padding: chipPadding,
-        },
-      },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: { ...chipTypography },
-        input: { padding: chipPadding },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: { ...chipTypography },
-      },
-    },
-    MuiListItemText: {
-      styleOverrides: {
-        root: { ...chipTypography },
-      },
-    },
   },
 })

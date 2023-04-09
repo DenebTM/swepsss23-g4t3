@@ -11,6 +11,7 @@ import { handleLogin } from '~/api/endpoints/login'
 import { URL } from '~/common'
 import { setJwt } from '~/helpers/jwt'
 import { LoginResponse } from '~/models/login'
+import { theme } from '~/styles/theme'
 
 /**
  * Login form component
@@ -86,6 +87,11 @@ export const LoginForm: React.FC = () => {
           loading={loggingIn}
           loadingPosition="center"
           color="primary"
+          sx={{
+            '&.MuiLoadingButton-loading': {
+              background: theme.primary,
+            },
+          }}
         >
           Log in
         </LoadingButton>
