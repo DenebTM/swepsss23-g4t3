@@ -38,6 +38,10 @@ declare module '@mui/material/Typography' {
 /** Width of non-collapsed sidebar */
 export const sidebarWidth = '200px'
 
+// Padding for input chips, filter chips, and buttons
+const medChipPadding = '14px 16px'
+const smallChipPadding = '8px 12px'
+
 /** Generate MUI theme according to palette mode */
 const generateTheme = (mode: PaletteMode) => {
   const tokens = getM3Tokens(mode)
@@ -76,8 +80,9 @@ const generateTheme = (mode: PaletteMode) => {
           root: {
             textTransform: 'none' as const,
             ...chipTypography,
-            padding: chipPadding,
+            padding: medChipPadding,
           },
+          sizeSmall: { padding: smallChipPadding },
         },
       },
       MuiOutlinedInput: {
@@ -88,10 +93,11 @@ const generateTheme = (mode: PaletteMode) => {
               borderColor: tokens.outline,
             },
           },
-          input: { padding: chipPadding },
+          input: { padding: medChipPadding },
           notchedOutline: {
             borderColor: tokens.outlineVariant,
           },
+          sizeSmall: { padding: smallChipPadding },
         },
       },
       MuiInputLabel: {
@@ -116,9 +122,6 @@ const generateTheme = (mode: PaletteMode) => {
     },
   }
 }
-
-/** Padding for input chips, filter chips, and buttons */
-const chipPadding = '14px 14px'
 
 /** Label style for buttons and chips */
 const chipTypography = typographyTheme.labelLarge
