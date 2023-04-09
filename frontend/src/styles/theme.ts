@@ -62,6 +62,9 @@ const generateTheme = (mode: PaletteMode) => {
       },
       divider: tokens.outlineVariant,
       background: { default: tokens.background, paper: tokens.surfaceBright },
+      // Add custom colour options
+      onSurface: tokens.onSurface,
+      onSurfaceVariant: tokens.onSurfaceVariant,
     },
   }
 }
