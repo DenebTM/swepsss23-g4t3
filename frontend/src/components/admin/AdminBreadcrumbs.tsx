@@ -10,7 +10,7 @@ interface AdminBreadcrumbsProps {
 }
 
 /**
- * Reusable breadcrumb componne tfor use in admin pages. Contains a single link back to the admin home page.
+ * Reusable breadcrumb component for use in admin pages. Contains a single link back to the admin home page.
  */
 export const AdminBreadcrumbs: React.FC<AdminBreadcrumbsProps> = (props) => {
   return (

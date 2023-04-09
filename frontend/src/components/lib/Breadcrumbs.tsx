@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import { theme } from '~/styles/theme'
 
 export interface BreadcrumbLink {
-  /** The URL of to navigate to on click */
+  /** The URL to navigate to on click */
   href: string
   /** The name to display for the breadcrumb link. Should be unique within the list of links in order to use it as a key. */
   name: string
