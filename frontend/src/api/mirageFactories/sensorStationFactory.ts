@@ -57,7 +57,7 @@ export const sensorStationFactory = Factory.extend<
     // Cerate measurements
     const measurements = server.createList(
       'measurement',
-      faker.datatype.number({ min: 0, max: 500 })
+      faker.datatype.number({ min: 0, max: 30 })
     ) as ModelInstance<Measurement>[]
 
     // Update sensorStation object
