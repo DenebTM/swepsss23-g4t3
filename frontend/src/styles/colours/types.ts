@@ -93,8 +93,9 @@ export interface M3Theme extends M3Colours {
  * Additional colours used in the theme. Should be used sparingly.
  */
 export interface CustomColours {
+  warnContainer: string
   warn: string
-  onWarn: string
+  onWarnContainer: string
   green: string
   tertiary: string
   blue: string

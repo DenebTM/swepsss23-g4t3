@@ -37,24 +37,36 @@ export const DonutFloatingLegend: React.FC<DonutFloatingLegendProps> = (
   props
 ) => {
   return (
-    <Fade in={true} mountOnEnter unmountOnExit>
+    <Fade in mountOnEnter unmountOnExit>
       <Box
         component="div"
         sx={{
           position: 'fixed',
-          left: props.clientX - 150, // Shift legend away from the edge of the page
-          top: props.clientY + 10,
+          left: props.clientX - 140, // Shift legend away from the edge of the page
+          top: props.clientY + 8,
           background: props.data.legendFill,
           padding: theme.spacing(1, 2),
           borderRadius: 1,
           boxShadow: theme.shadows[1],
+          zIndex: theme.zIndex.tooltip,
         }}
       >
+        <Typography
+          color={props.data.legendText}
+          variant="titleMedium"
+          gutterBottom
+          align="center"
+          display="block"
+        >
+          {props.data.displayName}
+        </Typography>
         {props.data.entities.map((entityName, index) => (
           <Typography
             key={`entity=${index}`}
             color={props.data.legendText}
+            variant="bodyMedium"
             align="center"
+            display="block"
           >
             {entityName}
           </Typography>

@@ -49,13 +49,13 @@ export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
   }, [snackbarMessage])
 
   return (
-    <div>
+    <>
       {accessPoints && (
         <StatusDonutCharts
           accessPoints={accessPoints}
           sensorStations={props.sensorStations}
         />
       )}
-    </div>
+    </>
   )
 }
