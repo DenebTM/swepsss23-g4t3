@@ -36,7 +36,7 @@ namespace ble::pairing {
       if (BLE.advertise()) {
         mode::active = true;
         mode::active_since = millis();
-        led::set_color(led::BLUE);
+        led::set_color(led::BLUE); // TODO: define LED colors/status codes in a central location
 
         Serial.print("Ready to pair! Station address: ");
         Serial.println(BLE.address());
@@ -50,7 +50,7 @@ namespace ble::pairing {
       BLE.stopAdvertise();
 
       pairing::mode::active = false;
-      led::set_color(led::RED);
+      led::set_color(led::RED); // TODO: define LED colors/status codes in a central location
     }
   }
 
