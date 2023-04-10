@@ -34,7 +34,7 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
    * Handle changes to editable cells.
    * Note that this function does *not* need to update `rows` as this is handled inside MUI's DataGrid component
    */
-  processRowUpdate: RowUpdateFunction<R>
+  processRowUpdate?: RowUpdateFunction<R>
   /** Rows to display in the table. Pagination is handled internally. If undefined, then display a loading indicator. */
   rows: readonly R[] | undefined
 
@@ -108,6 +108,7 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
               pageSize: 5,
             },
           },
+          ...props.initialState,
         }}
         isRowSelectable={() => false}
         pageSizeOptions={[5, 10, 25]}
