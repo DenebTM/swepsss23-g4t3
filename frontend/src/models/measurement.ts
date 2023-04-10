@@ -1,9 +1,13 @@
 import { Timestamp } from './timestamp'
 
+/** The unique identifier of a sensor station measurement */
+export type MeasurementId = number
+
 /**
  * A single measurement from a sensor station
  */
 export interface Measurement {
+  id: MeasurementId
   data: SensorValues
   timestamp: Timestamp
 }

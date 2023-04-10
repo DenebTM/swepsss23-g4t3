@@ -23,9 +23,6 @@ vi.mock('react-router-dom', () => ({
 
 test('render GreenhouseTabularView inside GreenhouseView without crashing', async () => {
   render(<GreenhouseView />)
-  expect(
-    screen.getByText(
-      `Greenhouse tabular view for greenhouse ${sensorStationUuid}`
-    )
-  ).toBeInTheDocument()
+  expect(screen.getByText('Air Pressure')).toBeInTheDocument()
+  // TODO qqjf Add tests for all table columns
 })

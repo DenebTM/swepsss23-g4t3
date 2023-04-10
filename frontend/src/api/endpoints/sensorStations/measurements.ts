@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { Server } from 'miragejs'
 import { _delete, _get } from '~/api/intercepts'
 import { Measurement } from '~/models/measurement'
@@ -20,7 +21,10 @@ export const getSensorStationMeasurements = async (
   from?: Timestamp,
   to?: Timestamp
 ): Promise<Measurement[]> => {
-  return _get(`${SENSOR_STATIONS_URI}/${sensorStationUuid}/${MEASUREMENTS_URI}`)
+  return _get(
+    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${MEASUREMENTS_URI}`,
+    { params: { from: from, to: to } }
+  )
 }
 
 /** Path to get sensor station measurements for mocked routes */
@@ -37,11 +41,25 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
   server.get(MEASUREMENT_PATH, (schema: AppSchema, request) => {
     const uuid: SensorStationUuid = Number(request.params.uuid)
     const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const body: { from?: Timestamp; to?: Timestamp } = request.queryParams
 
     if (sensorStation) {
-      // Return the first measurement if there is one
       const ssMeasurements: Measurement[] = sensorStation.attrs.measurements
-      return success(ssMeasurements.length > 0 ? ssMeasurements[0] : [])
+
+      if (typeof body.from === 'undefined' && typeof body.to === 'undefined') {
+        // Return the first measurement if there is one
+        return success(ssMeasurements.length > 0 ? [ssMeasurements[0]] : [])
+      } else {
+        return success(
+          ssMeasurements.filter(
+            (m) =>
+              ((typeof body.from === 'undefined' ||
+                dayjs(m.timestamp).isAfter(body.from)) &&
+                typeof body.to === 'undefined') ||
+              dayjs(m.timestamp).isBefore(body.to)
+          )
+        )
+      }
     } else {
       return notFound(`sensor station ${uuid}`)
     }
