@@ -224,6 +224,7 @@ export const getM3Tokens = (mode: PaletteMode): M3Theme => ({
 
 export const customColors: CustomColours = {
   warn: '#ec9f07',
+  onWarn: '#271902',
   green: '#00a769',
   tertiary: '#39656b',
   blue: '#5680b3',

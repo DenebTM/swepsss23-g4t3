@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
+import { Cell, Label, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
 import Box from '@mui/material/Box'
+
+import { theme } from '~/styles/theme'
 
 import { DonutFloatingLegend, DonutValue } from './DonutFloatingLegend'
 
 interface DonutChartProps {
   data: DonutValue[]
+  label: string
 }
 
 /**
@@ -48,6 +51,10 @@ export const DonutChart: React.FC<DonutChartProps> = (props) => {
             {props.data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fill} />
             ))}
+
+            <Label width={30} position="center" fill={theme.outline}>
+              {props.label}
+            </Label>
           </Pie>
         </PieChart>
       </ResponsiveContainer>
