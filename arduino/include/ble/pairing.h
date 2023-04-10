@@ -13,7 +13,7 @@ namespace ble::pairing {
   namespace mode {
     extern volatile bool entering;
     extern bool active;
-    extern unsigned long timestamp;
+    extern unsigned long active_since;
 
     void enter();
     void exit();
