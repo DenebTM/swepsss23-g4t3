@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+//import dayjs from 'dayjs'
 import { Server } from 'miragejs'
 import { _delete, _get } from '~/api/intercepts'
 import { Measurement } from '~/models/measurement'
@@ -41,12 +41,16 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
   server.get(MEASUREMENT_PATH, (schema: AppSchema, request) => {
     const uuid: SensorStationUuid = Number(request.params.uuid)
     const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
-    const body: { from?: Timestamp; to?: Timestamp } = request.queryParams
+    //const body: { from?: Timestamp; to?: Timestamp } = request.queryParams
 
     if (sensorStation) {
       const ssMeasurements: Measurement[] = sensorStation.attrs.measurements
 
-      if (typeof body.from === 'undefined' && typeof body.to === 'undefined') {
+      return success(ssMeasurements.length > 0 ? ssMeasurements[0] : [])
+    } else {
+      return notFound(`sensor station ${uuid}`)
+    }
+    /*if (typeof body.from === 'undefined' && typeof body.to === 'undefined') {
         // Return the first measurement if there is one
         return success(ssMeasurements.length > 0 ? [ssMeasurements[0]] : [])
       } else {
@@ -62,6 +66,6 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
       }
     } else {
       return notFound(`sensor station ${uuid}`)
-    }
+    }*/
   })
 }
