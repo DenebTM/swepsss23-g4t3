@@ -45,4 +45,3 @@ namespace ble {
     BLE.addService(sv_senswarn);
   }
 }
-
