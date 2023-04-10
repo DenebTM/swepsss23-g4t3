@@ -23,76 +23,78 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
 ) => {
   const [measurements, setMeasurements] = useState<Measurement[]>()
 
-  /** Columns for the greenhouse measurement table */
+  /** Styles applied to all table columns containing metric */
+  const metricColumnParams: Partial<GridColDef<Measurement, any, Measurement>> =
+    {
+      headerAlign: 'center',
+      align: 'center',
+      width: 110,
+    }
+
+  /**
+   * Columns for the greenhouse measurement table.
+   * qqjf TODO add units from ~/common to all greenhouse pages.
+   */
   const columns: GridColDef<Measurement, any, Measurement>[] = [
     {
       field: 'data.airPressure',
       headerName: 'Air Pressure',
-      headerAlign: 'center',
-      align: 'center',
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         round(params.row.data.airPressure),
+      ...metricColumnParams,
     },
     {
       field: 'data.airQuality',
       headerName: 'Air Quality',
-      headerAlign: 'center',
-      align: 'center',
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         round(params.row.data.airQuality),
+      ...metricColumnParams,
     },
     {
       field: 'data.humidity',
       headerName: 'Humidity',
-      headerAlign: 'center',
-      align: 'center',
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         round(params.row.data.humidity),
+      ...metricColumnParams,
     },
     {
       field: 'data.lightIntensity',
       headerName: 'Light Intensity',
-      headerAlign: 'center',
-      align: 'center',
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         round(params.row.data.lightIntensity),
+      ...metricColumnParams,
     },
     {
       field: 'data.soilMoisture',
       headerName: 'Soil Moisture',
-      headerAlign: 'center',
-      align: 'center',
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         round(params.row.data.soilMoisture),
+      ...metricColumnParams,
     },
 
     {
       field: 'data.temperature',
       headerName: 'Temperature',
-      headerAlign: 'center',
-      align: 'center',
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         round(params.row.data.temperature),
+      ...metricColumnParams,
     },
     {
       field: 'timestamp',
       headerName: 'Timestamp',
       description: 'When the measurement was taken',
       type: 'dateTime',
-      flex: 1,
       headerAlign: 'center',
       align: 'center',
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         dayjs(params.value).toDate(),
+      width: 200,
     },
   ]
 
   return (
     <DataGrid<Measurement, any, Measurement>
       columns={columns}
-      getRowId={(row: Measurement) => row.id}
-      rows={measurements}
-      setRows={setMeasurements}
       fetchRows={() =>
         getSensorStationMeasurements(
           props.uuid,
@@ -100,11 +102,21 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
           dayjs().toISOString()
         )
       }
+      getRowId={(row: Measurement) => row.id}
       initialState={{
         sorting: {
           sortModel: [{ field: 'timestamp', sort: 'desc' }],
         },
+        pagination: {
+          paginationModel: {
+            pageSize: 10,
+          },
+        },
       }}
+      rows={measurements}
+      setRows={setMeasurements}
+      size="small"
+      zebraStripes
     />
   )
 }
