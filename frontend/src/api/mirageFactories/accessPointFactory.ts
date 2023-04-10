@@ -11,8 +11,8 @@ export const accessPointFactory = Factory.extend<AccessPoint>({
     return `Access Point ${i + 1}`
   },
   active() {
-    // Return that an access point is offline with a 1/6 probability
-    return faker.datatype.number({ min: 0, max: 5 }) === 0
+    // Return that an access point is offline with a 1/3 probability
+    return faker.datatype.number({ min: 0, max: 2 }) !== 0
   },
   serverAddress() {
     return '192.0.0.0'
