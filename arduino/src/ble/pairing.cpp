@@ -17,7 +17,7 @@ namespace ble::pairing {
   }
 
   namespace mode {
-    // signal set by ISR; when true, will enter pairing mode at next update
+    // signal set by ISR; when true, will enter pairing mode at next call to `update`
     volatile bool entering = false;
 
     // whether or not pairing mode is currently active
