@@ -48,12 +48,11 @@ export const DonutChart: React.FC<DonutChartProps> = (props) => {
           >
             {props.data.map((entry, index) => (
               <Cell
-                key={`cell-${index}`}
+                key={`${props.label}-cell-${index}`}
                 fill={entry.fill}
                 style={{
                   filter: `drop-shadow(2px 2px 2px ${theme.outlineVariant})`,
                   cursor: 'pointer',
-                  transition: 'all 0.6s ease-in-out;',
                 }}
                 stroke="0"
               />
