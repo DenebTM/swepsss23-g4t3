@@ -141,7 +141,7 @@ namespace ble {
   }
 
 
-  // Sensor data transmission
+  /** convert values stored in `current_data` to correct data formats and transmit via BLE */
   void write_sensor_data() {
     // Sensor data format: float
     // BLE data format: unsigned 32-bit integer with resolution of 0.1 Pa
