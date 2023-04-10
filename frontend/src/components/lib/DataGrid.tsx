@@ -2,7 +2,9 @@ import { cancelable } from 'cancelable-promise'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
+import { SxProps, Theme } from '@mui/material/styles'
 import {
+  gridClasses,
   GridColDef,
   GridValidRowModel,
   DataGrid as MuiDataGrid,
@@ -11,6 +13,7 @@ import {
 
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { theme } from '~/styles/theme'
 
 /**
  * Handle changes to editable cells. Note that this function does not need to update rows as this is handled inside MUI's DataGrid component
@@ -23,6 +26,54 @@ export type RowUpdateFunction<R extends GridValidRowModel> = (
   newRow: R,
   oldRow: R
 ) => Promise<R>
+
+/**
+ * Custom styling to support changing the colour of even rows.
+ * This not be handled with `styled` as we need access to the fixed value of `R`
+ * in the main component to correctly type the MuiDataGrid props.
+ *
+ * Should also define `&.Mui-selected` if we need this in the future:
+ * see https://mui.com/x/react-data-grid/style/#styling-rows
+ */
+const dataGridRowSx = (theme: Theme): SxProps<Theme> => {
+  const hoveredRowColour =
+    theme.mode === 'light'
+      ? theme.ref.neutralVariant[90]
+      : theme.ref.neutralVariant[20]
+  const stripedRowColour =
+    theme.mode === 'light'
+      ? theme.ref.neutralVariant[95]
+      : theme.ref.neutralVariant[30]
+  const borderColour = theme.outlineVariant
+  return {
+    // Cell styles
+    [`& .${gridClasses.cell}`]: {
+      borderColor: borderColour,
+    },
+    // Row styles for all rows
+    [`& .${gridClasses.row}`]: {
+      [`&:first-of-type  .${gridClasses.cell}`]: {
+        borderTop: `${borderColour} 1px solid`, // Add top border to first row
+      },
+      '&:hover, &.Mui-hovered': {
+        backgroundColor: hoveredRowColour,
+        '@media (hover: none)': {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
+    // Row styles for even rows in the striped table variant
+    [`& .${gridClasses.row}.even`]: {
+      backgroundColor: stripedRowColour,
+      '&:hover, &.Mui-hovered': {
+        backgroundColor: hoveredRowColour,
+        '@media (hover: none)': {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
+  }
+}
 
 /** Extend and limit {@link MuiDataGridProps} to provide additional type hints and safety. */
 interface DataGridProps<R extends GridValidRowModel, V, F>
@@ -43,6 +94,10 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
   fetchRows: () => Promise<R[]>
   /** Function to update row data in the state of the parent component. */
   setRows: Dispatch<SetStateAction<R[] | undefined>>
+  /** Specify the amount of row padding. Defaults to medium. */
+  size?: 'medium' | 'small'
+  /** If true, alter the colour of every second table row */
+  zebraStripes?: boolean
 }
 
 /**
@@ -105,16 +160,24 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
           ...props.initialState,
         }}
         isRowSelectable={() => false}
-        pageSizeOptions={[5, 10, 25]}
+        pageSizeOptions={[10, 25, 100]}
         onProcessRowUpdateError={onProcessRowUpdateError}
         loading={typeof props.rows === 'undefined'}
         rows={typeof props.rows === 'undefined' ? [] : props.rows}
+        rowHeight={props.size === 'small' ? 36 : 56}
+        getRowClassName={
+          props.zebraStripes
+            ? (params) =>
+                params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+            : undefined
+        }
+        sx={{ ...dataGridRowSx(theme) }}
         {...gridProps}
       />
     </Box>
