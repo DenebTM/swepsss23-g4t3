@@ -9,9 +9,6 @@
 #define BLE_DEVICE_MANUFACTURER       "UIBK SE G4T3"
 #define BLE_DEVICE_APPEARANCE         0x3621
 
-#define BLE_NO_PAIRED_DEVICE          String("")
-#define BLE_PAIRING_MODE_TIMEOUT_MS   30000
-
 namespace ble {
   extern String paired_mac;
 
