@@ -94,6 +94,7 @@ export interface M3Theme extends M3Colours {
  */
 export interface CustomColours {
   warn: string
+  onWarn: string
   green: string
   tertiary: string
   blue: string
