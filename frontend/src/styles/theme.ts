@@ -78,6 +78,16 @@ const generateTheme = (mode: PaletteMode) => {
           },
         },
       },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            color: tokens.onSurface,
+            '&.Mui-disabled': {
+              color: tokens.outline,
+            },
+          },
+        },
+      },
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
