@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { Cell, Label, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
-import Box from '@mui/material/Box'
-
 import { theme } from '~/styles/theme'
 
 import { DonutFloatingLegend, DonutValue } from './DonutFloatingLegend'
@@ -33,26 +31,40 @@ export const DonutChart: React.FC<DonutChartProps> = (props) => {
   }
 
   return (
-    <Box sx={{ position: 'relative', height: 200 }}>
+    <>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={props.data}
-            innerRadius={60}
-            outerRadius={80}
+            innerRadius="82%"
+            outerRadius="100%"
             dataKey="value"
-            paddingAngle={4}
+            paddingAngle={3}
             onMouseEnter={onPieEnter}
             onMouseLeave={onPieLeave}
+            onMouseOut={onPieLeave}
             startAngle={90}
             endAngle={-270}
-            style={{ cursor: 'pointer' }}
           >
             {props.data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
+              <Cell
+                key={`cell-${index}`}
+                fill={entry.fill}
+                style={{
+                  filter: `drop-shadow(2px 2px 2px ${theme.outlineVariant})`,
+                  cursor: 'pointer',
+                  transition: 'all 0.6s ease-in-out;',
+                }}
+                stroke="0"
+              />
             ))}
 
-            <Label width={30} position="center" fill={theme.outline}>
+            <Label
+              width={100}
+              position="center"
+              fill={theme.outline}
+              enableBackground={'green'}
+            >
               {props.label}
             </Label>
           </Pie>
@@ -66,6 +78,6 @@ export const DonutChart: React.FC<DonutChartProps> = (props) => {
           clientY={legend.clientY}
         />
       )}
-    </Box>
+    </>
   )
 }

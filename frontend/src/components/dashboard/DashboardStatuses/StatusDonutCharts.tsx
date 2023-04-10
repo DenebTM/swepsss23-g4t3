@@ -1,6 +1,9 @@
 import React from 'react'
 
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { AccessPoint } from '~/models/accessPoint'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
@@ -26,8 +29,8 @@ const offlineStyles = {
 /** Legend styles for an entity in a warning state */
 const warnStyles = {
   fill: theme.warn,
-  legendFill: theme.warn,
-  legendText: theme.onWarn,
+  legendFill: theme.warnContainer,
+  legendText: theme.onWarnContainer,
 }
 
 /** Initial state of data to be displayed in a donut chart */
@@ -37,13 +40,13 @@ const initialEntityData = {
 }
 
 /** Text display value if an entity is online */
-const ONLINE = 'online'
+const ONLINE = 'Online'
 
 /** Text display value if an entity is offline */
-const OFFLINE = 'offline'
+const OFFLINE = 'Offline'
 
 /** Text display value if an entity is in a warning state */
-const WARN = 'warning'
+const WARN = 'Warning'
 
 /** Empty state for access point donut chart */
 const initialAccessPointData: DonutValue[] = [
@@ -87,6 +90,9 @@ interface StatusDonutChartsProps {
  * Donut chart showing the statuses of access points and sensor stations in the dashboard
  */
 export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
+  const stackDonuts = useMediaQuery(theme.breakpoints.down('sm'))
+  const donutHeight = stackDonuts ? 150 : 200
+
   /** Generate access point chart data to display */
   const accessPointData: DonutValue[] = props.accessPoints.reduce(
     (counts: DonutValue[], ap: AccessPoint) => {
@@ -130,13 +136,49 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
   )
 
   return (
-    <Grid container spacing={2} sx={{ width: '100%', height: 200 }}>
-      <Grid xs={12} sm={6} sx={{ height: '100%' }}>
-        <DonutChart data={accessPointData} label="Access Points" />
+    <Box component="div" sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Grid container spacing={1} sx={{ width: '100%', height: '100%' }}>
+        <Grid xs={12} sm={6} md={6} height={donutHeight}>
+          <DonutChart data={accessPointData} label="Access Points" />
+        </Grid>
+        <Grid xs={12} sm={6} md={6} height={donutHeight}>
+          <DonutChart data={sensorStationData} label={'Greenhouses'} />
+        </Grid>
       </Grid>
-      <Grid xs={12} sm={6} sx={{ height: 200 }}>
-        <DonutChart data={sensorStationData} label="Greenhouses" />
+      <Grid container spacing={2}>
+        {initialSensorStationData.map((v) => (
+          <Grid
+            xs={12}
+            sm={4}
+            key={v.displayName}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              component="span"
+              sx={{
+                background: v.fill,
+                minHeight: theme.spacing(1.5),
+                minWidth: theme.spacing(1.5),
+                borderRadius: 99,
+                marginRight: 1,
+                boxShadow: theme.shadows[1],
+              }}
+            />
+            <Typography
+              variant="labelMedium"
+              color={theme.outline}
+              width={stackDonuts ? theme.spacing(8) : undefined}
+            >
+              {v.displayName}
+            </Typography>
+          </Grid>
+        ))}
       </Grid>
-    </Grid>
+    </Box>
   )
 }
