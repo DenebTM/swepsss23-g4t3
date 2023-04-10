@@ -2,7 +2,7 @@ import React from 'react'
 
 import CheckIcon from '@mui/icons-material/Check'
 import EditIcon from '@mui/icons-material/Edit'
-import Button from '@mui/material/Button'
+import Button, { ButtonProps } from '@mui/material/Button'
 
 import { theme } from '~/styles/theme'
 
@@ -18,13 +18,20 @@ interface EditRowButtonProps {
  * Clickable cell to trigger editing the current row of the greenhouses accordion.
  */
 export const EditRowButton: React.FC<EditRowButtonProps> = (props) => {
+  const buttonProps: ButtonProps = {
+    size: 'small',
+    sx: {
+      width: theme.spacing(10),
+    },
+  }
+
   return props.editing ? (
     <Button
       onClick={props.saveRow}
       endIcon={<CheckIcon />}
-      size="small"
       variant="contained"
       color="primary"
+      {...buttonProps}
     >
       Save
     </Button>
@@ -33,8 +40,8 @@ export const EditRowButton: React.FC<EditRowButtonProps> = (props) => {
       onClick={props.startEditing}
       endIcon={<EditIcon />}
       sx={{ color: theme.onSurfaceVariant }}
-      size="small"
       variant="text"
+      {...buttonProps}
     >
       Edit
     </Button>
