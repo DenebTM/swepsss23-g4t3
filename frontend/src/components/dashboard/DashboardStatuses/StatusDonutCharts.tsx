@@ -12,33 +12,11 @@ import { theme } from '~/styles/theme'
 import { DonutChart } from './DonutChart'
 import { DonutValue } from './DonutFloatingLegend'
 
-/** Legend styles for an online entity */
-const onlineStyles = {
-  fill: theme.primary,
-  legendFill: theme.primaryContainer,
-  legendText: theme.onPrimaryContainer,
-}
-
-/** Legend styles for an offline entity */
-const offlineStyles = {
-  fill: theme.error,
-  legendFill: theme.errorContainer,
-  legendText: theme.onErrorContainer,
-}
-
-/** Legend styles for an entity in a warning state */
-const warnStyles = {
-  fill: theme.warn,
-  legendFill: theme.warnContainer,
-  legendText: theme.onWarnContainer,
-}
-
 /** Initial state of data to be displayed in a donut chart */
 const initialEntityData = {
   entities: [],
   value: 0,
 }
-
 /** Text display value if an entity is online */
 const ONLINE = 'Online'
 
@@ -48,37 +26,44 @@ const OFFLINE = 'Offline'
 /** Text display value if an entity is in a warning state */
 const WARN = 'Warning'
 
+/** Initial values for an online entity */
+const initialOnlineEntity = {
+  displayName: ONLINE,
+  fill: theme.primary,
+  legendFill: theme.primaryContainer,
+  legendText: theme.onPrimaryContainer,
+  ...initialEntityData,
+}
+
+/** Initial values for an entity in a warning state */
+const initialWarnEntity = {
+  displayName: WARN,
+  fill: theme.warn,
+  legendFill: theme.warnContainer,
+  legendText: theme.onWarnContainer,
+  ...initialEntityData,
+}
+
+/** Initial values for an online entity */
+const initialOfflineEntity = {
+  displayName: OFFLINE,
+  fill: theme.error,
+  legendFill: theme.errorContainer,
+  legendText: theme.onErrorContainer,
+  ...initialEntityData,
+}
+
 /** Empty state for access point donut chart */
 const initialAccessPointData: DonutValue[] = [
-  {
-    displayName: ONLINE,
-    ...initialEntityData,
-    ...onlineStyles,
-  },
-  {
-    displayName: OFFLINE,
-    ...initialEntityData,
-    ...offlineStyles,
-  },
+  initialOnlineEntity,
+  initialOfflineEntity,
 ]
 
 /** Empty state for sensor station donut chart */
 const initialSensorStationData: DonutValue[] = [
-  {
-    displayName: ONLINE,
-    ...initialEntityData,
-    ...onlineStyles,
-  },
-  {
-    displayName: WARN,
-    ...initialEntityData,
-    ...warnStyles,
-  },
-  {
-    displayName: OFFLINE,
-    ...initialEntityData,
-    ...offlineStyles,
-  },
+  initialOnlineEntity,
+  initialWarnEntity,
+  initialOfflineEntity,
 ]
 
 interface StatusDonutChartsProps {
