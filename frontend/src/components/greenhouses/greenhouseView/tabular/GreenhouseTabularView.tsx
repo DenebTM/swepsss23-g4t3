@@ -107,11 +107,6 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
         sorting: {
           sortModel: [{ field: 'timestamp', sort: 'desc' }],
         },
-        pagination: {
-          paginationModel: {
-            pageSize: 10,
-          },
-        },
       }}
       rows={measurements}
       setRows={setMeasurements}

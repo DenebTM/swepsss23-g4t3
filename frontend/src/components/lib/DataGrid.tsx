@@ -110,7 +110,7 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
   props: DataGridProps<R, V, F>
 ): React.ReactElement => {
   const addSnackbarMessage = useAddSnackbarMessage()
-  const { fetchRows, setRows, rows, ...gridProps } = props
+  const { fetchRows, setRows, rows, initialState, ...gridProps } = props
 
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
@@ -163,7 +163,7 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
               pageSize: 10,
             },
           },
-          ...props.initialState,
+          ...initialState,
         }}
         isRowSelectable={() => false}
         pageSizeOptions={[10, 25, 100]}
