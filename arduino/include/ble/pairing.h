@@ -3,6 +3,9 @@
 
 #include "ble.h"
 
+#define BLE_NO_PAIRED_DEVICE          String("")
+#define BLE_PAIRING_MODE_TIMEOUT_MS   5 * 60 * 1000
+
 namespace ble::pairing {
   /** set up button */
   void setup();
