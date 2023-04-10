@@ -64,6 +64,6 @@ namespace ble {
     // Sensor data format: unsigned 8-bit integer
     // BLE data format: unsigned 8-bit integer with resolution of 1%
     uint8_t soil_moisture = sensors::current_data.soil_moisture;
-    ch_illuminance.writeValue(soil_moisture);
+    ch_soilMoisture.writeValue(soil_moisture);
   }
 }
