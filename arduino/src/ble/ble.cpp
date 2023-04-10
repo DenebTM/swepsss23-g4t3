@@ -5,7 +5,6 @@
 
 #include <buttons.h>
 #include <led.h>
-#include <station_id.h>
 #include <sensors/data.h>
 #include <Ticker.h>
 
@@ -74,6 +73,7 @@ namespace ble {
     BLE.poll();
 
     // run timers etc
+    devinfo_update();
     envsense_update();
     pairing::update();
   }
