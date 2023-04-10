@@ -78,24 +78,5 @@ namespace ble {
     // run timers etc
     envsense_update();
     pairing::update();
-
-    // log something to the Serial console once a second
-    static unsigned long last_log_timestamp;
-    unsigned long current_timestamp = millis();
-    if (current_timestamp - last_log_timestamp >= 1000) {
-      if (BLE.central().connected()) {
-        uint8_t id = station_id();
-
-        if (id != val_stationID) {
-          Serial.println("Station ID changed");
-          val_stationID = id;
-          ch_stationID.writeValue(val_stationID);
-        }
-        Serial.print("Current station ID: ");
-        Serial.println((unsigned long)val_stationID);
-      }
-
-      last_log_timestamp = current_timestamp;
-    }
   }
 }
