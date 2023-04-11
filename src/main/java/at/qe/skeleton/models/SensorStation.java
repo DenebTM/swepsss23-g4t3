@@ -1,10 +1,11 @@
 package at.qe.skeleton.models;
 
+import com.fasterxml.jackson.annotation.*;
 import at.qe.skeleton.models.enums.Status;
 import jakarta.persistence.*;
 
-import java.time.Duration;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "SENSOR_STATION")
@@ -12,35 +13,47 @@ public class SensorStation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "STATION_ID")
-    private Long id;
+    @Column(name = "SS_ID")
+    private Integer id;
 
-    @OneToOne
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id"
+    )
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("apId")
+    @ManyToOne(optional = false)
     @JoinColumn(name = "AP_ID")
     private AccessPoint accessPoint;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     private Status status;
 
-    //TODO: check mappings!!!
-    @Column(name = "MEASUREMENTS")
-    @OneToMany
-    private List<Measurement> measurements;
+    @JsonBackReference
+    @OneToMany(mappedBy = "sensorStation",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    private Set<Measurement> measurements = new HashSet<>();
 
-    @Column(name = "TRANSMISSION_INTERVAL", nullable = false)
-    private Duration transmissionInterval;
+    @Column(name = "AGGREGATION_PERIOD", nullable = false)
+    private Long aggregationPeriod;
 
-    //TODO:check join column, user class is not yet updated
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
+    @JoinTable(name = "GARDENER_SS",
+            joinColumns = @JoinColumn(name = "SS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "USERNAME"))
+    private Set<Userx> gardeners;
+
     @OneToOne
-    @JoinColumn(name = "USER_ID")
-    private Userx gardener;
-
-    @ManyToOne
-    @JoinColumn(name = "VALUES_ID", insertable=false, updatable=false)
+    @JoinColumn(name = "UPPER_VALUES_ID")
     private SensorValues upperBound;
 
-    @ManyToOne
-    @JoinColumn(name = "VALUES_ID", insertable=false, updatable=false)
+    @OneToOne
+    @JoinColumn(name = "LOWER_VALUES_ID")
     private SensorValues lowerBound;
 
     //TODO: paths are not working yet
@@ -52,7 +65,7 @@ public class SensorStation {
     public SensorStation() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -64,16 +77,12 @@ public class SensorStation {
         return status;
     }
 
-    public List<Measurement> getMeasurements() {
+    public Set<Measurement> getMeasurements() {
         return measurements;
     }
 
-    public Duration getTransmissionInterval() {
-        return transmissionInterval;
-    }
-
-    public Userx getGardener() {
-        return gardener;
+    public Long getAggregationPeriod() {
+        return aggregationPeriod;
     }
 
     public SensorValues getUpperBound() {
@@ -84,7 +93,7 @@ public class SensorStation {
         return lowerBound;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -96,16 +105,12 @@ public class SensorStation {
         this.status = status;
     }
 
-    public void setMeasurements(List<Measurement> measurements) {
+    public void setMeasurements(Set<Measurement> measurements) {
         this.measurements = measurements;
     }
 
-    public void setTransmissionInterval(Duration transmissionInterval) {
-        this.transmissionInterval = transmissionInterval;
-    }
-
-    public void setGardener(Userx gardener) {
-        this.gardener = gardener;
+    public void setAggregationPeriod(Long aggregationPeriod) {
+        this.aggregationPeriod = aggregationPeriod;
     }
 
     public void setUpperBound(SensorValues upperBound) {
@@ -114,5 +119,13 @@ public class SensorStation {
 
     public void setLowerBound(SensorValues lowerBound) {
         this.lowerBound = lowerBound;
+    }
+
+    public Set<Userx> getGardeners() {
+        return gardeners;
+    }
+
+    public void setGardeners(Set<Userx> gardeners) {
+        this.gardeners = gardeners;
     }
 }

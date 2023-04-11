@@ -1,6 +1,7 @@
 package at.qe.skeleton.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,9 +46,9 @@ public class LoginController {
 
         try {
             // Authenticate user and set Authentication object in SecurityContext
-            org.springframework.security.core.Authentication authentification = authenticationManager
+            org.springframework.security.core.Authentication authentication = authenticationManager
                     .authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(authentification);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (DisabledException e) {
             return ResponseEntity.status(403).body("User is disabled");
         } catch (BadCredentialsException e) {
@@ -58,6 +59,6 @@ public class LoginController {
 
         // Generate and return a new JWT
         final String jwt = tokenManager.generateJwtToken(username);
-        return ResponseEntity.ok(new LoginResponseModel(jwt));
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseModel(jwt));
     }
 }

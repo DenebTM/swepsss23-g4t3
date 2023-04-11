@@ -52,6 +52,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 // This is an info message, not an error, as the user should be redirected to 
                 // log in again
                 logger.info("JWT has expired");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                        "You are unauthorized. Please log in.");
+                return;
             }
         } else {
             // If Authorization: Bearer [token] is not in the headers. This is a debug
