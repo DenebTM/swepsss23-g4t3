@@ -1,16 +1,18 @@
-import React from 'react'
+/*import React from 'react'
 
 import { getSensorStations } from '~/api/endpoints/sensorStations/sensorStations'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { SnackbarContext } from '~/contexts/SnackbarContext/SnackbarContext'
-import { MessageType } from '~/contexts/SnackbarContext/types'
+import { MessageType } from '~/contexts/SnackbarContext/types'*/
 import { SensorStation } from '~/models/sensorStation'
 
 /**
  * Hook to get the current values of the fetched sensor stations in the global AppContext.
  * If the values have not been set yet, then fetches and saves these.
  */
-export const useSensorStations = (): SensorStation[] | null => {
+export const useSensorStations = (): SensorStation[] | null => []
+
+/*{
   const { appState, setSensorStations } = React.useContext(AppContext)
   const { addMessage } = React.useContext(SnackbarContext)
   const sensorStations: SensorStation[] | null = appState.sensorStations.data
@@ -31,3 +33,4 @@ export const useSensorStations = (): SensorStation[] | null => {
   }
   return sensorStations
 }
+*/
