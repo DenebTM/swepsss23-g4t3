@@ -1,6 +1,5 @@
 package at.qe.skeleton.tests;
 
-import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.UserRole;
 import nl.jqno.equalsverifier.EqualsVerifier;

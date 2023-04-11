@@ -1,6 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

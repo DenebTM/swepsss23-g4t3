@@ -1,6 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.model.SensorStation;
+import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.services.SensorStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
