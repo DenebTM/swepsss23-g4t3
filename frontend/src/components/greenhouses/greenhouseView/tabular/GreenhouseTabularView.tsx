@@ -8,7 +8,7 @@ import { getSensorStationMeasurements } from '~/api/endpoints/sensorStations/mea
 import { Measurement } from '~/models/measurement'
 import { SensorStationUuid } from '~/models/sensorStation'
 
-/** Round all measurements to the same number of decimal places */
+/** Round all measurements to the same number of decimal places. TODO add to common once greenhouse columns are saved there. */
 const round = (n: number) => n.toFixed(1)
 
 interface GreenhouseTabularViewProps {
