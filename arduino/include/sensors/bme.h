@@ -6,8 +6,8 @@
 #include <bsec2.h>
 
 namespace sensors::bme {
-  static Bme68x sensor;
-  static Bsec2 bsec;
+  extern Bme68x sensor;
+  extern Bsec2 bsec;
 
   // returns true on success, false if the sensor could not be found
   bool setup();
