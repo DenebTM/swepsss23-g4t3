@@ -66,7 +66,7 @@ export const AdminHome: React.FC = () => {
   ]
 
   return (
-    <PageWrapper requiredRoles={[UserRole.ADMIN]}>
+    <PageWrapper permittedRoles={[UserRole.ADMIN]}>
       <PageHeader left="Admin Home" />
       <Grid container spacing={2} padding={2}>
         {adminHomeLinks.map((link) => (
