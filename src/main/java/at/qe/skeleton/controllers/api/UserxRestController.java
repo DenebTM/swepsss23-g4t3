@@ -47,11 +47,12 @@ public class UserxRestController implements BaseRestController {
         }
 
         // Return a 403 error if a non-admin and not user itself tries to get User
-        if (!userService.authRoleIsAdmin() || (userx.equals(userService.getAuthenticatedUser()))) {
+        if (!userService.authRoleIsAdmin() && !userx.equals(userService.getAuthenticatedUser())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
         }
 
-        return ResponseEntity.ok(userx);
+       // return ResponseEntity.ok(userx);
+        return ResponseEntity.status(HttpStatus.OK).body(userx);
     }
 
     /**
