@@ -3,14 +3,13 @@ package at.qe.skeleton.tests;
 import at.qe.skeleton.model.Userx;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import at.qe.skeleton.model.UserRole;
+import at.qe.skeleton.model.enums.UserRole;
 import at.qe.skeleton.services.UserService;
 
 /**
