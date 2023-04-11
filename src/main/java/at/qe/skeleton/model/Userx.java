@@ -5,6 +5,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
@@ -23,16 +27,14 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @Column(length = 100)
     private String username;
 
-    @ManyToOne(optional = false)
-    private Userx createUser;
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
-    @ManyToOne(optional = true)
-    private Userx updateUser;
+
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
+    @JsonIgnore
     @Column(name = "PASSWORD")
     private String password;
 
@@ -46,6 +48,11 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @Enumerated(EnumType.STRING)
     @Column(name = "USER_ROLE")
     private UserRole userRole;
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToMany(mappedBy = "gardeners", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<SensorStation> assignedSS;
 
     public String getUsername() {
         return username;
@@ -95,14 +102,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.userRole = roles;
     }
 
-    public Userx getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Userx createUser) {
-        this.createUser = createUser;
-    }
-
     public LocalDateTime getCreateDate() {
         return createDate;
     }
@@ -111,20 +110,20 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.createDate = createDate;
     }
 
-    public Userx getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Userx updateUser) {
-        this.updateUser = updateUser;
-    }
-
     public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Set<SensorStation> getAssignedSS() {
+        return assignedSS;
+    }
+
+    public void setAssignedSS(Set<SensorStation> assignedSS) {
+        this.assignedSS = assignedSS;
     }
 
     @Override
@@ -154,6 +153,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         return "at.qe.skeleton.model.User[ id=" + username + " ]";
     }
 
+    @JsonIgnore
     @Override
     public String getId() {
         return getUsername();
@@ -163,6 +163,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         setUsername(id);
     }
 
+    @JsonIgnore
     @Override
     public boolean isNew() {
         return (null == createDate);

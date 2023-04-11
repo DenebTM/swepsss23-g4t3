@@ -1,4 +1,5 @@
 #include <sensors/light.h>
+#include <sensors/data.h>
 
 #include <Ticker.h>
 
@@ -31,6 +32,7 @@ namespace sensors::light {
       lx_val = map(avg, LIGHT_VAL_100LX, LIGHT_VAL_200LX, 100, 200);
     }
 
+    current_data.illuminance = lx_val;
     Serial.println("Illuminance: " + String(lx_val) + " lx");
   }
 

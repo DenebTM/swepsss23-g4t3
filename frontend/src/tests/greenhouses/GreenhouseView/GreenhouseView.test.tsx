@@ -17,8 +17,8 @@ test('render GreenhouseGraphicalView inside GreenhouseView without search params
       new URLSearchParams([]), // Mock empty search params
     ],
     useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
-    useNavigate: () => vi.fn,
-    useLocation: () => vi.fn,
+    useNavigate: () => vi.fn(),
+    useLocation: () => vi.fn(),
   }))
 
   render(<GreenhouseView />)
@@ -33,8 +33,8 @@ test('render GreenhouseGraphicalView inside GreenhouseView when the ?view search
       ]),
     ],
     useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
-    useNavigate: () => vi.fn,
-    useLocation: () => vi.fn,
+    useNavigate: () => vi.fn(),
+    useLocation: () => vi.fn(),
   }))
 
   render(<GreenhouseView />)

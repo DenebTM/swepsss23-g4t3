@@ -9,7 +9,6 @@ import { PageWrapper } from '~/components/page/PageWrapper'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { DashboardCard } from '../lib/DashboardCard'
 import { PageHeader } from '../page/PageHeader'
@@ -63,7 +62,7 @@ export const Dashboard: React.FC = () => {
         Dashboard
       </Typography>
 
-      <Grid container spacing={2} sx={{ padding: theme.spacing(2) }}>
+      <Grid container spacing={2} padding={2}>
         <Grid xs={12} md={6}>
           <DashboardCard>
             <RecentActivity />
