@@ -61,14 +61,21 @@ public class UserxRestController implements BaseRestController {
      */
     @PostMapping(value ="/users")
     public ResponseEntity<Object> createUser(@RequestBody Map<String, Object> json) {
+
+        // return a 403 error if a non-admin wants to create a user
         if (!userService.authRoleIsAdmin()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
         }
-
+        // return a 400 error if the user gets created with empty username
         String username = (String)json.get("username");
         if (username == null || username.equals("")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username cannot be blank.");
         }
+        // return a 400 error if the user gets created with an username already in use
+        if (userService.loadUserByUsername(username)!=null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already in use. It must be unique.");
+        }
+        // return a 400 error if the user gets created with empty password
         String password = (String)json.get("password");
         if (password == null || password.equals("")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
@@ -78,12 +85,62 @@ public class UserxRestController implements BaseRestController {
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
         newUser = userService.saveUser(newUser);
 
+        if (json.containsKey("firstName")) {
+            newUser.setFirstName((String)json.get("firstName"));
+        }
+        if (json.containsKey("lastName")) {
+            newUser.setLastName((String)json.get("lastName"));
+        }
         // hand setting the other parameters over to updateUser
         return updateUser(newUser.getId(), json);
     }
 
+    /**
+     * PUT route to update an already existing user, only allowed by ADMIN
+     * @param username + json
+     * @return updated user
+     */
+    @PutMapping (value ="/users/{username}")
+    public ResponseEntity<Object> updateUser(@PathVariable(value = "username") String username, @RequestBody Map<String, Object> json) {
+        Userx user = userService.loadUserByUsername(username);
 
+        // return a 403 error if a non-admin wants to update another user
+        if (!userService.authRoleIsAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
+        }
+        // return a 404 error if the user to be updated does not exist
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User \"" + username + "\" does not exist.");
+        }
+        // return a 400 error if the username is part of the json body, because it cannot be updated
+        if (json.containsKey("username")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usernames are final and cannot be updated.");
+        }
 
+        // updating all fields mentioned in the json body
+        if (json.containsKey("firstName")) {
+            user.setFirstName((String)json.get("firstName"));
+        }
+        if (json.containsKey("lastName")) {
+            user.setLastName((String)json.get("lastName"));
+        }
+        if (json.containsKey("password")) {
+            String password = (String)json.get("password");
+            if (password == null || password.equals("")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
+            }
+//            String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
+            user.setPassword(password);
+        }
+        if (json.containsKey("userRole")) {
+            try {
+                user.setUserRole(UserRole.valueOf((String) json.get("userRole")));
+            } catch (IllegalArgumentException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Userrole does not exist");
+            }
+        }
+        return ResponseEntity.ok(userService.saveUser(user));
+    }
 
     /**
      * Route to GET all sensor stations gardeners are assigned to
