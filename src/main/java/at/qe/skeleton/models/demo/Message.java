@@ -1,11 +1,11 @@
-package at.qe.skeleton.model.demo;
+package at.qe.skeleton.models.demo;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.Userx;
 
 /**
  * A class representing a message.

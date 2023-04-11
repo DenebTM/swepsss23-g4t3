@@ -1,6 +1,6 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
-import at.qe.skeleton.model.enums.LogEntityType;
+import at.qe.skeleton.models.enums.LogEntityType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

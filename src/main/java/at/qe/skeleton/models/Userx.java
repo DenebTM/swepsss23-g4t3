@@ -1,10 +1,10 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import at.qe.skeleton.model.enums.UserRole;
+import at.qe.skeleton.models.enums.UserRole;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 

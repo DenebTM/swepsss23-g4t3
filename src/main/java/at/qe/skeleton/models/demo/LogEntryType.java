@@ -1,4 +1,4 @@
-package at.qe.skeleton.model.demo;
+package at.qe.skeleton.models.demo;
 
 /**
  * A class which denotes a type of a logEntry.

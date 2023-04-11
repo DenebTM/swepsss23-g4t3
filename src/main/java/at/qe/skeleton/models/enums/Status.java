@@ -1,4 +1,4 @@
-package at.qe.skeleton.model.enums;
+package at.qe.skeleton.models.enums;
 
 public enum Status {
 

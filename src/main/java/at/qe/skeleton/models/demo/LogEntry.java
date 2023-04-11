@@ -1,8 +1,8 @@
-package at.qe.skeleton.model.demo;
+package at.qe.skeleton.models.demo;
 
 import java.util.Date;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.Userx;
 
 /**
  * A class which represents a logEntry.

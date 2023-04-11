@@ -1,6 +1,6 @@
-package at.qe.skeleton.model.demo;
+package at.qe.skeleton.models.demo;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.Userx;
 
 /**
  * Just combines a user and its status.
