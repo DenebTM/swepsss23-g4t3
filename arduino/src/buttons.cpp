@@ -1,12 +1,14 @@
-#include "buttons.h"
+#include <buttons.h>
+
+#include <common.h>
 
 // debounce button presses before calling the actual function
 // defined as a macro in order to avoid repeating this code three times
 #define _BUTTON_ISR(id) \
   static void isrb##id() { \
     if (!button_funcs[id]) return; \
-    static unsigned long last_isr_timestamp; \
-    unsigned long isr_timestamp = millis(); \
+    static timestamp_t last_isr_timestamp; \
+    timestamp_t isr_timestamp = millis(); \
     if (isr_timestamp - last_isr_timestamp >= DEBOUNCE_LOCKOUT_MILLIS) { \
       button_funcs[id](); \
     } \

@@ -4,6 +4,9 @@
 #include <sensors/data.h>
 
 namespace sensors::bme {
+  Bme68x sensor;
+  Bsec2 bsec;
+
   void sensorCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bsec) {
     if (!outputs.nOutputs) {
       Serial.println("BME688 - Received callback but no data");
