@@ -1,5 +1,6 @@
 package at.qe.skeleton.tests;
 
+import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.UserRole;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -22,7 +23,9 @@ public class EqualsImplementationTest {
         userx1.setUsername("user1");
         Userx userx2 = new Userx();
         userx2.setUsername("user2");
-        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, userx1, userx2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
+        SensorStation ss = new SensorStation();
+        SensorStation ss2 = new SensorStation();
+        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, userx1, userx2).withPrefabValues(SensorStation.class, ss, ss2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
     }
 
     @Test
