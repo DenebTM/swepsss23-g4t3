@@ -1,16 +1,15 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserxRestController implements BaseRestController {
@@ -56,6 +55,37 @@ public class UserxRestController implements BaseRestController {
     }
 
     /**
+     * POST route to create a new user, only allowed by ADMIN
+     * @param json body (username + password is required)
+     * @return newly created user
+     */
+    @PostMapping(value ="/users")
+    public ResponseEntity<Object> createUser(@RequestBody Map<String, Object> json) {
+        if (!userService.authRoleIsAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
+        }
+
+        String username = (String)json.get("username");
+        if (username == null || username.equals("")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username cannot be blank.");
+        }
+        String password = (String)json.get("password");
+        if (password == null || password.equals("")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
+        }
+        Userx newUser = new Userx();
+        newUser.setUsername(username);
+        newUser.setUserRole(UserRole.USER); // role of new users is USER by default
+        newUser = userService.saveUser(newUser);
+
+        // hand setting the other parameters over to updateUser
+        return updateUser(newUser.getId(), json);
+    }
+
+
+
+
+    /**
      * Route to GET all sensor stations gardeners are assigned to
      * @param username
      * @return List of assigned sensor stations
@@ -82,4 +112,9 @@ public class UserxRestController implements BaseRestController {
 
         return ResponseEntity.ok(userService.getAssignedSS(gardener));
     }
+
+
+
+
+
 }
