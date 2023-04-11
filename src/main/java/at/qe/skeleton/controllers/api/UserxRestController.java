@@ -83,16 +83,15 @@ public class UserxRestController implements BaseRestController {
         Userx newUser = new Userx();
         newUser.setUsername(username);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
-        newUser = userService.saveUser(newUser);
-
         if (json.containsKey("firstName")) {
             newUser.setFirstName((String)json.get("firstName"));
         }
         if (json.containsKey("lastName")) {
             newUser.setLastName((String)json.get("lastName"));
         }
-        // hand setting the other parameters over to updateUser
-        return updateUser(newUser.getId(), json);
+        newUser = userService.saveUser(newUser);
+
+        return ResponseEntity.ok(userService.saveUser(newUser));
     }
 
     /**
@@ -140,6 +139,31 @@ public class UserxRestController implements BaseRestController {
             }
         }
         return ResponseEntity.ok(userService.saveUser(user));
+    }
+
+    /**
+     * DELETE route to delete a user by its username, only allowed by ADMIN
+     * @param username
+     * @return "Success."
+     */
+    @DeleteMapping(value="/users/{username}")
+    public ResponseEntity<Object> deleteUserByUsername(@PathVariable(value = "username") String username) {
+        Userx user = userService.loadUserByUsername(username);
+
+        // return a 403 error if a non-admin wants to delete a user
+        if (!userService.authRoleIsAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
+        }
+        // return a 404 error if the user to be deleted does not exist
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User \"" + username + "\" does not exist.");
+        }
+        // return a 403 error if the authenticated user tries to delete themselves
+        if (userService.getAuthenticatedUser().getUsername().equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Self-deletion is not permitted.");
+        }
+        userService.deleteUser(user);
+        return ResponseEntity.status(HttpStatus.OK).body("Success.");
     }
 
     /**
