@@ -17,6 +17,7 @@ interface UsersTableProps {
   setUsers: Dispatch<SetStateAction<User[] | undefined>>
   users: User[] | undefined
 }
+
 /**
  * Display users in an editable, filterable table
  */
