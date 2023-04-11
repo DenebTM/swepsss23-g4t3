@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import dayjs from 'dayjs'
 import { Factory, ModelInstance, Server } from 'miragejs'
 import { Measurement, SensorValues } from '~/models/measurement'
 
@@ -22,7 +23,10 @@ export const measurementFactory = Factory.extend<
 >({
   timestamp() {
     return faker.date
-      .between('2020-01-01T00:00:00.000Z', '2023-03-15T00:00:00.000Z')
+      .between(
+        dayjs().subtract(1, 'month').toISOString(),
+        dayjs().toISOString()
+      )
       .toISOString()
   },
 
