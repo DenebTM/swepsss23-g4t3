@@ -1,4 +1,5 @@
 #include <sensors/hygro.h>
+#include <sensors/data.h>
 
 #include <Ticker.h>
 
@@ -12,7 +13,9 @@ namespace sensors::hygro {
   }
 
   void do_output() {
-    Serial.println("Soil moisture: " + String(read_hum()) + "%");
+    int moisture = read_hum();
+    current_data.soil_moisture = moisture;
+    Serial.println("Soil moisture: " + String(moisture) + "%");
   }
 
   // Software timers for reading and outputting
