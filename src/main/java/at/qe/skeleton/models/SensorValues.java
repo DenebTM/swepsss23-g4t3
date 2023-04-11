@@ -9,7 +9,7 @@ public class SensorValues {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "VALUES_ID")
-    private Long id;
+    private Integer id;
 
     @Column(name = "HUMIDITY")
     private Double humidity;
@@ -32,7 +32,7 @@ public class SensorValues {
     public SensorValues() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

@@ -1,5 +1,6 @@
 package at.qe.skeleton.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,14 @@ public class Measurement {
     @JoinColumn(name = "VALUES_ID")
     private SensorValues sensorValues;
 
-    public Measurement() {
+    @JsonIgnore
+    @ManyToOne(optional = false)
+    private SensorStation sensorStation;
+
+    public Measurement(LocalDateTime timestamp, SensorValues sensorValues, SensorStation sensorStation) {
+        this.timestamp = timestamp;
+        this.sensorValues = sensorValues;
+        this.sensorStation = sensorStation;
     }
 
     public Integer getId() {
@@ -32,5 +40,13 @@ public class Measurement {
 
     public SensorValues getSensorValues() {
         return sensorValues;
+    }
+
+    public SensorStation getSensorStation() {
+        return sensorStation;
+    }
+
+    public void setSensorStation(SensorStation sensorStation) {
+        this.sensorStation = sensorStation;
     }
 }
