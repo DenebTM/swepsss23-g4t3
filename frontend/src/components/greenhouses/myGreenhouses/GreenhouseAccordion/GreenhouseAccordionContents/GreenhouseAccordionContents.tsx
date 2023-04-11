@@ -5,7 +5,7 @@ import TableBody from '@mui/material/TableBody'
 import TableContainer from '@mui/material/TableContainer'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
-import { aggregationPeriod } from '~/common'
+import { AGGREGATION_PERIOD } from '~/common'
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
@@ -100,7 +100,7 @@ export const GreenhouseAccordionContents: React.FC<
 > = (props) => {
   /** Store the key of the row that is currently being edited in the state (otherwise `false`)*/
   const [editing, setEditing] = useState<
-    keyof SensorValues | typeof aggregationPeriod | false
+    keyof SensorValues | typeof AGGREGATION_PERIOD | false
   >(false)
 
   /** Props to pass to all child cells in the table */
@@ -149,11 +149,11 @@ export const GreenhouseAccordionContents: React.FC<
                 {props.sensorStation.aggregationPeriod} seconds
               </Typography>
             )}
-            editing={editing === aggregationPeriod}
+            editing={editing === AGGREGATION_PERIOD}
             saveRow={(aggregationPeriod: number) =>
               handleSaveRow(/** qqjf TODO actually update the values here */)
             }
-            startEditing={() => setEditing(aggregationPeriod)}
+            startEditing={() => setEditing(AGGREGATION_PERIOD)}
             title="Aggregation Period"
             typographyProps={typographyProps}
             value={props.sensorStation.aggregationPeriod}
