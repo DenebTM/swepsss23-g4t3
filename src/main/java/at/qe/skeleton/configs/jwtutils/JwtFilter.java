@@ -1,10 +1,8 @@
 package at.qe.skeleton.configs.jwtutils;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
-import at.qe.skeleton.model.UserRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

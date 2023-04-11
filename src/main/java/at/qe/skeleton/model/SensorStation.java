@@ -1,5 +1,6 @@
 package at.qe.skeleton.model;
 
+import at.qe.skeleton.model.enums.Status;
 import jakarta.persistence.*;
 
 import java.time.Duration;
