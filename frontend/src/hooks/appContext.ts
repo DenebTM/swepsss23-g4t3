@@ -11,7 +11,7 @@ import { SensorStation } from '~/models/sensorStation'
  * If the values have not been set yet, then fetches and saves these.
  */
 export const useSensorStations = (): SensorStation[] | null => {
-  const { appState /*setSensorStations*/ } = React.useContext(AppContext)
+  const { appState, setSensorStations } = React.useContext(AppContext)
   const { addMessage } = React.useContext(SnackbarContext)
   const sensorStations: SensorStation[] | null = appState.sensorStations.data
 
@@ -19,8 +19,7 @@ export const useSensorStations = (): SensorStation[] | null => {
   if (sensorStations === null) {
     getSensorStations()
       .then((data) => {
-        console.log(data)
-        // setSensorStations(data)
+        setSensorStations(data)
       })
       .catch((err: Error) =>
         addMessage({
