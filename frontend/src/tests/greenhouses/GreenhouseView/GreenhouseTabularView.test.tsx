@@ -17,8 +17,9 @@ vi.mock('react-router-dom', () => ({
     new URLSearchParams([[GREENHOUSE_VIEW_QUERY, SensorStationView.TABLE]]),
   ],
   useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
-  useNavigate: () => vi.fn,
-  useLocation: () => vi.fn,
+  useNavigate: () => vi.fn(),
+  useLocation: () => vi.fn(),
+  useRouteError: () => vi.fn(),
 }))
 
 test('render GreenhouseTabularView inside GreenhouseView without crashing', async () => {
@@ -28,7 +29,7 @@ test('render GreenhouseTabularView inside GreenhouseView without crashing', asyn
     () => {
       expect(screen.getByText('Air Pressure')).toBeInTheDocument()
     },
-    { timeout: 4000 }
+    { timeout: 2000 }
   )
-  // TODO qqjf Add tests for all table columns
+  // TODO qqjf Add tests for all table columns once these are saved as a constant
 })
