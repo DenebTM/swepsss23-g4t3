@@ -82,6 +82,7 @@ public class UserxRestController implements BaseRestController {
         }
         Userx newUser = new Userx();
         newUser.setUsername(username);
+        newUser.setPassword(password);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
         if (json.containsKey("firstName")) {
             newUser.setFirstName((String)json.get("firstName"));
