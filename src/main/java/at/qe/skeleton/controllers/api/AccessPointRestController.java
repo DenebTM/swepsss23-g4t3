@@ -35,7 +35,7 @@ public class AccessPointRestController implements BaseRestController {
     public ResponseEntity<Object> getAPById(@PathVariable(value = "id") Integer id) {
         AccessPoint ap = apService.loadAPById(id);
 
-        // Return a 404 error if the access points is not found
+        // Return a 404 error if the access point is not found
         if (ap == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Access points with id: \"" + id + "\" not found.");
         }
