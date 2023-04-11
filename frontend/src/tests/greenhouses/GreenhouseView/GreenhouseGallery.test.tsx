@@ -17,8 +17,8 @@ vi.mock('react-router-dom', () => ({
     new URLSearchParams([[GREENHOUSE_VIEW_QUERY, SensorStationView.GALLERY]]),
   ],
   useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
-  useNavigate: () => vi.fn,
-  useLocation: () => vi.fn,
+  useNavigate: () => vi.fn(),
+  useLocation: () => vi.fn(),
 }))
 
 test('render GreenhouseGallery without crashing', async () => {
