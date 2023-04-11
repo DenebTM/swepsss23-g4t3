@@ -31,7 +31,7 @@ export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
         {...props.typographyProps}
         sx={{ margin: theme.spacing(0, 1), width: '15%' }}
       >
-        &#8212;
+        —
       </Typography>
       <Typography
         {...props.typographyProps}
