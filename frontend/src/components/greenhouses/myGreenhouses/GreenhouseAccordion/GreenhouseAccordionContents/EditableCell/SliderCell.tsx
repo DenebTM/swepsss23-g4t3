@@ -4,7 +4,7 @@ import Slider from '@mui/material/Slider'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import Grid from '@mui/material/Unstable_Grid2'
 
-import { ValueRange } from '~/common'
+import { onEnterKeypress, ValueRange } from '~/common'
 
 interface SliderCellProps {
   /** aria label of row title field */
@@ -34,15 +34,11 @@ export const SliderCell: React.FC<SliderCellProps> = (props) => {
     }
   }
 
-  /** Save the updated value on keypress */
-  const handleKeyPress: React.KeyboardEventHandler = (e) =>
-    e.key === 'Enter' && props.saveRow()
-
   /** Props for the input elements displaying the current slider values */
   const inputProps: Partial<TextFieldProps> = {
     size: 'small',
     variant: 'standard',
-    onKeyPress: handleKeyPress,
+    onKeyPress: onEnterKeypress(props.saveRow),
     inputProps: {
       step: props.step,
       min: props.min,

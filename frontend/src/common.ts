@@ -103,3 +103,13 @@ export interface ValueRange {
   lower: number
   upper: number
 }
+
+/**
+ * Helper function to generate an event handler which calls the `callback` on enter keypress
+ * @param callback The function to call on enter keyboard press
+ * @returns A KeyboardEventHandler
+ */
+export const onEnterKeypress =
+  (callback: () => void): React.KeyboardEventHandler =>
+  (event: React.KeyboardEvent) =>
+    event.key === 'Enter' && callback()
