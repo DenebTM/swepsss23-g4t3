@@ -97,9 +97,9 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
       columns={columns}
       fetchRows={() =>
         getSensorStationMeasurements(
-          props.uuid
-          //dayjs().subtract(1, 'week').toISOString(),
-          //dayjs().toISOString()
+          props.uuid,
+          dayjs().subtract(1, 'week').toISOString(),
+          dayjs().toISOString()
         )
       }
       getRowId={(row: Measurement) => row.id}
