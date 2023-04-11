@@ -14,7 +14,7 @@ export const ManageUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>()
 
   return (
-    <PageWrapper requiredRoles={[UserRole.ADMIN]}>
+    <PageWrapper permittedRoles={[UserRole.ADMIN]}>
       <PageHeader left={<AdminBreadcrumbs currentPageName="Manage Users" />} />
       Manage users
       <UsersTable setUsers={setUsers} users={users} />
