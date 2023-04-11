@@ -16,7 +16,8 @@ import { GreenhouseAccordion } from './GreenhouseAccordion/GreenhouseAccordion'
 export const MyGreenhouses: React.FC = () => {
   const sensorStations = useSensorStations() // qqjf TODO reload periodically?
 
-  const [expanded, setExpanded] = useState<SensorStationUuid | false>(false)
+  // Store the currently expanded uuid in the state if an accordion is expanded, otherwise `null`
+  const [expanded, setExpanded] = useState<SensorStationUuid | null>(null)
 
   return (
     <PageWrapper permittedRoles={[UserRole.ADMIN, UserRole.GARDENER]}>
