@@ -1,4 +1,4 @@
-package at.qe.skeleton.model.demo;
+package at.qe.skeleton.models.demo;
 
 /**
  * Simply denotes a user-status.
