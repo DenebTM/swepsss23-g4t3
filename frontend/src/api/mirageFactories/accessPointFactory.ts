@@ -4,7 +4,8 @@ import { AccessPoint } from '~/models/accessPoint'
 
 /** Factory to generate a fake {@link AccessPoint} */
 export const accessPointFactory = Factory.extend<AccessPoint>({
-  id(i: number) {
+  apId(i: number) {
+    // Rename `id` to `apId` to avoid clash with mirage build-in id key
     return i
   },
   name(i: number) {
