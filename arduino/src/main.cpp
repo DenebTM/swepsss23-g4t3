@@ -2,7 +2,7 @@
 #include <mbed.h>
 using namespace std::chrono_literals;
 
-#include <ble.h>
+#include <ble/ble.h>
 #include <buttons.h>
 #include <led.h>
 #include <sensors/bme.h>
@@ -19,7 +19,7 @@ void setup() {
   sensors::light::setup();
 
   led::setup();
-  led::set_color(led::RED);
+  led::set_color(led::RED); // TODO: define LED colors/status codes in a central location
 
   ble::setup();
 }
