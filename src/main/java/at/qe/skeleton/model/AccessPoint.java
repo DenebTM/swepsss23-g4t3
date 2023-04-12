@@ -1,9 +1,12 @@
 package at.qe.skeleton.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.net.InetAddress;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ACCESS_POINT")
@@ -12,10 +15,10 @@ public class AccessPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AP_ID")
-    private Long id;
+    private Integer id;
 
-    @Column(name = "ROOM_NAME", nullable = false)
-    private String roomName;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
     @Column(name = "LAST_UPDATE")
     private LocalDateTime lastUpdate;
@@ -26,15 +29,22 @@ public class AccessPoint {
     @Column(name = "ACTIVE")
     private Boolean active;
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "accessPoint",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    private Set<SensorStation> sensorStations = new HashSet<>();
+
     public AccessPoint() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public String getName() {
+        return name;
     }
 
     public LocalDateTime getLastUpdate() {
@@ -57,12 +67,12 @@ public class AccessPoint {
         this.serverAddress = serverAddress;
     }
 
-    public void setId(Long ID) {
+    public void setId(Integer ID) {
         this.id = ID;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setLastUpdate(LocalDateTime lastUpdate) {

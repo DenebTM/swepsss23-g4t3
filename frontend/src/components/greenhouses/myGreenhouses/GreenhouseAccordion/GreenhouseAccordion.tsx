@@ -12,7 +12,7 @@ import { GreenhouseAccordionSummary } from './GreenhouseAccordionSummary/Greenho
 interface GreenhouseAccordionProps {
   expanded: boolean
   sensorStation: SensorStation
-  setExpanded: Dispatch<SetStateAction<SensorStationUuid | false>>
+  setExpanded: Dispatch<SetStateAction<SensorStationUuid | null>>
 }
 
 /**
@@ -21,11 +21,11 @@ interface GreenhouseAccordionProps {
 export const GreenhouseAccordion: React.FC<GreenhouseAccordionProps> = (
   props
 ) => {
-  /** Handle click on the accordion panel */
+  /** Either expand the current panel or close the panel on click. */
   const handleChange =
     (uuid: SensorStationUuid) =>
     (event: React.SyntheticEvent, isExpanded: boolean) => {
-      props.setExpanded(isExpanded ? uuid : false)
+      props.setExpanded(isExpanded ? uuid : null)
     }
 
   return (
