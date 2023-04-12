@@ -1,15 +1,17 @@
-import { faker } from '@faker-js/faker'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { test, vi } from 'vitest'
 import {
+  GREENHOUSE_METRICS,
   GREENHOUSE_VIEW_QUERY,
+  GreenhouseMetricRange,
+  greenhouseMetricWithUnit,
   SensorStationView,
   SS_UUID_PARAM,
 } from '~/common'
 import { GreenhouseView } from '~/components/greenhouses/greenhouseView/GreenhouseView'
 
 /** Mocked UUID for testing */
-const sensorStationUuid = faker.datatype.number({ min: 0, max: 15 })
+const sensorStationUuid = 0
 
 /** Mock passing in the view via search params */
 vi.mock('react-router-dom', () => ({
@@ -22,8 +24,15 @@ vi.mock('react-router-dom', () => ({
   useRouteError: () => vi.fn(),
 }))
 
-test('render GreenhouseTabularView inside GreenhouseView without crashing', async () => {
+test('render GreenhouseTabularView inside GreenhouseView', async () => {
   render(<GreenhouseView />)
-  expect(screen.getByText('Air Pressure')).toBeInTheDocument()
-  // TODO qqjf Add tests for all table columns
+
+  // Expect a column for every metric to be visible once the measurements are fetched from the API
+  GREENHOUSE_METRICS.forEach((metricRange: GreenhouseMetricRange) =>
+    waitFor(() =>
+      expect(
+        screen.getByText(greenhouseMetricWithUnit(metricRange))
+      ).toBeInTheDocument()
+    )
+  )
 })
