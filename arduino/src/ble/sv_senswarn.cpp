@@ -2,15 +2,20 @@
 
 #include <sensors/warn.h>
 
-#define _WARN_WRITTEN_HANDLER(characteristic_name) \
-  void ch_warn_##characteristic_name ## _written_handler ( \
+#define _WARN_WRITTEN_HANDLER(sensor_name) \
+  void ch_warn_##sensor_name ## _written_handler ( \
     BLEDevice central, \
     BLECharacteristic characteristic \
   ) { \
-    sensors::current_warnings.characteristic_name = !!characteristic.value(); \
-    Serial.println(String(sensors::current_warnings.characteristic_name ? "Set" : "Cleared") + \
-      " sensor warning for " #characteristic_name); \
+    uint8_t warn = *characteristic.value(); \
+    sensors::current_warnings.sensor_name = !!warn; \
+    Serial.println(String(warn ? "Set" : "Cleared") + \
+      " sensor warning for " #sensor_name); \
   }
+
+#define _SETUP_WARN_CHAR(sensor_name) \
+    sv_senswarn.addCharacteristic(ch_warn_##sensor_name); \
+    ch_warn_##sensor_name.setEventHandler(BLEWritten, ch_warn_##sensor_name ## _written_handler);
 
 namespace ble {
   BLEService sv_senswarn(BLE_UUID_SENSOR_WARNINGS);
@@ -29,18 +34,12 @@ namespace ble {
   _WARN_WRITTEN_HANDLER(soil_moisture)
 
   void senswarn_setup() {
-    sv_senswarn.addCharacteristic(ch_warn_air_pressure);
-    ch_warn_air_pressure.setEventHandler(BLEWritten, ch_warn_air_pressure_written_handler);
-    sv_senswarn.addCharacteristic(ch_warn_temperature);
-    ch_warn_air_pressure.setEventHandler(BLEWritten, ch_warn_temperature_written_handler);
-    sv_senswarn.addCharacteristic(ch_warn_humidity);
-    ch_warn_air_pressure.setEventHandler(BLEWritten, ch_warn_humidity_written_handler);
-    sv_senswarn.addCharacteristic(ch_warn_illuminance);
-    ch_warn_air_pressure.setEventHandler(BLEWritten, ch_warn_illuminance_written_handler);
-    sv_senswarn.addCharacteristic(ch_warn_air_quality);
-    ch_warn_air_pressure.setEventHandler(BLEWritten, ch_warn_air_quality_written_handler);
-    sv_senswarn.addCharacteristic(ch_warn_soil_moisture);
-    ch_warn_air_pressure.setEventHandler(BLEWritten, ch_warn_soil_moisture_written_handler);
+    _SETUP_WARN_CHAR(air_pressure)
+    _SETUP_WARN_CHAR(temperature)
+    _SETUP_WARN_CHAR(humidity)
+    _SETUP_WARN_CHAR(illuminance)
+    _SETUP_WARN_CHAR(air_quality)
+    _SETUP_WARN_CHAR(soil_moisture)
 
     BLE.addService(sv_senswarn);
   }
