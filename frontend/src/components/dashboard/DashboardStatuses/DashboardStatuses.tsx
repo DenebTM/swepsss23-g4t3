@@ -7,6 +7,8 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { AccessPoint } from '~/models/accessPoint'
 import { SensorStation } from '~/models/sensorStation'
 
+import { StatusDonutCharts } from './StatusDonutCharts'
+
 interface DashboardStatusesProps {
   /** The fetched sensor stations to display */
   sensorStations: SensorStation[]
@@ -47,22 +49,13 @@ export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
   }, [snackbarMessage])
 
   return (
-    <div>
-      {props.sensorStations.map((s: SensorStation) => (
-        <li key={s.uuid}>
-          {'Sensor station ' + s.uuid + ' has status "' + s.status + '"'}
-        </li>
-      ))}
-      {accessPoints &&
-        accessPoints.map((ap: AccessPoint) => (
-          <li key={ap.id}>
-            {'Access point ' +
-              ap.name +
-              ' has active status "' +
-              ap.active +
-              '"'}
-          </li>
-        ))}
-    </div>
+    <>
+      {accessPoints && (
+        <StatusDonutCharts
+          accessPoints={accessPoints}
+          sensorStations={props.sensorStations}
+        />
+      )}
+    </>
   )
 }
