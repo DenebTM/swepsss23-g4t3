@@ -197,3 +197,5 @@ export const greenhouseMetricWithUnit = (
 ): string =>
   metricRange.displayName +
   (metricRange.unit === '' ? '' : ` (${metricRange.unit})`)
+
+export const emDash = '—'
