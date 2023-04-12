@@ -1,8 +1,8 @@
 import React from 'react'
 
+import { URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { UserRole } from '~/models/user'
 
 import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
 
@@ -11,7 +11,7 @@ import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
  */
 export const AdminLogs: React.FC = () => {
   return (
-    <PageWrapper permittedRoles={[UserRole.ADMIN]}>
+    <PageWrapper permittedRoles={URL.adminLogs.permittedRoles}>
       <PageHeader left={<AdminBreadcrumbs currentPageName="Logs" />} />
       Admin logs
     </PageWrapper>

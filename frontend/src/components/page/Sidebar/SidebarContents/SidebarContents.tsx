@@ -25,12 +25,11 @@ const topSidebarVals = (
   sensorStations: SensorStation[]
 ): SidebarElementWithChildren[] => [
   {
-    label: 'Dashboard',
-    url: URL.dashboard,
+    ...URL.dashboard,
     icon: <HomeIcon />,
     childNodes: sensorStations.map((s) => ({
-      label: `Greenhouse ${s.uuid}`,
-      url: URL.greenhouseView(s.uuid, SensorStationView.GRAPHICAL),
+      pageTitle: URL.greenhouseView.pageTitle(s.uuid),
+      href: URL.greenhouseView.href(s.uuid, SensorStationView.GRAPHICAL),
       icon: (
         <Badge badgeContent={s.uuid} sx={{ color: theme.onSurfaceVariant }}>
           <LocalFloristIcon />
@@ -38,18 +37,22 @@ const topSidebarVals = (
       ),
     })),
   },
-  { label: 'Getting Started', url: URL.gettingStarted, icon: <MenuBookIcon /> },
-  { label: 'My Greenhouses', url: URL.myGreenhouses, icon: <YardIcon /> },
   {
-    adminOnly: true,
-    label: 'Admin Home',
-    url: URL.adminHome,
+    ...URL.gettingStarted,
+    icon: <MenuBookIcon />,
+  },
+  {
+    ...URL.myGreenhouses,
+    icon: <YardIcon />,
+  },
+  {
+    ...URL.adminHome,
     icon: <AdminPanelSettingsIcon />,
     childNodes: [
-      { label: 'Users', url: URL.manageUsers },
-      { label: 'Access Points', url: URL.manageAccessPoints },
-      { label: 'Greenhouses', url: URL.manageGreenhouses },
-      { label: 'Logs', url: URL.adminLogs },
+      URL.manageUsers,
+      URL.manageAccessPoints,
+      URL.manageGreenhouses,
+      URL.adminLogs,
     ],
   },
 ]
@@ -57,6 +60,7 @@ const topSidebarVals = (
 interface SidebarContentsProps {
   open: boolean
 }
+
 /**
  * Sidebar contents (list of icons and their onClick functionality)
  * Should be a direct child of `Sidebar`.
@@ -70,7 +74,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       .then(() => {
         // Delete JWT cookie
         deleteJwt()
-        navigate(URL.login)
+        navigate(URL.login.href)
       })
       .catch((err: Error) => {
         throw err
@@ -82,7 +86,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       {sensorStations && (
         <List>
           {topSidebarVals(sensorStations).map((el) => (
-            <SidebarElement key={el.label} {...el} open={props.open} />
+            <SidebarElement key={el.pageTitle} {...el} open={props.open} />
           ))}
         </List>
       )}

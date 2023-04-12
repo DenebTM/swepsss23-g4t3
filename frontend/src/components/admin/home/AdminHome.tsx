@@ -14,7 +14,6 @@ import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { UserRole } from '~/models/user'
 
 import { AdminHomeButton, AdminHomeButtonProps } from './AdminHomeButton'
 
@@ -32,19 +31,19 @@ export const AdminHome: React.FC = () => {
       title: 'Manage Users',
       description: 'Edit and delete users',
       icon: <PersonOutlineOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.manageUsers),
+      onClick: () => navigate(URL.manageUsers.href),
     },
     {
       title: 'Manage Access Points',
       description: 'Add and remove access points',
       icon: <WifiOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.manageAccessPoints),
+      onClick: () => navigate(URL.manageAccessPoints.href),
     },
     {
       title: 'Audit Log',
       description: 'View filterable logs for events and errors',
       icon: <TocOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.adminLogs),
+      onClick: () => navigate(URL.adminLogs.href),
     },
     {
       title: 'Add Greenhouses',
@@ -61,12 +60,12 @@ export const AdminHome: React.FC = () => {
       title: 'Manage Greenhouses',
       description: 'Print QR codes and assign gardeners to greenhouses',
       icon: <HomeOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.manageGreenhouses),
+      onClick: () => navigate(URL.manageGreenhouses.href),
     },
   ]
 
   return (
-    <PageWrapper permittedRoles={[UserRole.ADMIN]}>
+    <PageWrapper permittedRoles={URL.adminHome.permittedRoles}>
       <PageHeader left="Admin Home" />
       <Grid container spacing={2} padding={2}>
         {adminHomeLinks.map((link) => (

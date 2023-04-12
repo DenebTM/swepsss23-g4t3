@@ -3,6 +3,7 @@ import { useRouteError } from 'react-router-dom'
 
 import Typography from '@mui/material/Typography'
 
+import { URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 
 interface ErrorProps {
@@ -33,7 +34,7 @@ export const Error: React.FC<ErrorProps> = (props) => {
   return (
     <PageWrapper hideSidebar>
       <Typography variant="headlineLarge" color="onSurface" component="h1">
-        Error
+        {URL.error.pageTitle}
       </Typography>
 
       {Boolean(props.message) && (
