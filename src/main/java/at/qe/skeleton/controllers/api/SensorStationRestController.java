@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.model.SensorStation;
 import at.qe.skeleton.services.SensorStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_PATH = "/sensor-stations";
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private HelperFunctions helperFunctions;
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -36,7 +39,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station with id: \"" + id + "\" not found.");
+            helperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
 
         return ResponseEntity.ok(ss);
