@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
-import { _delete, _get } from '~/api/intercepts'
+import { _delete, _get, _put } from '~/api/intercepts'
 import { Photo, PhotoId } from '~/models/photo'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
@@ -23,7 +23,7 @@ export const getSensorStations = async (): Promise<SensorStation[]> => {
 
 /**
  * GET /api/sensor-stations/${uuid}
- * Get a single access point by ID
+ * Get a single sensor station by ID
  * @returns The fetched access point
  */
 export const getSensorStation = async (
@@ -34,7 +34,7 @@ export const getSensorStation = async (
 
 /**
  * DEL /api/sensor-stations/${uuid}
- * Delete a single access point by ID
+ * Delete a single sensor station  by ID
  */
 export const deleteSensorStation = async (
   sensorStationUuid: SensorStationUuid
@@ -43,6 +43,17 @@ export const deleteSensorStation = async (
 }
 
 /**
+ * PUT /api/sensor-stations/${uuid}
+ * Update a single sensor station by ID
+ */
+export const updateSensorStation = async (
+  sensorStationUuid: SensorStationUuid,
+  newParams: Omit<Partial<SensorStation>, 'uuid'>
+): Promise<SensorStation> => {
+  return _put(`${SENSOR_STATIONS_URI}/${sensorStationUuid}`, newParams)
+}
+
+/*
  * Get photos for a single sensor station
  */
 export const getSensorStationPhotos = async (
@@ -113,4 +124,18 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
       return success(fakePhotos)
     }
   )
+
+  /** Mock {@link updateSensorStation} */
+  server.put(mockedSensorStationRoute, (schema: AppSchema, request) => {
+    const uuid: SensorStationUuid = Number(request.params.uuid)
+    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const newParams: Partial<SensorStation> = JSON.parse(request.requestBody)
+
+    if (sensorStation) {
+      sensorStation.update(newParams)
+      return success(sensorStation.attrs)
+    } else {
+      return notFound(`sensor station ${uuid}`)
+    }
+  })
 }
