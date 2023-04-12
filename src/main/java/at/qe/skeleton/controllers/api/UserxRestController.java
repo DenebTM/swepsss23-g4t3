@@ -168,7 +168,7 @@ public class UserxRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Self-deletion is not permitted.");
         }
         userService.deleteUser(user);
-        return ResponseEntity.ok("Success.");
+        return ResponseEntity.ok(user);
     }
 
     /**
