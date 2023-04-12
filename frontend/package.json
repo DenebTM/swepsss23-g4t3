@@ -35,6 +35,7 @@
         "setup-husky": "cd .. && husky install frontend/.husky && cd frontend && npx husky add .husky/pre-commit \"cd frontend && npx lint-staged --config config/.lintstagedrc.json\"",
         "start": "vite serve",
         "mock": "export NODE_ENV=mock-api && vite serve",
+        "mock-windows": "set NODE_ENV=mock-api && vite serve",
         "lint-code": "npx eslint ./src --cache --fix --ignore-path .gitignore --ext .ts,.tsx",
         "check-types": "tsc --project tsconfig.json",
         "build": "vite build",
