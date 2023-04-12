@@ -7,12 +7,14 @@ import {
 } from '@mui/x-data-grid'
 
 import { DataGrid, RowUpdateFunction } from '@component-lib/DataGrid'
+import { DeleteCell } from '@component-lib/DeleteCell'
 import dayjs from 'dayjs'
 import {
+  deleteAccessPoint,
   getAccessPoints,
   updateAccessPoint,
 } from '~/api/endpoints/accessPoints'
-import { AccessPoint } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 
 /**
  * Access point managment page for admins
@@ -57,7 +59,15 @@ export const AccessPointsAdminTable: React.FC = () => {
       sortable: false,
       renderCell: (
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
-      ) => <div>Delete AP</div>,
+      ) => (
+        <DeleteCell<AccessPoint, AccessPointId>
+          deleteEntity={deleteAccessPoint}
+          entityId={params.row.apId}
+          entityName="access point"
+          getEntityId={(r) => r.apId}
+          setRows={setAccessPoints}
+        />
+      ),
     },
   ]
 
