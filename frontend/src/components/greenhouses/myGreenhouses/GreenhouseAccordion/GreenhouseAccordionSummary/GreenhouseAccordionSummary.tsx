@@ -24,6 +24,7 @@ export const GreenhouseAccordionSummary: React.FC<
   return (
     <AccordionSummary
       expandIcon={<ExpandMoreIcon sx={{ color: theme.outline }} />}
+      sx={{ borderBottom: `${theme.outlineVariant} 1px solid` }}
     >
       <Grid
         container

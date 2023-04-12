@@ -5,15 +5,16 @@ import TableBody from '@mui/material/TableBody'
 import TableContainer from '@mui/material/TableContainer'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
-import { AGGREGATION_PERIOD } from '~/common'
+import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
+import { AGGREGATION_PERIOD, ValueRange } from '~/common'
+import { AppContext } from '~/contexts/AppContext/AppContext'
+import { MessageType } from '~/contexts/SnackbarContext/types'
+import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
-import {
-  EditableCellProps,
-  EditableTableRow,
-  ValueRange,
-} from './EditableTableRow'
+import { GreenhouseEditableRangeCell } from './EditableCell/GreenhouseEditableRangeCell'
+import { EditableCellProps, EditableTableRow } from './EditableTableRow'
 
 /**
  * Type for a singe greenhouse metric range.
@@ -98,6 +99,9 @@ interface GreenhouseAccordionContentsProps {
 export const GreenhouseAccordionContents: React.FC<
   GreenhouseAccordionContentsProps
 > = (props) => {
+  const { setSensorStations } = React.useContext(AppContext)
+  const addSnackbarMessage = useAddSnackbarMessage()
+
   /** Store the key of the row that is currently being edited in the state (otherwise `false`)*/
   const [editing, setEditing] = useState<
     keyof SensorValues | typeof AGGREGATION_PERIOD | false
@@ -109,11 +113,57 @@ export const GreenhouseAccordionContents: React.FC<
     variant: 'bodyMedium',
   }
 
+  /**
+   * Save updated boundary values value in the backend
+   * We could check that the value hasn't been updated to reduce calls to the backend.
+   * but left it simple for now.
+   */
+  const handleSaveBoundaryValue = (
+    valueKey: keyof SensorValues,
+    lower: number,
+    upper: number
+  ): Promise<void> =>
+    handleSaveRow(
+      updateSensorStation(props.sensorStation.uuid, {
+        lowerBound: {
+          ...props.sensorStation.lowerBound,
+          [valueKey]: lower,
+        },
+        upperBound: {
+          ...props.sensorStation.upperBound,
+          [valueKey]: upper,
+        },
+      })
+    )
+
   /** Handle saving updated aggregation period or sensor range */
-  const handleSaveRow = (): Promise<void> => {
-    setEditing(false)
-    return Promise.resolve()
-  }
+  const handleSaveRow = (
+    ssUpdatePromise: Promise<SensorStation>
+  ): Promise<void> =>
+    ssUpdatePromise
+      .then((updatedSs) => {
+        // Update sensor station in app context
+        setSensorStations((oldValue) => {
+          if (oldValue === null) {
+            return []
+          } else {
+            return oldValue.map((s) =>
+              s.uuid === props.sensorStation.uuid ? updatedSs : s
+            )
+          }
+        })
+      })
+      .catch((err: Error) => {
+        addSnackbarMessage({
+          header: 'Could not load save updated value',
+          body: err.message,
+          type: MessageType.ERROR,
+        })
+      })
+      .finally(() => {
+        setEditing(false)
+        return Promise.resolve()
+      })
 
   return (
     <TableContainer>
@@ -127,10 +177,17 @@ export const GreenhouseAccordionContents: React.FC<
                 ariaLabel={ariaLabel}
                 editableCell={(
                   editableCellProps: EditableCellProps<ValueRange>
-                ) => <div>Editable cell for {row.valueKey}</div>}
+                ) => (
+                  <GreenhouseEditableRangeCell
+                    labelledBy={ariaLabel}
+                    sensorStation={props.sensorStation}
+                    {...row}
+                    {...editableCellProps}
+                  />
+                )}
                 editing={editing === row.valueKey}
                 saveRow={(v: ValueRange) =>
-                  handleSaveRow(/** qqjf TODO actually update the values here */)
+                  handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
                 }
                 startEditing={() => setEditing(row.valueKey)}
                 title={row.title}
@@ -151,7 +208,11 @@ export const GreenhouseAccordionContents: React.FC<
             )}
             editing={editing === AGGREGATION_PERIOD}
             saveRow={(aggregationPeriod: number) =>
-              handleSaveRow(/** qqjf TODO actually update the values here */)
+              handleSaveRow(
+                updateSensorStation(props.sensorStation.uuid, {
+                  aggregationPeriod: aggregationPeriod,
+                })
+              )
             }
             startEditing={() => setEditing(AGGREGATION_PERIOD)}
             title="Aggregation Period"
