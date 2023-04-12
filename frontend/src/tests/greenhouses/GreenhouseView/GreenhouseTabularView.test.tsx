@@ -10,7 +10,7 @@ import {
 } from '~/common'
 import { GreenhouseView } from '~/components/greenhouses/greenhouseView/GreenhouseView'
 
-/** Mocked UUID for testing */
+/** Mocked UUID for testing. Should have meaurements defined. */
 const sensorStationUuid = 0
 
 /** Mock passing in the view via search params */
