@@ -47,7 +47,7 @@ public class UserxRestController implements BaseRestController {
 
         // Return a 404 error if the User is not found
         if (userx == null) {
-            helperFunctions.notFoundError("User", username);
+            return helperFunctions.notFoundError("User", username);
         }
 
         // Return a 403 error if a non-admin and not user itself tries to get User
@@ -114,7 +114,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 404 error if the user to be updated does not exist
         if (user == null) {
-            helperFunctions.notFoundError("User", username);
+            return helperFunctions.notFoundError("User", username);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("username")) {
@@ -161,7 +161,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 404 error if the user to be deleted does not exist
         if (user == null) {
-            helperFunctions.notFoundError("User", username);
+            return helperFunctions.notFoundError("User", username);
         }
         // return a 403 error if the authenticated user tries to delete themselves
         if (userService.getAuthenticatedUser().getUsername().equals(username)) {
@@ -185,7 +185,7 @@ public class UserxRestController implements BaseRestController {
         }
         // Return a 404 error if the user is not found
         if (gardener == null) {
-            helperFunctions.notFoundError("User", username);
+            return helperFunctions.notFoundError("User", username);
         }
         // Return a 403 error if a non admin tries to get list of assigned sensor stations for other users
         if (userService.authRoleIsGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {

@@ -2,7 +2,9 @@ package at.qe.skeleton.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HelperFunctions {
 
     public ResponseEntity<Object> notFoundError(String object, String id) {
