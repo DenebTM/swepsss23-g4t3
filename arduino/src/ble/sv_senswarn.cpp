@@ -8,10 +8,12 @@
     BLEDevice central, \
     BLECharacteristic characteristic \
   ) { \
-    uint8_t warn = *characteristic.value(); \
-    sensors::current_warnings.sensor_name = !!warn; \
-    Serial.println(String(warn ? "Set" : "Cleared") + \
-      " sensor warning for " #sensor_name); \
+    uint8_t warn = !!*characteristic.value(); \
+    if (sensors::current_warnings.sensor_name != warn) { \
+      sensors::current_warnings.sensor_name = warn; \
+      Serial.println(String(warn ? "Set" : "Cleared") + \
+        " sensor warning for " #sensor_name); \
+    } \
   }
 
 #define _SETUP_WARN_CHAR(sensor_name) \
