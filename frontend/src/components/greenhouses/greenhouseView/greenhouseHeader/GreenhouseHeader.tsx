@@ -22,8 +22,8 @@ export const GreenhouseViewHeader: React.FC<GreenhouseViewHeaderProps> = (
     <PageHeader
       left={
         <Breadcrumbs
-          links={[{ name: 'Dashboard', href: URL.dashboard }]}
-          currentPageName={`Greenhouse ${props.uuid}`}
+          links={[{ name: 'Dashboard', href: URL.dashboard.href }]}
+          currentPageName={URL.greenhouseView.pageTitle(props.uuid)}
         />
       }
       right={<GreenhouseSegmentedButtons uuid={props.uuid} view={props.view} />}

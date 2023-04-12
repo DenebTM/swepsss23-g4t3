@@ -38,7 +38,7 @@ import { AppProvider } from './contexts/AppContext/AppProvider'
  */
 const loginLoader: LoaderFunction = () => {
   if (isJwtValid() !== null) {
-    return redirect(URL.dashboard)
+    return redirect(URL.dashboard.href)
   }
 
   return null
@@ -49,7 +49,7 @@ const loginLoader: LoaderFunction = () => {
  */
 const authorizationLoader: LoaderFunction = () => {
   if (isJwtValid() === null) {
-    return redirect(URL.login)
+    return redirect(URL.login.href)
   }
 
   return null
@@ -67,7 +67,7 @@ const authRoute = (path: string, element: JSX.Element) => ({
 const router = createBrowserRouter([
   /* Routes accessible by anyone */
   {
-    path: URL.login,
+    path: URL.login.href,
     element: <Login />,
     errorElement: <Error />,
     loader: loginLoader,
@@ -78,20 +78,20 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    path: URL.error,
+    path: URL.error.href,
     element: <Error />,
   },
 
   /* Routes accessible only to logged-in users */
-  authRoute(URL.adminHome, <AdminHome />),
-  authRoute(URL.adminLogs, <AdminLogs />),
-  authRoute(URL.dashboard, <Dashboard />),
-  authRoute(URL.gettingStarted, <GettingStarted />),
+  authRoute(URL.adminHome.href, <AdminHome />),
+  authRoute(URL.adminLogs.href, <AdminLogs />),
+  authRoute(URL.dashboard.href, <Dashboard />),
+  authRoute(URL.gettingStarted.href, <GettingStarted />),
   authRoute(`/${GREENHOUSES_ROOT}/:${SS_UUID_PARAM}`, <GreenhouseView />),
-  authRoute(URL.manageAccessPoints, <ManageAccessPoints />),
-  authRoute(URL.manageGreenhouses, <ManageGreenhouses />),
-  authRoute(URL.manageUsers, <ManageUsers />),
-  authRoute(URL.myGreenhouses, <MyGreenhouses />),
+  authRoute(URL.manageAccessPoints.href, <ManageAccessPoints />),
+  authRoute(URL.manageGreenhouses.href, <ManageGreenhouses />),
+  authRoute(URL.manageUsers.href, <ManageUsers />),
+  authRoute(URL.myGreenhouses.href, <MyGreenhouses />),
 
   /* Fallback page (to catch unknown URLs) */
   { element: <Error message="Error 404: page not found." /> },

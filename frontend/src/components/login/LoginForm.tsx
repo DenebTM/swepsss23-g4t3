@@ -38,7 +38,7 @@ export const LoginForm: React.FC = () => {
         .then((res: AxiosResponse<LoginResponse>) => {
           // Save JWT as a cookie
           setJwt(res.data.token)
-          navigate(URL.dashboard)
+          navigate(URL.dashboard.href)
         })
         .catch((err: Error) => {
           setLoginError(err.message)

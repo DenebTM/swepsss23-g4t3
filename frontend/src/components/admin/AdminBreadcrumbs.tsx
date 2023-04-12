@@ -17,7 +17,7 @@ export const AdminBreadcrumbs: React.FC<AdminBreadcrumbsProps> = (props) => {
     <PageHeader
       left={
         <Breadcrumbs
-          links={[{ name: 'Admin Home', href: URL.adminHome }]}
+          links={[{ name: URL.adminHome.pageTitle, href: URL.adminHome.href }]}
           currentPageName={props.currentPageName}
         />
       }

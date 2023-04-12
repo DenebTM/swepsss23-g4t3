@@ -1,4 +1,5 @@
 import { SensorStationUuid } from './models/sensorStation'
+import { UserRole } from './models/user'
 
 /** The root path for pages relating to greenhouses */
 export const GREENHOUSES_ROOT = 'greenhouses'
@@ -15,22 +16,47 @@ export const GREENHOUSE_VIEW_QUERY = 'view'
 /** The param name of the sensor station ID in sensor station routes */
 export const SS_UUID_PARAM = 'sensorStationId'
 
-/** Paths for all frontend URLs */
+/**
+ * Paths for all frontend URLs.
+ * Each value can have the following properties:
+ *
+ * @param href Value or function to generate the relative URL of the page
+ * @param pageTitle The display title of the page
+ * @param permittedRoles User roles allowed to view the page if these should be restricted.
+ *
+ */
 export const URL = {
   /** Path for admin home */
-  adminHome: `/${ADMIN_ROOT}`,
+  adminHome: {
+    pageTitle: 'Admin Home',
+    href: `/${ADMIN_ROOT}`,
+    permittedRoles: [UserRole.ADMIN],
+  },
 
   /** Path for admin to view all logs */
-  adminLogs: `/${ADMIN_ROOT}/logs`,
+  adminLogs: {
+    pageTitle: 'Logs',
+    href: `/${ADMIN_ROOT}/logs`,
+    permittedRoles: [UserRole.ADMIN],
+  },
 
   /** Fallback error page */
-  error: '/error',
+  error: {
+    pageTitle: 'Error',
+    href: '/error',
+  },
 
   /** Main dashboard page */
-  dashboard: '/',
+  dashboard: {
+    pageTitle: 'Dashboard',
+    href: '/',
+  },
 
   /** Getting started instructions page */
-  gettingStarted: '/getting-started',
+  gettingStarted: {
+    pageTitle: 'Getting Started',
+    href: '/getting-started',
+  },
 
   /**
    * Pages showing information about a single sensor station.
@@ -38,32 +64,52 @@ export const URL = {
    * @param view Whether to show the graphical, table, or gallery view. Should be a value in enum {@link SensorStationView}.
    * @returns The relative path to the page
    */
-  greenhouseView: (
-    sensorStationId: SensorStationUuid,
-    view: SensorStationView
-  ) => {
-    const pathBase = `/${GREENHOUSES_ROOT}/${sensorStationId}`
-    if (view === SensorStationView.GRAPHICAL) {
-      return pathBase
-    } else {
-      return `${pathBase}?${GREENHOUSE_VIEW_QUERY}=${view}`
-    }
+  greenhouseView: {
+    pageTitle: (sensorStationId: SensorStationUuid) =>
+      `Greenhouse ${sensorStationId}`,
+    href: (sensorStationId: SensorStationUuid, view: SensorStationView) => {
+      const pathBase = `/${GREENHOUSES_ROOT}/${sensorStationId}`
+      if (view === SensorStationView.GRAPHICAL) {
+        return pathBase
+      } else {
+        return `${pathBase}?${GREENHOUSE_VIEW_QUERY}=${view}`
+      }
+    },
   },
 
   /** The login page */
-  login: '/login',
+  login: {
+    pageTitle: 'Log In',
+    href: '/login',
+  },
 
   /** Path for access point managment by admins */
-  manageAccessPoints: `/${ADMIN_ROOT}/access-points`,
+  manageAccessPoints: {
+    pageTitle: 'Access Points',
+    href: `/${ADMIN_ROOT}/access-points`,
+    permittedRoles: [UserRole.ADMIN],
+  },
 
   /** Path for sensor station managment by admins */
-  manageGreenhouses: `/${ADMIN_ROOT}/${GREENHOUSES_ROOT}`,
+  manageGreenhouses: {
+    pageTitle: 'Greenhouses',
+    href: `/${ADMIN_ROOT}/${GREENHOUSES_ROOT}`,
+    permittedRoles: [UserRole.ADMIN],
+  },
 
   /** Path for user managment by admins */
-  manageUsers: `/${ADMIN_ROOT}/users`,
+  manageUsers: {
+    pageTitle: 'Users',
+    href: `/${ADMIN_ROOT}/users`,
+    permittedRoles: [UserRole.ADMIN],
+  },
 
   /** My greenhouses page showing sensor stations assigned to the logged-in user */
-  myGreenhouses: `/${GREENHOUSES_ROOT}`,
+  myGreenhouses: {
+    pageTitle: 'My Greenhouses',
+    href: `/${GREENHOUSES_ROOT}`,
+    permittedRoles: [UserRole.ADMIN, UserRole.GARDENER],
+  },
 
   /**
    * Page for uploading photos for a single sensor station.
@@ -71,8 +117,11 @@ export const URL = {
    * @param sensorStationId The UUID of the sensor station
    * @returns The relative path to the page
    */
-  photoUpload: (sensorStationId: SensorStationUuid) =>
-    `/${UPLOAD_ROOT}/${sensorStationId}`,
+  photoUpload: {
+    pageTitle: 'Photo Upload',
+    href: (sensorStationId: SensorStationUuid) =>
+      `/${UPLOAD_ROOT}/${sensorStationId}`,
+  },
 }
 
 /** Enum for the URL parameters controlling the view of a single sensor station.

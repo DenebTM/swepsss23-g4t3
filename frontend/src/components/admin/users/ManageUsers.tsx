@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 
+import { URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { User, UserRole } from '~/models/user'
+import { User } from '~/models/user'
 
 import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
 import { UsersTable } from './UsersTable'
@@ -14,7 +15,7 @@ export const ManageUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>()
 
   return (
-    <PageWrapper permittedRoles={[UserRole.ADMIN]}>
+    <PageWrapper permittedRoles={URL.manageUsers.permittedRoles}>
       <PageHeader left={<AdminBreadcrumbs currentPageName="Manage Users" />} />
       Manage users
       <UsersTable setUsers={setUsers} users={users} />

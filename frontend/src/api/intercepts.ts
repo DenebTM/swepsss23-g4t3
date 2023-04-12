@@ -62,7 +62,7 @@ const axiosWrapper = async <R extends RestVariant, T = unknown, D = unknown>(
     .catch((err: AxiosError) => {
       if (err.response && err.response.status === 401) {
         // If unauthorised, redirect to login page
-        window.location.pathname = URL.login
+        window.location.pathname = URL.login.href
       }
       // Otherwise, extract message from AxiosError object and throw it
       throw Error(handleAxiosError(err))

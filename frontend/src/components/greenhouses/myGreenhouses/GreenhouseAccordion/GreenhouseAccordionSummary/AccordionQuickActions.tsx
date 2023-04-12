@@ -30,7 +30,7 @@ export const AccordionQuickActions: React.FC<AccordionQuickActionsProps> = (
     {
       title: 'Overview',
       icon: <DashboardIcon />,
-      url: URL.greenhouseView(
+      url: URL.greenhouseView.href(
         props.sensorStationUuid,
         SensorStationView.GRAPHICAL
       ),
@@ -38,7 +38,7 @@ export const AccordionQuickActions: React.FC<AccordionQuickActionsProps> = (
     {
       title: 'Gallery',
       icon: <ImageOutlinedIcon />,
-      url: URL.greenhouseView(
+      url: URL.greenhouseView.href(
         props.sensorStationUuid,
         SensorStationView.GALLERY
       ),
@@ -46,7 +46,10 @@ export const AccordionQuickActions: React.FC<AccordionQuickActionsProps> = (
     {
       title: 'Data Tables',
       icon: <StorageOutlinedIcon />,
-      url: URL.greenhouseView(props.sensorStationUuid, SensorStationView.TABLE),
+      url: URL.greenhouseView.href(
+        props.sensorStationUuid,
+        SensorStationView.TABLE
+      ),
     },
   ]
 

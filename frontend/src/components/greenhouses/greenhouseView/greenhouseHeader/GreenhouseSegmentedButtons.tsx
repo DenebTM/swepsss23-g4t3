@@ -61,7 +61,7 @@ export const GreenhouseSegmentedButtons: React.FC<
 
   /** Handle navigate to targetView on button click */
   const handleNavigate = (targetView: SensorStationView): void => {
-    navigate(URL.greenhouseView(props.uuid, targetView))
+    navigate(URL.greenhouseView.href(props.uuid, targetView))
   }
 
   return (
