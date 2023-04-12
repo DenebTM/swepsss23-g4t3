@@ -38,6 +38,10 @@ declare module '@mui/material/Typography' {
 /** Width of non-collapsed sidebar */
 export const sidebarWidth = '200px'
 
+// Padding for input chips, filter chips, and buttons
+const medChipPadding = '14px 16px'
+const smallChipPadding = '8px 12px'
+
 /** Generate MUI theme according to palette mode */
 const generateTheme = (mode: PaletteMode) => {
   const tokens = getM3Tokens(mode)
@@ -59,12 +63,14 @@ const generateTheme = (mode: PaletteMode) => {
         secondary: tokens.onSurfaceVariant,
         disabled: tokens.onSurfaceVariant,
         hint: tokens.onSurfaceVariant,
+        outline: tokens.outline,
       },
       divider: tokens.outlineVariant,
       background: { default: tokens.background, paper: tokens.surfaceBright },
       // Add custom colour options
       onSurface: tokens.onSurface,
       onSurfaceVariant: tokens.onSurfaceVariant,
+      outline: tokens.outline,
     },
 
     // Component overrides
@@ -74,8 +80,9 @@ const generateTheme = (mode: PaletteMode) => {
           root: {
             textTransform: 'none' as const,
             ...chipTypography,
-            padding: chipPadding,
+            padding: medChipPadding,
           },
+          sizeSmall: { padding: smallChipPadding },
         },
       },
       MuiIconButton: {
@@ -96,10 +103,11 @@ const generateTheme = (mode: PaletteMode) => {
               borderColor: tokens.outline,
             },
           },
-          input: { padding: chipPadding },
+          input: { padding: medChipPadding },
           notchedOutline: {
             borderColor: tokens.outlineVariant,
           },
+          sizeSmall: { padding: smallChipPadding },
         },
       },
       MuiInputLabel: {
@@ -112,12 +120,18 @@ const generateTheme = (mode: PaletteMode) => {
           root: { ...chipTypography },
         },
       },
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            '&:before': {
+              backgroundColor: tokens.outlineVariant,
+            },
+          },
+        },
+      },
     },
   }
 }
-
-/** Padding for input chips, filter chips, and buttons */
-const chipPadding = '14px 14px'
 
 /** Label style for buttons and chips */
 const chipTypography = typographyTheme.labelLarge
