@@ -18,6 +18,8 @@ public class UserxRestController implements BaseRestController {
     private UserService userService;
 
     private static final String USER_PATH = "/users";
+    private static final String USERNAME_PATH = USER_PATH + "/{username}";
+
 
     /**
      * Route to GET all users
@@ -36,7 +38,7 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return userx
      */
-    @GetMapping(value = USER_PATH +"/{username}")
+    @GetMapping(value = USERNAME_PATH)
     public ResponseEntity<Object> getUserByUsername(@PathVariable(value = "username") String username) {
         Userx userx = userService.loadUserByUsername(username);
 
@@ -50,8 +52,7 @@ public class UserxRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
         }
 
-       // return ResponseEntity.ok(userx);
-        return ResponseEntity.status(HttpStatus.OK).body(userx);
+        return ResponseEntity.ok(userx);
     }
 
     /**
@@ -59,7 +60,7 @@ public class UserxRestController implements BaseRestController {
      * @param json body (username + password is required)
      * @return newly created user
      */
-    @PostMapping(value ="/users")
+    @PostMapping(value = USER_PATH)
     public ResponseEntity<Object> createUser(@RequestBody Map<String, Object> json) {
 
         // return a 403 error if a non-admin wants to create a user
@@ -100,7 +101,7 @@ public class UserxRestController implements BaseRestController {
      * @param username + json
      * @return updated user
      */
-    @PutMapping (value ="/users/{username}")
+    @PutMapping (value = USERNAME_PATH)
     public ResponseEntity<Object> updateUser(@PathVariable(value = "username") String username, @RequestBody Map<String, Object> json) {
         Userx user = userService.loadUserByUsername(username);
 
@@ -147,7 +148,7 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return "Success."
      */
-    @DeleteMapping(value="/users/{username}")
+    @DeleteMapping(value = USERNAME_PATH)
     public ResponseEntity<Object> deleteUserByUsername(@PathVariable(value = "username") String username) {
         Userx user = userService.loadUserByUsername(username);
 
@@ -164,7 +165,7 @@ public class UserxRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Self-deletion is not permitted.");
         }
         userService.deleteUser(user);
-        return ResponseEntity.status(HttpStatus.OK).body("Success.");
+        return ResponseEntity.ok("Success.");
     }
 
     /**
@@ -172,7 +173,7 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return List of assigned sensor stations
      */
-    @GetMapping(value = USER_PATH +"/{username}/sensor-stations")
+    @GetMapping(value = USERNAME_PATH +"/sensor-stations")
     public ResponseEntity<Object> getAssignedSS(@PathVariable(value = "username") String username) {
         Userx gardener = userService.loadUserByUsername(username);
         // Return a 403 error if a normal user tries to get list of assigned sensor stations
