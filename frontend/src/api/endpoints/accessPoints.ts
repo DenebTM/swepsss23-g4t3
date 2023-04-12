@@ -1,5 +1,5 @@
 import { Server } from 'miragejs'
-import { _delete, _get } from '~/api/intercepts'
+import { _delete, _get, _put } from '~/api/intercepts'
 import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
@@ -12,9 +12,8 @@ export const ACCESS_POINTS_URI = '/access-points'
  * GET /api/access-points
  * @returns All access points in the database
  */
-export const getAccessPoints = async (): Promise<AccessPoint[]> => {
-  return _get(ACCESS_POINTS_URI)
-}
+export const getAccessPoints = async (): Promise<AccessPoint[]> =>
+  _get(ACCESS_POINTS_URI)
 
 /**
  * GET /api/access-points/${accessPointId}
@@ -23,9 +22,7 @@ export const getAccessPoints = async (): Promise<AccessPoint[]> => {
  */
 export const getAccessPoint = async (
   accessPointId: AccessPointId
-): Promise<AccessPoint> => {
-  return _get(`${ACCESS_POINTS_URI}/${accessPointId}`)
-}
+): Promise<AccessPoint> => _get(`${ACCESS_POINTS_URI}/${accessPointId}`)
 
 /**
  * DEL /api/access-points/${accessPointId}
@@ -33,9 +30,20 @@ export const getAccessPoint = async (
  */
 export const deleteAccessPoint = async (
   accessPointId: AccessPointId
-): Promise<void> => {
-  return _delete(`${ACCESS_POINTS_URI}/${accessPointId}`)
-}
+): Promise<void> => _delete(`${ACCESS_POINTS_URI}/${accessPointId}`)
+
+/**
+ * PUT /api/access-points/${accessPointId}
+ * Update a single access point by id
+ */
+export const updateAccessPoint = async (
+  accessPointId: AccessPointId,
+  updatedAp: Omit<Partial<AccessPoint>, 'id'>
+): Promise<AccessPoint> =>
+  _put(`${ACCESS_POINTS_URI}/${accessPointId}`, { ...updatedAp })
+
+/** Constant for mocking routes related to a single access point */
+const singleApRoute = `${ACCESS_POINTS_URI}/:id`
 
 /** Mocked access point functions */
 export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
@@ -46,22 +54,35 @@ export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
   })
 
   /** Mock {@link getAccessPoint} */
-  server.get(`${ACCESS_POINTS_URI}/:name`, (schema: AppSchema, request) => {
-    const apName: AccessPointId = request.params.name
-    const accessPoint = schema.findBy('accessPoint', { name: apName })
+  server.get(singleApRoute, (schema: AppSchema, request) => {
+    const apId: AccessPointId = Number(request.params.id)
+    const accessPoint = schema.findBy('accessPoint', { apId: apId })
 
-    return accessPoint ? accessPoint.attrs : notFound(`access point ${apName}`)
+    return accessPoint ? accessPoint.attrs : notFound(`access point ${apId}`)
   })
 
   /** Mock {@link deleteAccessPoint} */
-  server.delete(`${ACCESS_POINTS_URI}/:name`, (schema: AppSchema, request) => {
-    const apName: AccessPointId = request.params.name
-    const accessPoint = schema.findBy('accessPoint', { name: apName })
+  server.delete(singleApRoute, (schema: AppSchema, request) => {
+    const apId: AccessPointId = Number(request.params.id)
+    const accessPoint = schema.findBy('accessPoint', { apId: apId })
     if (accessPoint) {
       accessPoint.destroy()
       return success()
     } else {
-      return notFound(`access point ${apName}`)
+      return notFound(`access point ${apId}`)
+    }
+  })
+
+  /** Mock {@link updateAccessPoint} */
+  server.put(singleApRoute, (schema: AppSchema, request) => {
+    const apId: AccessPointId = Number(request.params.id)
+    const accessPoint = schema.findBy('accessPoint', { apId: apId })
+    if (accessPoint) {
+      const body: Partial<AccessPoint> = JSON.parse(request.requestBody)
+      accessPoint.update(body)
+      return success(accessPoint.attrs)
+    } else {
+      return notFound(`access point ${apId}`)
     }
   })
 }
