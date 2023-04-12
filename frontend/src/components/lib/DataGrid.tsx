@@ -18,9 +18,9 @@ import { theme } from '~/styles/theme'
 /**
  * Handle changes to editable cells. Note that this function does not need to update rows as this is handled inside MUI's DataGrid component
     @template R The type of each row object.
-    @param newRow — Row object with the new values.
-    @param oldRow — Row object with the old values.
-    @returns — The final values to update the row.
+    @param newRow Row object with the new values.
+    @param oldRow Row object with the old values.
+    @returns The final values to update the row.
  */
 export type RowUpdateFunction<R extends GridValidRowModel> = (
   newRow: R,

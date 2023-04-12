@@ -6,6 +6,7 @@ import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import { DataGrid } from '@component-lib/DataGrid'
 import dayjs from 'dayjs'
 import {
+  emDash,
   GREENHOUSE_METRICS,
   GreenhouseMetricRange,
   greenhouseMetricWithUnit,
@@ -49,7 +50,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
       valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
         params.row.measurements.length > 0
           ? roundMetric(params.row.measurements[0].data[metricRange.valueKey])
-          : '-',
+          : emDash,
       ...metricColumnParams,
     })),
     {
