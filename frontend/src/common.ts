@@ -96,8 +96,7 @@ export const API_DEV_URL = 'http://localhost:8080'
 export const AGGREGATION_PERIOD = 'aggregationPeriod'
 
 /**
- * Interface for a range of values.
- * Use to store a lower and upper bound for greenhouse sensor values.
+ * Store the current lower and upper bounds for greenhouse sensor values.
  */
 export interface ValueRange {
   lower: number
