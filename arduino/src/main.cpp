@@ -8,6 +8,12 @@ using namespace std::chrono_literals;
 #include <sensors/bme.h>
 #include <sensors/hygro.h>
 #include <sensors/light.h>
+#include <hwtimer.h>
+
+static volatile bool toggle = false;
+void timer_isr() {
+  toggle = !toggle;
+}
 
 void setup() {
   Serial.begin(9600);
@@ -22,6 +28,8 @@ void setup() {
   led::set_color(led::RED); // TODO: define LED colors/status codes in a central location
 
   ble::setup();
+
+  hwtimer::attach_isr(1000, timer_isr);
 }
 
 void loop() {
@@ -31,6 +39,7 @@ void loop() {
 
   ble::update();
 
+  digitalWrite(LED_BUILTIN, toggle);
   // reduce power consumption
   rtos::ThisThread::sleep_for(1ms);
 }
