@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.UserService;
@@ -16,6 +17,8 @@ public class UserxRestController implements BaseRestController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private HelperFunctions helperFunctions;
 
     private static final String USER_PATH = "/users";
     private static final String USERNAME_PATH = USER_PATH + "/{username}";
@@ -44,7 +47,7 @@ public class UserxRestController implements BaseRestController {
 
         // Return a 404 error if the User is not found
         if (userx == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with username: \"" + username + "\" not found.");
+            helperFunctions.notFoundError("User", username);
         }
 
         // Return a 403 error if a non-admin and not user itself tries to get User
@@ -111,7 +114,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 404 error if the user to be updated does not exist
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User \"" + username + "\" does not exist.");
+            helperFunctions.notFoundError("User", username);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("username")) {
@@ -158,7 +161,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 404 error if the user to be deleted does not exist
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User \"" + username + "\" does not exist.");
+            helperFunctions.notFoundError("User", username);
         }
         // return a 403 error if the authenticated user tries to delete themselves
         if (userService.getAuthenticatedUser().getUsername().equals(username)) {
@@ -182,7 +185,7 @@ public class UserxRestController implements BaseRestController {
         }
         // Return a 404 error if the user is not found
         if (gardener == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with username: \"" + username + "\" not found.");
+            helperFunctions.notFoundError("User", username);
         }
         // Return a 403 error if a non admin tries to get list of assigned sensor stations for other users
         if (userService.authRoleIsGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {
