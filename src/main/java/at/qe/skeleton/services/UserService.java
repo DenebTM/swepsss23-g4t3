@@ -130,4 +130,8 @@ public class UserService {
     public Boolean authRoleIsAdmin(){
         return getAuthenticatedUser().getUserRole() == UserRole.ADMIN;
     }
+
+    public Boolean isNotValidPassword(String password) {
+        return (password == null || password.equals(""));
+    }
 }
