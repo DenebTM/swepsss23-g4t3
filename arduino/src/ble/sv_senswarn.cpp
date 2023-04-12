@@ -1,5 +1,6 @@
 #include <ble/sv_senswarn.h>
 
+#include <common.h>
 #include <sensors/warn.h>
 
 #define _WARN_WRITTEN_HANDLER(sensor_name) \
@@ -26,20 +27,14 @@ namespace ble {
   BLEUnsignedCharCharacteristic ch_warn_air_quality  (BLE_UUID_WARN_AIR_QUALITY,   BLEWrite);
   BLEUnsignedCharCharacteristic ch_warn_soil_moisture(BLE_UUID_WARN_SOIL_MOISTURE, BLEWrite);
 
-  _WARN_WRITTEN_HANDLER(air_pressure)
-  _WARN_WRITTEN_HANDLER(temperature)
-  _WARN_WRITTEN_HANDLER(humidity)
-  _WARN_WRITTEN_HANDLER(illuminance)
-  _WARN_WRITTEN_HANDLER(air_quality)
-  _WARN_WRITTEN_HANDLER(soil_moisture)
+  // define write handlers for warning characteristics
+  CALL_FOREACH(_WARN_WRITTEN_HANDLER,
+    air_pressure, temperature, humidity, illuminance, air_quality, soil_moisture)
 
   void senswarn_setup() {
-    _SETUP_WARN_CHAR(air_pressure)
-    _SETUP_WARN_CHAR(temperature)
-    _SETUP_WARN_CHAR(humidity)
-    _SETUP_WARN_CHAR(illuminance)
-    _SETUP_WARN_CHAR(air_quality)
-    _SETUP_WARN_CHAR(soil_moisture)
+    // assign write handlers for warning characteristics and add them to the service
+    CALL_FOREACH(_SETUP_WARN_CHAR,
+      air_pressure, temperature, humidity, illuminance, air_quality, soil_moisture)
 
     BLE.addService(sv_senswarn);
   }
