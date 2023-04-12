@@ -8,6 +8,6 @@
  * (lmao)
  */
 #define CALL_FOREACH(call, arg1, arg2, arg3, arg4, arg5, arg6) \
-  call(arg1); call(arg2); call(arg3); call(arg4); call(arg5); call(arg6);      
+  call(arg1); call(arg2); call(arg3); call(arg4); call(arg5); call(arg6);
 
 #endif
