@@ -78,7 +78,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 400 error if the user gets created with empty password
         String password = (String)json.get("password");
-        if (password == null || password.equals("")) {
+        if (userService.isNotValidPassword(password)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
         }
         Userx newUser = new Userx();
@@ -127,7 +127,7 @@ public class UserxRestController implements BaseRestController {
         }
         if (json.containsKey("password")) {
             String password = (String)json.get("password");
-            if (password == null || password.equals("")) {
+            if (userService.isNotValidPassword(password)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
             }
 //            String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
@@ -137,7 +137,7 @@ public class UserxRestController implements BaseRestController {
             try {
                 user.setUserRole(UserRole.valueOf((String) json.get("userRole")));
             } catch (IllegalArgumentException e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Userrole does not exist");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User role does not exist");
             }
         }
         return ResponseEntity.ok(userService.saveUser(user));
