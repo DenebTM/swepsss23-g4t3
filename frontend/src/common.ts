@@ -94,3 +94,21 @@ export const API_DEV_URL = 'http://localhost:8080'
 
 /** Key value for greenhouse settings related to the aggregation period */
 export const AGGREGATION_PERIOD = 'aggregationPeriod'
+
+/**
+ * Store the current lower and upper bounds for greenhouse sensor values.
+ */
+export interface ValueRange {
+  lower: number
+  upper: number
+}
+
+/**
+ * Helper function to generate an event handler which calls the `callback` on enter keypress
+ * @param callback The function to call on enter keyboard press
+ * @returns A KeyboardEventHandler
+ */
+export const onEnterKeypress =
+  (callback: () => void): React.KeyboardEventHandler =>
+  (event: React.KeyboardEvent) =>
+    event.key === 'Enter' && callback()

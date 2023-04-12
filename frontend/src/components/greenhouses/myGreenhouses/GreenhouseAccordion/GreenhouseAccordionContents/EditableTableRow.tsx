@@ -5,14 +5,9 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
-/**
- * Interface for a range of values.
- * Use to store a lower and upper bound for greenhouse sensor values.
- */
-export interface ValueRange {
-  lower: number
-  upper: number
-}
+import { ValueRange } from '~/common'
+
+import { EditRowButton } from './EditRowButton'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
@@ -76,7 +71,7 @@ export const EditableTableRow = <V extends ValueRange | number>(
           {props.title}
         </Typography>
       </StyledTableCell>
-      <StyledTableCell align="center">
+      <StyledTableCell align="center" width="50%">
         {props.editableCell({
           editing: props.editing,
           rowValue: rowValue,
@@ -85,7 +80,13 @@ export const EditableTableRow = <V extends ValueRange | number>(
           typographyProps: props.typographyProps,
         })}
       </StyledTableCell>
-      <StyledTableCell align="right">[edit button]</StyledTableCell>
+      <StyledTableCell align="right">
+        <EditRowButton
+          editing={props.editing}
+          startEditing={props.startEditing}
+          saveRow={() => props.saveRow(rowValue)}
+        />
+      </StyledTableCell>
     </StyledTableRow>
   )
 }
