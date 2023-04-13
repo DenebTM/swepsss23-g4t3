@@ -1,8 +1,6 @@
 #include <sensors/light.h>
 #include <sensors/data.h>
 
-#include <algorithm>
-
 #include <hwtimer.h>
 
 namespace sensors::light {
