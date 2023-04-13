@@ -16,6 +16,7 @@ public class SensorStationRestController implements BaseRestController {
 
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
+    private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -44,21 +45,21 @@ public class SensorStationRestController implements BaseRestController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping(value = SS_ID_PATH + "/gardeners/{username}")
+    @GetMapping(value = SS_ID_GARDENER_PATH)
     public ResponseEntity<Object> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
         //TODO return a List of Strings containing all usernames that are assigned
         return ResponseEntity.ok("");
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping(value = SS_ID_PATH + "/gardeners/{username}")
+    @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
     public ResponseEntity<Object> assignGardenerToSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
         //TODO assign Gardener to SS
         return ResponseEntity.ok("The gardener was successfully assigned");
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping(value = SS_ID_PATH + "/gardeners/{username}")
+    @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
     public ResponseEntity<Object> removeGardenerFromSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
         //TODO delete Gardener from SS, and SS from Gardeners SS List
         return ResponseEntity.ok("The gardener was removed.");
