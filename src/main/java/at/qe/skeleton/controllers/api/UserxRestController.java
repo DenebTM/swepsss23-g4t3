@@ -31,9 +31,6 @@ public class UserxRestController implements BaseRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = USER_PATH)
     public ResponseEntity<Object> getUsers() {
-//        if (!(userService.authRoleIsAdmin())) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
-//        }
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -63,13 +60,9 @@ public class UserxRestController implements BaseRestController {
      * @param json body (username + password is required)
      * @return newly created user
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = USER_PATH)
     public ResponseEntity<Object> createUser(@RequestBody Map<String, Object> json) {
-
-        // return a 403 error if a non-admin wants to create a user
-        if (!userService.authRoleIsAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
-        }
         // return a 400 error if the user gets created with empty username
         String username = (String)json.get("username");
         if (username == null || username.equals("")) {
@@ -106,14 +99,10 @@ public class UserxRestController implements BaseRestController {
      * @param username + json
      * @return updated user
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping (value = USERNAME_PATH)
     public ResponseEntity<Object> updateUser(@PathVariable(value = "username") String username, @RequestBody Map<String, Object> json) {
         Userx user = userService.loadUserByUsername(username);
-
-        // return a 403 error if a non-admin wants to update another user
-        if (!userService.authRoleIsAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
-        }
         // return a 404 error if the user to be updated does not exist
         if (user == null) {
             return HelperFunctions.notFoundError("User", username);
@@ -154,14 +143,10 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return "Success."
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = USERNAME_PATH)
     public ResponseEntity<Object> deleteUserByUsername(@PathVariable(value = "username") String username) {
         Userx user = userService.loadUserByUsername(username);
-
-        // return a 403 error if a non-admin wants to delete a user
-        if (!userService.authRoleIsAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
-        }
         // return a 404 error if the user to be deleted does not exist
         if (user == null) {
             return HelperFunctions.notFoundError("User", username);
