@@ -8,7 +8,7 @@
 #define DEBOUNCE_LOCKOUT_MILLIS 50
 
 namespace buttons {
-  int setup(unsigned int button_id, voidFuncPtr button_func);
+  int setup(unsigned int button_id, voidFuncPtr callback);
 }
 
 #endif
