@@ -8,7 +8,7 @@ import java.util.zip.Inflater;
  * Taken from https://medium.com/shoutloudz/spring-boot-upload-and-download-images-using-jpa-b1c9ef174dc0
  */
 
-public class ImageUtils {
+public class ImageUtil {
 
     public static byte[] compressImage(byte[] data) {
 
