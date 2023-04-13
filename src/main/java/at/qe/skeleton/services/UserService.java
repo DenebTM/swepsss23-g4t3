@@ -131,6 +131,11 @@ public class UserService {
         return getAuthenticatedUser().getUserRole() == UserRole.ADMIN;
     }
 
+    /**
+     * Function used when setting a new password to check if it's empty or not
+     * @param password
+     * @return True if password is valid, false if not
+     */
     public Boolean isNotValidPassword(String password) {
         return (password == null || password.equals(""));
     }

@@ -42,6 +42,11 @@ public class SensorStationService {
      */
     public SensorStation saveSS(SensorStation ss){ return ssRepository.save(ss);}
 
+    /**
+     * getting a list of usernames of all gardeners assigned to a single sensor station
+     * @param ss
+     * @return list of usernames
+     */
     public List<String> getGardenersBySS(SensorStation ss){
         return ss.getGardeners().stream().map(Userx::getUsername).collect(Collectors.toList());
     }
