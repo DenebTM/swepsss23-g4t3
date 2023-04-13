@@ -12,7 +12,7 @@ int buttons::setup(unsigned int button_id, voidFuncPtr callback) {
   pinMode(BUTTON0_PIN + button_id, INPUT_PULLUP);
   mbed::InterruptIn* button = new mbed::InterruptIn(digitalPinToPinName(BUTTON0_PIN + button_id));
 
-  // debounce button press before calling the function
+  // debounce button press before running the callback
   button->rise([callback]() {
     static timestamp_t last_isr_timestamp;
     timestamp_t isr_timestamp = millis();
