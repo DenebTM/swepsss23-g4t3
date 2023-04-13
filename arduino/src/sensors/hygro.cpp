@@ -1,34 +1,28 @@
 #include <sensors/hygro.h>
 #include <sensors/data.h>
 
-#include <Ticker.h>
+#include <algorithm>
+
+#include <mbed/drivers/include/drivers/LowPowerTicker.h>
+
+#include <hwtimer.h>
 
 namespace sensors::hygro { 
   int next_sample_idx = 0;
-  long samples[HYGRO_SAMPLE_COUNT] = { 0 };
+  int samples[HYGRO_SAMPLE_COUNT];
 
-  void do_read() {
-    samples[next_sample_idx] = read();
-    next_sample_idx = (next_sample_idx + 1) % HYGRO_SAMPLE_COUNT;
-  }
-
-  void do_output() {
-    int moisture = read_hum();
-    current_data.soil_moisture = moisture;
-    Serial.println("Soil moisture: " + String(moisture) + "%");
-  }
-
-  // Software timers for reading and outputting
-  // I would use hardware timers but something™️ makes everything hang if I do
-  Ticker read_timer(do_read, HYGRO_READ_INTERVAL_MS);
-  Ticker output_timer(do_output, HYGRO_OUTPUT_INTERVAL_MS);
+  volatile bool shall_read = false;
+  volatile bool shall_output = false;
 }
 
 void sensors::hygro::setup() {
   pinMode(HYGRO_PIN, INPUT);
 
-  read_timer.start();
-  output_timer.start();
+  // pre-fill samples with 0% humidity
+  std::fill_n(samples, HYGRO_SAMPLE_COUNT, HYGRO_CALIB_AIR_VALUE);
+
+  hwtimer::set_interval(HYGRO_READ_INTERVAL_MS, []() { shall_read = true; });
+  hwtimer::set_interval(HYGRO_OUTPUT_INTERVAL_MS, []() { shall_output = true; });
 }
 
 int sensors::hygro::read() {
@@ -36,14 +30,26 @@ int sensors::hygro::read() {
 }
 
 void sensors::hygro::update() {
-  read_timer.update();
-  output_timer.update();
+  if (shall_read) {
+    shall_read = false;
+
+    samples[next_sample_idx] = read();
+    next_sample_idx = (next_sample_idx + 1) % HYGRO_SAMPLE_COUNT;
+  }
+
+  if (shall_output) {
+    shall_output = false;
+
+    int moisture = read_hum();
+    current_data.soil_moisture = moisture;
+    Serial.println("Soil moisture: " + String(moisture) + "%");
+  }
 }
 
 int sensors::hygro::read_hum() {
   unsigned long long total = 0;
   for (int i = 0; i < HYGRO_SAMPLE_COUNT; i++) {
-    total += samples[i];
+    total += samples[(next_sample_idx + i) % HYGRO_SAMPLE_COUNT];
   }
   long avg = total / HYGRO_SAMPLE_COUNT;
 
@@ -52,5 +58,4 @@ int sensors::hygro::read_hum() {
 
   // return value normalized to range of 0-100%
   return map(avg, HYGRO_CALIB_AIR_VALUE, HYGRO_CALIB_WATER_VALUE, 0, 100);
-
 }
