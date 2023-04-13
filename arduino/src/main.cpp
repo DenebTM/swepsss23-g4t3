@@ -8,7 +8,6 @@ using namespace std::chrono_literals;
 #include <sensors/bme.h>
 #include <sensors/hygro.h>
 #include <sensors/light.h>
-#include <hwtimer.h>
 
 void setup() {
   Serial.begin(9600);
