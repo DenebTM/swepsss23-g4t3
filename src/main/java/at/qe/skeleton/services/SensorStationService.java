@@ -35,6 +35,13 @@ public class SensorStationService {
         return ssRepository.findFirstById(id);
     }
 
+    /**
+     * saves a sensor station into database
+     * @param ss the sensor station to save
+     * @return the saved sensor station
+     */
+    public SensorStation saveSS(SensorStation ss){ return ssRepository.save(ss);}
+
     public List<String> getGardenersBySS(SensorStation ss){
         return ss.getGardeners().stream().map(Userx::getUsername).collect(Collectors.toList());
     }
