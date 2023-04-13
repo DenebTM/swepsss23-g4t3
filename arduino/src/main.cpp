@@ -28,8 +28,6 @@ void setup() {
   led::set_color(led::RED); // TODO: define LED colors/status codes in a central location
 
   ble::setup();
-
-  hwtimer::attach_isr(1000, timer_isr);
 }
 
 void loop() {
@@ -39,7 +37,6 @@ void loop() {
 
   ble::update();
 
-  digitalWrite(LED_BUILTIN, toggle);
   // reduce power consumption
   rtos::ThisThread::sleep_for(1ms);
 }
