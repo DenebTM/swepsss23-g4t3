@@ -1,9 +1,9 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.services.SensorStationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +36,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station with id: \"" + id + "\" not found.");
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
 
         return ResponseEntity.ok(ss);
