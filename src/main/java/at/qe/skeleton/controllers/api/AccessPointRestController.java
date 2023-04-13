@@ -1,7 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
-import at.qe.skeleton.model.AccessPoint;
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.services.AccessPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

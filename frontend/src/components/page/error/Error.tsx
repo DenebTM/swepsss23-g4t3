@@ -1,6 +1,8 @@
 import React from 'react'
 import { useRouteError } from 'react-router-dom'
 
+import Typography from '@mui/material/Typography'
+
 import { PageWrapper } from '~/components/page/PageWrapper'
 
 interface ErrorProps {
@@ -30,9 +32,23 @@ export const Error: React.FC<ErrorProps> = (props) => {
 
   return (
     <PageWrapper hideSidebar>
-      <h1>TODO: error page</h1>
-      {Boolean(props.message) && <p>{props.message}</p>}
-      <p>{getErrorMessage(error)}</p>
+      <Typography variant="headlineLarge" color="onSurface" component="h1">
+        Error
+      </Typography>
+
+      {Boolean(props.message) && (
+        <Typography
+          variant="headlineSmall"
+          color="onSurfaceVariant"
+          component="h2"
+        >
+          {props.message}
+        </Typography>
+      )}
+
+      <Typography variant="bodyLarge" color="onSurfaceVariant" component="p">
+        {getErrorMessage(error)}
+      </Typography>
     </PageWrapper>
   )
 }

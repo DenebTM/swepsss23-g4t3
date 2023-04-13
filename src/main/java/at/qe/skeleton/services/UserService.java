@@ -1,8 +1,8 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.SensorStation;
-import at.qe.skeleton.model.UserRole;
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.SensorStation;
+import at.qe.skeleton.models.enums.UserRole;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;

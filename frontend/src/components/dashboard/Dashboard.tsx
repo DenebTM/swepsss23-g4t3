@@ -1,42 +1,37 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
-import { getUsers } from '~/api/endpoints/user'
+import Typography from '@mui/material/Typography'
+import Grid from '@mui/material/Unstable_Grid2'
+
+import { getSensorStations } from '~/api/endpoints/sensorStations/sensorStations'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { User } from '~/models/user'
+import { SensorStation } from '~/models/sensorStation'
+
+import { PageHeader } from '../page/PageHeader'
+import { DashboardCard } from './DashboardCard'
+import { DashboardFilters } from './DashboardFilters'
+import { DashboardStatuses } from './DashboardStatuses/DashboardStatuses'
+import { DashboardTable } from './DashboardTable/DashboardTable'
+import { RecentActivity } from './RecentActivity/RecentActivity'
 
 /**
  * Dashboard page
  */
 export const Dashboard: React.FC = () => {
   const addSnackbarMessage = useAddSnackbarMessage()
-  const [users, setUsers] = useState<User[]>([])
+  const [sensorStations, setSensorStations] = useState<SensorStation[]>([])
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
-  /** Load users from the API on component mount and set the value of {@link snackbarMessage} */
+  /** Load sensor stations from the API on component mount */
   useEffect(() => {
-    const usersPromise = cancelable(getUsers())
-    usersPromise
-      .then((data) => {
-        setUsers(data)
-        setSnackbarMessage({
-          header: '',
-          body: 'Loaded users!',
-          type: MessageType.CONFIRM,
-        })
-      })
-      .catch((err: Error) =>
-        setSnackbarMessage({
-          header: 'Could not load users',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
-      )
+    const ssPromise = cancelable(getSensorStations())
+    loadSensorStations(ssPromise)
 
     // Cancel the promise callbacks on component unmount
-    return usersPromise.cancel
+    return ssPromise.cancel
   }, [])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
@@ -44,16 +39,46 @@ export const Dashboard: React.FC = () => {
     if (snackbarMessage !== null) {
       addSnackbarMessage(snackbarMessage)
     }
-  }, [snackbarMessage])
+  }, [addSnackbarMessage, snackbarMessage])
+
+  /** Load sensor stations from the backend and set in state */
+  const loadSensorStations = (promise: Promise<SensorStation[]>) =>
+    promise
+      .then((data) => {
+        setSensorStations(data)
+      })
+      .catch((err: Error) =>
+        setSnackbarMessage({
+          header: 'Could not load sensor stations',
+          body: err.message,
+          type: MessageType.ERROR,
+        })
+      )
 
   return (
     <PageWrapper>
-      <h1>Dashboard</h1>
-      <ul>
-        {users.map((u: User) => (
-          <li key={u.username}>{u.firstName + ' ' + u.lastName}</li>
-        ))}
-      </ul>
+      <PageHeader right={<DashboardFilters />} />
+      <Typography variant="headlineLarge" color="onSurface" component="h1">
+        Dashboard
+      </Typography>
+
+      <Grid container spacing={2} padding={2}>
+        <Grid xs={12} md={6}>
+          <DashboardCard>
+            <RecentActivity />
+          </DashboardCard>
+        </Grid>
+        <Grid xs={12} md={6}>
+          <DashboardCard>
+            <DashboardStatuses sensorStations={sensorStations} />
+          </DashboardCard>
+        </Grid>
+        <Grid xs={12}>
+          <DashboardCard>
+            <DashboardTable sensorStations={sensorStations} />
+          </DashboardCard>
+        </Grid>
+      </Grid>
     </PageWrapper>
   )
 }

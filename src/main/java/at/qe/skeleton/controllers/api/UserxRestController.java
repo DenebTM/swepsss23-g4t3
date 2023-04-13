@@ -1,8 +1,8 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
-import at.qe.skeleton.model.UserRole;
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.enums.UserRole;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -186,9 +186,4 @@ public class UserxRestController implements BaseRestController {
 
         return ResponseEntity.ok(userService.getAssignedSS(gardener));
     }
-
-
-
-
-
 }

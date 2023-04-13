@@ -4,12 +4,15 @@ import { AccessPoint } from '~/models/accessPoint'
 
 /** Factory to generate a fake {@link AccessPoint} */
 export const accessPointFactory = Factory.extend<AccessPoint>({
+  id(i: number) {
+    return i
+  },
   name(i: number) {
     return `Access Point ${i + 1}`
   },
   active() {
-    // Return that an access point is offline with a 1/6 probability
-    return faker.datatype.number({ min: 0, max: 5 }) === 0
+    // Return that an access point is offline with a 1/3 probability
+    return faker.datatype.number({ min: 0, max: 2 }) !== 0
   },
   serverAddress() {
     return '192.0.0.0'

@@ -16,7 +16,8 @@ export const MOCK_API = 'MOCK_API'
  * Reads the desired environment
  */
 export const mirageSetup = (
-  environment = MOCK_API
+  environment = MOCK_API,
+  logging = true
 ): Server<AppRegistry> | undefined => {
   if (process.env.NODE_ENV !== 'mock-api' && environment !== MOCK_API) {
     return
@@ -28,7 +29,7 @@ export const mirageSetup = (
     seeds: createSeedData,
   })
 
-  server.logging = true // Whether or not to log all requests
+  server.logging = logging // Whether or not to log all requests
   server.urlPrefix = API_DEV_URL // Base URL
 
   // Register internal endpoints with /api namespace
