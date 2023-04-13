@@ -14,8 +14,6 @@ public class AccessPointRestController implements BaseRestController {
 
     @Autowired
     private AccessPointService apService;
-    @Autowired
-    private HelperFunctions helperFunctions;
 
     private static final String AP_PATH = "/access-points";
 
@@ -39,7 +37,7 @@ public class AccessPointRestController implements BaseRestController {
 
         // Return a 404 error if the access point is not found
         if (ap == null) {
-            return helperFunctions.notFoundError("Access point", String.valueOf(id));
+            return HelperFunctions.notFoundError("Access point", String.valueOf(id));
         }
 
         return ResponseEntity.ok(ap);

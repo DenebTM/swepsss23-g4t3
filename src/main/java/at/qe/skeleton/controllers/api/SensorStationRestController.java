@@ -15,8 +15,6 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_PATH = "/sensor-stations";
     @Autowired
     private SensorStationService ssService;
-    @Autowired
-    private HelperFunctions helperFunctions;
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -38,7 +36,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return helperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
 
         return ResponseEntity.ok(ss);
