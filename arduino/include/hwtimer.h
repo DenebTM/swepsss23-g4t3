@@ -4,7 +4,14 @@
 #include <Arduino.h>
 
 namespace hwtimer {
-  bool attach_isr(unsigned int interval_ms, voidFuncPtr callback);
+  /**
+   * Set up a function `callback` to be called every `interval` milliseconds.
+   * 
+   * `callback` is run in an interrupt context and must thus adhere to certain
+   * limitations, such as not being able to use functions that themselves rely
+   * on interrupts
+   */
+  int set_interval(unsigned int interval, voidFuncPtr callback);
 }
 
 #endif
