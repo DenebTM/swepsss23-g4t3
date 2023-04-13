@@ -18,8 +18,6 @@ public class UserxRestController implements BaseRestController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private HelperFunctions helperFunctions;
 
     private static final String USER_PATH = "/users";
     private static final String USERNAME_PATH = USER_PATH + "/{username}";
@@ -50,9 +48,8 @@ public class UserxRestController implements BaseRestController {
 
         // Return a 404 error if the User is not found
         if (userx == null) {
-            return helperFunctions.notFoundError("User", username);
+            return HelperFunctions.notFoundError("User", username);
         }
-
         // Return a 403 error if a non-admin and not user itself tries to get User
         if (!userService.authRoleIsAdmin() && !userx.equals(userService.getAuthenticatedUser())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
@@ -85,7 +82,7 @@ public class UserxRestController implements BaseRestController {
         // return a 400 error if the user gets created with empty password
         String password = (String)json.get("password");
         if (userService.isNotValidPassword(password)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is not valid.");
         }
         Userx newUser = new Userx();
         newUser.setUsername(username);
@@ -119,7 +116,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 404 error if the user to be updated does not exist
         if (user == null) {
-            return helperFunctions.notFoundError("User", username);
+            return HelperFunctions.notFoundError("User", username);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("username")) {
@@ -167,7 +164,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 404 error if the user to be deleted does not exist
         if (user == null) {
-            return helperFunctions.notFoundError("User", username);
+            return HelperFunctions.notFoundError("User", username);
         }
         // return a 403 error if the authenticated user tries to delete themselves
         if (userService.getAuthenticatedUser().getUsername().equals(username)) {
@@ -191,7 +188,7 @@ public class UserxRestController implements BaseRestController {
         }
         // Return a 404 error if the user is not found
         if (gardener == null) {
-            return helperFunctions.notFoundError("User", username);
+            return HelperFunctions.notFoundError("User", username);
         }
         // Return a 403 error if a non admin tries to get list of assigned sensor stations for other users
         if (userService.authRoleIsGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {
