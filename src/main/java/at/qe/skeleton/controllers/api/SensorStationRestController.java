@@ -5,16 +5,16 @@ import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.services.SensorStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
 
-    private static final String SS_PATH = "/sensor-stations";
     @Autowired
     private SensorStationService ssService;
+
+    private static final String SS_PATH = "/sensor-stations";
+    private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -30,7 +30,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param id
      * @return sensor station
      */
-    @GetMapping(value = SS_PATH +"/{uuid}")
+    @GetMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
@@ -40,6 +40,24 @@ public class SensorStationRestController implements BaseRestController {
         }
 
         return ResponseEntity.ok(ss);
+    }
+
+    @GetMapping(value = SS_ID_PATH + "/gardeners/{username}")
+    public ResponseEntity<Object> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
+        //TODO return a List of Strings containing all usernames that are assigned
+        return ResponseEntity.ok("");
+    }
+
+    @PostMapping(value = SS_ID_PATH + "/gardeners/{username}")
+    public ResponseEntity<Object> assignGardenerToSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+        //TODO assign Gardener to SS
+        return ResponseEntity.ok("The gardener was successfully assigned");
+    }
+
+    @DeleteMapping(value = SS_ID_PATH + "/gardeners/{username}")
+    public ResponseEntity<Object> removeGardenerFromSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+        //TODO delete Gardener from SS, and SS from Gardeners SS List
+        return ResponseEntity.ok("The gardener was removed.");
     }
 
 }
