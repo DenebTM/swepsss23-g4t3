@@ -59,6 +59,7 @@ bool sensors::bme::setup() {
 
   if (!bsec.updateSubscription(sensorList, ARRAY_LEN(sensorList), BSEC_SAMPLE_RATE_LP)) {
     Serial.println("BME688 - Error updating sensor data subscription: " + String(bsec.status));
+    return false;
   }
 
   bsec.attachCallback(sensorCallback);
