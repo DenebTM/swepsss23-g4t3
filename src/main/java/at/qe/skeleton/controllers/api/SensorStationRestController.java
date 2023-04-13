@@ -2,7 +2,9 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.SensorStation;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.services.SensorStationService;
+import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +18,8 @@ public class SensorStationRestController implements BaseRestController {
 
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private UserService userService;
 
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
@@ -66,7 +70,16 @@ public class SensorStationRestController implements BaseRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
     public ResponseEntity<Object> assignGardenerToSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
-        //TODO assign Gardener to SS
+        SensorStation ss = ssService.loadSSById(id);
+        Userx user = userService.loadUserByUsername(username);
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        if (user == null) {
+            return HelperFunctions.notFoundError("User", String.valueOf(username));
+        }
+        ss.getGardeners().add(user);
+        ssService.saveSS(ss);
         return ResponseEntity.ok("The gardener was successfully assigned");
     }
 
