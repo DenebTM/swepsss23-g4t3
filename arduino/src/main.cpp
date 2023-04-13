@@ -10,11 +10,6 @@ using namespace std::chrono_literals;
 #include <sensors/light.h>
 #include <hwtimer.h>
 
-static volatile bool toggle = false;
-void timer_isr() {
-  toggle = !toggle;
-}
-
 void setup() {
   Serial.begin(9600);
   // wait for the Serial port to be initialized so that error messages during setup don't get lost
