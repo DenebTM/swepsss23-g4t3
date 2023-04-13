@@ -41,8 +41,8 @@ namespace sensors::light {
 void sensors::light::setup() {
   pinMode(LIGHT_PIN, INPUT);
 
-  hwtimer::set_interval(LIGHT_READ_INTERVAL_MS, []() { shall_read = true; });
-  hwtimer::set_interval(LIGHT_OUTPUT_INTERVAL_MS, []() { shall_output = true; });
+  hwtimer::flag_interval(LIGHT_READ_INTERVAL_MS, &shall_read);
+  hwtimer::flag_interval(LIGHT_OUTPUT_INTERVAL_MS, &shall_output);
 }
 
 void sensors::light::update() {

@@ -12,6 +12,13 @@ namespace hwtimer {
    * on interrupts
    */
   void set_interval(unsigned int interval, mbed::Callback<void()> callback);
+  
+  /**
+   * Sets up a simple callback to set `*flag` to `true` every `interval` milliseconds
+   */
+  inline void flag_interval(unsigned int interval, volatile bool* flag) {
+    set_interval(interval, [flag]() { *flag = true; });
+  }
 }
 
 #endif
