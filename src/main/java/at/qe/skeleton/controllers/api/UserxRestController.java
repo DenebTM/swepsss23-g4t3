@@ -7,6 +7,7 @@ import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,11 +29,13 @@ public class UserxRestController implements BaseRestController {
      * Route to GET all users
      * @return List of all users
      */
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = USER_PATH)
     public ResponseEntity<Object> getUsers() {
-        if (!(userService.authRoleIsAdmin())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
-        }
+//        if (!(userService.authRoleIsAdmin())) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions. Admin level permissions are required.");
+//        }
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -86,6 +89,8 @@ public class UserxRestController implements BaseRestController {
         }
         Userx newUser = new Userx();
         newUser.setUsername(username);
+        //TODO after Password encoder is set
+//      String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
         newUser.setPassword(password);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
         if (json.containsKey("firstName")) {
@@ -133,6 +138,7 @@ public class UserxRestController implements BaseRestController {
             if (userService.isNotValidPassword(password)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
             }
+            //TODO after Password encoder is set
 //            String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
             user.setPassword(password);
         }
