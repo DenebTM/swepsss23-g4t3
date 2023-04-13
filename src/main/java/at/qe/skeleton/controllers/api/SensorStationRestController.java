@@ -67,6 +67,12 @@ public class SensorStationRestController implements BaseRestController {
         return ResponseEntity.ok(usernames);
     }
 
+    /**
+     * a POST route to assign gardeners to a specific sensor station
+     * @param id
+     * @param username
+     * @return 200 ok "The gardener was successfully assigned"
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
     public ResponseEntity<Object> assignGardenerToSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
@@ -83,10 +89,25 @@ public class SensorStationRestController implements BaseRestController {
         return ResponseEntity.ok("The gardener was successfully assigned");
     }
 
+    /**
+     * a DELETE route to remove an assigned gardener from its sensor station
+     * @param id
+     * @param username
+     * @return 200 ok "The gardener was removed."
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
     public ResponseEntity<Object> removeGardenerFromSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
-        //TODO delete Gardener from SS, and SS from Gardeners SS List
+        SensorStation ss = ssService.loadSSById(id);
+        Userx user = userService.loadUserByUsername(username);
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        if (user == null) {
+            return HelperFunctions.notFoundError("User", String.valueOf(username));
+        }
+        ss.getGardeners().remove(user);
+        ssService.saveSS(ss);
         return ResponseEntity.ok("The gardener was removed.");
     }
 
