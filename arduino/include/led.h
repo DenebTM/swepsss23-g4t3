@@ -31,5 +31,4 @@ namespace led {
   void set_color(Color color);
 }
 
-
 #endif

@@ -7,15 +7,6 @@
 #define PAIRING_MODE_TIMED_OUT (millis() >= mode::active_since + BLE_PAIRING_MODE_TIMEOUT_MS)
 
 namespace ble::pairing {
-  // runs on press of button 0; signals to enter pairing mode next time `update` is run
-  void isr() {
-    // don't enter pairing mode if already active
-    if (pairing::mode::active) {
-      return;
-    }
-    pairing::mode::entering = true;
-  }
-
   namespace mode {
     // signal set by ISR; when true, will enter pairing mode at next call to `update`
     volatile bool entering = false;
@@ -55,7 +46,13 @@ namespace ble::pairing {
   }
 
   void setup() {
-    buttons::setup(0, ble::pairing::isr);
+    buttons::setup(0, []() {
+      // don't enter pairing mode if already active
+      if (pairing::mode::active) {
+        return;
+      }
+      pairing::mode::entering = true;
+    });
     Serial.println("Press button 0 (rightmost) to begin pairing");
   }
 
