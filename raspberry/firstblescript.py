@@ -35,7 +35,6 @@ async def run():
                     break
             await asyncio.sleep(5)
         
-        if device is not None:
             async with BleakClient(device.address) as client:
                 while True:
                     air_pressure = int.from_bytes(await client.read_gatt_char(air_pressure_uuid), "little", signed=False)/1000
