@@ -3,14 +3,13 @@
 
 #include <algorithm>
 
-#include <mbed/drivers/include/drivers/LowPowerTicker.h>
-
 #include <hwtimer.h>
 
 namespace sensors::hygro { 
   int next_sample_idx = 0;
   int samples[HYGRO_SAMPLE_COUNT];
 
+  // Flags for periodic tasks
   volatile bool shall_read = false;
   volatile bool shall_output = false;
 }
