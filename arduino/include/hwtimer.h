@@ -1,7 +1,7 @@
 #ifndef _HWTIMER_H
 #define _HWTIMER_H
 
-#include <Arduino.h>
+#include <mbed.h>
 
 namespace hwtimer {
   /**
@@ -11,7 +11,7 @@ namespace hwtimer {
    * limitations, such as not being able to use functions that themselves rely
    * on interrupts
    */
-  int set_interval(unsigned int interval, voidFuncPtr callback);
+  void set_interval(unsigned int interval, mbed::Callback<void()> callback);
 }
 
 #endif
