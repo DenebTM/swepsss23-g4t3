@@ -1,7 +1,6 @@
 #include <ble/sv_envsense.h>
 
-#include <Ticker.h>
-
+#include <hwtimer.h>
 #include <sensors/data.h>
 
 namespace ble {
@@ -13,8 +12,8 @@ namespace ble {
   BLEUnsignedShortCharacteristic ch_airQuality(BLE_UUID_AIR_QUALITY, BLERead | BLENotify);
   BLEUnsignedCharCharacteristic ch_soilMoisture(BLE_UUID_SOIL_MOISTURE, BLERead | BLENotify);
 
-  // Periodic tasks
-  Ticker write_sensor_data_timer(write_sensor_data, BLE_ENVSENSE_TRANSMIT_INTERVAL_MS);
+  // Flags for periodic tasks
+  volatile bool shall_write_sensor_data = false;
 
   // set up environmental sensing service
   void envsense_setup() {
@@ -27,11 +26,15 @@ namespace ble {
 
     BLE.addService(sv_envsense);
 
-    write_sensor_data_timer.start();
+    hwtimer::set_interval(BLE_ENVSENSE_TRANSMIT_INTERVAL_MS, []() { shall_write_sensor_data = true; });
   }
 
   void envsense_update() {
-    write_sensor_data_timer.update();
+    if (shall_write_sensor_data) {
+      shall_write_sensor_data = false;
+
+      write_sensor_data();
+    }
   }
 
   /** convert values stored in `current_data` to correct data formats and transmit via BLE */

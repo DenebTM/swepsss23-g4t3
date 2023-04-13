@@ -1,7 +1,6 @@
 #include <ble/sv_devinfo.h>
 
-#include <Ticker.h>
-
+#include <hwtimer.h>
 #include <station_id.h>
 
 namespace ble {
@@ -12,7 +11,8 @@ namespace ble {
   BLEByteCharacteristic ch_stationID(BLE_UUID_STATION_ID, BLERead | BLENotify);
   uint8_t val_stationID = 0;
   
-  Ticker update_station_id_timer(update_station_id, STATION_ID_CHECK_INTERVAL_MS);
+  // Flags for periodic tasks
+  volatile bool shall_update_station_id = false;
 
   void devinfo_setup() {
     BLE.setAppearance(BLE_DEVICE_APPEARANCE);
@@ -30,11 +30,15 @@ namespace ble {
     BLE.setAdvertisedService(ble::sv_devinfo);
 
     update_station_id();
-    update_station_id_timer.start();
+    hwtimer::set_interval(STATION_ID_CHECK_INTERVAL_MS, []() { shall_update_station_id = true; });
   }
 
   void devinfo_update() {
-    update_station_id_timer.update();
+    if (shall_update_station_id) {
+      shall_update_station_id = false;
+
+      update_station_id();
+    }
   }
 
   void update_station_id() {
