@@ -15,7 +15,7 @@ import { SensorStationView, URL } from '~/common'
 import { deleteJwt } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
-import { sidebarIconColour } from '~/styles/theme'
+import { theme } from '~/styles/theme'
 
 import { SidebarElement, SidebarElementWithChildren } from './SidebarElement'
 import { SidebarListItem } from './SidebarListItem'
@@ -29,10 +29,10 @@ const topSidebarVals = (
     url: URL.dashboard,
     icon: <HomeIcon />,
     childNodes: sensorStations.map((s) => ({
-      label: `Greenhouse ${s.id}`,
-      url: URL.greenhouseView(s.id, SensorStationView.GRAPHICAL),
+      label: `Greenhouse ${s.uuid}`,
+      url: URL.greenhouseView(s.uuid, SensorStationView.GRAPHICAL),
       icon: (
-        <Badge badgeContent={s.id} sx={{ color: sidebarIconColour }}>
+        <Badge badgeContent={s.uuid} sx={{ color: theme.onSurfaceVariant }}>
           <LocalFloristIcon />
         </Badge>
       ),

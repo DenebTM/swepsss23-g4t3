@@ -8,9 +8,10 @@ import TextField from '@mui/material/TextField'
 import Box from '@mui/system/Box'
 
 import { handleLogin } from '~/api/endpoints/login'
-import { URL } from '~/common'
+import { onEnterKeypress, URL } from '~/common'
 import { setJwt } from '~/helpers/jwt'
 import { LoginResponse } from '~/models/login'
+import { theme } from '~/styles/theme'
 
 /**
  * Login form component
@@ -66,7 +67,7 @@ export const LoginForm: React.FC = () => {
           label="Username"
           autoComplete="username"
           inputRef={usernameRef}
-          onKeyPress={(e) => e.key === 'Enter' && handleApiLogin()}
+          onKeyPress={onEnterKeypress(handleApiLogin)}
           fullWidth
         />
         <TextField
@@ -75,7 +76,7 @@ export const LoginForm: React.FC = () => {
           label="Password"
           type="password"
           inputRef={passwordRef}
-          onKeyPress={(e) => e.key === 'Enter' && handleApiLogin()}
+          onKeyPress={onEnterKeypress(handleApiLogin)}
           fullWidth
         />
         <LoadingButton
@@ -85,6 +86,12 @@ export const LoginForm: React.FC = () => {
           size="large"
           loading={loggingIn}
           loadingPosition="center"
+          color="primary"
+          sx={{
+            '&.MuiLoadingButton-loading': {
+              background: theme.primary,
+            },
+          }}
         >
           Log in
         </LoadingButton>

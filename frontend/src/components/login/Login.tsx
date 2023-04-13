@@ -3,8 +3,11 @@ import React from 'react'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
+import Box from '@mui/system/Box'
 
+import { PlantIcon } from '@component-lib/PlantIcon'
 import { PageWrapper } from '~/components/page/PageWrapper'
+import { theme } from '~/styles/theme'
 
 import { LoginForm } from './LoginForm'
 
@@ -23,14 +26,18 @@ export const Login: React.FC = () => {
             padding: 4,
           }}
         >
-          <Typography
-            variant="h4"
-            align="center"
-            color="textSecondary"
-            gutterBottom
-          >
-            Log in
-          </Typography>
+          <Box component="div" display="flex" alignItems="center" padding={2}>
+            <Typography
+              variant="headlineLarge"
+              align="center"
+              color="onSurface"
+              component="h1"
+              marginRight={1}
+            >
+              Log in
+            </Typography>
+            <PlantIcon color={theme.onSurface} />
+          </Box>
           <LoginForm />
         </Paper>
       </Container>
