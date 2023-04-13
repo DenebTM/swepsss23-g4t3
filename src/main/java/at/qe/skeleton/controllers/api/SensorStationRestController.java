@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class SensorStationRestController implements BaseRestController {
 
@@ -44,11 +47,20 @@ public class SensorStationRestController implements BaseRestController {
         return ResponseEntity.ok(ss);
     }
 
+    /**
+     * Route to GET all gardeners assigned to a single sensor station
+     * @param id
+     * @return list of usernames
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = SS_ID_GARDENER_PATH)
     public ResponseEntity<Object> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
-        //TODO return a List of Strings containing all usernames that are assigned
-        return ResponseEntity.ok("");
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        List<String> usernames = ssService.getGardenersBySS(ss);
+        return ResponseEntity.ok(usernames);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

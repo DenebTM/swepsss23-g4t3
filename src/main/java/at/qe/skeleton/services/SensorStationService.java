@@ -1,11 +1,15 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.models.SensorStation;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.SensorStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SensorStationService {
@@ -31,5 +35,7 @@ public class SensorStationService {
         return ssRepository.findFirstById(id);
     }
 
-
+    public List<String> getGardenersBySS(SensorStation ss){
+        return ss.getGardeners().stream().map(Userx::getUsername).collect(Collectors.toList());
+    }
 }
