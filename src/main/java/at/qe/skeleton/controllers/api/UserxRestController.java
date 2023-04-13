@@ -141,7 +141,7 @@ public class UserxRestController implements BaseRestController {
     /**
      * DELETE route to delete a user by its username, only allowed by ADMIN
      * @param username
-     * @return "Success."
+     * @return the deleted user
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = USERNAME_PATH)
