@@ -184,6 +184,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
   },
   {
     displayName: 'Air Quality',
+    description: 'Index of Air Quality (IAQ)',
     valueKey: 'airQuality',
     unit: '',
     min: 0,
