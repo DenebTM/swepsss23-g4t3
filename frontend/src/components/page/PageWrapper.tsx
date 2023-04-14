@@ -1,6 +1,7 @@
 import React from 'react'
 
 import CssBaseline from '@mui/material/CssBaseline'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
 import { useUserRole } from '~/hooks/user'
@@ -27,6 +28,9 @@ interface PageWrapperProps {
  */
 export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
   const userRole = useUserRole()
+  const breakSm = useMediaQuery(theme.breakpoints.up('sm'))
+  const breakMd = useMediaQuery(theme.breakpoints.up('md'))
+  const breakLg = useMediaQuery(theme.breakpoints.up('lg'))
 
   return (
     <Box
@@ -47,7 +51,10 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
           flex: '1',
           minHeight: '100vh',
           minWidth: 0,
-          padding: theme.spacing(0, 2),
+          padding: theme.spacing(
+            0,
+            breakLg ? 8 : breakMd ? 6 : breakSm ? 4 : 1
+          ),
           flexDirection: 'column',
         }}
       >
