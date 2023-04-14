@@ -3,17 +3,14 @@ import { _delete, _get, _put } from '~/api/intercepts'
 import { User, Username } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
-import { notFound, success } from './helpers'
-
-/** URI for users routes */
-export const USERS_URI = '/users'
+import { API_URI, notFound, success } from './consts'
 
 /**
  * GET /api/users
  * @returns All users in the database
  */
 export const getUsers = async (): Promise<User[]> => {
-  return _get(USERS_URI)
+  return _get(API_URI.users)
 }
 
 /**
@@ -22,7 +19,7 @@ export const getUsers = async (): Promise<User[]> => {
  * @returns All users in the database
  */
 export const getUser = async (username: Username): Promise<User> => {
-  return _get(`${USERS_URI}/${username}`)
+  return _get(`${API_URI.users}/${username}`)
 }
 
 /**
@@ -34,7 +31,7 @@ export const updateUser = async (
   username: Username,
   updatedUser: Partial<User>
 ): Promise<User> => {
-  return _put(`${USERS_URI}/${username}`, { ...updatedUser })
+  return _put(`${API_URI.users}/${username}`, { ...updatedUser })
 }
 
 /**
@@ -42,16 +39,16 @@ export const updateUser = async (
  * DEL /api/users/${username}
  */
 export const deleteUser = async (username: Username): Promise<void> => {
-  return _delete(`${USERS_URI}/${username}`)
+  return _delete(`${API_URI.users}/${username}`)
 }
 
 /** Constant for mocking routes related to a single user */
-const singleUserRoute = `${USERS_URI}/:username`
+const singleUserRoute = `${API_URI.users}/:username`
 
 /** Mocked users functions */
 export const mockedUserReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getUsers} */
-  server.get(USERS_URI, (schema: AppSchema, request) => {
+  server.get(API_URI.users, (schema: AppSchema, request) => {
     const users = schema.all('user')
     return success(users.models)
   })
