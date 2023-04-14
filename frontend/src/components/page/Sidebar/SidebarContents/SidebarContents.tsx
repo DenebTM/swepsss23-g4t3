@@ -31,10 +31,7 @@ const topSidebarVals = (
       pageTitle: PAGE_URL.greenhouseView.pageTitle(s.uuid),
       href: PAGE_URL.greenhouseView.href(s.uuid, SensorStationView.GRAPHICAL),
       icon: (
-        <Badge
-          badgeContent={String(s.uuid)}
-          sx={{ color: theme.onSurfaceVariant }}
-        >
+        <Badge badgeContent={String(s.uuid)}>
           <LocalFloristIcon />
         </Badge>
       ),
