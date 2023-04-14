@@ -1,13 +1,19 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.model.ImageData;
 import at.qe.skeleton.model.SensorStation;
+import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
@@ -15,6 +21,8 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_PATH = "/sensor-stations";
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private ImageDataRepository imageDataRepository;
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -40,6 +48,19 @@ public class SensorStationRestController implements BaseRestController {
         }
 
         return ResponseEntity.ok(ss);
+    }
+
+    /**
+     * Route to GET all photos from a specific sensor-station by its ID
+     * @param ssId
+     * @return list of photos
+     */
+
+    @GetMapping(value = SS_PATH + "/{uuid}/photos")
+    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable Integer ssId) {
+        SensorStation ss = ssService.loadSSById(ssId);
+        List<ImageData> images = imageDataRepository.findAllBySensorStation(ss);
+        return ResponseEntity.ok(images);
     }
 
 }
