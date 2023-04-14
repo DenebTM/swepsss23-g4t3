@@ -21,35 +21,13 @@ import { Measurement, SensorValues } from '~/models/measurement'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
-/**
- * Normalise a value into a percentage.
- * Will be between 0 and 100 if the value lies between minimum and maximum
- */
-const normalisePercentage = (value: number, minimum: number, maximum: number) =>
-  (100 * (value - minimum)) / (maximum - minimum)
-
-/** Type synonym for graph key-value pairs */
-type GraphValues = Record<keyof SensorValues, number>
-
-/** Key of timestamp parameter in greenhouse values */
-const TIMESTAMP_KEY = 'isoTimestamp'
-
-/** Convert a {@link Measurement} to an object of type {@link GraphValues} and cast type. */
-const measurementToGraphValues = (
-  m: Measurement,
-  valueGetter: (value: number, valueKey: keyof SensorValues) => number
-): GraphValues =>
-  Object.fromEntries(
-    GREENHOUSE_METRICS.map((metricRange: GreenhouseMetricRange) => [
-      metricRange.valueKey,
-      valueGetter(m.data[metricRange.valueKey], metricRange.valueKey),
-    ])
-  ) as GraphValues
-
-type DataValue = {
-  [TIMESTAMP_KEY]: string
-  rawValues: GraphValues
-} & GraphValues
+import {
+  DataValue,
+  measurementToGraphValues,
+  normalisePercentage,
+  RAW_VALUES_KEY,
+  TIMESTAMP_KEY,
+} from './helpers'
 
 interface GreenhouseGraphProps {
   measurements: Measurement[]
@@ -62,7 +40,7 @@ interface GreenhouseGraphProps {
  */
 export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
   const [data, setData] = useState<DataValue[]>()
-
+  console.log(props)
   useEffect(() => {
     if (typeof props.sensorStation !== 'undefined') {
       const lower: SensorValues = props.sensorStation.lowerBound
@@ -77,7 +55,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
             normalisePercentage(value, lower[valueKey], upper[valueKey])
         ),
         // Save raw values
-        rawValues: measurementToGraphValues(
+        [RAW_VALUES_KEY]: measurementToGraphValues(
           measurement,
           (value: number) => value
         ),
@@ -123,7 +101,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
           }
           formatter={(value: number | string, name, payload, index) => {
             const key = String(payload.dataKey)
-            const trueValue: number = payload.payload['rawValues'][key]
+            const trueValue: number = payload.payload[RAW_VALUES_KEY][key]
             return `${roundMetric(trueValue)}${
               GREENHOUSE_METRICS.find((m) => m.valueKey == payload.dataKey)
                 ?.unit

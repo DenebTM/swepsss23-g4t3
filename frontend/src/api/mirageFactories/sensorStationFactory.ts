@@ -25,16 +25,21 @@ const compareSensorVals =
     ) as unknown as SensorValues
 
 /** Randomly jitter sensor values by a percentage of the current value */
-const randomJitter = (sensorValues: SensorValues) =>
-  Object.keys(sensorValues).reduce(
-    (a: SensorValues, k: string) => ({
+const randomJitter = (sensorValues: SensorValues, percentage = 0.2) =>
+  Object.keys(sensorValues).reduce((a: SensorValues, k: string) => {
+    const val: number = a[k as keyof SensorValues]
+    const plusMinus = faker.helpers.arrayElement([-1, +1])
+    const jitter = faker.datatype.float({
+      min: 0,
+      max: percentage,
+      precision: 0.01,
+    })
+
+    return {
       ...a,
-      [k]:
-        faker.datatype.float({ min: 0.9, max: 1.1, precision: 0.001 }) *
-        a[k as keyof SensorValues],
-    }),
-    sensorValues
-  )
+      [k]: val + val * plusMinus * jitter,
+    }
+  }, sensorValues)
 
 /**
  * Factory to generate a fake {@link SensorStation}.
@@ -105,24 +110,6 @@ export const sensorStationFactory = Factory.extend<
     // Randomly jitter max and min values
     lowerBound.update(randomJitter(minSensorValues))
     upperBound.update(randomJitter(maxSensorValues))
-
-    // Swap bounds so that the values of lowerBound are all <= upperBound
-    Object.keys(lowerBound.attrs).forEach((sensorValKey) => {
-      const castKey = sensorValKey as keyof SensorValues
-      const lowerVal = Math.min(
-        lowerBound.attrs[castKey],
-        upperBound.attrs[castKey]
-      )
-      upperBound.update({
-        [castKey]: Math.max(
-          lowerBound.attrs[castKey],
-          upperBound.attrs[castKey]
-        ),
-      })
-      lowerBound.update({
-        [castKey]: lowerVal,
-      })
-    })
 
     // Update sensorStation object
     sensorStation.update({
