@@ -1,3 +1,5 @@
+import { SensorValues } from '~/models/measurement'
+
 import { SensorStationUuid } from './models/sensorStation'
 import { UserRole } from './models/user'
 
@@ -161,3 +163,90 @@ export const onEnterKeypress =
   (callback: () => void): React.KeyboardEventHandler =>
   (event: React.KeyboardEvent) =>
     event.key === 'Enter' && callback()
+
+/** Rounding function for metric values. */
+export const roundMetric = (n: number) => n.toFixed(1)
+
+/**
+ * Type for a singe greenhouse metric range.
+ * Each `GreenhouseMetricRange` will be mapped to a single table row.
+ */
+export interface GreenhouseMetricRange {
+  /** Description of the metric */
+  description?: string
+  /** The display name of the metric. */
+  displayName: string
+  /** Maximum possible supported value. */
+  max: number
+  /** Minimum possible supported value. */
+  min: number
+  /**
+   * Step size for the input field arrows.
+   * Users can manually input other values (in smaller step sizes).
+   */
+  step: number
+  /** The unit of the metric (to be displayed inside the table row). */
+  unit: string
+  /** The key of the metric inside {@link SensorValues}. */
+  valueKey: keyof SensorValues
+}
+
+export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
+  {
+    displayName: 'Temperature',
+    valueKey: 'temperature',
+    unit: '°C',
+    min: 0,
+    max: 65,
+    step: 5,
+  },
+  {
+    displayName: 'Soil Moisture',
+    valueKey: 'soilMoisture',
+    unit: '%',
+    min: 0,
+    max: 100,
+    step: 5,
+  },
+  {
+    displayName: 'Light',
+    valueKey: 'lightIntensity',
+    unit: 'lx',
+    min: 10,
+    max: 1000,
+    step: 20,
+  },
+  {
+    displayName: 'Air Pressure',
+    valueKey: 'airPressure',
+    unit: 'hPa',
+    min: 700,
+    max: 1300,
+    step: 50,
+  },
+  {
+    displayName: 'Humidity',
+    valueKey: 'humidity',
+    unit: '%',
+    min: 0,
+    max: 100,
+    step: 5,
+  },
+  {
+    displayName: 'Air Quality',
+    description: 'Index of Air Quality (IAQ)',
+    valueKey: 'airQuality',
+    unit: '',
+    min: 0,
+    max: 500,
+    step: 25,
+  },
+]
+
+export const greenhouseMetricWithUnit = (
+  metricRange: GreenhouseMetricRange
+): string =>
+  metricRange.displayName +
+  (metricRange.unit === '' ? '' : ` (${metricRange.unit})`)
+
+export const emDash = '—'
