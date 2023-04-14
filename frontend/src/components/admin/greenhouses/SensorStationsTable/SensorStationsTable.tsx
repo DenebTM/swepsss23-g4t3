@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
@@ -9,10 +9,14 @@ import { AppContext } from '~/contexts/AppContext/AppContext'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
+import { GardenerChips } from './GardenerChips'
+
+/** Type of a `DataGrid` row */
+type R = SensorStation[] | undefined
+
 const centerCell: Partial<GridColDef<SensorStation, any, SensorStation>> = {
   headerAlign: 'center',
   align: 'center',
-  flex: 1,
 }
 
 /**
@@ -22,8 +26,22 @@ export const SensorStationsTable: React.FC = () => {
   const sensorStations = useSensorStations()
   const { setSensorStations } = React.useContext(AppContext)
 
-  /** Type of a `DataGrid` row */
-  type R = SensorStation[] | undefined
+  // Store the largest number of gardeners for a single greenhuse as dynamic column width is not supported yet by DataGrid:
+  // https://github.com/mui/mui-x/issues/1241
+  const [maxGardenersPerGreenhouse, setMaxGardenersPerGreenhouse] =
+    useState<number>(1)
+
+  useEffect(() => {
+    if (sensorStations === null) {
+      setMaxGardenersPerGreenhouse(0)
+    } else {
+      setMaxGardenersPerGreenhouse(
+        sensorStations.reduce((prev: SensorStation, current: SensorStation) =>
+          prev.gardeners.length > current.gardeners.length ? prev : current
+        ).gardeners.length
+      )
+    }
+  }, [sensorStations])
 
   /** Handle row updates */
   const handleUpdateSensorStations: Dispatch<SetStateAction<R>> = (
@@ -59,10 +77,10 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       field: 'accessPoint',
-      headerName: 'Access Point',
+      headerName: 'Access Point ID',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
-      ) => <div>{JSON.stringify(params.value)}</div>,
+      ) => params.value,
       ...centerCell,
     },
     {
@@ -71,17 +89,20 @@ export const SensorStationsTable: React.FC = () => {
       description: 'Gardeners assigned to the sensor station',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
-      ) => <div>{JSON.stringify(params.row.gardeners)}</div>,
+      ) => <GardenerChips {...params} />,
       ...centerCell,
+      // Dynamic column width is not supported yet, so hard code a width for each chip:
+      // https://github.com/mui/mui-x/issues/1241
+      width: 135 * maxGardenersPerGreenhouse,
     },
     {
       field: 'action',
-      headerName: 'Delete',
-      description: 'Delete the given sensor sensor',
+      headerName: 'Actions',
       sortable: false,
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => (
+        // TODO qqjf add links and actions here
         <DeleteCell<SensorStation, SensorStationUuid>
           deleteEntity={deleteSensorStation}
           entityId={params.row.uuid}
