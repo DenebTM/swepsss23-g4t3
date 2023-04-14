@@ -7,11 +7,10 @@ import {
 } from '@mui/x-data-grid'
 
 import { DataGrid, RowUpdateFunction } from '@component-lib/DataGrid'
+import { DeleteCell } from '@component-lib/DeleteCell'
 import dayjs from 'dayjs'
-import { getUsers, updateUser } from '~/api/endpoints/user'
-import { User, UserRole } from '~/models/user'
-
-import { DeleteUserCell } from './DeleteUserCell'
+import { deleteUser, getUsers, updateUser } from '~/api/endpoints/user'
+import { User, Username, UserRole } from '~/models/user'
 
 interface UsersTableProps {
   setUsers: Dispatch<SetStateAction<User[] | undefined>>
@@ -28,7 +27,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
     oldUser: User
   ) => updateUser(oldUser.username, newUser)
 
-  /** Columns for the user managmement table */
+  /** Columns for the user management table */
   const columns: GridColDef<User, any, User>[] = [
     { field: 'username', headerName: 'Username', flex: 1 },
     {
@@ -76,9 +75,12 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       align: 'center',
       sortable: false,
       renderCell: (params: GridRenderCellParams<User, any, User>) => (
-        <DeleteUserCell
-          setUsers={props.setUsers}
-          username={params.row.username}
+        <DeleteCell<User, Username>
+          deleteEntity={deleteUser}
+          entityId={params.row.username}
+          entityName="user"
+          getEntityId={(r) => r.username}
+          setRows={props.setUsers}
         />
       ),
     },

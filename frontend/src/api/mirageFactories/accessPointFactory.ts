@@ -4,7 +4,8 @@ import { AccessPoint } from '~/models/accessPoint'
 
 /** Factory to generate a fake {@link AccessPoint} */
 export const accessPointFactory = Factory.extend<AccessPoint>({
-  id(i: number) {
+  apId(i: number) {
+    // Rename `id` to `apId` to avoid clash with mirage built-in id key
     return i
   },
   name(i: number) {
@@ -15,7 +16,7 @@ export const accessPointFactory = Factory.extend<AccessPoint>({
     return faker.datatype.number({ min: 0, max: 2 }) !== 0
   },
   serverAddress() {
-    return '192.0.0.0'
+    return faker.internet.ipv4()
   },
   lastUpdate() {
     return faker.date

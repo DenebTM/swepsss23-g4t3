@@ -1,4 +1,4 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import at.qe.skeleton.models.enums.UserRole;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
