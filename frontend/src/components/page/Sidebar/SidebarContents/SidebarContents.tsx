@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
-import { SensorStationView, URL } from '~/common'
+import { PAGE_URL, SensorStationView } from '~/common'
 import { deleteJwt } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
@@ -25,11 +25,11 @@ const topSidebarVals = (
   sensorStations: SensorStation[]
 ): SidebarElementWithChildren[] => [
   {
-    ...URL.dashboard,
+    ...PAGE_URL.dashboard,
     icon: <HomeIcon />,
     childNodes: sensorStations.map((s) => ({
-      pageTitle: URL.greenhouseView.pageTitle(s.uuid),
-      href: URL.greenhouseView.href(s.uuid, SensorStationView.GRAPHICAL),
+      pageTitle: PAGE_URL.greenhouseView.pageTitle(s.uuid),
+      href: PAGE_URL.greenhouseView.href(s.uuid, SensorStationView.GRAPHICAL),
       icon: (
         <Badge badgeContent={s.uuid} sx={{ color: theme.onSurfaceVariant }}>
           <LocalFloristIcon />
@@ -38,21 +38,21 @@ const topSidebarVals = (
     })),
   },
   {
-    ...URL.gettingStarted,
+    ...PAGE_URL.gettingStarted,
     icon: <MenuBookIcon />,
   },
   {
-    ...URL.myGreenhouses,
+    ...PAGE_URL.myGreenhouses,
     icon: <YardIcon />,
   },
   {
-    ...URL.adminHome,
+    ...PAGE_URL.adminHome,
     icon: <AdminPanelSettingsIcon />,
     childNodes: [
-      URL.manageUsers,
-      URL.manageAccessPoints,
-      URL.manageGreenhouses,
-      URL.adminLogs,
+      PAGE_URL.manageUsers,
+      PAGE_URL.manageAccessPoints,
+      PAGE_URL.manageGreenhouses,
+      PAGE_URL.adminLogs,
     ],
   },
 ]
@@ -74,7 +74,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       .then(() => {
         // Delete JWT cookie
         deleteJwt()
-        navigate(URL.login.href)
+        navigate(PAGE_URL.login.href)
       })
       .catch((err: Error) => {
         throw err

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { URL } from '~/common'
+import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 
@@ -11,7 +11,7 @@ import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
  */
 export const ManageGreenhouses: React.FC = () => {
   return (
-    <PageWrapper permittedRoles={URL.manageGreenhouses.permittedRoles}>
+    <PageWrapper permittedRoles={PAGE_URL.manageGreenhouses.permittedRoles}>
       <PageHeader
         left={<AdminBreadcrumbs currentPageName="Manage Greenhouses" />}
       />

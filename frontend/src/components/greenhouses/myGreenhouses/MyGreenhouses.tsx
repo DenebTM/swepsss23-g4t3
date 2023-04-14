@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import Typography from '@mui/material/Typography'
 
-import { URL } from '~/common'
+import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { useSensorStations } from '~/hooks/appContext'
@@ -20,7 +20,7 @@ export const MyGreenhouses: React.FC = () => {
   const [expanded, setExpanded] = useState<SensorStationUuid | null>(null)
 
   return (
-    <PageWrapper permittedRoles={URL.myGreenhouses.permittedRoles}>
+    <PageWrapper permittedRoles={PAGE_URL.myGreenhouses.permittedRoles}>
       <PageHeader
         left={
           <Typography
@@ -28,7 +28,7 @@ export const MyGreenhouses: React.FC = () => {
             color="onSurfaceVariant"
             component="h1"
           >
-            {URL.myGreenhouses.pageTitle}
+            {PAGE_URL.myGreenhouses.pageTitle}
           </Typography>
         }
       />

@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import { getSensorStations } from '~/api/endpoints/sensorStations/sensorStations'
-import { URL } from '~/common'
+import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -60,7 +60,7 @@ export const Dashboard: React.FC = () => {
     <PageWrapper>
       <PageHeader right={<DashboardFilters />} />
       <Typography variant="headlineLarge" color="onSurface" component="h1">
-        {URL.dashboard.pageTitle}
+        {PAGE_URL.dashboard.pageTitle}
       </Typography>
 
       <Grid container spacing={2} padding={2}>

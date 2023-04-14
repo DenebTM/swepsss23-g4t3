@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 
-import { API_DEV_URL, URL } from '~/common'
+import { API_DEV_URL, PAGE_URL } from '~/common'
 import { getJwt } from '~/helpers/jwt'
 
 /**
@@ -62,7 +62,7 @@ const axiosWrapper = async <R extends RestVariant, T = unknown, D = unknown>(
     .catch((err: AxiosError) => {
       if (err.response && err.response.status === 401) {
         // If unauthorised, redirect to login page
-        window.location.pathname = URL.login.href
+        window.location.pathname = PAGE_URL.login.href
       }
       // Otherwise, extract message from AxiosError object and throw it
       throw Error(handleAxiosError(err))
