@@ -11,3 +11,13 @@ export const notFound = (entity: string): Response =>
 
 /** Return a {@link Response} with no headers, a message about the given entity, and a 401 unauthorised code */
 export const unauthorised = (): Response => unauthorised()
+
+/** Paths for backend URIs */
+export const API_URI = {
+  accessPoints: '/access-points',
+  gardeners: '/gardeners',
+  measurements: '/measurements',
+  photos: '/photos',
+  sensorStations: '/sensor-stations',
+  users: '/users',
+}
