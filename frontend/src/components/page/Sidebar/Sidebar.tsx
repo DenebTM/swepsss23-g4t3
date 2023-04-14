@@ -41,6 +41,7 @@ export const Sidebar: React.FC = () => {
           color: theme.outline,
           paddingTop: 2,
           paddingBottom: 1,
+          paddingRight: 0,
         }}
       >
         {appState.sidebarOpen && (
