@@ -4,11 +4,7 @@ import { SensorStationUuid } from '~/models/sensorStation'
 import { Username, UserRole } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
-import { notFound, success, unauthorised } from '../helpers'
-import { SENSOR_STATIONS_URI } from './sensorStations'
-
-/** Part of URI path corresponding to sensor gardeners */
-const GARDENERS_URI = 'gardeners'
+import { API_URI, notFound, success, unauthorised } from '../consts'
 
 /**
  * Assign a gardener (by username) to a sensor station
@@ -19,7 +15,7 @@ export const assignGardener = async (
   username: Username
 ): Promise<void> => {
   return _post(
-    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS_URI}/${username}`
+    `${API_URI.sensorStations}/${sensorStationUuid}${API_URI.gardeners}/${username}`
   )
 }
 
@@ -32,12 +28,12 @@ export const removeGardener = async (
   username: Username
 ): Promise<void> => {
   return _delete(
-    `${SENSOR_STATIONS_URI}/${sensorStationUuid}/${GARDENERS_URI}/${username}`
+    `${API_URI.sensorStations}/${sensorStationUuid}${API_URI.gardeners}/${username}`
   )
 }
 
 /** Path to update sensor station gardeners for mocked routes */
-export const GARDENER_PATH = `${SENSOR_STATIONS_URI}/:uuid/${GARDENERS_URI}/:username`
+export const GARDENER_PATH = `${API_URI.sensorStations}/:uuid${API_URI.gardeners}/:username`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationGardenerReqs: EndpointReg = (

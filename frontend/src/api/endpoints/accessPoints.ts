@@ -3,17 +3,14 @@ import { _delete, _get, _put } from '~/api/intercepts'
 import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
-import { notFound, success } from './helpers'
-
-/** URI for access points */
-export const ACCESS_POINTS_URI = '/access-points'
+import { API_URI, notFound, success } from './consts'
 
 /**
  * GET /api/access-points
  * @returns All access points in the database
  */
 export const getAccessPoints = async (): Promise<AccessPoint[]> =>
-  _get(ACCESS_POINTS_URI)
+  _get(API_URI.accessPoints)
 
 /**
  * GET /api/access-points/${accessPointId}
@@ -22,7 +19,7 @@ export const getAccessPoints = async (): Promise<AccessPoint[]> =>
  */
 export const getAccessPoint = async (
   accessPointId: AccessPointId
-): Promise<AccessPoint> => _get(`${ACCESS_POINTS_URI}/${accessPointId}`)
+): Promise<AccessPoint> => _get(`${API_URI.accessPoints}/${accessPointId}`)
 
 /**
  * DEL /api/access-points/${accessPointId}
@@ -30,7 +27,7 @@ export const getAccessPoint = async (
  */
 export const deleteAccessPoint = async (
   accessPointId: AccessPointId
-): Promise<void> => _delete(`${ACCESS_POINTS_URI}/${accessPointId}`)
+): Promise<void> => _delete(`${API_URI.accessPoints}/${accessPointId}`)
 
 /**
  * PUT /api/access-points/${accessPointId}
@@ -40,15 +37,15 @@ export const updateAccessPoint = async (
   accessPointId: AccessPointId,
   updatedAp: Omit<Partial<AccessPoint>, 'id'>
 ): Promise<AccessPoint> =>
-  _put(`${ACCESS_POINTS_URI}/${accessPointId}`, { ...updatedAp })
+  _put(`${API_URI.accessPoints}/${accessPointId}`, { ...updatedAp })
 
 /** Constant for mocking routes related to a single access point */
-const singleApRoute = `${ACCESS_POINTS_URI}/:id`
+const singleApRoute = `${API_URI.accessPoints}/:id`
 
 /** Mocked access point functions */
 export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getAccessPoints} */
-  server.get(ACCESS_POINTS_URI, (schema: AppSchema, request) => {
+  server.get(API_URI.accessPoints, (schema: AppSchema, request) => {
     const accessPoints = schema.all('accessPoint')
     return success(accessPoints.models)
   })
