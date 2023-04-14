@@ -97,9 +97,6 @@ const router = createBrowserRouter([
   authRoute(PAGE_URL.manageGreenhouses.href, <ManageGreenhouses />),
   authRoute(PAGE_URL.manageUsers.href, <ManageUsers />),
   authRoute(PAGE_URL.myGreenhouses.href, <MyGreenhouses />),
-
-  /* Fallback page (to catch unknown URLs) */
-  { element: <Error message="Error 404: page not found." /> },
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
