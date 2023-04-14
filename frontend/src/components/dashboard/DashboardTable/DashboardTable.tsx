@@ -29,7 +29,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
   > = {
     headerAlign: 'center',
     align: 'center',
-    width: 130,
+    width: 135,
   }
 
   /**
