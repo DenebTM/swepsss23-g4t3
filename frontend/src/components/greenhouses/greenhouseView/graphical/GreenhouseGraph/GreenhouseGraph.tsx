@@ -40,7 +40,7 @@ interface GreenhouseGraphProps {
  */
 export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
   const [data, setData] = useState<DataValue[]>()
-  console.log(props)
+
   useEffect(() => {
     if (typeof props.sensorStation !== 'undefined') {
       const lower: SensorValues = props.sensorStation.lowerBound
@@ -92,7 +92,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
         />
         <YAxis>
           <Label angle={-90} position="left" fill={theme.outline}>
-            Percentile
+            Percentile (%)
           </Label>
         </YAxis>
         <Tooltip<number | string, string>
