@@ -85,6 +85,8 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       field: 'gardeners',
+      sortable: false,
+      filterable: false,
       headerName: 'Gardeners',
       description: 'Gardeners assigned to the sensor station',
       renderCell: (
@@ -99,6 +101,7 @@ export const SensorStationsTable: React.FC = () => {
       field: 'action',
       headerName: 'Actions',
       sortable: false,
+      filterable: false,
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => (
