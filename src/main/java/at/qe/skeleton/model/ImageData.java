@@ -22,9 +22,12 @@ public class ImageData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "NAME")
     private String name;
 
-    private String type;
+    @ManyToOne
+    @JoinColumn(name = "SENSOR_STATION")
+    private SensorStation sensorStation;
 
     @Lob
     @Column(name = "CONTENT", length = 1000)
@@ -36,14 +39,6 @@ public class ImageData {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public byte[] getContent() {
@@ -60,5 +55,19 @@ public class ImageData {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public SensorStation getSensorStation() {
+        return sensorStation;
+    }
+
+    public void setSensorStation(SensorStation sensorStation) {
+        this.sensorStation = sensorStation;
+    }
+
+    public ImageData(String name, SensorStation sensorStation, byte[] content) {
+        this.name = name;
+        this.sensorStation = sensorStation;
+        this.content = content;
     }
 }
