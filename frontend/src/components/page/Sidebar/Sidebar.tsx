@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
 
 import { AppContext } from '~/contexts/AppContext/AppContext'
+import { theme } from '~/styles/theme'
 
 import { CustomDrawer } from './CustomDrawer'
 import { SidebarContents } from './SidebarContents/SidebarContents'
@@ -31,9 +32,11 @@ export const Sidebar: React.FC = () => {
   return (
     <CustomDrawer open={appState.sidebarOpen}>
       <DrawerHeader
-        sx={{ justifyContent: appState.sidebarOpen ? 'flex-end' : 'center' }}
+        sx={{
+          justifyContent: appState.sidebarOpen ? 'flex-end' : 'center',
+        }}
       >
-        <IconButton onClick={toggleDrawerOpen} color="inherit">
+        <IconButton onClick={toggleDrawerOpen} sx={{ color: theme.outline }}>
           <MenuIcon />
         </IconButton>
       </DrawerHeader>
