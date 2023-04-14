@@ -2,9 +2,10 @@ import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
 import { AppRegistry, Endpoints } from '~/api/mirageTypes'
 
-import { ACCESS_POINTS_URI, mockedAccessPointReqs } from './accessPoints'
+import { mockedAccessPointReqs } from './accessPoints'
+import { API_URI } from './consts'
 import { mockedLoginEndpoints } from './login'
-import { mockedPhotoReqs, PHOTOS_URI } from './photo'
+import { mockedPhotoReqs } from './photo'
 import {
   GARDENER_PATH,
   mockedSensorStationGardenerReqs,
@@ -13,20 +14,17 @@ import {
   MEASUREMENT_PATH,
   mockedSensorStationMeasurementReqs,
 } from './sensorStations/measurements'
-import {
-  mockedSensorStationReqs,
-  SENSOR_STATIONS_URI,
-} from './sensorStations/sensorStations'
-import { mockedUserReqs, USERS_URI } from './user'
+import { mockedSensorStationReqs } from './sensorStations/sensorStations'
+import { mockedUserReqs } from './user'
 
 /** All endpoints mocked by mirage */
 export const endpoints: Endpoints = {
-  [USERS_URI]: mockedUserReqs,
-  [ACCESS_POINTS_URI]: mockedAccessPointReqs,
-  [SENSOR_STATIONS_URI]: mockedSensorStationReqs,
+  [API_URI.users]: mockedUserReqs,
+  [API_URI.accessPoints]: mockedAccessPointReqs,
+  [API_URI.sensorStations]: mockedSensorStationReqs,
   [GARDENER_PATH]: mockedSensorStationGardenerReqs,
   [MEASUREMENT_PATH]: mockedSensorStationMeasurementReqs,
-  [PHOTOS_URI]: mockedPhotoReqs,
+  [API_URI.photos]: mockedPhotoReqs,
 }
 
 /** Initialise all seed data used by mirage */

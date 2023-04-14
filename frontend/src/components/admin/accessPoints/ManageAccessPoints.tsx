@@ -5,6 +5,7 @@ import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 
 import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
+import { AccessPointsTable } from './AccessPointsTable'
 
 /**
  * Access point managment page for admins
@@ -15,7 +16,7 @@ export const ManageAccessPoints: React.FC = () => {
       <PageHeader
         left={<AdminBreadcrumbs currentPageName="Manage Access Points" />}
       />
-      Manage access points
+      <AccessPointsTable />
     </PageWrapper>
   )
 }

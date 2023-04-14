@@ -83,7 +83,7 @@ export const sensorStationFactory = Factory.extend<
       lowerBound: lowerBound.attrs,
       measurements: measurements.map((m) => m.attrs),
       upperBound: upperBound.attrs,
-      accessPoint: ap.attrs.name,
+      accessPoint: ap.attrs.apId,
     })
   },
 })

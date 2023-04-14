@@ -8,7 +8,7 @@ import { LoginResponse } from '~/models/login'
 import { UserRole } from '~/models/user'
 
 import { AppSchema, Endpoints } from '../mirageTypes'
-import { success, unauthorised } from './helpers'
+import { success, unauthorised } from './consts'
 
 const LOGIN_URI = `${API_DEV_URL}/handle-login`
 const LOGOUT_URI = `${API_DEV_URL}/logout`
