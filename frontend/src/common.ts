@@ -25,7 +25,7 @@ export const SS_UUID_PARAM = 'sensorStationId'
  * @param permittedRoles User roles allowed to view the page if these should be restricted.
  *
  */
-export const URL = {
+export const PAGE_URL = {
   /** Path for admin home */
   adminHome: {
     pageTitle: 'Admin Home',

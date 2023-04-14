@@ -9,7 +9,7 @@ import WifiOutlinedIcon from '@mui/icons-material/WifiOutlined'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import Grid from '@mui/material/Unstable_Grid2'
 
-import { URL } from '~/common'
+import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { MessageType } from '~/contexts/SnackbarContext/types'
@@ -31,19 +31,19 @@ export const AdminHome: React.FC = () => {
       title: 'Manage Users',
       description: 'Edit and delete users',
       icon: <PersonOutlineOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.manageUsers.href),
+      onClick: () => navigate(PAGE_URL.manageUsers.href),
     },
     {
       title: 'Manage Access Points',
       description: 'Add and remove access points',
       icon: <WifiOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.manageAccessPoints.href),
+      onClick: () => navigate(PAGE_URL.manageAccessPoints.href),
     },
     {
       title: 'Audit Log',
       description: 'View filterable logs for events and errors',
       icon: <TocOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.adminLogs.href),
+      onClick: () => navigate(PAGE_URL.adminLogs.href),
     },
     {
       title: 'Add Greenhouses',
@@ -60,12 +60,12 @@ export const AdminHome: React.FC = () => {
       title: 'Manage Greenhouses',
       description: 'Print QR codes and assign gardeners to greenhouses',
       icon: <HomeOutlinedIcon fontSize={iconFontSize} />,
-      onClick: () => navigate(URL.manageGreenhouses.href),
+      onClick: () => navigate(PAGE_URL.manageGreenhouses.href),
     },
   ]
 
   return (
-    <PageWrapper permittedRoles={URL.adminHome.permittedRoles}>
+    <PageWrapper permittedRoles={PAGE_URL.adminHome.permittedRoles}>
       <PageHeader left="Admin Home" />
       <Grid container spacing={2} padding={2}>
         {adminHomeLinks.map((link) => (

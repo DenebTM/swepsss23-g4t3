@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
 import { PlantIcon } from '@component-lib/PlantIcon'
-import { URL } from '~/common'
+import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { theme } from '~/styles/theme'
 
@@ -35,7 +35,7 @@ export const Login: React.FC = () => {
               component="h1"
               marginRight={1}
             >
-              {URL.login.pageTitle}
+              {PAGE_URL.login.pageTitle}
             </Typography>
             <PlantIcon color={theme.onSurface} />
           </Box>

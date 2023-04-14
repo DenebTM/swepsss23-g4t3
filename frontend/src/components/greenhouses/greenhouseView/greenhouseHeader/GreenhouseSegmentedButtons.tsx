@@ -7,7 +7,7 @@ import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import { styled } from '@mui/material/styles'
 
-import { SensorStationView, URL } from '~/common'
+import { PAGE_URL, SensorStationView } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { SegmentedButton } from './SegmentedButton'
@@ -61,7 +61,7 @@ export const GreenhouseSegmentedButtons: React.FC<
 
   /** Handle navigate to targetView on button click */
   const handleNavigate = (targetView: SensorStationView): void => {
-    navigate(URL.greenhouseView.href(props.uuid, targetView))
+    navigate(PAGE_URL.greenhouseView.href(props.uuid, targetView))
   }
 
   return (
