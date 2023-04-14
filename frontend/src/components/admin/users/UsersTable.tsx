@@ -27,7 +27,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
     oldUser: User
   ) => updateUser(oldUser.username, newUser)
 
-  /** Columns for the user managmement table */
+  /** Columns for the user management table */
   const columns: GridColDef<User, any, User>[] = [
     { field: 'username', headerName: 'Username', flex: 1 },
     {

@@ -28,7 +28,7 @@ export const AccessPointsAdminTable: React.FC = () => {
     oldAp: AccessPoint
   ) => updateAccessPoint(oldAp.apId, newAp)
 
-  /** Columns for the user managmement table */
+  /** Columns for the access point management table */
   const columns: GridColDef<AccessPoint, any, AccessPoint>[] = [
     { field: 'name', headerName: 'Name', flex: 1, editable: true },
     {
