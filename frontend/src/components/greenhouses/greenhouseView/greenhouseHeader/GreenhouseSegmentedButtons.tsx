@@ -17,6 +17,7 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   '& .MuiButtonGroup-grouped': {
     borderRadius: 0,
     margin: 0,
+    padding: theme.spacing(1, 2),
     '&:first-of-type': {
       borderRadius: `${borderRadius} 0 0 ${borderRadius}`,
     },
