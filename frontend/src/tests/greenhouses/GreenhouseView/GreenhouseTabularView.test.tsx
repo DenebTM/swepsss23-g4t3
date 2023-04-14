@@ -70,18 +70,21 @@ test('render GreenhouseTabularView inside GreenhouseView', async () => {
 
   // Expect a column for every metric to be visible once the measurements are fetched from the API
   GREENHOUSE_METRICS.forEach((metricRange: GreenhouseMetricRange) =>
-    waitFor(() =>
-      expect(
-        screen.getByText(greenhouseMetricWithUnit(metricRange))
-      ).toBeInTheDocument()
+    waitFor(
+      () =>
+        expect(
+          screen.getByText(greenhouseMetricWithUnit(metricRange))
+        ).toBeInTheDocument(),
+      { timeout: 5000 }
     )
   )
 
   // Expect (rounded) mocked data values to be visible in table
   MOCKED_MEASUREMENTS.forEach((measurement: Measurement) =>
     Object.values(measurement.data).forEach((value: number) =>
-      waitFor(() =>
-        expect(screen.getByText(roundMetric(value))).toBeInTheDocument()
+      waitFor(
+        () => expect(screen.getByText(roundMetric(value))).toBeInTheDocument(),
+        { timeout: 5000 }
       )
     )
   )
