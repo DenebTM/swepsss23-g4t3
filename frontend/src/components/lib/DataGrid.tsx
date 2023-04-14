@@ -126,15 +126,13 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
 
   /** Load rows from the API on component mount */
   useEffect(() => {
-    let rowsPromise
-
     if (typeof props.fetchRows !== 'undefined') {
-      rowsPromise = cancelable(props.fetchRows())
+      const rowsPromise = cancelable(props.fetchRows())
       handleFetchRows(rowsPromise)
-    }
 
-    // Cancel the promise callbacks on component unmount
-    return rowsPromise?.cancel
+      // Cancel the promise callbacks on component unmount
+      return rowsPromise.cancel
+    }
   }, [])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
