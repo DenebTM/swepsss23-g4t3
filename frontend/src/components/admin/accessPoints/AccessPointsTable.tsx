@@ -19,7 +19,7 @@ import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 /**
  * Access point managment page for admins
  */
-export const AccessPointsAdminTable: React.FC = () => {
+export const AccessPointsTable: React.FC = () => {
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
 
   /** Update a single access point */
