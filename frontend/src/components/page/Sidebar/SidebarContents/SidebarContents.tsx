@@ -31,7 +31,10 @@ const topSidebarVals = (
       pageTitle: PAGE_URL.greenhouseView.pageTitle(s.uuid),
       href: PAGE_URL.greenhouseView.href(s.uuid, SensorStationView.GRAPHICAL),
       icon: (
-        <Badge badgeContent={s.uuid} sx={{ color: theme.onSurfaceVariant }}>
+        <Badge
+          badgeContent={String(s.uuid)}
+          sx={{ color: theme.onSurfaceVariant }}
+        >
           <LocalFloristIcon />
         </Badge>
       ),
@@ -82,7 +85,11 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
 
   return (
     <>
-      <Divider />
+      <Divider
+        sx={{
+          borderColor: props.open ? 'transparent' : theme.outlineVariant,
+        }}
+      />
       {sensorStations && (
         <List>
           {topSidebarVals(sensorStations).map((el) => (
@@ -91,7 +98,12 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
         </List>
       )}
 
-      <Divider sx={{ marginTop: 'auto' }} />
+      <Divider
+        sx={{
+          marginTop: 'auto',
+          borderColor: props.open ? 'transparent' : theme.outlineVariant,
+        }}
+      />
 
       <SidebarListItem label="Logout" open={props.open} onClick={handleLogout}>
         <LogoutIcon />

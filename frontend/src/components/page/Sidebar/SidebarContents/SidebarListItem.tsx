@@ -8,6 +8,8 @@ import ListItemText from '@mui/material/ListItemText'
 import { Tooltip } from '@component-lib/Tooltip'
 import { theme } from '~/styles/theme'
 
+const sidebarListItemBorderRadius = 8
+
 interface SidebarListItemProps {
   children?: React.ReactNode
   label: string
@@ -25,6 +27,12 @@ interface SidebarListItemProps {
  */
 export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
   const [buttonDisabled, setButtonDisabled] = useState(props.selected)
+
+  /** Margin in px */
+  const iconMarginSides = 10
+
+  const selectedColor = theme.onSecondaryContainer
+  const unselectedColor = theme.onSurfaceVariant
 
   useEffect(() => setButtonDisabled(props.selected), [props.selected])
 
@@ -51,9 +59,10 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
       disablePadding
       sx={{
         display: 'block',
-        marginTop: 0,
-        marginBottom: 0,
+        margin: props.open ? 0 : '0 2px',
         background: props.selected ? theme.secondaryContainer : '',
+        borderRadius: sidebarListItemBorderRadius,
+        padding: props.open ? 0 : theme.spacing(0.5, 0),
       }}
     >
       <Tooltip
@@ -68,22 +77,24 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
           disabled={buttonDisabled}
           onClick={handleButtonClick}
           sx={{
-            minHeight:
-              props.variant === 'small' ? theme.spacing(3) : theme.spacing(6),
             justifyContent: props.open ? 'initial' : 'center',
             px: 2.5,
             '&.Mui-disabled': {
               opacity: 0.8,
             },
-            color: props.selected
-              ? theme.onSecondaryContainer
-              : theme.onSurfaceVariant,
+            color: props.selected ? selectedColor : unselectedColor,
+            borderRadius: sidebarListItemBorderRadius,
+            padding:
+              props.variant === 'small'
+                ? theme.spacing(0.5, 0)
+                : theme.spacing(1, 0),
           }}
         >
           <ListItemIcon
             sx={{
-              minWidth: 0,
-              mr: props.open ? 3 : 'auto',
+              minWidth: props.open ? `${iconMarginSides + 24}px` : 'auto',
+              marginRight: props.open ? `${iconMarginSides}px` : 'auto',
+              marginLeft: props.open ? `${iconMarginSides}px` : 'auto',
               justifyContent: 'center',
               color: 'inherit',
             }}
@@ -91,13 +102,15 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
             {props.children}
           </ListItemIcon>
 
-          <ListItemText
-            primary={props.label}
-            sx={{
-              opacity: props.open ? 1 : 0,
-              color: 'inherit',
-            }}
-          />
+          {props.open && (
+            <ListItemText
+              primary={props.label}
+              sx={{
+                opacity: props.open ? 1 : 0,
+                color: 'inherit',
+              }}
+            />
+          )}
         </ListItemButton>
       </Tooltip>
     </ListItem>
