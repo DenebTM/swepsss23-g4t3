@@ -91,7 +91,7 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
    */
   processRowUpdate?: RowUpdateFunction<R>
   /** Rows to display in the table. Pagination is handled internally. If undefined, then display a loading indicator. */
-  rows: readonly R[] | undefined
+  rows: readonly R[] | undefined | null
 
   // Additional props
   /**
@@ -181,7 +181,11 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
         pageSizeOptions={[10, 25, 100]}
         onProcessRowUpdateError={onProcessRowUpdateError}
         loading={typeof props.rows === 'undefined'}
-        rows={typeof props.rows === 'undefined' ? [] : props.rows}
+        rows={
+          typeof props.rows === 'undefined' || props.rows === null
+            ? []
+            : props.rows
+        }
         rowHeight={props.size === 'small' ? 36 : 56}
         getRowClassName={
           props.zebraStripes
