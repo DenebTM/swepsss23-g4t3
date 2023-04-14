@@ -18,9 +18,9 @@ import { theme } from '~/styles/theme'
 /**
  * Handle changes to editable cells. Note that this function does not need to update rows as this is handled inside MUI's DataGrid component
     @template R The type of each row object.
-    @param newRow — Row object with the new values.
-    @param oldRow — Row object with the old values.
-    @returns — The final values to update the row.
+    @param newRow Row object with the new values.
+    @param oldRow Row object with the old values.
+    @returns The final values to update the row.
  */
 export type RowUpdateFunction<R extends GridValidRowModel> = (
   newRow: R,
@@ -50,6 +50,10 @@ const dataGridRowSx = (theme: Theme): SxProps<Theme> => {
     [`& .${gridClasses.cell}`]: {
       borderColor: borderColour,
     },
+    [`&.${gridClasses.autoHeight} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
+      {
+        borderBottomColor: borderColour,
+      },
     // Row styles for all rows
     [`& .${gridClasses.row}`]: {
       [`&:first-of-type  .${gridClasses.cell}`]: {
@@ -90,10 +94,16 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
   rows: readonly R[] | undefined
 
   // Additional props
-  /** Function to fetch row data. Error handling and state updates are then handled internally using `setRows`. */
-  fetchRows: () => Promise<R[]>
-  /** Function to update row data in the state of the parent component. */
-  setRows: Dispatch<SetStateAction<R[] | undefined>>
+  /**
+   * Function to fetch row data. Error handling and state updates are then handled internally
+   * using `props.setRows`. If `fetchRows` is undefined then only the initial value of `props.rows` will be displayed.
+   */
+  fetchRows?: () => Promise<R[]>
+  /**
+   * Function to update row data in the state of the parent component.
+   * If left undefined, then the table contents can not be updated or edited.
+   */
+  setRows?: Dispatch<SetStateAction<R[] | undefined>>
   /** Specify the amount of row padding. Defaults to medium. */
   size?: 'medium' | 'small'
   /** If true, alter the colour of every second table row */
@@ -116,11 +126,13 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
 
   /** Load rows from the API on component mount */
   useEffect(() => {
-    const rowsPromise = cancelable(props.fetchRows())
-    handleFetchRows(rowsPromise)
+    if (typeof props.fetchRows !== 'undefined') {
+      const rowsPromise = cancelable(props.fetchRows())
+      handleFetchRows(rowsPromise)
 
-    // Cancel the promise callbacks on component unmount
-    return rowsPromise.cancel
+      // Cancel the promise callbacks on component unmount
+      return rowsPromise.cancel
+    }
   }, [])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
@@ -134,10 +146,10 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
   const handleFetchRows = (promise: Promise<R[]>) =>
     promise
       .then((data) => {
-        props.setRows(data)
+        props.setRows?.(data)
       })
       .catch((err: Error) => {
-        props.setRows([]) // Remove loading state
+        props.setRows?.([]) // Remove loading state
         setSnackbarMessage({
           header: 'Could not load table contents',
           body: err.message,

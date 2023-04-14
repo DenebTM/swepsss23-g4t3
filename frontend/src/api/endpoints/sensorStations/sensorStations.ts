@@ -5,20 +5,14 @@ import { Photo, PhotoId } from '~/models/photo'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
-import { notFound, success } from '../helpers'
-
-/** URI for sensor stations */
-export const SENSOR_STATIONS_URI = '/sensor-stations'
-
-/** URI for routes relating to both sensor stations and photos */
-export const SS_PHOTOS_URI = '/photos'
+import { API_URI, notFound, success } from '../consts'
 
 /**
  * GET /api/sensor-stations
  * @returns All sensor stations in the database
  */
 export const getSensorStations = async (): Promise<SensorStation[]> => {
-  return _get(SENSOR_STATIONS_URI)
+  return _get(API_URI.sensorStations)
 }
 
 /**
@@ -29,7 +23,7 @@ export const getSensorStations = async (): Promise<SensorStation[]> => {
 export const getSensorStation = async (
   sensorStationUuid: SensorStationUuid
 ): Promise<SensorStation> => {
-  return _get(`${SENSOR_STATIONS_URI}/${sensorStationUuid}`)
+  return _get(`${API_URI.sensorStations}/${sensorStationUuid}`)
 }
 
 /**
@@ -39,7 +33,7 @@ export const getSensorStation = async (
 export const deleteSensorStation = async (
   sensorStationUuid: SensorStationUuid
 ): Promise<SensorStation> => {
-  return _delete(`${SENSOR_STATIONS_URI}/${sensorStationUuid}`)
+  return _delete(`${API_URI.sensorStations}/${sensorStationUuid}`)
 }
 
 /**
@@ -50,7 +44,7 @@ export const updateSensorStation = async (
   sensorStationUuid: SensorStationUuid,
   newParams: Omit<Partial<SensorStation>, 'uuid'>
 ): Promise<SensorStation> => {
-  return _put(`${SENSOR_STATIONS_URI}/${sensorStationUuid}`, newParams)
+  return _put(`${API_URI.sensorStations}/${sensorStationUuid}`, newParams)
 }
 
 /*
@@ -59,16 +53,16 @@ export const updateSensorStation = async (
 export const getSensorStationPhotos = async (
   sensorStationUuid: SensorStationUuid
 ): Promise<Photo[]> => {
-  return _get(`${SENSOR_STATIONS_URI}/${sensorStationUuid}${SS_PHOTOS_URI}`)
+  return _get(`${API_URI.sensorStations}/${sensorStationUuid}${API_URI.photos}`)
 }
 
 /** Route for mocking calls to an individual sensor station */
-const mockedSensorStationRoute = `${SENSOR_STATIONS_URI}/:uuid`
+const mockedSensorStationRoute = `${API_URI.sensorStations}/:uuid`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getSensorStations} */
-  server.get(SENSOR_STATIONS_URI, (schema: AppSchema, request) => {
+  server.get(API_URI.sensorStations, (schema: AppSchema, request) => {
     const sensorStations = schema.all('sensorStation')
     return success(sensorStations.models)
   })
@@ -98,7 +92,7 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
 
   /** Mock {@link getSensorStationPhotos} */
   server.get(
-    `${mockedSensorStationRoute}${SS_PHOTOS_URI}`,
+    `${mockedSensorStationRoute}${API_URI.photos}`,
     (schema: AppSchema, request) => {
       const uuid: SensorStationUuid = Number(request.params.uuid)
       const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
