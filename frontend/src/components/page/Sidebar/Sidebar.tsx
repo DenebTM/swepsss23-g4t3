@@ -3,7 +3,11 @@ import { useContext } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
 import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/system/Box'
 
+import { PlantIcon } from '@component-lib/PlantIcon'
+import { Tooltip } from '@component-lib/Tooltip'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { theme } from '~/styles/theme'
 
@@ -33,12 +37,37 @@ export const Sidebar: React.FC = () => {
     <CustomDrawer open={appState.sidebarOpen}>
       <DrawerHeader
         sx={{
-          justifyContent: appState.sidebarOpen ? 'flex-end' : 'center',
+          justifyContent: appState.sidebarOpen ? 'space-between' : 'center',
+          color: theme.outline,
+          paddingTop: 2,
+          paddingBottom: 1,
         }}
       >
-        <IconButton onClick={toggleDrawerOpen} sx={{ color: theme.outline }}>
-          <MenuIcon />
-        </IconButton>
+        {appState.sidebarOpen && (
+          <Box
+            component="div"
+            display="flex"
+            alignItems="center"
+            paddingLeft={1}
+          >
+            <Typography
+              variant="titleMedium"
+              color="inherit"
+              align="center"
+              sx={{
+                marginRight: '1px',
+              }}
+            >
+              PlantHealth
+            </Typography>
+            <PlantIcon color={theme.outline} height={theme.spacing(2)} />
+          </Box>
+        )}
+        <Tooltip title="Hide sidebar" arrow>
+          <IconButton onClick={toggleDrawerOpen} sx={{ color: 'inherit' }}>
+            <MenuIcon />
+          </IconButton>
+        </Tooltip>
       </DrawerHeader>
       <SidebarContents open={appState.sidebarOpen} />
     </CustomDrawer>
