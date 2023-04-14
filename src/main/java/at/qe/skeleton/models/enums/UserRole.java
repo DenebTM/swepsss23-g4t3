@@ -1,8 +1,4 @@
-package at.qe.skeleton.model;
-
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Set;
+package at.qe.skeleton.models.enums;
 
 /**
  * Enumeration of available user roles.

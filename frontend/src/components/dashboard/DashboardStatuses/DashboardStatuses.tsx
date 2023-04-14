@@ -10,7 +10,6 @@ import { SensorStation } from '~/models/sensorStation'
 import { StatusDonutCharts } from './StatusDonutCharts'
 
 interface DashboardStatusesProps {
-  /** The fetched sensor stations to display */
   sensorStations: SensorStation[]
 }
 
@@ -19,6 +18,7 @@ interface DashboardStatusesProps {
  */
 export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
   const addSnackbarMessage = useAddSnackbarMessage()
+
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
@@ -39,7 +39,7 @@ export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
 
     // Cancel the promise callbacks on component unmount
     return apPromise.cancel
-  }, [])
+  }, [setSnackbarMessage])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
   useEffect(() => {

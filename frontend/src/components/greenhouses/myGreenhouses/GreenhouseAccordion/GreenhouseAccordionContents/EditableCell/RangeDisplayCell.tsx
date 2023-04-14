@@ -2,7 +2,7 @@ import React from 'react'
 
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
-import { ValueRange } from '~/common'
+import { emDash, ValueRange } from '~/common'
 import { theme } from '~/styles/theme'
 
 interface RangeDisplayCellProps {
@@ -31,7 +31,7 @@ export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
         {...props.typographyProps}
         sx={{ margin: theme.spacing(0, 1), width: '15%' }}
       >
-        —
+        {emDash}
       </Typography>
       <Typography
         {...props.typographyProps}

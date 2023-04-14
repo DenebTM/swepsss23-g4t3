@@ -69,7 +69,7 @@ export const AdminHome: React.FC = () => {
       <PageHeader left="Admin Home" />
       <Grid container spacing={2} padding={2}>
         {adminHomeLinks.map((link) => (
-          <Grid xs={12} sm={6} md={4}>
+          <Grid xs={12} sm={6} md={4} key={link.title}>
             <AdminHomeButton {...link} />
           </Grid>
         ))}
