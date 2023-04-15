@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 
 import Typography from '@mui/material/Typography'
 
+import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStationUuid } from '~/models/sensorStation'
-import { UserRole } from '~/models/user'
 
 import { GreenhouseAccordion } from './GreenhouseAccordion/GreenhouseAccordion'
 
@@ -20,7 +20,7 @@ export const MyGreenhouses: React.FC = () => {
   const [expanded, setExpanded] = useState<SensorStationUuid | null>(null)
 
   return (
-    <PageWrapper permittedRoles={[UserRole.ADMIN, UserRole.GARDENER]}>
+    <PageWrapper permittedRoles={PAGE_URL.myGreenhouses.permittedRoles}>
       <PageHeader
         left={
           <Typography
@@ -28,7 +28,7 @@ export const MyGreenhouses: React.FC = () => {
             color="onSurfaceVariant"
             component="h1"
           >
-            My Greenhouses
+            {PAGE_URL.myGreenhouses.pageTitle}
           </Typography>
         }
       />

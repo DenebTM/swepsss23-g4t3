@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Breadcrumbs } from '@component-lib/Breadcrumbs'
-import { SensorStationView, URL } from '~/common'
+import { PAGE_URL, SensorStationView } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -22,8 +22,8 @@ export const GreenhouseViewHeader: React.FC<GreenhouseViewHeaderProps> = (
     <PageHeader
       left={
         <Breadcrumbs
-          links={[{ name: 'Dashboard', href: URL.dashboard }]}
-          currentPageName={`Greenhouse ${props.uuid}`}
+          links={[{ name: 'Dashboard', href: PAGE_URL.dashboard.href }]}
+          currentPageName={PAGE_URL.greenhouseView.pageTitle(props.uuid)}
         />
       }
       right={<GreenhouseSegmentedButtons uuid={props.uuid} view={props.view} />}
