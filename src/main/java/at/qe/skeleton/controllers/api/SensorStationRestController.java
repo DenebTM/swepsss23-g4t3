@@ -99,7 +99,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
-            return HelperFunctions.notFoundError("Access point", String.valueOf(id));
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
         ssService.deleteSS(ss);
         return ResponseEntity.ok(ss);
