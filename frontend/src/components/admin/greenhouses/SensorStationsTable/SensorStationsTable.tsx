@@ -26,7 +26,7 @@ export const SensorStationsTable: React.FC = () => {
   const sensorStations = useSensorStations()
   const { setSensorStations } = React.useContext(AppContext)
 
-  // Store the largest number of gardeners for a single greenhuse as dynamic column width is not supported yet by DataGrid:
+  // Store the largest number of gardeners for a single greenhouse as dynamic column width is not supported yet by DataGrid:
   // https://github.com/mui/mui-x/issues/1241
   const [maxGardenersPerGreenhouse, setMaxGardenersPerGreenhouse] =
     useState<number>(1)
