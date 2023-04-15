@@ -13,7 +13,12 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import { mirageSetup } from '~/api/mirageSetup'
-import { GREENHOUSES_ROOT, SS_UUID_PARAM, UPLOAD_ROOT, URL } from '~/common'
+import {
+  GREENHOUSES_ROOT,
+  PAGE_URL,
+  SS_UUID_PARAM,
+  UPLOAD_ROOT,
+} from '~/common'
 import { ManageAccessPoints } from '~/components/admin/accessPoints/ManageAccessPoints'
 import { ManageGreenhouses } from '~/components/admin/greenhouses/ManageGreenhouses'
 import { AdminHome } from '~/components/admin/home/AdminHome'
@@ -38,7 +43,7 @@ import { AppProvider } from './contexts/AppContext/AppProvider'
  */
 const loginLoader: LoaderFunction = () => {
   if (isJwtValid() !== null) {
-    return redirect(URL.dashboard)
+    return redirect(PAGE_URL.dashboard.href)
   }
 
   return null
@@ -49,7 +54,7 @@ const loginLoader: LoaderFunction = () => {
  */
 const authorizationLoader: LoaderFunction = () => {
   if (isJwtValid() === null) {
-    return redirect(URL.login)
+    return redirect(PAGE_URL.login.href)
   }
 
   return null
@@ -67,7 +72,7 @@ const authRoute = (path: string, element: JSX.Element) => ({
 const router = createBrowserRouter([
   /* Routes accessible by anyone */
   {
-    path: URL.login,
+    path: PAGE_URL.login.href,
     element: <Login />,
     errorElement: <Error />,
     loader: loginLoader,
@@ -78,23 +83,20 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    path: URL.error,
+    path: PAGE_URL.error.href,
     element: <Error />,
   },
 
   /* Routes accessible only to logged-in users */
-  authRoute(URL.adminHome, <AdminHome />),
-  authRoute(URL.adminLogs, <AdminLogs />),
-  authRoute(URL.dashboard, <Dashboard />),
-  authRoute(URL.gettingStarted, <GettingStarted />),
+  authRoute(PAGE_URL.adminHome.href, <AdminHome />),
+  authRoute(PAGE_URL.adminLogs.href, <AdminLogs />),
+  authRoute(PAGE_URL.dashboard.href, <Dashboard />),
+  authRoute(PAGE_URL.gettingStarted.href, <GettingStarted />),
   authRoute(`/${GREENHOUSES_ROOT}/:${SS_UUID_PARAM}`, <GreenhouseView />),
-  authRoute(URL.manageAccessPoints, <ManageAccessPoints />),
-  authRoute(URL.manageGreenhouses, <ManageGreenhouses />),
-  authRoute(URL.manageUsers, <ManageUsers />),
-  authRoute(URL.myGreenhouses, <MyGreenhouses />),
-
-  /* Fallback page (to catch unknown URLs) */
-  { element: <Error message="Error 404: page not found." /> },
+  authRoute(PAGE_URL.manageAccessPoints.href, <ManageAccessPoints />),
+  authRoute(PAGE_URL.manageGreenhouses.href, <ManageGreenhouses />),
+  authRoute(PAGE_URL.manageUsers.href, <ManageUsers />),
+  authRoute(PAGE_URL.myGreenhouses.href, <MyGreenhouses />),
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)

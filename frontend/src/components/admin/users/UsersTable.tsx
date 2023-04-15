@@ -74,6 +74,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       headerAlign: 'center',
       align: 'center',
       sortable: false,
+      filterable: false,
       renderCell: (params: GridRenderCellParams<User, any, User>) => (
         <DeleteCell<User, Username>
           deleteEntity={deleteUser}

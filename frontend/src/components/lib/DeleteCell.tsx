@@ -15,7 +15,7 @@ import { theme } from '~/styles/theme'
  */
 interface DeleteCellProps<R extends GridValidRowModel, T = number> {
   /** Function to delete a table row by entityId */
-  deleteEntity: (entityId: T) => Promise<void>
+  deleteEntity: (entityId: T) => Promise<any>
   /** The name of the entity shown in the table. Used to display informative messages to users. */
   entityName: string
   /** The type of the unique identifier of a given row */
