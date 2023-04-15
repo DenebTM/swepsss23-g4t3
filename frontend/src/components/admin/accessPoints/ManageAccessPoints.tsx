@@ -1,8 +1,8 @@
 import React from 'react'
 
+import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { UserRole } from '~/models/user'
 
 import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
 import { AccessPointsTable } from './AccessPointsTable'
@@ -12,7 +12,7 @@ import { AccessPointsTable } from './AccessPointsTable'
  */
 export const ManageAccessPoints: React.FC = () => {
   return (
-    <PageWrapper permittedRoles={[UserRole.ADMIN]}>
+    <PageWrapper permittedRoles={PAGE_URL.manageAccessPoints.permittedRoles}>
       <PageHeader
         left={<AdminBreadcrumbs currentPageName="Manage Access Points" />}
       />
