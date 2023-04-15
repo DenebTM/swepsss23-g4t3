@@ -141,7 +141,7 @@ public class UserService {
     /**
      * Function used when setting a new password to check if it's empty or not
      * @param password
-     * @return True if password is valid, false if not
+     * @return True if password is invalid, false if not
      */
     public Boolean isNotValidPassword(String password) {
         return (password == null || password.equals(""));
