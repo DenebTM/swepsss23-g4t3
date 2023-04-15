@@ -5,6 +5,7 @@ import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 
 import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
+import { SensorStationsTable } from './SensorStationsTable/SensorStationsTable'
 
 /**
  * Sensor station managment page for admins
@@ -15,7 +16,7 @@ export const ManageGreenhouses: React.FC = () => {
       <PageHeader
         left={<AdminBreadcrumbs currentPageName="Manage Greenhouses" />}
       />
-      Manage greenhouses
+      <SensorStationsTable />
     </PageWrapper>
   )
 }
