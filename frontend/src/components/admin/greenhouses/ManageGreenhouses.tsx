@@ -1,8 +1,8 @@
 import React from 'react'
 
+import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { UserRole } from '~/models/user'
 
 import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
 import { SensorStationsTable } from './SensorStationsTable/SensorStationsTable'
@@ -12,7 +12,7 @@ import { SensorStationsTable } from './SensorStationsTable/SensorStationsTable'
  */
 export const ManageGreenhouses: React.FC = () => {
   return (
-    <PageWrapper permittedRoles={[UserRole.ADMIN]}>
+    <PageWrapper permittedRoles={PAGE_URL.manageGreenhouses.permittedRoles}>
       <PageHeader
         left={<AdminBreadcrumbs currentPageName="Manage Greenhouses" />}
       />
