@@ -57,6 +57,7 @@ export const AccessPointsTable: React.FC = () => {
       align: 'center',
       flex: 1,
       sortable: false,
+      filterable: false,
       renderCell: (
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
       ) => (
