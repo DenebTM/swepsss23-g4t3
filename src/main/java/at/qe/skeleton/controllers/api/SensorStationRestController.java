@@ -64,7 +64,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(value = SS_ID_PATH)
-    public ResponseEntity<Object> updateSS(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
+    public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
@@ -74,11 +74,15 @@ public class SensorStationRestController implements BaseRestController {
             try {
                 ss.setStatus(Status.valueOf((String) json.get("status")));
             } catch (IllegalArgumentException e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status does not exist");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status does not exist.");
             }
         }
         if (json.containsKey("aggregationPeriod")) {
-            ss.setAggregationPeriod((Long)json.get("aggregationPeriod"));
+            try {
+                ss.setAggregationPeriod(Long.valueOf((String)json.get("aggregationPeriod")));
+            } catch (IllegalArgumentException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid number to update aggregation period.");
+            }
         }
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
@@ -91,7 +95,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_PATH)
-    public ResponseEntity<Object> deleteSSById(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
