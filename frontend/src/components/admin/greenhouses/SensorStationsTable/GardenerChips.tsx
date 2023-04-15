@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack'
 import { GridRenderCellParams } from '@mui/x-data-grid'
 
 import { RemovableChip } from '@component-lib/RemovableChip'
-import { URL } from '~/common'
+import { PAGE_URL } from '~/common'
 import { SensorStation } from '~/models/sensorStation'
 
 /**
@@ -28,7 +28,7 @@ export const GardenerChips: React.FC<
             })
           }
           label={username}
-          onClick={() => navigate(URL.manageUsers)}
+          onClick={() => navigate(PAGE_URL.manageUsers.href)}
           tooltipTitle="Manage users"
         />
       ))}
