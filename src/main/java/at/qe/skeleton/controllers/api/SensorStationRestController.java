@@ -71,7 +71,7 @@ public class SensorStationRestController implements BaseRestController {
      * a POST route to assign gardeners to a specific sensor station
      * @param id
      * @param username
-     * @return 200 ok "The gardener was successfully assigned"
+     * @return the updated sensor station
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
@@ -92,7 +92,7 @@ public class SensorStationRestController implements BaseRestController {
      * a DELETE route to remove an assigned gardener from its sensor station
      * @param id
      * @param username
-     * @return 200 ok "The gardener was removed."
+     * @return the updated sensor station
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
