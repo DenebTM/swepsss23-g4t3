@@ -85,8 +85,7 @@ public class SensorStationRestController implements BaseRestController {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
         }
         ss.getGardeners().add(user);
-        ssService.saveSS(ss);
-        return ResponseEntity.ok("The gardener was successfully assigned");
+        return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
     /**
@@ -108,7 +107,7 @@ public class SensorStationRestController implements BaseRestController {
         }
         ss.getGardeners().remove(user);
         ssService.saveSS(ss);
-        return ResponseEntity.ok("The gardener was removed.");
+        return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
 }
