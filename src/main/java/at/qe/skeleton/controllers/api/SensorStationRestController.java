@@ -1,8 +1,10 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
+import at.qe.skeleton.models.ImageData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,6 +19,8 @@ public class SensorStationRestController implements BaseRestController {
 
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private ImageDataRepository imageDataRepository;
     @Autowired
     private UserService userService;
 
@@ -108,6 +111,22 @@ public class SensorStationRestController implements BaseRestController {
         ss.getGardeners().remove(user);
         ssService.saveSS(ss);
         return ResponseEntity.ok(ssService.saveSS(ss));
+    }
+
+    /**
+     * Route to GET all photos from a specific sensor-station by its ID
+     * @param id
+     * @return list of photos
+     */
+
+    @GetMapping(value = SS_PATH + "/{uuid}/photos")
+    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss != null) {
+            List<ImageData> images = imageDataRepository.findAllBySensorStation(ss);
+            return ResponseEntity.ok(images);
+        }
+        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
 
 }
