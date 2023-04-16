@@ -1,14 +1,15 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { useIsAdmin } from '~/hooks/user'
+import { useUserRole } from '~/hooks/user'
+import { UserRole } from '~/models/user'
 
 import { SidebarListItem } from './SidebarListItem'
 
 /** Type of a general element which will be rendered as a sidebark link */
 interface SidebarElement {
-  adminOnly?: boolean
-  label: string
-  url: string
+  permittedRoles?: UserRole[]
+  pageTitle: string
+  href: string
   icon?: JSX.Element
 }
 /** A single sidebar element with subelements */
@@ -25,31 +26,31 @@ interface SidebarElementProps extends SidebarElementWithChildren {
  */
 export const SidebarElement: React.FC<SidebarElementProps> = (props) => {
   const navigate = useNavigate()
-  const isAdmin = useIsAdmin()
+  const userRole = useUserRole()
   const { pathname } = useLocation()
 
-  if (isAdmin && (props.adminOnly ?? true)) {
+  if (!props.permittedRoles || props.permittedRoles.includes(userRole)) {
     return (
       <>
         <SidebarListItem
-          label={props.label}
+          label={props.pageTitle}
           open={props.open}
-          onClick={() => navigate(props.url)}
-          selected={pathname === props.url}
+          onClick={() => navigate(props.href)}
+          selected={pathname === props.href}
         >
           {props.icon}
         </SidebarListItem>
         {props.childNodes &&
           props.childNodes.map(
             (child: SidebarElement) =>
-              /** Render child elements in the sidebar only if open or if the child has an icon defined*/
+              /** Render child elements in the sidebar only if open or if the child has an icon defined */
               (props.open || child.icon) && (
                 <SidebarListItem
-                  key={child.label}
-                  label={child.label}
+                  key={child.pageTitle}
+                  label={child.pageTitle}
                   open={props.open}
-                  onClick={() => navigate(child.url)}
-                  selected={pathname === child.url}
+                  onClick={() => navigate(child.href)}
+                  selected={pathname === child.href}
                   variant="small"
                 >
                   {props.open ? null : child.icon}
@@ -59,6 +60,6 @@ export const SidebarElement: React.FC<SidebarElementProps> = (props) => {
       </>
     )
   } else {
-    return null // If the user is not an admin but the page requires admin priviledges
+    return null // If the user does not have the right to access the page
   }
 }

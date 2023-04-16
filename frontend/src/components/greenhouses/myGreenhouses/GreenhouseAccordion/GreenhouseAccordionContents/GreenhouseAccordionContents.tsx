@@ -6,7 +6,12 @@ import TableContainer from '@mui/material/TableContainer'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
 import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
-import { AGGREGATION_PERIOD, ValueRange } from '~/common'
+import {
+  AGGREGATION_PERIOD,
+  GREENHOUSE_METRICS,
+  GreenhouseMetricRange,
+  ValueRange,
+} from '~/common'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -15,79 +20,6 @@ import { SensorStation } from '~/models/sensorStation'
 
 import { GreenhouseEditableRangeCell } from './EditableCell/GreenhouseEditableRangeCell'
 import { EditableCellProps, EditableTableRow } from './EditableTableRow'
-
-/**
- * Type for a singe greenhouse metric range.
- * Each `GreenhouseMetricRange` will be mapped to a single table row.
- */
-interface GreenhouseMetricRange {
-  /** Maximum supported value. */
-  max: number
-  /** Minimum supported value. */
-  min: number
-  /**
-   * Step size for the input field arrows.
-   * Users can manually input other values (in smaller step sizes).
-   */
-  step: number
-  /** Title to show at the start of the row. */
-  title: string
-  /** The unit of the metric (to be displayed inside the table row). */
-  unit: string
-  /** The key of the metric inside {@link SensorValues}. */
-  valueKey: keyof SensorValues
-}
-
-const tableRows: GreenhouseMetricRange[] = [
-  {
-    title: 'Temperature',
-    valueKey: 'temperature',
-    unit: '°C',
-    min: 0,
-    max: 65,
-    step: 5,
-  },
-  {
-    title: 'Soil Moisture',
-    valueKey: 'soilMoisture',
-    unit: '%',
-    min: 0,
-    max: 100,
-    step: 5,
-  },
-  {
-    title: 'Light',
-    valueKey: 'lightIntensity',
-    unit: 'lx',
-    min: 10,
-    max: 1000,
-    step: 20,
-  },
-  {
-    title: 'Air Pressure',
-    valueKey: 'airPressure',
-    unit: 'hPa',
-    min: 700,
-    max: 1300,
-    step: 50,
-  },
-  {
-    title: 'Humidity',
-    valueKey: 'humidity',
-    unit: '%',
-    min: 0,
-    max: 100,
-    step: 5,
-  },
-  {
-    title: 'Air Quality',
-    valueKey: 'airQuality',
-    unit: '',
-    min: 0,
-    max: 500,
-    step: 25,
-  },
-]
 
 interface GreenhouseAccordionContentsProps {
   sensorStation: SensorStation
@@ -169,7 +101,7 @@ export const GreenhouseAccordionContents: React.FC<
     <TableContainer>
       <Table sx={{ width: '100%' }} aria-label="greenhouse settings table">
         <TableBody>
-          {tableRows.map((row: GreenhouseMetricRange) => {
+          {GREENHOUSE_METRICS.map((row: GreenhouseMetricRange) => {
             const ariaLabel = `title-${row.valueKey}`
             return (
               <EditableTableRow<ValueRange>
@@ -190,7 +122,7 @@ export const GreenhouseAccordionContents: React.FC<
                   handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
                 }
                 startEditing={() => setEditing(row.valueKey)}
-                title={row.title}
+                title={row.displayName}
                 typographyProps={typographyProps}
                 value={{
                   lower: props.sensorStation.lowerBound[row.valueKey],
