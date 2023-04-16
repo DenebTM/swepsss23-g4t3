@@ -20,6 +20,15 @@ illuminance_uuid = base_uuid.format("ff04")
 air_quality_index_uuid = base_uuid.format("ff05")
 soil_moisture_uuid = base_uuid.format("ff06")
 
+#global constants for the error messages takne out of the ble communication Spec
+error_service_uuid = base_uuid.format("ff00")
+air_pressure_failure_uuid = base_uuid.format("ff01")
+temperature_failure_uuid = base_uuid.format("ff02")
+humidity_failure_uuid = base_uuid.format("ff03")
+illuminance_failure_uuid = base_uuid.format("ff04")
+air_quality_failure_uuid = base_uuid.format("ff05")
+soil_moisture_failure_uuid = base_uuid.format("ff06")
+
 #in seconds
 polling_interval = 10
 
@@ -71,6 +80,7 @@ async def listen_for_instructions(session):
     async with aiohttp.ClientSession(web_server_address + "/access_points/name") as session:
         connection_allowed = await send_connection_request(session)
         while connection_allowed:
+            pass
 
         
             
@@ -102,16 +112,20 @@ async def search_for_sensorstations():
 
 async def read_and_send_sensorvalues(sensorstation):
     try:
-        async with BleakClient(sensorstation.address) as client:#
-            #send confirm to backend that connection to sensorstation
+        async with BleakClient(sensorstation.address) as client:
+            
             while True:
-                air_pressure = int.from_bytes(await client.read_gatt_char(air_pressure_uuid), "little", signed=False)/1000
-                sensordataCursor.execute("INSERT INTO sensordata (sensors_station_name, air_pressure, datetime) VALUES (?, ?, ?)", (sensorstation.name, air_pressure, int(time.time())))
-                sensordataDB.commit()
-                print(air_pressure)
-                print(sensorstation.name)
+
+                temperature = int.from_bytes(await client.read_gatt_char(humidity_uuid), "little", signed=False)
+                humidity = int.from_bytes(await client.read_gatt_char(temperature_uuid), "little", signed=False)
+                air_pressure = int.from_bytes(await client.read_gatt_char(air_pressure_uuid), "little", signed=False)
+                illuminance = int.from_bytes(await client.read_gatt_char(illuminance_uuid), "little", signed=False)
+                air_quality_index = int.from_bytes(await client.read_gatt_char(air_quality_index_uuid), "little", signed=False)
+                soil_moisture = int.from_bytes(await client.read_gatt_char(soil_moisture_uuid), "little", signed=False)
+
+                sensorstations_db_conn.execute("INSERT INTO sensordata (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (sensorstation.name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
+                sensorstations_db_conn.commit()
                 await asyncio.sleep(polling_interval)
-                #poll for new updates to the specific sensorstation via 
 
     except:
         #send error code to backend that connection was not succesfull and delete task? what happens at startup?
@@ -124,25 +138,28 @@ async def spawn_sensorstation_tasks(sensorstations):
 
 async def update_sensorstations(json_data):
     data = json.loads(json_data)
-    sensorstations = data["sensorstations"]
+    sensorstation = data["sensorstation"]
 
-    for sensor in sensorstations:
-        sensorstationname = sensor["name"]
-        transmisstioninterval = sensor["transmissioninterval"]
-        temperature_max = sensor["thresholds"]["temperature_max"]
-        humidity_max = sensor["thresholds"]["humidity_max"]
-        air_pressure_max = sensor["thresholds"]["air_pressure_max"]
-        illuminance_max = sensor["thresholds"]["illuminance_max"]
-        air_quality_index_max = sensor["thresholds"]["air_quality_index_max"]
-        soil_moisture_max = sensor["thresholds"]["soil_moisture_max"]
-        temperature_min = sensor["thresholds"]["temperature_min"]
-        humidity_min = sensor["thresholds"]["humidity_min"]
-        air_pressure_min = sensor["thresholds"]["air_pressure_min"]
-        illuminance_min = sensor["thresholds"]["illuminance_min"]
-        air_quality_index_min = sensor["thresholds"]["air_quality_index_min"]
-        soil_moisture_min = sensor["thresholds"]["soil_moisture_min"]
+    with sensorstations_db_conn:
+        try:
+            sensorstationname = sensorstation["name"]
+            transmisstioninterval = sensorstation["transmissioninterval"]
+            thresholds = sensorstation["thresholds"]
+            temperature_max = thresholds["temperature_max"]
+            humidity_max = thresholds["humidity_max"]
+            air_pressure_max = thresholds["air_pressure_max"]
+            illuminance_max = thresholds["illuminance_max"]
+            air_quality_index_max = thresholds["air_quality_index_max"]
+            soil_moisture_max = thresholds["soil_moisture_max"]
+            temperature_min = thresholds["temperature_min"]
+            humidity_min = thresholds["humidity_min"]
+            air_pressure_min = thresholds["air_pressure_min"]
+            illuminance_min = thresholds["illuminance_min"]
+            air_quality_index_min = thresholds["air_quality_index_min"]
+            soil_moisture_min = thresholds["soil_moisture_min"]
 
-        sensorstations_db_conn.execute('''INSERT INTO sensorstations
+            sensorstations_db_conn.execute(
+                '''INSERT INTO sensorstations
                 (sensorstationname, transmissioninterval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
@@ -154,11 +171,65 @@ async def update_sensorstations(json_data):
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min))
+        except Exception as e:
+            sensorstations_db_conn.rollback()
+            print(f"Error inserting data for sensorstation {sensorstationname}: {e}")
 
 
-async def check_values_for_threshholds():
+
+
+async def check_values_for_threshholds(sensorstation):
+    current_time = int (time.time())
+    five_min_ago = current_time - 300
+
+    with sensorstations_db_conn:
+        try:
+            averages_query = sensorstations_db_conn.execute(
+            f'''SELECT AVG(temperature) AS temp_avg, AVG(humidity) AS humidity_avg,
+            AVG(air_pressure) AS air_pressure_avg, AVG(illuminance) AS illuminance_avg,
+            AVG(air_quality_index) AS air_quality_index_avg, AVG(soil_moisture) AS soil_moisture_avg
+            FROM sensordata
+            WHERE sensorstationname = ?
+            AND timestamp >= ?''',
+            (sensorstation.name, five_min_ago)
+            )
+
+            averages_dict = dict(averages_query.fetchone())
+
+
+            thresholds_query = sensorstations_db_conn.execute(
+            f'''SELECT temperature_max, humidity_max, air_pressure_max, 
+                illuminance_max, air_quality_index_max, soil_moisture_max,
+                temperature_min, humidity_min, air_pressure_min, 
+                illuminance_min, air_quality_index_min, soil_moisture_min
+                FROM sensorstations
+                WHERE sensorstationname = ?''',
+            (sensorstation.name,)
+            )
+            thresholds_dict = dict(thresholds_query.fetchone())
+
+            # Check if averages are outside thresholds and take appropriate action
+            for metric, average_value in averages_dict.items():
+                if metric in thresholds_dict:
+                    max_threshold = thresholds_dict[metric+"_max"]
+                    min_threshold = thresholds_dict[metric+"_min"]
+                    if max_threshold is not None and average_value > max_threshold or average_value < min_threshold:
+                        pass
+                        #return function with name of sensor who is out of bounds to send to sensorstation and backend
+                        #send errorcode to backend and let light of sensorstation glow
+        except:
+            pass
+
+async def send_error(sensorstation, sensor):
+    service = await sensorstation.get_service(error_service_uuid)
+    characteristic = await service.get_characteristic(characteristic_uuid)
+
+    # Convert the value to bytes and write it to the characteristic
+    value_bytes = bytes(value)
+    await characteristic.write_value(value_bytes)
     pass
-        
+
+     
         
 async def main():
     #send to /accesspoints that i exist POST
