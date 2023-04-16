@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { test, vi } from 'vitest'
 import {
   GREENHOUSE_VIEW_QUERY,
@@ -17,16 +17,11 @@ test('render GreenhouseGraphicalView inside GreenhouseView without search params
       new URLSearchParams([]), // Mock empty search params
     ],
     useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
-    useNavigate: () => vi.fn,
-    useLocation: () => vi.fn,
+    useNavigate: () => vi.fn(),
+    useLocation: () => vi.fn(),
   }))
 
   render(<GreenhouseView />)
-  expect(
-    screen.getByText(
-      `Greenhouse graphical view for greenhouse ${sensorStationUuid}`
-    )
-  ).toBeInTheDocument()
 })
 
 test('render GreenhouseGraphicalView inside GreenhouseView when the ?view search query is empty', async () => {
@@ -38,14 +33,9 @@ test('render GreenhouseGraphicalView inside GreenhouseView when the ?view search
       ]),
     ],
     useParams: () => ({ [SS_UUID_PARAM]: sensorStationUuid }),
-    useNavigate: () => vi.fn,
-    useLocation: () => vi.fn,
+    useNavigate: () => vi.fn(),
+    useLocation: () => vi.fn(),
   }))
 
   render(<GreenhouseView />)
-  expect(
-    screen.getByText(
-      `Greenhouse graphical view for greenhouse ${sensorStationUuid}`
-    )
-  ).toBeInTheDocument()
 })

@@ -1,11 +1,12 @@
 import { Timestamp } from './timestamp'
 
-export type AccessPointId = string
+export type AccessPointId = number
 
 /** Information about a single access point */
 export interface AccessPoint {
   active: boolean
   lastUpdate: Timestamp
-  name: AccessPointId
+  apId: AccessPointId
+  name: string
   serverAddress: string // IP address
 }

@@ -1,8 +1,12 @@
 // based heavily on https://github.com/boschsensortec/Bosch-BSEC2-Library/blob/master/examples/generic_examples/basic/basic.ino
 
 #include <sensors/bme.h>
+#include <sensors/data.h>
 
 namespace sensors::bme {
+  Bme68x sensor;
+  Bsec2 bsec;
+
   void sensorCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bsec) {
     if (!outputs.nOutputs) {
       Serial.println("BME688 - Received callback but no data");
@@ -13,16 +17,20 @@ namespace sensors::bme {
       const bsecData output = outputs.output[i];
       switch (output.sensor_id) {
         case BSEC_OUTPUT_IAQ:
+          sensors::current_data.air_quality = output.signal;
           Serial.println("  IAQ: " + String(output.signal));
           Serial.println("    (Accuracy status: " + String((int) output.accuracy) + ")");
           break;
         case BSEC_OUTPUT_RAW_TEMPERATURE:
+          sensors::current_data.temperature = output.signal;
           Serial.println("  Temperature: " + String(output.signal) + "°C");
           break;
         case BSEC_OUTPUT_RAW_PRESSURE:
+          sensors::current_data.air_pressure = output.signal;
           Serial.println("  Air Pressure: " + String(output.signal / 100) + " hPa");
           break;
         case BSEC_OUTPUT_RAW_HUMIDITY:
+          sensors::current_data.humidity = output.signal;
           Serial.println("  Humidity: " + String(output.signal) + "%");
           break;
         default:
