@@ -30,12 +30,12 @@ public class ImageDataController {
     }
 
     @GetMapping(value = "/photo/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    ByteArrayResource downloadImage(@PathVariable Integer imageId) {
-        byte[] image = imageDbRepository.findById(imageId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
-                .getContent();
-
-        return new ByteArrayResource(image);
+    ResponseEntity<Object> downloadImage(@PathVariable Integer imageId) {
+        Optional<ImageData> image = imageDbRepository.findById(imageId);
+        if (image.isPresent()) {
+            return ResponseEntity.ok(image);
+        }
+        return HelperFunctions.notFoundError("Photo", String.valueOf(imageId));
     }
 
     @DeleteMapping(value = "/photo/{imageId}")
@@ -45,6 +45,6 @@ public class ImageDataController {
             imageDbRepository.delete(maybeImage.get());
             return ResponseEntity.ok(maybeImage.get());
         }
-        return ResponseEntity.ofNullable(maybeImage);
+        return HelperFunctions.notFoundError("Photo", String.valueOf(imageId));
     }
 }
