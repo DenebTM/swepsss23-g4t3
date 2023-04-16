@@ -1,13 +1,34 @@
 #include <sensors/hygro.h>
+#include <sensors/data.h>
 
-namespace sensors::hygro {
-  // keep track of last `HYGRO_SAMPLE_COUNT` samples for averaging
+#include <Ticker.h>
+
+namespace sensors::hygro { 
   int next_sample_idx = 0;
   long samples[HYGRO_SAMPLE_COUNT] = { 0 };
+
+  void do_read() {
+    samples[next_sample_idx] = read();
+    next_sample_idx = (next_sample_idx + 1) % HYGRO_SAMPLE_COUNT;
+  }
+
+  void do_output() {
+    int moisture = read_hum();
+    current_data.soil_moisture = moisture;
+    Serial.println("Soil moisture: " + String(moisture) + "%");
+  }
+
+  // Software timers for reading and outputting
+  // I would use hardware timers but something™️ makes everything hang if I do
+  Ticker read_timer(do_read, HYGRO_READ_INTERVAL_MS);
+  Ticker output_timer(do_output, HYGRO_OUTPUT_INTERVAL_MS);
 }
 
 void sensors::hygro::setup() {
   pinMode(HYGRO_PIN, INPUT);
+
+  read_timer.start();
+  output_timer.start();
 }
 
 int sensors::hygro::read() {
@@ -15,13 +36,8 @@ int sensors::hygro::read() {
 }
 
 void sensors::hygro::update() {
-  samples[next_sample_idx++] = read();
-
-  if (next_sample_idx >= HYGRO_SAMPLE_COUNT) {
-    next_sample_idx = 0;
-
-    Serial.println("Soil moisture: " + String(read_hum()) + "%");
-  }
+  read_timer.update();
+  output_timer.update();
 }
 
 int sensors::hygro::read_hum() {

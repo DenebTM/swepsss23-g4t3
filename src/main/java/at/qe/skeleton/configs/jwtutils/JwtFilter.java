@@ -1,10 +1,8 @@
 package at.qe.skeleton.configs.jwtutils;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
-import at.qe.skeleton.model.UserRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -54,6 +52,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 // This is an info message, not an error, as the user should be redirected to 
                 // log in again
                 logger.info("JWT has expired");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                        "You are unauthorized. Please log in.");
+                return;
             }
         } else {
             // If Authorization: Bearer [token] is not in the headers. This is a debug

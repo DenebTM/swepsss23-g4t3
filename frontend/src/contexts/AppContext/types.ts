@@ -12,13 +12,19 @@ export interface AppState {
   sidebarOpen: boolean
 }
 
+export type SetSensorStations = (
+  sensorStations:
+    | SensorStation[]
+    | ((oldValue: SensorStation[] | null) => SensorStation[])
+) => void
+
 /** Interface for the global Context for the app */
 export interface IAppContext {
   appState: AppState
   dispatch?: React.Dispatch<AppReducerAction>
 
   /** Set sensor stations and update the `lastFetch` value in the app context */
-  setSensorStations: (sensorStations: SensorStation[]) => void
+  setSensorStations: SetSensorStations
 
   /** Set whether the sidebar is open (or collapsed) */
   setSidebarOpen: (open: boolean) => void

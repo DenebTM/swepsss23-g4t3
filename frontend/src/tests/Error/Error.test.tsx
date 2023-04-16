@@ -5,8 +5,8 @@ import { Error } from '~/components/page/error/Error'
 const TEST_ERR = 'Test error message'
 vi.mock('react-router-dom', () => ({
   useRouteError: () => ({ data: TEST_ERR }),
-  useNavigate: () => vi.fn,
-  useLocation: () => vi.fn,
+  useNavigate: () => vi.fn(),
+  useLocation: () => vi.fn(),
 }))
 
 test('renders error page and shows a caught error message', () => {

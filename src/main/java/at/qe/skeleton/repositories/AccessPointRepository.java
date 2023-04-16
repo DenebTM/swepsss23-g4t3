@@ -1,8 +1,8 @@
 package at.qe.skeleton.repositories;
 
-import at.qe.skeleton.model.AccessPoint;
+import at.qe.skeleton.models.AccessPoint;
 
 public interface AccessPointRepository extends AbstractRepository<AccessPoint, Long> {
 
-    AccessPoint findFirstById(Long id);
+    AccessPoint findFirstById(Integer id);
 }

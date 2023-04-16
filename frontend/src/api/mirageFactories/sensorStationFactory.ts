@@ -47,9 +47,26 @@ export const sensorStationFactory = Factory.extend<
       server.create('user', { username: userId, role: UserRole.GARDENER })
     }
 
-    // Create bounds
+    // Create bound objects
     const lowerBound: ModelInstance<SensorValues> = server.create('sensorValue')
     const upperBound: ModelInstance<SensorValues> = server.create('sensorValue')
+    // Swap bounds so that the values of lowerBound are all <= upperBound
+    Object.keys(lowerBound.attrs).forEach((sensorValKey) => {
+      const castKey = sensorValKey as keyof SensorValues
+      const lowerVal = Math.min(
+        lowerBound.attrs[castKey],
+        upperBound.attrs[castKey]
+      )
+      upperBound.update({
+        [castKey]: Math.max(
+          lowerBound.attrs[castKey],
+          upperBound.attrs[castKey]
+        ),
+      })
+      lowerBound.update({
+        [castKey]: lowerVal,
+      })
+    })
 
     // Create access point
     const ap: ModelInstance<AccessPoint> = server.create('accessPoint')
@@ -57,7 +74,7 @@ export const sensorStationFactory = Factory.extend<
     // Cerate measurements
     const measurements = server.createList(
       'measurement',
-      faker.datatype.number({ min: 0, max: 8 })
+      faker.datatype.number({ min: 0, max: 30 })
     ) as ModelInstance<Measurement>[]
 
     // Update sensorStation object
@@ -66,7 +83,7 @@ export const sensorStationFactory = Factory.extend<
       lowerBound: lowerBound.attrs,
       measurements: measurements.map((m) => m.attrs),
       upperBound: upperBound.attrs,
-      accessPoint: ap.attrs.name,
+      accessPoint: ap.attrs.apId,
     })
   },
 })
