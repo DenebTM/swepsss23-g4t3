@@ -8,6 +8,9 @@ from bleak import BleakScanner, BleakClient
 from bleak.exc import BleakError
 import sqlite3
 
+from common import polling_interval
+from search_for_sensorstations import search_for_sensorstations
+
 sensor_station_name = "PH SensorStation"
 
 #global constants taken out of the BLE Communication Spec
@@ -31,21 +34,9 @@ sensorstations_db_conn.execute('''CREATE TABLE IF NOT EXISTS sensordata
               soil_moisture REAL,
               timestamp INTEGER)''')
 
-async def search_for_sensorstations():
-    try:
-        devices = await BleakScanner.discover()
-        for d in devices:
-            if sensor_station_name in d.name:
-                asyncio.create_task(read_and_send_sensorvalues(d))
-    except BleakError as e:
-        #write error to audit log
-        print(f"Error: {e}")
-
-
 async def read_and_send_sensorvalues(sensorstation):
     try:
         async with BleakClient(sensorstation.address) as client:
-            
             while True:
                 temperature = int.from_bytes(await client.read_gatt_char(humidity_uuid), "little", signed=False)
                 humidity = int.from_bytes(await client.read_gatt_char(temperature_uuid), "little", signed=False)
@@ -56,7 +47,7 @@ async def read_and_send_sensorvalues(sensorstation):
 
                 sensorstations_db_conn.execute("INSERT INTO sensordata (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (sensorstation.name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
                 sensorstations_db_conn.commit()
-                await asyncio.sleep(20)
+                await asyncio.sleep(polling_interval)
 
     except:
         #send error code to backend that connection was not succesfull and delete task? what happens at startup?
