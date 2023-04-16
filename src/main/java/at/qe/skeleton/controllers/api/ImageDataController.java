@@ -2,7 +2,9 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.ImageDataRepository;
+import at.qe.skeleton.services.SensorStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,11 @@ public class ImageDataController {
 
     @Autowired
     ImageDataRepository imageDbRepository;
+    @Autowired
+    SensorStationService sensorStationService;
+
+    private static final String SS_PATH = "/sensor-stations";
+    private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
 
     /**
      * Route to POST images to the photo gallery
@@ -23,11 +30,13 @@ public class ImageDataController {
      * @return the imageId
      * @throws Exception
      */
-    @PostMapping
-    Integer uploadImage(@RequestParam MultipartFile multipartImage) throws Exception {
+    @PostMapping(value = SS_ID_PATH + "/photos")
+    Integer uploadImage(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws Exception {
         ImageData dbImage = new ImageData();
         dbImage.setName(multipartImage.getName());
         dbImage.setContent(multipartImage.getBytes());
+        SensorStation ss = sensorStationService.loadSSById(id);
+        dbImage.setSensorStation(ss);
         return imageDbRepository.save(dbImage).getId();
     }
 
@@ -36,9 +45,10 @@ public class ImageDataController {
      * @param imageId
      * @return the picture if found
      */
-    @GetMapping(value = "/photo/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    ResponseEntity<Object> downloadImage(@PathVariable Integer imageId) {
-        Optional<ImageData> maybeImage = imageDbRepository.findById(imageId);
+    @GetMapping(value = SS_ID_PATH + "/photos/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    ResponseEntity<Object> downloadImage(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "imageId") Integer imageId) {
+        SensorStation ss = sensorStationService.loadSSById(id);
+        Optional<ImageData> maybeImage = imageDbRepository.findByIdAndSensorStation(imageId, ss);
         return maybeImage.<ResponseEntity<Object>>map(ResponseEntity::ok).orElseGet(() -> HelperFunctions.notFoundError("Photo", String.valueOf(imageId)));
     }
 

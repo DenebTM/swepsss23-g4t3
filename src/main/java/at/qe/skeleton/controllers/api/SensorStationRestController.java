@@ -118,8 +118,8 @@ public class SensorStationRestController implements BaseRestController {
      * @param id
      * @return list of photos
      */
-
-    @GetMapping(value = SS_PATH + "/{uuid}/photos")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GARDENER', 'USER')")
+    @GetMapping(value = SS_ID_PATH + "/photos")
     public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
