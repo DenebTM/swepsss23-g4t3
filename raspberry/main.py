@@ -24,7 +24,7 @@ async def listen_for_instructions(session):
 
 async def spawn_sensorstation_tasks(sensorstations):
     for sensorstation in sensorstations:
-        asyncio.create_task(read_and_send_sensorvalues(sensorstation["name"]))
+        await asyncio.create_task(read_and_send_sensorvalues(sensorstation))
 
 async def check_values_for_thresholds(sensorstation):
     current_time = int(time.time())
@@ -79,7 +79,9 @@ async def check_values_for_thresholds(sensorstation):
 
 async def main():
     while True:
-        await search_for_sensorstations()
+        sensorstations = await search_for_sensorstations()
+
+        await spawn_sensorstation_tasks(sensorstations)
     #     # send to /accesspoints that i exist POST
     #     access_point = {'name': common.access_point_name}
     #     try:
