@@ -44,7 +44,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station with id: \"" + id + "\" not found.");
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
 
         return ResponseEntity.ok(ss);

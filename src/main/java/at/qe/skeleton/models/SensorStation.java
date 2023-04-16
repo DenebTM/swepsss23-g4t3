@@ -1,6 +1,7 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.*;
+import at.qe.skeleton.models.enums.Status;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
