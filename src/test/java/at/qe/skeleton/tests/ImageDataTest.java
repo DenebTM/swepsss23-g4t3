@@ -1,8 +1,8 @@
 package at.qe.skeleton.tests;
 
-import at.qe.skeleton.model.AccessPoint;
-import at.qe.skeleton.model.ImageData;
-import at.qe.skeleton.model.SensorStation;
+import at.qe.skeleton.models.AccessPoint;
+import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.repositories.SensorStationRepository;

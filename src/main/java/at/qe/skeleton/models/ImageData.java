@@ -1,4 +1,4 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

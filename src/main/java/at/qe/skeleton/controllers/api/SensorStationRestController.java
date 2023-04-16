@@ -1,7 +1,8 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.model.ImageData;
-import at.qe.skeleton.model.SensorStation;
+import at.qe.skeleton.controllers.HelperFunctions;
+import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import org.springframework.beans.factory.annotation.Autowired;
