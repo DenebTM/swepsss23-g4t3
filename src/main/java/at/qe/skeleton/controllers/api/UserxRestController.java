@@ -22,7 +22,6 @@ public class UserxRestController implements BaseRestController {
     private static final String USER_PATH = "/users";
     private static final String USERNAME_PATH = USER_PATH + "/{username}";
 
-
     /**
      * Route to GET all users
      * @return List of all users
@@ -30,9 +29,7 @@ public class UserxRestController implements BaseRestController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = USER_PATH)
-    public ResponseEntity<Object> getUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
+    public ResponseEntity<Object> getUsers() { return ResponseEntity.ok(userService.getAllUsers()); }
 
     /**
      * Route to GET a specific user by its username
