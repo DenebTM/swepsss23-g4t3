@@ -1,10 +1,10 @@
 import sqlite3
 
-sensorstations_db_conn = sqlite3.connect('sensorstations.db')
+db_conn = sqlite3.connect('sensorstations.db')
 
 # create necessary tables on initialization
 # triple quotation mark for multi line strings in python
-sensorstations_db_conn.execute('''CREATE TABLE IF NOT EXISTS sensorstations
+db_conn.execute('''CREATE TABLE IF NOT EXISTS sensorstations
              (id INTEGER PRIMARY KEY UNIQUE,
               sensorstationname TEXT,
               transmissioninterval INTEGER,
@@ -21,7 +21,7 @@ sensorstations_db_conn.execute('''CREATE TABLE IF NOT EXISTS sensorstations
               air_quality_index_min REAL,
               soil_moisture_min REAL)''')
 
-sensorstations_db_conn.execute('''CREATE TABLE IF NOT EXISTS sensordata
+db_conn.execute('''CREATE TABLE IF NOT EXISTS sensordata
              (sensorstationname TEXT,
               temperature REAL,
               humidity REAL,

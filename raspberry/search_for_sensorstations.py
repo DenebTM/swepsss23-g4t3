@@ -12,21 +12,25 @@ async def search_for_sensorstations():
         for d in devices:
             if common.sensor_station_name in d.name:
                 sensorstations.append(d)
+        
+        print("Found sensor stations:")
+        print(sensorstations)
 
-        data = {
-            "sensorstations": sensorstations
-        }
+        # TODO
+        # data = {
+        #     "sensorstations": sensorstations
+        # }
 
-        response = requests.post(common.access_point_address + "/sensorstations", json=data)
+        # response = aiohttp.post(common.access_point_address + "/sensorstations", json=data)
 
-        if response.status_code == 200:
-            # write to audit log
-            pass
-        else:
-            # write error to audit log
-            pass
+        # if response.status_code == 200:
+        #     # write to audit log
+        #     pass
+        # else:
+        #     # write error to audit log
+        #     pass
     except BleakError as e:
         # write error to audit log
         print(f"Error: {e}")
 
-asyncio.run(search_for_sensorstations())
+    await asyncio.sleep(1)
