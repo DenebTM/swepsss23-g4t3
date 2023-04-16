@@ -1,6 +1,6 @@
 package at.qe.skeleton.controllers;
 
-import at.qe.skeleton.model.ImageData;
+import at.qe.skeleton.models.ImageData;
 import at.qe.skeleton.repositories.ImageDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
