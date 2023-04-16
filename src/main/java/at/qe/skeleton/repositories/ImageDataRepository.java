@@ -15,4 +15,6 @@ public interface ImageDataRepository extends AbstractRepository<ImageData, Integ
     Optional<ImageData> findById(Integer id);
 
     List<ImageData> findAllBySensorStation(SensorStation sensorStation);
+
+    Optional<ImageData> findByIdAndSensorStation(Integer id, SensorStation sensorStation);
 }
