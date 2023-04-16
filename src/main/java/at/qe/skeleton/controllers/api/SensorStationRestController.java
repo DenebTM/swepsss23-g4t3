@@ -121,15 +121,18 @@ public class SensorStationRestController implements BaseRestController {
 
     /**
      * Route to GET all photos from a specific sensor-station by its ID
-     * @param ssId
+     * @param id
      * @return list of photos
      */
 
     @GetMapping(value = SS_PATH + "/{uuid}/photos")
-    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable Integer ssId) {
-        SensorStation ss = ssService.loadSSById(ssId);
-        List<ImageData> images = imageDataRepository.findAllBySensorStation(ss);
-        return ResponseEntity.ok(images);
+    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss != null) {
+            List<ImageData> images = imageDataRepository.findAllBySensorStation(ss);
+            return ResponseEntity.ok(images);
+        }
+        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
 
 }
