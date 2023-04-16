@@ -45,8 +45,7 @@ async def search_for_sensorstations():
 async def read_and_send_sensorvalues(sensorstation):
     try:
         async with BleakClient(sensorstation.address) as client:
-            print("do i get here?")
-            #send confirm to backend that connection to sensorstation
+            
             while True:
                 temperature = int.from_bytes(await client.read_gatt_char(humidity_uuid), "little", signed=False)
                 humidity = int.from_bytes(await client.read_gatt_char(temperature_uuid), "little", signed=False)
