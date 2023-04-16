@@ -1,4 +1,3 @@
-import asyncio
 import requests
 from bleak import BleakScanner
 from bleak.exc import BleakError
@@ -13,8 +12,12 @@ async def search_for_sensorstations():
             if common.sensor_station_name in d.name:
                 sensorstations.append(d)
         
-        print("Found sensor stations:")
-        print(sensorstations)
+        if len(sensorstations) > 0:
+            print("Found sensor stations:", sensorstations)
+        else:
+            print("No sensor stations found...")
+
+        return sensorstations
 
         # TODO
         # data = {
@@ -32,5 +35,4 @@ async def search_for_sensorstations():
     except BleakError as e:
         # write error to audit log
         print(f"Error: {e}")
-
-    await asyncio.sleep(1)
+        return []
