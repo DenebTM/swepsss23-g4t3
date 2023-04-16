@@ -1,12 +1,12 @@
 import json
 
-from db_conn import sensorstations_db_conn
+from db import db_conn
 
 async def update_sensorstations(json_data):
     data = json.loads(json_data)
     sensorstation = data["sensorstation"]
 
-    with sensorstations_db_conn:
+    with db_conn:
         try:
             sensorstationname = sensorstation["name"]
             transmisstioninterval = sensorstation["transmissioninterval"]
@@ -24,7 +24,7 @@ async def update_sensorstations(json_data):
             air_quality_index_min = thresholds["air_quality_index_min"]
             soil_moisture_min = thresholds["soil_moisture_min"]
 
-            sensorstations_db_conn.execute(
+            db_conn.execute(
                 '''INSERT INTO sensorstations
                 (sensorstationname, transmissioninterval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
@@ -38,5 +38,5 @@ async def update_sensorstations(json_data):
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min))
         except Exception as e:
-            sensorstations_db_conn.rollback()
+            db_conn.rollback()
             print(f"Error inserting data for sensorstation {sensorstationname}: {e}")
