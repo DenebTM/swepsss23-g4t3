@@ -3,22 +3,16 @@ package at.qe.skeleton.controllers.api;
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.ImageData;
 import at.qe.skeleton.models.SensorStation;
-import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
