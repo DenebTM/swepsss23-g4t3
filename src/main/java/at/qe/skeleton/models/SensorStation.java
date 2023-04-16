@@ -41,8 +41,7 @@ public class SensorStation {
     private Long aggregationPeriod;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "GARDENER_SS",
             joinColumns = @JoinColumn(name = "SS_ID"),
             inverseJoinColumns = @JoinColumn(name = "USERNAME"))
