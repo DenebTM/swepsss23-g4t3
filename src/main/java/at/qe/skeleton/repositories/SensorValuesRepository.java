@@ -1,6 +1,6 @@
 package at.qe.skeleton.repositories;
 
-import at.qe.skeleton.model.SensorValues;
+import at.qe.skeleton.models.SensorValues;
 
 public interface SensorValuesRepository extends AbstractRepository<SensorValues, Long> {
 
