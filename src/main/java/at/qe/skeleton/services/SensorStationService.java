@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.SensorStationRepository;
@@ -41,6 +42,14 @@ public class SensorStationService {
      * @return the saved sensor station
      */
     public SensorStation saveSS(SensorStation ss){ return ssRepository.save(ss);}
+
+    /**
+     * function to delete a sensor station
+     * @param ss to delete
+     */
+    public void deleteSS(SensorStation ss) {
+        ssRepository.delete(ss);
+    }
 
     /**
      * getting a list of usernames of all gardeners assigned to a single sensor station

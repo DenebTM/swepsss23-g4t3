@@ -1,18 +1,24 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.ImageData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.models.enums.Status;
+import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
@@ -51,6 +57,57 @@ public class SensorStationRestController implements BaseRestController {
             return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
 
+        return ResponseEntity.ok(ss);
+    }
+
+    /**
+     * a PUT route to update an existing sensor station
+     * @param id
+     * @param json
+     * @return updated sensor station
+     */
+    // TODO: for now authority is ADMIN, but for example aggregationPeriod should be changeable also by GARDENERS
+    //  and I guess status should only be set automatically instead of manually by admin
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping(value = SS_ID_PATH)
+    public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
+        SensorStation ss = ssService.loadSSById(id);
+        // return a 404 error if the sensor station to be updated does not exist
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        if (json.containsKey("status")) {
+            try {
+                ss.setStatus(Status.valueOf((String) json.get("status")));
+            } catch (IllegalArgumentException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status does not exist.");
+            }
+        }
+        if (json.containsKey("aggregationPeriod")) {
+            try {
+                ss.setAggregationPeriod(Long.valueOf((String)json.get("aggregationPeriod")));
+            } catch (IllegalArgumentException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid number to update aggregation period.");
+            }
+        }
+        return ResponseEntity.ok(ssService.saveSS(ss));
+    }
+
+
+    /**
+     * DELETE route to delete a sensor station by its id, only allowed by ADMIN
+     * @param id
+     * @return the deleted sensor station
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping(value = SS_ID_PATH)
+    public ResponseEntity<Object> deleteSSById(@PathVariable(value = "uuid") Integer id) {
+        SensorStation ss = ssService.loadSSById(id);
+        // return a 404 error if the sensor station to be deleted does not exist
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        ssService.deleteSS(ss);
         return ResponseEntity.ok(ss);
     }
 
