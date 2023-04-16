@@ -2,19 +2,28 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.SensorStation;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.services.SensorStationService;
+import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
 
-    private static final String SS_PATH = "/sensor-stations";
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private UserService userService;
+
+    private static final String SS_PATH = "/sensor-stations";
+    private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
+    private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -30,7 +39,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param id
      * @return sensor station
      */
-    @GetMapping(value = SS_PATH +"/{uuid}")
+    @GetMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
@@ -40,6 +49,65 @@ public class SensorStationRestController implements BaseRestController {
         }
 
         return ResponseEntity.ok(ss);
+    }
+
+    /**
+     * Route to GET all gardeners assigned to a single sensor station
+     * @param id
+     * @return list of usernames
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(value = SS_ID_GARDENER_PATH)
+    public ResponseEntity<Object> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        List<String> usernames = ssService.getGardenersBySS(ss);
+        return ResponseEntity.ok(usernames);
+    }
+
+    /**
+     * a POST route to assign gardeners to a specific sensor station
+     * @param id
+     * @param username
+     * @return the updated sensor station
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
+    public ResponseEntity<Object> assignGardenerToSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+        SensorStation ss = ssService.loadSSById(id);
+        Userx user = userService.loadUserByUsername(username);
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        if (user == null) {
+            return HelperFunctions.notFoundError("User", String.valueOf(username));
+        }
+        ss.getGardeners().add(user);
+        return ResponseEntity.ok(ssService.saveSS(ss));
+    }
+
+    /**
+     * a DELETE route to remove an assigned gardener from its sensor station
+     * @param id
+     * @param username
+     * @return the updated sensor station
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
+    public ResponseEntity<Object> removeGardenerFromSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+        SensorStation ss = ssService.loadSSById(id);
+        Userx user = userService.loadUserByUsername(username);
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+        if (user == null) {
+            return HelperFunctions.notFoundError("User", String.valueOf(username));
+        }
+        ss.getGardeners().remove(user);
+        ssService.saveSS(ss);
+        return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
 }
