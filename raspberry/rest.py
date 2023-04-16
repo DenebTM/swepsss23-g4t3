@@ -7,6 +7,7 @@ import time
 from bleak import BleakScanner, BleakClient
 from bleak.exc import BleakError
 import sqlite3
+import logging
 
 sensor_station_name = "PH SensorStation"
 
@@ -22,12 +23,15 @@ soil_moisture_uuid = base_uuid.format("ff06")
 #in seconds
 polling_interval = 10
 
+#Values taken from config.yaml file 
 with open("conf.example.yaml", "r") as f:
     config = yaml.safe_load(f)
     web_server_address = config["web_server_address"]
     web_server_address = "http://" + web_server_address + "/accesspoints/"
     access_point_name = config["access_point_name"]
     access_point_address = web_server_address + access_point_name
+
+logging_file = "communication.log"
 
 #triple quotation mark for multi line strings in python
 sensorstations_db_conn = sqlite3.connect('sensorstations.db')
@@ -107,6 +111,7 @@ async def read_and_send_sensorvalues(sensorstation):
                 print(air_pressure)
                 print(sensorstation.name)
                 await asyncio.sleep(polling_interval)
+                #poll for new updates to the specific sensorstation via 
 
     except:
         #send error code to backend that connection was not succesfull and delete task? what happens at startup?
