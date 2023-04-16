@@ -39,6 +39,10 @@ public class AccessPoint {
     public AccessPoint() {
     }
 
+    public AccessPoint(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }
