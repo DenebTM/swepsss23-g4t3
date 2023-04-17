@@ -58,7 +58,9 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
           flexDirection: 'column',
         }}
       >
-        {props.permittedRoles && !props.permittedRoles.includes(userRole) ? (
+        {props.permittedRoles &&
+        userRole !== null &&
+        !props.permittedRoles.includes(userRole) ? (
           <AccessDenied />
         ) : (
           props.children

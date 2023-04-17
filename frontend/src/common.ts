@@ -18,6 +18,8 @@ export const GREENHOUSE_VIEW_QUERY = 'view'
 /** The param name of the sensor station ID in sensor station routes */
 export const SS_UUID_PARAM = 'sensorStationId'
 
+const _ALL_ROLES = Object.values(UserRole)
+
 /**
  * Paths for all frontend URLs.
  * Each value can have the following properties:
@@ -52,6 +54,7 @@ export const PAGE_URL = {
   dashboard: {
     pageTitle: 'Dashboard',
     href: '/',
+    permittedRoles: _ALL_ROLES,
   },
 
   /** Getting started instructions page */
@@ -77,6 +80,8 @@ export const PAGE_URL = {
         return `${pathBase}?${GREENHOUSE_VIEW_QUERY}=${view}`
       }
     },
+    permittedRoles: (view: SensorStationView) =>
+      view === SensorStationView.GALLERY ? undefined : _ALL_ROLES,
   },
 
   /** The login page */
