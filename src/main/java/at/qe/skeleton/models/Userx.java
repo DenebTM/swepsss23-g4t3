@@ -52,7 +52,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @ManyToMany(mappedBy = "gardeners", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "gardeners", fetch = FetchType.EAGER)
     private Set<SensorStation> assignedSS;
 
     public String getUsername() {
