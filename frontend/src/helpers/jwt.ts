@@ -54,6 +54,11 @@ export const isJwtValid = (jwt?: string | null): JWTPayload | null => {
 }
 
 /**
+ * Return `true` if a valid JWT is currently saved in cookies and `false` otherwise.
+ */
+export const isUserLoggedIn = (): boolean => isJwtValid() !== null
+
+/**
  * Delete the saved JWT cookie with key {@link AUTH_JWT} (if it exists)
  */
 export const deleteJwt = (): void => {

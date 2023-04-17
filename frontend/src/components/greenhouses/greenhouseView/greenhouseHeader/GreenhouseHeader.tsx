@@ -3,7 +3,7 @@ import React from 'react'
 import { Breadcrumbs } from '@component-lib/Breadcrumbs'
 import { PAGE_URL, SensorStationView } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
-import { isJwtValid } from '~/helpers/jwt'
+import { isUserLoggedIn } from '~/helpers/jwt'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GreenhouseSegmentedButtons } from './GreenhouseSegmentedButtons'
@@ -27,7 +27,7 @@ export const GreenhouseViewHeader: React.FC<GreenhouseViewHeaderProps> = (
             {
               name: 'Dashboard',
               href: PAGE_URL.dashboard.href,
-              disabled: isJwtValid() === null,
+              disabled: !isUserLoggedIn(),
             },
           ]}
           currentPageName={PAGE_URL.greenhouseView.pageTitle(props.uuid)}

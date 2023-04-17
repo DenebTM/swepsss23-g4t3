@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles'
 import { SystemStyleObject } from '@mui/system/styleFunctionSx'
 
 import { Tooltip } from '@component-lib/Tooltip'
-import { isJwtValid } from '~/helpers/jwt'
+import { isUserLoggedIn } from '~/helpers/jwt'
 import { theme } from '~/styles/theme'
 
 interface SegmentedButtonProps extends ButtonProps {
@@ -20,7 +20,7 @@ interface SegmentedButtonProps extends ButtonProps {
 }
 /** Component for a single button within a group of segmented buttons */
 export const SegmentedButton: React.FC<SegmentedButtonProps> = (props) => {
-  const { icon, selected, sx, ...buttonProps } = props
+  const { icon, selected, sx, loggedInOnly, ...buttonProps } = props
 
   /** Styles for a selected button segment */
   const selectedBtnStyles = {
@@ -40,14 +40,16 @@ export const SegmentedButton: React.FC<SegmentedButtonProps> = (props) => {
     },
   }
 
-  /** Whether to disable the button due to the user not being logged in */
-  const loggedInOnly = isJwtValid() === null && props.loggedInOnly
-
   return (
-    <Tooltip arrow title={loggedInOnly ? 'Log in to view this page' : ''}>
+    <Tooltip
+      arrow
+      title={
+        !isUserLoggedIn() && loggedInOnly ? 'Log in to view this page' : ''
+      }
+    >
       <Button
         {...buttonProps}
-        disabled={props.selected || loggedInOnly}
+        disabled={props.selected || (!isUserLoggedIn() && loggedInOnly)}
         startIcon={props.selected ? icon : null}
         sx={{
           ...(props.selected ? selectedBtnStyles : unselectedBtnStyles),
