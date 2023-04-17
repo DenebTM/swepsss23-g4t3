@@ -12,7 +12,7 @@ import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
 import { PAGE_URL, SensorStationView } from '~/common'
-import { deleteJwt, isJwtValid } from '~/helpers/jwt'
+import { deleteJwt, isUserLoggedIn } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
@@ -93,7 +93,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       />
       {sensorStations && (
         <List>
-          {topSidebarVals(isJwtValid() !== null, sensorStations).map((el) => (
+          {topSidebarVals(isUserLoggedIn(), sensorStations).map((el) => (
             <SidebarElement key={el.pageTitle} {...el} open={props.open} />
           ))}
         </List>
@@ -107,7 +107,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       />
 
       <SidebarListItem
-        label={isJwtValid() === null ? PAGE_URL.login.pageTitle : 'Logout'}
+        label={isUserLoggedIn() ? 'Logout' : PAGE_URL.login.pageTitle}
         open={props.open}
         onClick={handleLogout}
       >

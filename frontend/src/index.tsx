@@ -35,7 +35,7 @@ import { Login } from '~/components/login/Login'
 import { Error } from '~/components/page/error/Error'
 import { MessageSnackbars } from '~/components/page/MessageSnackbars'
 import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
-import { isJwtValid } from '~/helpers/jwt'
+import { isUserLoggedIn } from '~/helpers/jwt'
 import '~/styles/index.css'
 import { theme } from '~/styles/theme'
 
@@ -45,7 +45,7 @@ import { AppProvider } from './contexts/AppContext/AppProvider'
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
  */
 const loginLoader: LoaderFunction = async () => {
-  if (isJwtValid() !== null) {
+  if (isUserLoggedIn()) {
     return redirect(PAGE_URL.dashboard.href)
   }
 
@@ -56,7 +56,7 @@ const loginLoader: LoaderFunction = async () => {
  * Page loader to check whether the user is signed in with a valid token, and redirect to login page otherwise.
  */
 const authorizationLoader: LoaderFunction = async () => {
-  if (isJwtValid() === null) {
+  if (!isUserLoggedIn()) {
     return redirect(PAGE_URL.login.href)
   }
 
