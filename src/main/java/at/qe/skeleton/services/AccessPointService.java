@@ -39,4 +39,12 @@ public class AccessPointService {
         return apRepository.save(ap);
     }
 
+    /**
+     * function to delete an access point
+     * @param ap to delete
+     */
+    public void deleteAP(AccessPoint ap) {
+        apRepository.delete(ap);
+    }
+
 }
