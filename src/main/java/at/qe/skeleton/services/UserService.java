@@ -6,6 +6,7 @@ import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -27,6 +28,8 @@ public class UserService {
 
     @Autowired
     private UserxRepository userRepository;
+    @Autowired
+    private SensorStationService ssService;
 
     /**
      * Returns a collection of all users.
@@ -75,8 +78,12 @@ public class UserService {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(Userx userx) {
+        Set<SensorStation> assignedSS = userx.getAssignedSS();
+        for (SensorStation ss : assignedSS){
+            ss.getGardeners().remove(userx);
+            ssService.saveSS(ss);
+        }
         userRepository.delete(userx);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 
     public Userx getAuthenticatedUser() {
@@ -131,6 +138,11 @@ public class UserService {
         return getAuthenticatedUser().getUserRole() == UserRole.ADMIN;
     }
 
+    /**
+     * Function used when setting a new password to check if it's empty or not
+     * @param password
+     * @return True if password is invalid, false if not
+     */
     public Boolean isNotValidPassword(String password) {
         return (password == null || password.equals(""));
     }
