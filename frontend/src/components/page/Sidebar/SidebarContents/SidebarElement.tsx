@@ -57,7 +57,7 @@ export const SidebarElement: React.FC<SidebarElementProps> = (props) => {
                 label={child.pageTitle}
                 open={props.open}
                 onClick={() => navigate(child.href)}
-                selected={pathname === child.href}
+                selected={pathname === child.href.split('?')[0]} // Ignore query params
                 variant="small"
               >
                 {props.open ? null : child.icon}
