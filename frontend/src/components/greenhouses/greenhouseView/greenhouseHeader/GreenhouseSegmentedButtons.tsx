@@ -18,12 +18,6 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
     borderRadius: 0,
     margin: 0,
     padding: theme.spacing(1, 2),
-    '&:first-of-type': {
-      borderRadius: `${borderRadius} 0 0 ${borderRadius}`,
-    },
-    '&:last-of-type': {
-      borderRadius: `0 ${borderRadius} ${borderRadius} 0`,
-    },
   },
 }))
 
@@ -47,16 +41,19 @@ export const GreenhouseSegmentedButtons: React.FC<
       name: 'Overview',
       key: SensorStationView.GRAPHICAL,
       icon: <DashboardIcon />,
+      loggedInOnly: true,
     },
     {
       name: 'Gallery',
       key: SensorStationView.GALLERY,
       icon: <ImageOutlinedIcon />,
+      loggedInOnly: false,
     },
     {
       name: 'Table',
       key: SensorStationView.TABLE,
       icon: <StorageOutlinedIcon />,
+      loggedInOnly: true,
     },
   ]
 
@@ -68,13 +65,22 @@ export const GreenhouseSegmentedButtons: React.FC<
   return (
     <div>
       <StyledButtonGroup>
-        {views.map((btn) => (
+        {views.map((btn, index: number) => (
           <SegmentedButton
             key={btn.key}
             onClick={() => handleNavigate(btn.key)}
             icon={btn.icon}
             selected={props.view === btn.key}
             aria-label={'Navigate to greenhouse ' + btn.key.toLowerCase()}
+            loggedInOnly={btn.loggedInOnly}
+            sx={{
+              borderRadius:
+                index === 0
+                  ? `${borderRadius} 0 0 ${borderRadius}`
+                  : index === views.length - 1
+                  ? `0 ${borderRadius} ${borderRadius} 0`
+                  : '',
+            }}
           >
             {btn.name}
           </SegmentedButton>
