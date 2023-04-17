@@ -26,7 +26,10 @@ export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
 
   /** Show the overlay with a button to delete images if the user is a gardener or admin */
   const handleShowItemBar = () => {
-    if ([UserRole.ADMIN, UserRole.GARDENER].includes(userRole)) {
+    if (
+      userRole !== null &&
+      [UserRole.ADMIN, UserRole.GARDENER].includes(userRole)
+    ) {
       setShowItemBar(true)
     }
   }

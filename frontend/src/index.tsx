@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import {
   createBrowserRouter,
   LoaderFunction,
+  LoaderFunctionArgs,
   redirect,
   RouterProvider,
 } from 'react-router-dom'
@@ -14,8 +15,10 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import { mirageSetup } from '~/api/mirageSetup'
 import {
+  GREENHOUSE_VIEW_QUERY,
   GREENHOUSES_ROOT,
   PAGE_URL,
+  SensorStationView,
   SS_UUID_PARAM,
   UPLOAD_ROOT,
 } from '~/common'
@@ -41,7 +44,7 @@ import { AppProvider } from './contexts/AppContext/AppProvider'
 /**
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
  */
-const loginLoader: LoaderFunction = () => {
+const loginLoader: LoaderFunction = async () => {
   if (isJwtValid() !== null) {
     return redirect(PAGE_URL.dashboard.href)
   }
@@ -52,12 +55,31 @@ const loginLoader: LoaderFunction = () => {
 /**
  * Page loader to check whether the user is signed in with a valid token, and redirect to login page otherwise.
  */
-const authorizationLoader: LoaderFunction = () => {
+const authorizationLoader: LoaderFunction = async () => {
   if (isJwtValid() === null) {
     return redirect(PAGE_URL.login.href)
   }
 
   return null
+}
+
+/**
+ * Page loader to check whether the user is signed in with a valid token, and redirect to login page otherwise.
+ */
+const greenhousePagesLoader: LoaderFunction = async (
+  args: LoaderFunctionArgs
+) => {
+  const url = new URL(args.request.url)
+  const search = new URLSearchParams(url.search)
+  const sensorStationView = search.get(GREENHOUSE_VIEW_QUERY)
+
+  // Allow viewing the greenhouses gallery when not logged in
+  switch (sensorStationView) {
+    case SensorStationView.GALLERY:
+      return null
+    default:
+      return authorizationLoader(args)
+  }
 }
 
 /** Wrapper for routes that require the user to be logged in to view */
@@ -70,7 +92,7 @@ const authRoute = (path: string, element: JSX.Element) => ({
 
 /** Router to manage paths and corresponding components for all frontend pages */
 const router = createBrowserRouter([
-  /* Routes accessible by anyone */
+  // Routes accessible by anyone
   {
     path: PAGE_URL.login.href,
     element: <Login />,
@@ -86,13 +108,24 @@ const router = createBrowserRouter([
     path: PAGE_URL.error.href,
     element: <Error />,
   },
+  {
+    path: PAGE_URL.gettingStarted.href,
+    element: <GettingStarted />,
+    errorElement: <Error />,
+  },
 
-  /* Routes accessible only to logged-in users */
+  // Greenhouse pages
+  {
+    path: `/${GREENHOUSES_ROOT}/:${SS_UUID_PARAM}`,
+    element: <GreenhouseView />,
+    errorElement: <Error />,
+    loader: greenhousePagesLoader,
+  },
+
+  // Routes accessible only to logged-in users
   authRoute(PAGE_URL.adminHome.href, <AdminHome />),
   authRoute(PAGE_URL.adminLogs.href, <AdminLogs />),
   authRoute(PAGE_URL.dashboard.href, <Dashboard />),
-  authRoute(PAGE_URL.gettingStarted.href, <GettingStarted />),
-  authRoute(`/${GREENHOUSES_ROOT}/:${SS_UUID_PARAM}`, <GreenhouseView />),
   authRoute(PAGE_URL.manageAccessPoints.href, <ManageAccessPoints />),
   authRoute(PAGE_URL.manageGreenhouses.href, <ManageGreenhouses />),
   authRoute(PAGE_URL.manageUsers.href, <ManageUsers />),
