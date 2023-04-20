@@ -1,6 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,7 @@ class UserxRestControllerTest {
     Userx user;
     String username;
     String createUsername;
+    String createPassword;
     Map<String, Object> jsonCreateUser = new HashMap<>();
     Map<String, Object> jsonUpdateUser = new HashMap<>();
 
@@ -38,6 +40,7 @@ class UserxRestControllerTest {
         user = userService.loadUserByUsername("elvis");
 
         createUsername = "jsonUsername";
+        createPassword = "secretPassword";
         jsonCreateUser.put("username", createUsername);
         jsonCreateUser.put("password", "secretPassword");
         jsonCreateUser.put("firstName", "first");
@@ -101,7 +104,26 @@ class UserxRestControllerTest {
         Assertions.assertTrue(response.getBody() instanceof Userx);
         if (response.getBody() instanceof Userx){
             Assertions.assertEquals(createUsername, ((Userx) response.getBody()).getUsername());
+            Assertions.assertEquals(createPassword, ((Userx) response.getBody()).getPassword());
+            // default user role is USER
+            Assertions.assertEquals(UserRole.USER, ((Userx) response.getBody()).getUserRole());
         }
+        // if username is already in use, 400 bad request error
+        jsonCreateUser.replace("username", username);
+        ResponseEntity response400 = this.userxRestController.createUser(jsonCreateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        // if username is not part of json body, 400 bad request error
+        response400 = this.userxRestController.createUser(jsonUpdateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        // if username is empty, 400 bad request error
+        jsonCreateUser.replace("username", "");
+        response400 = this.userxRestController.createUser(jsonCreateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        jsonCreateUser.replace("username", createUsername);
+        // if password is empty, 400 bad request error
+        jsonCreateUser.replace("password", "");
+        response400 = this.userxRestController.createUser(jsonCreateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
     }
 
     @Test
