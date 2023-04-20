@@ -1,4 +1,4 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

@@ -1,5 +1,6 @@
 #include <ble/sv_envsense.h>
 
+#include <common.h>
 #include <hwtimer.h>
 #include <sensors/data.h>
 
@@ -17,12 +18,8 @@ namespace ble {
 
   // set up environmental sensing service
   void envsense_setup() {
-    sv_envsense.addCharacteristic(ch_airPressure);
-    sv_envsense.addCharacteristic(ch_temperature);
-    sv_envsense.addCharacteristic(ch_humidity);
-    sv_envsense.addCharacteristic(ch_illuminance);
-    sv_envsense.addCharacteristic(ch_airQuality);
-    sv_envsense.addCharacteristic(ch_soilMoisture);
+    CALL_FOREACH(sv_envsense.addCharacteristic,
+      ch_airPressure, ch_temperature, ch_humidity, ch_illuminance, ch_airQuality, ch_soilMoisture)
 
     BLE.addService(sv_envsense);
 

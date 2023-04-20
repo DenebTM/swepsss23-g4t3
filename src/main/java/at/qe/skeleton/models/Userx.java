@@ -1,4 +1,4 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import at.qe.skeleton.models.enums.UserRole;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
@@ -51,7 +52,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @ManyToMany(mappedBy = "gardeners", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "gardeners", fetch = FetchType.EAGER)
     private Set<SensorStation> assignedSS;
 
     public String getUsername() {

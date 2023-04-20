@@ -9,6 +9,7 @@ interface PlantIconProps extends Partial<BoxTypeMap['props']> {
 
 /**
  * Icon component for the PlantHealth logo
+ * TODO add attribution
  */
 export const PlantIcon: React.FC<PlantIconProps> = (props) => {
   const { color, ...spanProps } = props

@@ -2,6 +2,7 @@
 #include <ble/pairing.h>
 #include <ble/sv_devinfo.h>
 #include <ble/sv_envsense.h>
+#include <ble/sv_senswarn.h>
 
 #include <buttons.h>
 #include <led.h>
@@ -59,6 +60,7 @@ namespace ble {
 
     devinfo_setup();
     envsense_setup();
+    senswarn_setup();
     pairing::setup();
 
     BLE.setEventHandler(BLEConnected, connect_event_handler);
@@ -77,5 +79,3 @@ namespace ble {
     pairing::update();
   }
 }
-
-

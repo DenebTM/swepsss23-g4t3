@@ -5,9 +5,10 @@ import { Server } from 'miragejs'
 import { handleAxiosError } from '~/api/intercepts'
 import { API_DEV_URL } from '~/common'
 import { LoginResponse } from '~/models/login'
+import { UserRole } from '~/models/user'
 
 import { AppSchema, Endpoints } from '../mirageTypes'
-import { success, unauthorised } from './helpers'
+import { success, unauthorised } from './consts'
 
 const LOGIN_URI = `${API_DEV_URL}/handle-login`
 const LOGOUT_URI = `${API_DEV_URL}/logout`
@@ -21,13 +22,14 @@ const token_exp = Math.round(Date.now() / 1000 + 60 * 60)
  * Generate a JWT for mocking the login and logout functions.
  * Uses a different secret and algorithm to the backend as this function is only used for simple local tests.
  */
-const FAKE_JWT = await new CompactSign(
-  new TextEncoder().encode(
-    JSON.stringify({ authorities: 'ADMIN', exp: token_exp })
+const mock_jwt = (userRole: UserRole): Promise<string> =>
+  new CompactSign(
+    new TextEncoder().encode(
+      JSON.stringify({ authorities: userRole, exp: token_exp })
+    )
   )
-)
-  .setProtectedHeader({ alg: 'HS256' })
-  .sign(SECRET)
+    .setProtectedHeader({ alg: 'HS256' })
+    .sign(SECRET)
 
 /**
  * @param username The username of the user to log in
@@ -68,8 +70,20 @@ export const mockedLoginEndpoints: Endpoints = {
         request.requestBody
       )
 
-      if (body.username === 'admin' && body.password === 'passwd') {
-        return success({ token: FAKE_JWT })
+      /** Mock users and user roles for testing */
+      const mock_users: { [key: string]: UserRole } = {
+        admin: UserRole.ADMIN,
+        susi: UserRole.GARDENER,
+        user1: UserRole.USER,
+      }
+
+      if (
+        Object.keys(mock_users).includes(body.username) &&
+        body.password === 'passwd'
+      ) {
+        return mock_jwt(mock_users[body.username]).then((jwt) =>
+          success({ token: jwt })
+        )
       } else {
         return unauthorised()
       }

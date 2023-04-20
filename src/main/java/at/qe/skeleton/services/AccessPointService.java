@@ -1,6 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.AccessPoint;
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,14 @@ public class AccessPointService {
      */
     public AccessPoint saveAP(AccessPoint ap) {
         return apRepository.save(ap);
+    }
+
+    /**
+     * function to delete an access point
+     * @param ap to delete
+     */
+    public void deleteAP(AccessPoint ap) {
+        apRepository.delete(ap);
     }
 
 }
