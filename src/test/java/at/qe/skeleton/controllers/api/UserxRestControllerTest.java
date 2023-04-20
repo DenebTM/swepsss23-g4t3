@@ -14,6 +14,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @WebAppConfiguration
@@ -27,10 +29,18 @@ class UserxRestControllerTest {
     String username;
     Userx user;
 
+    Map<String, Object> jsonUser = new HashMap<>();
+
     @BeforeEach
     void setUp() {
         username = "elvis";
         user = userService.loadUserByUsername("elvis");
+
+        jsonUser.put("username", "jsonName");
+        jsonUser.put("password", "secretPassword");
+        jsonUser.put("firstName", "first");
+        jsonUser.put("lastName", "last");
+
     }
 
     @Test
@@ -69,8 +79,12 @@ class UserxRestControllerTest {
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedGetUserByUsername() {
-        ResponseEntity response = this.userxRestController.getUserByUsername(username);
-        Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        try {
+            ResponseEntity response = this.userxRestController.getUserByUsername(username);
+            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof AccessDeniedException);
+        }
     }
 
     @Test
@@ -78,7 +92,29 @@ class UserxRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "susi", authorities = {"GARDENER"})
+    void testUnauthorizedCreateUser() {
+        try {
+            ResponseEntity response = this.userxRestController.createUser(jsonUser);
+            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof AccessDeniedException);
+        }
+    }
+
+    @Test
     void updateUser() {
+    }
+
+    @Test
+    @WithMockUser(username = "susi", authorities = {"GARDENER"})
+    void testUnauthorizedUpdateUser() {
+        try {
+            ResponseEntity response = this.userxRestController.updateUser(username, jsonUser);
+            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof AccessDeniedException);
+        }
     }
 
     @Test
@@ -86,6 +122,28 @@ class UserxRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "susi", authorities = {"GARDENER"})
+    void testUnauthorizedDeleteUser() {
+        try {
+            ResponseEntity response = this.userxRestController.deleteUserByUsername(username);
+            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof AccessDeniedException);
+        }
+    }
+
+    @Test
     void getAssignedSS() {
+    }
+
+    @Test
+    @WithMockUser(username = "susi", authorities = {"GARDENER"})
+    void testUnauthorizedGetAssignedSS() {
+        try {
+            ResponseEntity response = this.userxRestController.getAssignedSS(username);
+            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof AccessDeniedException);
+        }
     }
 }
