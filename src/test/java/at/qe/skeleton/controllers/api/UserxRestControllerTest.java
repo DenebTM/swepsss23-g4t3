@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collection;
@@ -166,8 +167,14 @@ class UserxRestControllerTest {
         }
     }
 
+    @DirtiesContext
     @Test
-    void deleteUserByUsername() {
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testDeleteUserByUsername() {
+        int originalSize = userService.getAllUsers().size();
+        ResponseEntity response = this.userxRestController.deleteUserByUsername(username);
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Assertions.assertEquals(originalSize-1, userService.getAllUsers().size());
     }
 
     @Test
