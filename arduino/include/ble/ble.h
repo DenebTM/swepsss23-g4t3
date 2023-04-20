@@ -13,8 +13,8 @@
 
 using namespace std::chrono_literals;
 static led::StatusCode* const LEDC_BLE_UNPAIRED = new led::StatusCode{
-  { led::Color::RED, 2s },
-  { led::Color::OFF, 2s },
+  { led::Color::RED, 1500ms },
+  { led::Color::OFF, 1500ms },
 };
 static led::StatusCode* const LEDC_BLE_PAIRING = new led::StatusCode{
   { led::Color::BLUE, 250ms },
