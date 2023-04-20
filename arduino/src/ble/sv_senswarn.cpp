@@ -1,42 +1,43 @@
 #include <ble/sv_senswarn.h>
 
+#include <vector>
+#include <tuple>
+
 #include <common.h>
 #include <sensors/warn.h>
 
-#define _WARN_WRITTEN_HANDLER(sensor_name) \
-  void ch_warn_##sensor_name ## _written_handler ( \
-    BLEDevice central, \
-    BLECharacteristic characteristic \
-  ) { \
-    uint8_t warn = !!*characteristic.value(); \
-    if (sensors::current_warnings.sensor_name != warn) { \
-      sensors::current_warnings.sensor_name = warn; \
-      Serial.println(String(warn ? "Set" : "Cleared") + \
-        " sensor warning for " #sensor_name); \
-    } \
-  }
-
-#define _SETUP_WARN_CHAR(sensor_name) \
-    sv_senswarn.addCharacteristic(ch_warn_##sensor_name); \
-    ch_warn_##sensor_name.setEventHandler(BLEWritten, ch_warn_##sensor_name ## _written_handler);
-
 namespace ble {
   BLEService sv_senswarn(BLE_UUID_SENSOR_WARNINGS);
-  BLEUnsignedCharCharacteristic ch_warn_air_pressure (BLE_UUID_WARN_AIR_PRESSURE,  BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_temperature  (BLE_UUID_WARN_TEMPERATURE,   BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_humidity     (BLE_UUID_WARN_HUMIDITY,      BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_illuminance  (BLE_UUID_WARN_ILLUMINANCE,   BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_air_quality  (BLE_UUID_WARN_AIR_QUALITY,   BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_soil_moisture(BLE_UUID_WARN_SOIL_MOISTURE, BLEWrite);
 
-  // define write handlers for warning characteristics
-  CALL_FOREACH(_WARN_WRITTEN_HANDLER,
-    air_pressure, temperature, humidity, illuminance, air_quality, soil_moisture)
+  // array of BLE characteristics, their associated warning values (and sensor name to display in console; temporary)
+  auto senswarn_chars = std::vector<std::tuple<const char*, uint8_t*, BLEUnsignedCharCharacteristic*>>{
+    { "air_pressure",  &sensors::current_warnings.air_pressure,  new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_PRESSURE,  BLEWrite) },
+    { "temperature",   &sensors::current_warnings.temperature,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_TEMPERATURE,   BLEWrite) },
+    { "humidity",      &sensors::current_warnings.humidity,      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_HUMIDITY,      BLEWrite) },
+    { "illuminance",   &sensors::current_warnings.illuminance,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_ILLUMINANCE,   BLEWrite) },
+    { "air_quality",   &sensors::current_warnings.air_quality,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_QUALITY,   BLEWrite) },
+    { "soil_moisture", &sensors::current_warnings.soil_moisture, new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_SOIL_MOISTURE, BLEWrite) },
+  };
 
   void senswarn_setup() {
-    // assign write handlers for warning characteristics and add them to the service
-    CALL_FOREACH(_SETUP_WARN_CHAR,
-      air_pressure, temperature, humidity, illuminance, air_quality, soil_moisture)
+    for (auto tup : senswarn_chars) {
+      auto ble_char = std::get<BLEUnsignedCharCharacteristic*>(tup);
+      auto val_ptr = std::get<uint8_t*>(tup);
+      auto sensor_name = std::get<const char*>(tup);
+
+      ble_char->setEventHandler(BLEWritten, [sensor_name, val_ptr](
+        BLEDevice central,
+        BLECharacteristic characteristic
+      ) {
+        uint8_t warn = !!*characteristic.value();
+        if (*val_ptr != warn) {
+          *val_ptr = warn;
+          Serial.println(String(warn ? "Set" : "Cleared") + " sensor warning for " + String(sensor_name));
+        }
+      });
+
+      sv_senswarn.addCharacteristic(*ble_char);
+    }
 
     BLE.addService(sv_senswarn);
   }

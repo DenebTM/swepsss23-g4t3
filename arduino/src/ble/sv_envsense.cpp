@@ -12,18 +12,12 @@ namespace ble {
 
   // array of BLE characteristics and their associated sensor values
   std::vector<std::pair<BLECharacteristic*, void*>> envsense_chars = {
-    { new BLEUnsignedIntCharacteristic(BLE_UUID_AIR_PRESSURE, BLERead | BLENotify),
-        &sensors::current_data.air_pressure },
-    { new BLEShortCharacteristic(BLE_UUID_TEMPERATURE, BLERead | BLENotify),
-        &sensors::current_data.temperature },
-    { new BLEUnsignedShortCharacteristic(BLE_UUID_HUMIDITY, BLERead | BLENotify),
-        &sensors::current_data.humidity },
-    { new BLECharacteristic(BLE_UUID_ILLUMINANCE, BLERead | BLENotify, 3, true),
-        &sensors::current_data.illuminance },
-    { new BLEUnsignedShortCharacteristic(BLE_UUID_AIR_QUALITY, BLERead | BLENotify),
-        &sensors::current_data.air_quality },
-    { new BLEUnsignedCharCharacteristic(BLE_UUID_SOIL_MOISTURE, BLERead | BLENotify),
-        &sensors::current_data.soil_moisture },
+    { new BLEUnsignedIntCharacteristic(BLE_UUID_AIR_PRESSURE, BLERead | BLENotify),   &sensors::current_data.air_pressure },
+    { new BLEShortCharacteristic(BLE_UUID_TEMPERATURE, BLERead | BLENotify),          &sensors::current_data.temperature },
+    { new BLEUnsignedShortCharacteristic(BLE_UUID_HUMIDITY, BLERead | BLENotify),     &sensors::current_data.humidity },
+    { new BLECharacteristic(BLE_UUID_ILLUMINANCE, BLERead | BLENotify, 3, true),      &sensors::current_data.illuminance },
+    { new BLEUnsignedShortCharacteristic(BLE_UUID_AIR_QUALITY, BLERead | BLENotify),  &sensors::current_data.air_quality },
+    { new BLEUnsignedCharCharacteristic(BLE_UUID_SOIL_MOISTURE, BLERead | BLENotify), &sensors::current_data.soil_moisture },
   };
 
   // Flags for periodic tasks
