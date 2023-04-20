@@ -31,7 +31,7 @@
 
     <Loggers>
         <Logger level="warn" additivity="false">
-            <AppenderRef ref="warnErrorLog" />
+            <AppenderRef ref="warnErrorLog" level="warn"/>
             <AppenderRef ref="Console" />
         </Logger>
         <Logger level="info" additivity="false">
@@ -40,8 +40,8 @@
         </Logger>
         <Root level="debug">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="warnErrorLog" />
             <AppenderRef ref="infoLog" />
+            <AppenderRef ref="warnErrorLog" level="warn"/>
         </Root>
     </Loggers>
 </Configuration>
