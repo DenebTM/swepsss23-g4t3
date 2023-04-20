@@ -28,15 +28,13 @@ namespace led {
     PURPLE = RED | BLUE,                      // #ff0050
     WHITE = RED | GREEN | BLUE                // #ff5050
   };
-
-  typedef std::chrono::milliseconds ColorDurationMsec;
-  typedef std::vector<std::pair<Color, ColorDurationMsec>> StatusCode;
+  typedef std::chrono::milliseconds ColorDuration;
+  typedef std::vector<std::pair<Color, ColorDuration>> StatusCode;
 
   void setup();
 
-  void bg_thread_func();
-
   void set_color(Color color);
+  void set_status_code(StatusCode& code);
 }
 
 #endif

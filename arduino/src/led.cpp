@@ -14,7 +14,33 @@ namespace led {
     pinMode(LED_GREEN_PIN, OUTPUT);
     pinMode(LED_BLUE_PIN, OUTPUT);
 
-    bg_thread.start(bg_thread_func);
+    // run in a background thread
+    // this massively simplifies iterating over the currently active status code
+    bg_thread.start([]() {
+      while (true) {
+        if (!active_status_code) {
+          rtos::ThisThread::sleep_for(10ms);
+          continue;
+        }
+
+        set_color(Color::OFF);
+        auto last_active_status_code = active_status_code;
+        for (auto tup : *last_active_status_code) {
+          const auto duration = std::get<ColorDuration>(tup);
+          auto next_update = rtos::Kernel::Clock::now() + duration;
+
+          const auto color = std::get<Color>(tup);
+          set_color(color);
+
+          rtos::ThisThread::sleep_until(next_update);
+
+          // restart the loop if the status change has changed
+          if (active_status_code != last_active_status_code) {
+            break;
+          }
+        }
+      }
+    });
   }
 
   Color active_color = OFF;
@@ -33,24 +59,7 @@ namespace led {
     analogWrite(LED_BLUE_PIN, blue);
   }
 
-  void bg_thread_func() {
-    active_status_code = new StatusCode{{ Color::RED, 500ms }, { Color::OFF, 200ms }};
-
-    while (true) {
-      if (!active_status_code) {
-        rtos::ThisThread::yield();
-        continue;
-      }
-
-      for (auto tup : *active_status_code) {
-        const auto duration = std::get<ColorDurationMsec>(tup);
-        auto next_update = rtos::Kernel::Clock::now() + duration;
-
-        const auto color = std::get<Color>(tup);
-        set_color(color);
-
-        rtos::ThisThread::sleep_until(next_update);
-      }
-    }
+  void set_status_code(StatusCode& code) {
+    active_status_code = &code;
   }
 }
