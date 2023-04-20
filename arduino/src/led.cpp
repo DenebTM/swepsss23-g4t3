@@ -3,6 +3,8 @@
 #include <rtos.h>
 
 namespace led {
+  using namespace std::chrono_literals;
+
   volatile bool shall_update = false;
 
   rtos::Thread bg_thread;
@@ -32,7 +34,7 @@ namespace led {
   }
 
   void bg_thread_func() {
-    active_status_code = new StatusCode{{ Color::RED, 500 }, { Color::OFF, 200 }};
+    active_status_code = new StatusCode{{ Color::RED, 500ms }, { Color::OFF, 200ms }};
 
     while (true) {
       if (!active_status_code) {
@@ -41,12 +43,13 @@ namespace led {
       }
 
       for (auto tup : *active_status_code) {
-        const auto color = std::get<Color>(tup);
         const auto duration = std::get<ColorDurationMsec>(tup);
+        auto next_update = rtos::Kernel::Clock::now() + duration;
 
+        const auto color = std::get<Color>(tup);
         set_color(color);
 
-        rtos::ThisThread::sleep_until(millis() + duration);
+        rtos::ThisThread::sleep_until(next_update);
       }
     }
   }

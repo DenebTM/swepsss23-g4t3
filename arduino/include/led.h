@@ -29,7 +29,7 @@ namespace led {
     WHITE = RED | GREEN | BLUE                // #ff5050
   };
 
-  typedef unsigned int ColorDurationMsec;
+  typedef std::chrono::milliseconds ColorDurationMsec;
   typedef std::vector<std::pair<Color, ColorDurationMsec>> StatusCode;
 
   void setup();
