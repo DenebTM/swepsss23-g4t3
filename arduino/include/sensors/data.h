@@ -14,7 +14,7 @@ namespace sensors {
     int16_t temperature;
 
     // normalized illuminance (0..n lx) read from light sensor (see `light.cpp`)
-    uint24 illuminance;
+    uint32_t illuminance;
 
     // normalized soil moisture (0..100%) read from light sensor (see `light.cpp`)
     uint8_t soil_moisture;
