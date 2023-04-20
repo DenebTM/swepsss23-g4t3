@@ -1,32 +1,14 @@
 #ifndef _BLE_H
 #define _BLE_H
 
-#include <cstddef>
 #include <Arduino.h>
 #include <ArduinoBLE.h>
-
-#include <led.h>
 
 #define BLE_DEVICE_NAME               "PH SensorStation"
 #define BLE_DEVICE_MANUFACTURER       "UIBK SE G4T3"
 #define BLE_DEVICE_APPEARANCE         0x3621
 
-using namespace std::chrono_literals;
-static led::StatusCode* const LEDC_BLE_UNPAIRED = new led::StatusCode{
-  { led::Color::RED, 1500ms },
-  { led::Color::OFF, 1500ms },
-};
-static led::StatusCode* const LEDC_BLE_PAIRING = new led::StatusCode{
-  { led::Color::BLUE, 250ms },
-  { led::Color::OFF, 250ms },
-};
-static led::StatusCode* const LEDC_BLE_CONNECTED = new led::StatusCode{
-  { led::Color::GREEN, 100ms }
-};
-static led::StatusCode* const LEDC_BLE_DISCONNECTED = new led::StatusCode{
-  { led::Color::YELLOW, 1s },
-  { led::Color::OFF, 1s },
-};
+#define BLE_NO_PAIRED_DEVICE          String("")
 
 namespace ble {
   extern String paired_mac;
