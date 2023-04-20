@@ -48,7 +48,7 @@ void sensors::hygro::update() {
 int sensors::hygro::read_hum() {
   unsigned long long total = 0;
   for (int i = 0; i < HYGRO_SAMPLE_COUNT; i++) {
-    total += samples[(next_sample_idx + i) % HYGRO_SAMPLE_COUNT];
+    total += samples[i];
   }
   long avg = total / HYGRO_SAMPLE_COUNT;
 
