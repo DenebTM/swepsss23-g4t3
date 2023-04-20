@@ -26,20 +26,26 @@ class UserxRestControllerTest {
     @Autowired
     private UserxRestController userxRestController;
 
-    String username;
     Userx user;
-
-    Map<String, Object> jsonUser = new HashMap<>();
+    String username;
+    String createUsername;
+    Map<String, Object> jsonCreateUser = new HashMap<>();
+    Map<String, Object> jsonUpdateUser = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         username = "elvis";
         user = userService.loadUserByUsername("elvis");
 
-        jsonUser.put("username", "jsonName");
-        jsonUser.put("password", "secretPassword");
-        jsonUser.put("firstName", "first");
-        jsonUser.put("lastName", "last");
+        createUsername = "jsonUsername";
+        jsonCreateUser.put("username", createUsername);
+        jsonCreateUser.put("password", "secretPassword");
+        jsonCreateUser.put("firstName", "first");
+        jsonCreateUser.put("lastName", "last");
+
+        jsonUpdateUser.put("password", "newPassword");
+        jsonUpdateUser.put("firstName", "newFirst");
+        jsonUpdateUser.put("lastName", "newLast");
 
     }
 
@@ -88,14 +94,21 @@ class UserxRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void createUser() {
+        ResponseEntity response = this.userxRestController.createUser(jsonCreateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Assertions.assertTrue(response.getBody() instanceof Userx);
+        if (response.getBody() instanceof Userx){
+            Assertions.assertEquals(createUsername, ((Userx) response.getBody()).getUsername());
+        }
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedCreateUser() {
         try {
-            ResponseEntity response = this.userxRestController.createUser(jsonUser);
+            ResponseEntity response = this.userxRestController.createUser(jsonCreateUser);
             Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
         } catch (Exception e) {
             Assertions.assertTrue(e instanceof AccessDeniedException);
@@ -110,7 +123,7 @@ class UserxRestControllerTest {
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedUpdateUser() {
         try {
-            ResponseEntity response = this.userxRestController.updateUser(username, jsonUser);
+            ResponseEntity response = this.userxRestController.updateUser(username, jsonCreateUser);
             Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
         } catch (Exception e) {
             Assertions.assertTrue(e instanceof AccessDeniedException);
