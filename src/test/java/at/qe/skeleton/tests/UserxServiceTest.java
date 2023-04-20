@@ -1,6 +1,6 @@
 package at.qe.skeleton.tests;
 
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.models.Userx;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import at.qe.skeleton.model.UserRole;
+import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.services.UserService;
 
 /**
@@ -28,7 +28,7 @@ public class UserxServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDataInitialization() {
-        Assertions.assertEquals(4, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
+        Assertions.assertEquals(7, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
         for (Userx userx : userService.getAllUsers()) {
             if ("admin".equals(userx.getUsername())) {
                 Assertions.assertSame(userx.getUserRole(), UserRole.ADMIN, "User \"" + userx + "\" does not have role ADMIN");
@@ -46,7 +46,17 @@ public class UserxServiceTest {
                 Assertions.assertSame(userx.getUserRole(), UserRole.ADMIN, "User \"" + userx + "\" does not have role ADMIN");
                 Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 Assertions.assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
-            } else {
+            } else if ("hans".equals(userx.getUsername())) {
+                Assertions.assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
+                Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
+            } else if ("peter".equals(userx.getUsername())) {
+                Assertions.assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
+                Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
+            } else if ("franz".equals(userx.getUsername())) {
+                Assertions.assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
+                Assertions.assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
+            }
+            else {
                 Assertions.fail("Unknown user \"" + userx.getUsername() + "\" loaded from test data source via UserService.getAllUsers");
             }
         }
@@ -64,7 +74,7 @@ public class UserxServiceTest {
 
         userService.deleteUser(toBeDeletedUserx);
 
-        Assertions.assertEquals(3, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
+        Assertions.assertEquals(6, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         Userx deletedUserx = userService.loadUserByUsername(username);
         Assertions.assertNull(deletedUserx, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUser");
 

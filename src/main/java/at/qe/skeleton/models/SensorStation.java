@@ -1,6 +1,7 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.*;
+import at.qe.skeleton.models.enums.Status;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -40,8 +41,7 @@ public class SensorStation {
     private Long aggregationPeriod;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "GARDENER_SS",
             joinColumns = @JoinColumn(name = "SS_ID"),
             inverseJoinColumns = @JoinColumn(name = "USERNAME"))
@@ -55,13 +55,12 @@ public class SensorStation {
     @JoinColumn(name = "LOWER_VALUES_ID")
     private SensorValues lowerBound;
 
-    //TODO: paths are not working yet
-    /*@ElementCollection
-    @CollectionTable(name = "PATH", joinColumns = @JoinColumn(name = "STATION_ID"))
-    @Column(name = "PHOTOS")
-    public Set<Path> paths = new HashSet<>();*/
-
     public SensorStation() {
+    }
+
+    public SensorStation(AccessPoint accessPoint, Long aggregationPeriod) {
+        this.accessPoint = accessPoint;
+        this.aggregationPeriod = aggregationPeriod;
     }
 
     public Integer getId() {

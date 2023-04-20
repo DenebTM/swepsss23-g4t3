@@ -9,7 +9,7 @@ interface DashboardCardProps {
 }
 
 /**
- * Reusable component for the main elements in the Dashboard screen
+ * Reusable component for the main elements in the Dashboard and greenhouse graphical overview screen
  */
 export const DashboardCard: React.FC<DashboardCardProps> = (props) => {
   return (

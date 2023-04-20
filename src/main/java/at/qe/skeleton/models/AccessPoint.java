@@ -1,4 +1,4 @@
-package at.qe.skeleton.model;
+package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -37,6 +37,10 @@ public class AccessPoint {
     private Set<SensorStation> sensorStations = new HashSet<>();
 
     public AccessPoint() {
+    }
+
+    public AccessPoint(String name) {
+        this.name = name;
     }
 
     public Integer getId() {

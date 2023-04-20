@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField'
 import Box from '@mui/system/Box'
 
 import { handleLogin } from '~/api/endpoints/login'
-import { onEnterKeypress, URL } from '~/common'
+import { onEnterKeypress, PAGE_URL } from '~/common'
 import { setJwt } from '~/helpers/jwt'
 import { LoginResponse } from '~/models/login'
 import { theme } from '~/styles/theme'
@@ -38,7 +38,7 @@ export const LoginForm: React.FC = () => {
         .then((res: AxiosResponse<LoginResponse>) => {
           // Save JWT as a cookie
           setJwt(res.data.token)
-          navigate(URL.dashboard)
+          navigate(PAGE_URL.dashboard.href)
         })
         .catch((err: Error) => {
           setLoginError(err.message)
