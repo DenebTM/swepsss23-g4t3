@@ -18,7 +18,6 @@
 namespace ble {
   void envsense_setup();
   void envsense_update();
-  void write_sensor_data();
 }
 
 #endif
