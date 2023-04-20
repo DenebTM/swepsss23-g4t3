@@ -18,9 +18,9 @@
             </Policies>
             <DefaultRolloverStrategy max="1" />
         </RollingFile>
-        <RollingFile name="appLog"
-                     fileName="${APP_LOG_ROOT}/SpringBoot2App/application.log"
-                     filePattern="${APP_LOG_ROOT}/SpringBoot2App/application-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="warnErrorLog"
+                     fileName="${APP_LOG_ROOT}/SpringBoot2App/warnError.log"
+                     filePattern="${APP_LOG_ROOT}/SpringBoot2App/warnError-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout pattern="${LOG_PATTERN}" />
             <Policies>
                 <SizeBasedTriggeringPolicy size="19500KB" />
@@ -31,7 +31,7 @@
 
     <Loggers>
         <Logger level="warn" additivity="false">
-            <AppenderRef ref="appLog" />
+            <AppenderRef ref="warnErrorLog" />
             <AppenderRef ref="Console" />
         </Logger>
         <Logger level="info" additivity="false">
@@ -40,7 +40,7 @@
         </Logger>
         <Root level="debug">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="appLog" />
+            <AppenderRef ref="warnErrorLog" />
             <AppenderRef ref="infoLog" />
         </Root>
     </Loggers>
