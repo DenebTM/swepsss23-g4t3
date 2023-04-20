@@ -95,7 +95,7 @@ class UserxRestControllerTest {
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    void createUser() {
+    void testCreateUser() {
         ResponseEntity response = this.userxRestController.createUser(jsonCreateUser);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         Assertions.assertTrue(response.getBody() instanceof Userx);
@@ -116,14 +116,28 @@ class UserxRestControllerTest {
     }
 
     @Test
-    void updateUser() {
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testUpdateUser() {
+        ResponseEntity response = this.userxRestController.updateUser(username, jsonUpdateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Assertions.assertTrue(response.getBody() instanceof Userx);
+        if (response.getBody() instanceof Userx){
+            Assertions.assertEquals(username, ((Userx) response.getBody()).getUsername());
+        }
+        // if username is part of json body, 400 bad request error
+        ResponseEntity response400 = this.userxRestController.updateUser(username, jsonCreateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        // if password is empty, 400 bad request error
+        jsonUpdateUser.replace("password", "");
+        response400 = this.userxRestController.updateUser(username, jsonUpdateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedUpdateUser() {
         try {
-            ResponseEntity response = this.userxRestController.updateUser(username, jsonCreateUser);
+            ResponseEntity response = this.userxRestController.updateUser(username, jsonUpdateUser);
             Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
         } catch (Exception e) {
             Assertions.assertTrue(e instanceof AccessDeniedException);
