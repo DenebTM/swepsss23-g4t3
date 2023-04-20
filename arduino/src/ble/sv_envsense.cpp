@@ -10,7 +10,7 @@
 namespace ble {
   BLEService sv_envsense(BLE_UUID_ESS);
 
-    // 3 bytes according to BLE ESS spec (why)
+  // array of BLE characteristics and their associated sensor values
   std::vector<std::pair<BLECharacteristic*, void*>> envsense_chars = {
     { new BLEUnsignedIntCharacteristic(BLE_UUID_AIR_PRESSURE, BLERead | BLENotify),
         &sensors::current_data.air_pressure },
