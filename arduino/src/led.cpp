@@ -5,9 +5,9 @@
 namespace led {
   using namespace std::chrono_literals;
 
-  volatile bool shall_update = false;
-
   rtos::Thread bg_thread;
+  Color active_color = OFF;
+  StatusCode* active_status_code = nullptr;
 
   void setup() {
     pinMode(LED_RED_PIN, OUTPUT);
@@ -43,9 +43,6 @@ namespace led {
     });
   }
 
-  Color active_color = OFF;
-  StatusCode* active_status_code;
-
   void set_color(Color color) {
     if (color == active_color) return;
     active_color = color;
@@ -59,7 +56,7 @@ namespace led {
     analogWrite(LED_BLUE_PIN, blue);
   }
 
-  void set_status_code(StatusCode& code) {
-    active_status_code = &code;
+  void set_status_code(StatusCode* const code) {
+    active_status_code = code;
   }
 }

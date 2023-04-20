@@ -34,7 +34,7 @@ namespace led {
   void setup();
 
   void set_color(Color color);
-  void set_status_code(StatusCode& code);
+  void set_status_code(StatusCode* const code);
 }
 
 #endif

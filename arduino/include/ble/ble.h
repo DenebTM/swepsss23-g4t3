@@ -5,9 +5,28 @@
 #include <Arduino.h>
 #include <ArduinoBLE.h>
 
+#include <led.h>
+
 #define BLE_DEVICE_NAME               "PH SensorStation"
 #define BLE_DEVICE_MANUFACTURER       "UIBK SE G4T3"
 #define BLE_DEVICE_APPEARANCE         0x3621
+
+using namespace std::chrono_literals;
+static led::StatusCode* const LEDC_BLE_UNPAIRED = new led::StatusCode{
+  { led::Color::RED, 2s },
+  { led::Color::OFF, 2s },
+};
+static led::StatusCode* const LEDC_BLE_PAIRING = new led::StatusCode{
+  { led::Color::BLUE, 250ms },
+  { led::Color::OFF, 250ms },
+};
+static led::StatusCode* const LEDC_BLE_CONNECTED = new led::StatusCode{
+  { led::Color::GREEN, 100ms }
+};
+static led::StatusCode* const LEDC_BLE_DISCONNECTED = new led::StatusCode{
+  { led::Color::YELLOW, 1s },
+  { led::Color::OFF, 1s },
+};
 
 namespace ble {
   extern String paired_mac;
