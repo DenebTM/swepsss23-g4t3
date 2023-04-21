@@ -93,7 +93,7 @@ class AccessPointRestControllerTest {
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertEquals(originalSize-1, apService.getAllAP().size());
         response404 = this.apRestController.getAPById(id);
-        assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "User is still found in database after being deleted.");
+        assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "AccessPoint is still found in database after being deleted.");
     }
 
     @Test
