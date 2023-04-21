@@ -41,18 +41,6 @@ public class PhotoDataController {
     }
 
     /**
-     * Route to GET images from the gallery, aka download pictures
-     * @param photoId
-     * @return the picture if found
-     */
-    @GetMapping(value = SS_ID_PATH + "/photos/{photoId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    ResponseEntity<Object> downloadImage(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "photoId") Integer photoId) {
-        SensorStation ss = sensorStationService.loadSSById(id);
-        Optional<PhotoData> maybePhoto = photoDbRepository.findByIdAndSensorStation(photoId, ss);
-        return maybePhoto.<ResponseEntity<Object>>map(ResponseEntity::ok).orElseGet(() -> HelperFunctions.notFoundError("Photo", String.valueOf(photoId)));
-    }
-
-    /**
      * Route to DELete pictures from the gallery
      * @param photoId
      * @return the picture if found
