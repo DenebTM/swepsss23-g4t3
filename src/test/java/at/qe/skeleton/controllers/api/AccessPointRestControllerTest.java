@@ -13,6 +13,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,11 +30,15 @@ class AccessPointRestControllerTest {
 
     AccessPoint ap;
     Integer id;
+    Map<String, Object> jsonUpdateAP = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         id = 1;
         ap = apService.loadAPById(id);
+
+        jsonUpdateAP.put("name", "newName");
+        jsonUpdateAP.put("active", true);
     }
 
     @Test
@@ -57,10 +63,32 @@ class AccessPointRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateAP() {
+        ResponseEntity response = this.apRestController.updateAP(id, jsonUpdateAP);
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Assertions.assertTrue(response.getBody() instanceof AccessPoint);
+        if (response.getBody() instanceof AccessPoint){
+            Assertions.assertEquals(id, ((AccessPoint) response.getBody()).getId());
+            Assertions.assertEquals(jsonUpdateAP.get("name"), ((AccessPoint) response.getBody()).getName());
+            Assertions.assertEquals(jsonUpdateAP.get("active"), ((AccessPoint) response.getBody()).getActive());
+        }
+        // if ap id does not exist in database, 404 not found error
+        ResponseEntity response404 = this.apRestController.updateAP(9999, jsonUpdateAP);
+        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteAPById() {
+        int originalSize = apService.getAllAP().size();
+        ResponseEntity response404 = this.apRestController.deleteAPById(99999);
+        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+
+        ResponseEntity response = this.apRestController.deleteAPById(id);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(originalSize-1, apService.getAllAP().size());
+        response404 = this.apRestController.getAPById(id);
+        assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "User is still found in database after being deleted.");
     }
 }
