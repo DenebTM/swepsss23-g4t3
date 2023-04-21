@@ -2,6 +2,7 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
+import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +18,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,10 +40,15 @@ class SensorStationRestControllerTest {
     Integer id;
     Map<String, Object> jsonUpdateSS = new HashMap<>();
 
+    Userx susi;
+    String username;
+
     @BeforeEach
     void setUp() {
         id = 1;
         ss = ssService.loadSSById(id);
+        username = "susi";
+        susi = userService.loadUserByUsername(username);
 
         jsonUpdateSS.put("status", "OFFLINE");
         jsonUpdateSS.put("aggregationPeriod", 50);
@@ -88,7 +95,14 @@ class SensorStationRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetGardenersBySS() {
+        ResponseEntity response404 = this.ssRestController.getGardenersBySS(99999);
+        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+
+        ResponseEntity response = this.ssRestController.getGardenersBySS(id);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(ss.getGardeners().contains(susi), ((List) response.getBody()).contains(username));
     }
 
     @Test
