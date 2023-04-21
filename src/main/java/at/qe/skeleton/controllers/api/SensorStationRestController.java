@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
@@ -127,6 +129,40 @@ public class SensorStationRestController implements BaseRestController {
             return ResponseEntity.ok(photos);
         }
         return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
+    }
+
+    /**
+     * Route to POST images to the photo gallery
+     * @param multipartImage
+     * @return the photoId
+     * @throws Exception
+     */
+    @PostMapping(value = SS_ID_PATH + "/photos")
+    Integer uploadImage(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws Exception {
+        PhotoData dbPhoto = new PhotoData();
+        dbPhoto.setName(multipartImage.getName());
+        dbPhoto.setContent(multipartImage.getBytes());
+        SensorStation ss = ssService.loadSSById(id);
+        dbPhoto.setSensorStation(ss);
+        return photoDataRepository.save(dbPhoto).getId();
+    }
+
+    /**
+     * Route to DELete pictures from the gallery
+     * @param photoId
+     * @return the picture if found
+     */
+    @DeleteMapping(value = SS_ID_PATH + "/photos/{photoId}")
+    ResponseEntity<Object> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss != null) {
+            Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
+            if (maybePhoto.isPresent()) {
+                photoDataRepository.delete(maybePhoto.get());
+                return ResponseEntity.ok(maybePhoto.get());
+            }
+        }
+        return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
     }
 
 }
