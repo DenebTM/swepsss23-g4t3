@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collection;
@@ -70,8 +72,19 @@ class SensorStationRestControllerTest {
     void testUpdateSS() {
     }
 
+    @DirtiesContext
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteSSById() {
+        int originalSize = ssService.getAllSS().size();
+        ResponseEntity response404 = this.ssRestController.deleteSSById(99999);
+        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+
+        ResponseEntity response = this.ssRestController.deleteSSById(id);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(originalSize-1, ssService.getAllSS().size());
+        response404 = this.ssRestController.getSSById(id);
+        assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "Sensor station is still found in database after being deleted.");
     }
 
     @Test
