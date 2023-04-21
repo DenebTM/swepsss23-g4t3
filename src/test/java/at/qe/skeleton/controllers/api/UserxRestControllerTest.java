@@ -50,6 +50,8 @@ class UserxRestControllerTest {
         jsonUpdateUser.put("password", "newPassword");
         jsonUpdateUser.put("firstName", "newFirst");
         jsonUpdateUser.put("lastName", "newLast");
+        jsonUpdateUser.put("userRole", "GARDENER");
+
     }
 
     @Test
@@ -155,6 +157,9 @@ class UserxRestControllerTest {
         jsonUpdateUser.replace("password", "");
         response400 = this.userxRestController.updateUser(username, jsonUpdateUser);
         Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        // if username does not exist in database, 404 not found error
+        ResponseEntity response404 = this.userxRestController.updateUser("notExistingUsername", jsonUpdateUser);
+        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
     @Test
@@ -200,15 +205,31 @@ class UserxRestControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetAssignedSS() {
-        Userx susi = userService.loadUserByUsername("susi");
-        ResponseEntity response = this.userxRestController.getAssignedSS("susi");
+        ResponseEntity response = this.userxRestController.getAssignedSS(username);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(susi.getAssignedSS().size(), ((Collection) response.getBody()).size());
+        Assertions.assertEquals(user.getAssignedSS().size(), ((Collection) response.getBody()).size());
+        // if username is not GARDENER or ADMIN, return empty ArrayList
+        response = this.userxRestController.getAssignedSS("max");
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Assertions.assertEquals(0, ((Collection<?>) response.getBody()).size());
+        // if username does not exist in database, 404 not found error
+        ResponseEntity response404 = this.userxRestController.getAssignedSS("notExistingUsername");
+        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedGetAssignedSS() {
+        try {
+            ResponseEntity response = this.userxRestController.getAssignedSS(username);
+            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof AccessDeniedException);
+        }
+    }
+    @Test
+    @WithMockUser(username = "max", authorities = {"USER"})
+    void testUnauthorizedGetAssignedSSUser() {
         try {
             ResponseEntity response = this.userxRestController.getAssignedSS(username);
             Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
