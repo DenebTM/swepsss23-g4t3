@@ -10,7 +10,7 @@
             <PatternLayout pattern="${LOG_PATTERN}" />
         </Console>
         <RollingFile name="infoLog"
-                     fileName="${APP_LOG_ROOT}/SpringBoot2App/info.log"
+                     fileName="${APP_LOG_ROOT}/info.log"
                      filePattern="${APP_LOG_ROOT}/info-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout pattern="${LOG_PATTERN}" />
             <Policies>
@@ -19,8 +19,8 @@
             <DefaultRolloverStrategy max="1" />
         </RollingFile>
         <RollingFile name="warnErrorLog"
-                     fileName="${APP_LOG_ROOT}/SpringBoot2App/warnError.log"
-                     filePattern="${APP_LOG_ROOT}/SpringBoot2App/warnError-%d{yyyy-MM-dd}-%i.log">
+                     fileName="${APP_LOG_ROOT}/warnError.log"
+                     filePattern="${APP_LOG_ROOT}/warnError-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout pattern="${LOG_PATTERN}" />
             <Policies>
                 <SizeBasedTriggeringPolicy size="19500KB" />
@@ -30,18 +30,18 @@
     </Appenders>
 
     <Loggers>
-        <Logger level="warn" additivity="false">
+        <Logger name="warnErrorLogger" level="warn" additivity="false">
             <AppenderRef ref="warnErrorLog" level="warn"/>
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger level="info" additivity="false">
+        <Logger name="infoLogger" level="info" additivity="false">
             <AppenderRef ref="infoLog" />
             <AppenderRef ref="Console" />
         </Logger>
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="infoLog" />
             <AppenderRef ref="warnErrorLog" level="warn"/>
+            <AppenderRef ref="infoLog" />
         </Root>
     </Loggers>
 </Configuration>
