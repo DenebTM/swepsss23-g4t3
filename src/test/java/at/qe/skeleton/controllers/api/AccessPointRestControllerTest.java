@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collection;
@@ -62,6 +64,7 @@ class AccessPointRestControllerTest {
         Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateAP() {
@@ -78,6 +81,7 @@ class AccessPointRestControllerTest {
         Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteAPById() {
@@ -90,5 +94,16 @@ class AccessPointRestControllerTest {
         assertEquals(originalSize-1, apService.getAllAP().size());
         response404 = this.apRestController.getAPById(id);
         assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "User is still found in database after being deleted.");
+    }
+
+    @Test
+    @WithMockUser(username = "susi", authorities = {"GARDENER"})
+    void testUnauthorizedDeleteAP() {
+        try {
+            ResponseEntity response = this.apRestController.deleteAPById(id);
+            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof AccessDeniedException);
+        }
     }
 }
