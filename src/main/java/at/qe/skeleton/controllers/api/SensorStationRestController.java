@@ -88,7 +88,6 @@ public class SensorStationRestController implements BaseRestController {
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
-
     /**
      * DELETE route to delete a sensor station by its id, only allowed by ADMIN
      * @param id
