@@ -1,6 +1,8 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.services.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -15,9 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @WebAppConfiguration
@@ -50,7 +50,6 @@ class UserxRestControllerTest {
         jsonUpdateUser.put("password", "newPassword");
         jsonUpdateUser.put("firstName", "newFirst");
         jsonUpdateUser.put("lastName", "newLast");
-
     }
 
     @Test
@@ -97,6 +96,7 @@ class UserxRestControllerTest {
         }
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testCreateUser() {
@@ -138,6 +138,7 @@ class UserxRestControllerTest {
         }
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateUser() {
@@ -172,9 +173,16 @@ class UserxRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteUserByUsername() {
         int originalSize = userService.getAllUsers().size();
+        ResponseEntity response404 = this.userxRestController.deleteUserByUsername("notExistingUsername");
+        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        ResponseEntity response403 = this.userxRestController.deleteUserByUsername("admin");
+        Assertions.assertSame(HttpStatusCode.valueOf(403), response403.getStatusCode(), "Self deletion is permitted.");
+
         ResponseEntity response = this.userxRestController.deleteUserByUsername(username);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         Assertions.assertEquals(originalSize-1, userService.getAllUsers().size());
+        response404 = this.userxRestController.getUserByUsername(username);
+        Assertions.assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "User is still found in database after being deleted.");
     }
 
     @Test
@@ -188,8 +196,14 @@ class UserxRestControllerTest {
         }
     }
 
+    @DirtiesContext
     @Test
-    void getAssignedSS() {
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testGetAssignedSS() {
+        Userx susi = userService.loadUserByUsername("susi");
+        ResponseEntity response = this.userxRestController.getAssignedSS("susi");
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Assertions.assertEquals(susi.getAssignedSS().size(), ((Collection) response.getBody()).size());
     }
 
     @Test
