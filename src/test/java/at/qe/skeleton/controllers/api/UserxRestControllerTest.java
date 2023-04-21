@@ -1,8 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.services.UserService;
 import org.junit.jupiter.api.Assertions;
