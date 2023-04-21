@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageData {
+public class PhotoData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +65,7 @@ public class ImageData {
         this.sensorStation = sensorStation;
     }
 
-    public ImageData(String name, SensorStation sensorStation, byte[] content) {
+    public PhotoData(String name, SensorStation sensorStation, byte[] content) {
         this.name = name;
         this.sensorStation = sensorStation;
         this.content = content;

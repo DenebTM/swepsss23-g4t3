@@ -1,10 +1,10 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
-import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.repositories.ImageDataRepository;
+import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class SensorStationRestController implements BaseRestController {
     @Autowired
     private SensorStationService ssService;
     @Autowired
-    private ImageDataRepository imageDataRepository;
+    private PhotoDataRepository photoDataRepository;
     @Autowired
     private UserService userService;
 
@@ -123,8 +123,8 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
-            List<ImageData> images = imageDataRepository.findAllBySensorStation(ss);
-            return ResponseEntity.ok(images);
+            List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
+            return ResponseEntity.ok(photos);
         }
         return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
