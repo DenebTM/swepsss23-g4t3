@@ -7,10 +7,10 @@
 #define BLE_PAIRING_MODE_TIMEOUT_MS   5 * 60 * 1000
 
 namespace ble::pairing {
-  /** set up button */
+  /** enable pairing button */
   void setup();
 
-  /** check for button press or connection requests */
+  /** check if button was pressed, handle connection requests */
   void update();
 
   namespace mode {
