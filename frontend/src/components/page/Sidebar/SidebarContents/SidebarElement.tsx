@@ -30,8 +30,7 @@ export const SidebarElement: React.FC<SidebarElementProps> = (props) => {
   const { pathname } = useLocation()
 
   const showLink = (permittedRoles?: UserRole[]) =>
-    typeof permittedRoles === 'undefined' ||
-    (userRole !== null && permittedRoles.includes(userRole))
+    typeof permittedRoles === 'undefined' || permittedRoles.includes(userRole)
 
   return (
     <>

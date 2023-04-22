@@ -5,7 +5,7 @@ import { Server } from 'miragejs'
 import { handleAxiosError } from '~/api/intercepts'
 import { API_DEV_URL } from '~/common'
 import { LoginResponse } from '~/models/login'
-import { UserRole } from '~/models/user'
+import { AuthUserRole } from '~/models/user'
 
 import { AppSchema, Endpoints } from '../mirageTypes'
 import { success, unauthorised } from './consts'
@@ -22,7 +22,7 @@ const token_exp = Math.round(Date.now() / 1000 + 60 * 60)
  * Generate a JWT for mocking the login and logout functions.
  * Uses a different secret and algorithm to the backend as this function is only used for simple local tests.
  */
-const mock_jwt = (userRole: UserRole): Promise<string> =>
+const mock_jwt = (userRole: AuthUserRole): Promise<string> =>
   new CompactSign(
     new TextEncoder().encode(
       JSON.stringify({ authorities: userRole, exp: token_exp })
@@ -71,10 +71,10 @@ export const mockedLoginEndpoints: Endpoints = {
       )
 
       /** Mock users and user roles for testing */
-      const mock_users: { [key: string]: UserRole } = {
-        admin: UserRole.ADMIN,
-        susi: UserRole.GARDENER,
-        user1: UserRole.USER,
+      const mock_users: { [key: string]: AuthUserRole } = {
+        admin: AuthUserRole.ADMIN,
+        susi: AuthUserRole.GARDENER,
+        user1: AuthUserRole.USER,
       }
 
       if (

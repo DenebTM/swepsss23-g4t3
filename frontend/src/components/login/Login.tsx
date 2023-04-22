@@ -18,7 +18,7 @@ import { LoginForm } from './LoginForm'
  */
 export const Login: React.FC = () => {
   return (
-    <PageWrapper hideSidebar>
+    <PageWrapper hideSidebar permittedRoles={PAGE_URL.login.permittedRoles}>
       <Container maxWidth="sm" sx={{ paddingTop: 10 }} disableGutters>
         <Paper
           sx={{
