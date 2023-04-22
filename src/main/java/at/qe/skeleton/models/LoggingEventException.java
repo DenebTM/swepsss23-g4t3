@@ -17,11 +17,11 @@ public class LoggingEventException {
     private Long eventId;
 
     @Id
-    @Column(name = "mapped_key", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    private String mappedKey;
+    @Column(name = "i", nullable = false)
+    @JdbcTypeCode(SqlTypes.SMALLINT)
+    private Integer i;
 
-    @Column(name = "mapped_value")
+    @Column(name = "trace_line", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    private String mappedValue;
+    private Long traceLine;
 }
