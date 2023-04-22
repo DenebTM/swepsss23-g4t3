@@ -11,7 +11,7 @@ import { PageTitle } from '../page/PageTitle'
  */
 export const GettingStarted: React.FC = () => {
   return (
-    <PageWrapper>
+    <PageWrapper permittedRoles={PAGE_URL.gettingStarted.permittedRoles}>
       <PageHeader
         left={<PageTitle>{PAGE_URL.gettingStarted.pageTitle}</PageTitle>}
       />

@@ -3,7 +3,7 @@ import { Factory, ModelInstance, Server } from 'miragejs'
 import { AccessPoint } from '~/models/accessPoint'
 import { Measurement, SensorValues } from '~/models/measurement'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
-import { Username, UserRole } from '~/models/user'
+import { AuthUserRole, Username } from '~/models/user'
 
 import { AfterCreate, AppRegistry } from '../mirageTypes'
 
@@ -44,7 +44,7 @@ export const sensorStationFactory = Factory.extend<
     for (let i = 0; i <= nGardeners; i++) {
       const userId = faker.name.middleName().toLowerCase()
       gardenerIds.push(userId)
-      server.create('user', { username: userId, role: UserRole.GARDENER })
+      server.create('user', { username: userId, role: AuthUserRole.GARDENER })
     }
 
     // Create bound objects

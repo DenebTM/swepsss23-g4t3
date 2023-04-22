@@ -1,7 +1,7 @@
 import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
-import { UserRole } from './models/user'
+import { AuthUserRole, GuestRole, UserRole } from './models/user'
 
 /** The root path for pages relating to greenhouses */
 export const GREENHOUSES_ROOT = 'greenhouses'
@@ -18,7 +18,7 @@ export const GREENHOUSE_VIEW_QUERY = 'view'
 /** The param name of the sensor station ID in sensor station routes */
 export const SS_UUID_PARAM = 'sensorStationId'
 
-const _ALL_ROLES = Object.values(UserRole)
+const _ALL_ROLES = [...Object.values(AuthUserRole), ...Object.values(GuestRole)]
 
 /**
  * Paths for all frontend URLs.
@@ -29,38 +29,46 @@ const _ALL_ROLES = Object.values(UserRole)
  * @param permittedRoles User roles allowed to view the page if these should be restricted.
  *
  */
-export const PAGE_URL = {
+export const PAGE_URL: {
+  [key: string]: {
+    pageTitle: any
+    href: any
+    permittedRoles: UserRole[] | any
+  }
+} = {
   /** Path for admin home */
   adminHome: {
     pageTitle: 'Admin Home',
     href: `/${ADMIN_ROOT}`,
-    permittedRoles: [UserRole.ADMIN],
+    permittedRoles: [AuthUserRole.ADMIN],
   },
 
   /** Path for admin to view all logs */
   adminLogs: {
     pageTitle: 'Logs',
     href: `/${ADMIN_ROOT}/logs`,
-    permittedRoles: [UserRole.ADMIN],
+    permittedRoles: [AuthUserRole.ADMIN],
   },
 
   /** Fallback error page */
   error: {
     pageTitle: 'Error',
     href: '/error',
+    permittedRoles: _ALL_ROLES,
   },
 
   /** Main dashboard page */
   dashboard: {
     pageTitle: 'Dashboard',
     href: '/',
-    permittedRoles: _ALL_ROLES,
+    permittedRoles: Object.values(AuthUserRole),
   },
 
   /** Getting started instructions page */
   gettingStarted: {
     pageTitle: 'Getting Started',
     href: '/getting-started',
+    permittedRoles: _ALL_ROLES,
   },
 
   /**
@@ -81,41 +89,44 @@ export const PAGE_URL = {
       }
     },
     permittedRoles: (view: SensorStationView) =>
-      view === SensorStationView.GALLERY ? undefined : _ALL_ROLES,
+      view === SensorStationView.GALLERY
+        ? _ALL_ROLES
+        : Object.values(AuthUserRole),
   },
 
   /** The login page */
   login: {
     pageTitle: 'Log In',
     href: '/login',
+    permittedRoles: _ALL_ROLES,
   },
 
   /** Path for access point managment by admins */
   manageAccessPoints: {
     pageTitle: 'Access Points',
     href: `/${ADMIN_ROOT}/access-points`,
-    permittedRoles: [UserRole.ADMIN],
+    permittedRoles: [AuthUserRole.ADMIN],
   },
 
   /** Path for sensor station managment by admins */
   manageGreenhouses: {
     pageTitle: 'Greenhouses',
     href: `/${ADMIN_ROOT}/${GREENHOUSES_ROOT}`,
-    permittedRoles: [UserRole.ADMIN],
+    permittedRoles: [AuthUserRole.ADMIN],
   },
 
   /** Path for user managment by admins */
   manageUsers: {
     pageTitle: 'Users',
     href: `/${ADMIN_ROOT}/users`,
-    permittedRoles: [UserRole.ADMIN],
+    permittedRoles: [AuthUserRole.ADMIN],
   },
 
   /** My greenhouses page showing sensor stations assigned to the logged-in user */
   myGreenhouses: {
     pageTitle: 'My Greenhouses',
     href: `/${GREENHOUSES_ROOT}`,
-    permittedRoles: [UserRole.ADMIN, UserRole.GARDENER],
+    permittedRoles: [AuthUserRole.ADMIN, AuthUserRole.GARDENER],
   },
 
   /**
@@ -128,6 +139,7 @@ export const PAGE_URL = {
     pageTitle: 'Photo Upload',
     href: (sensorStationId: SensorStationUuid) =>
       `/${UPLOAD_ROOT}/${sensorStationId}`,
+    permittedRoles: _ALL_ROLES,
   },
 }
 
