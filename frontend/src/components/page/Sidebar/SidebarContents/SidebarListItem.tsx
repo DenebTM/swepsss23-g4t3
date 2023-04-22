@@ -8,7 +8,11 @@ import ListItemText from '@mui/material/ListItemText'
 import { Tooltip } from '@component-lib/Tooltip'
 import { theme } from '~/styles/theme'
 
+// Style constants
+const iconMarginSides = 10
 const sidebarListItemBorderRadius = 8
+const selectedColor = theme.onSecondaryContainer
+const unselectedColor = theme.onSurfaceVariant
 
 interface SidebarListItemProps {
   children?: React.ReactNode
@@ -27,12 +31,6 @@ interface SidebarListItemProps {
  */
 export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
   const [buttonDisabled, setButtonDisabled] = useState(props.selected)
-
-  /** Margin in px */
-  const iconMarginSides = 10
-
-  const selectedColor = theme.onSecondaryContainer
-  const unselectedColor = theme.onSurfaceVariant
 
   useEffect(() => setButtonDisabled(props.selected), [props.selected])
 
