@@ -1,19 +1,11 @@
 package at.qe.skeleton.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Table(name = "logging_event")
 public class LoggingEvent {
 
