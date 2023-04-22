@@ -18,7 +18,7 @@ namespace sensors::light {
     }
     long avg = total / LIGHT_SAMPLE_COUNT;
 
-    // perform linear interpolation for known values
+    // perform linear interpolation between known values
     int lx_val = 0;
     if (avg <= LIGHT_VAL_20LX) {
       lx_val = map(avg, 0, LIGHT_VAL_20LX, 0, 20);
@@ -39,8 +39,8 @@ namespace sensors::light {
 void sensors::light::setup() {
   pinMode(LIGHT_PIN, INPUT);
 
-  hwtimer::flag_interval(LIGHT_READ_INTERVAL_MS, &shall_read);
-  hwtimer::flag_interval(LIGHT_OUTPUT_INTERVAL_MS, &shall_output);
+  hwtimer::attach_flag_isr(LIGHT_READ_INTERVAL_MS, &shall_read);
+  hwtimer::attach_flag_isr(LIGHT_OUTPUT_INTERVAL_MS, &shall_output);
 }
 
 void sensors::light::update() {

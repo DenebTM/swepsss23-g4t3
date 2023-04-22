@@ -43,7 +43,7 @@ namespace sensors::bme {
 }
 
 bool sensors::bme::setup() {
-  /* Desired subscription list of BSEC2 outputs */
+  // desired values from BSEC2 library
   bsecSensor sensorList[] = {
     BSEC_OUTPUT_IAQ,
     BSEC_OUTPUT_RAW_TEMPERATURE,

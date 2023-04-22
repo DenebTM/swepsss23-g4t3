@@ -7,19 +7,15 @@
 
 namespace sensors {
   struct sensor_data {
-    // normalized BME688 sensor values provided by the `bsec2` library
     uint32_t air_pressure;
     uint16_t air_quality;
     uint16_t humidity;
     int16_t temperature;
-
-    // normalized illuminance (0..n lx) read from light sensor (see `light.cpp`)
-    uint24 illuminance;
-
-    // normalized soil moisture (0..100%) read from light sensor (see `light.cpp`)
+    uint32_t illuminance;
     uint8_t soil_moisture;
   };
 
+  // last-read sensor data, stored in the format required by BLE
   extern struct sensor_data current_data;
 }
 

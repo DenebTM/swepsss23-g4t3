@@ -20,8 +20,8 @@ void sensors::hygro::setup() {
   // pre-fill samples with 0% humidity
   std::fill_n(samples, HYGRO_SAMPLE_COUNT, HYGRO_CALIB_AIR_VALUE);
 
-  hwtimer::flag_interval(HYGRO_READ_INTERVAL_MS, &shall_read);
-  hwtimer::flag_interval(HYGRO_OUTPUT_INTERVAL_MS, &shall_output);
+  hwtimer::attach_flag_isr(HYGRO_READ_INTERVAL_MS, &shall_read);
+  hwtimer::attach_flag_isr(HYGRO_OUTPUT_INTERVAL_MS, &shall_output);
 }
 
 int sensors::hygro::read() {
@@ -48,7 +48,7 @@ void sensors::hygro::update() {
 int sensors::hygro::read_hum() {
   unsigned long long total = 0;
   for (int i = 0; i < HYGRO_SAMPLE_COUNT; i++) {
-    total += samples[(next_sample_idx + i) % HYGRO_SAMPLE_COUNT];
+    total += samples[i];
   }
   long avg = total / HYGRO_SAMPLE_COUNT;
 

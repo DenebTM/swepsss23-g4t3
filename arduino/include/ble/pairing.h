@@ -25,10 +25,10 @@ static led::StatusCode* const LEDC_BLE_DISCONNECTED = new led::StatusCode{
 };
 
 namespace ble::pairing {
-  /** set up button */
+  /** enable pairing button */
   void setup();
 
-  /** check for button press or connection requests */
+  /** check if button was pressed, handle connection requests */
   void update();
 
   namespace mode {

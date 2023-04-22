@@ -11,13 +11,15 @@ namespace hwtimer {
    * limitations, such as not being able to use functions that themselves rely
    * on interrupts
    */
-  void set_interval(unsigned int interval, mbed::Callback<void()> callback);
+  void attach_isr(unsigned int interval, mbed::Callback<void()> callback);
   
   /**
    * Sets up a simple callback to set `*flag` to `true` every `interval` milliseconds
+   * 
+   * Used by various modules' setup functions to set up their respective timers
    */
-  inline void flag_interval(unsigned int interval, volatile bool* flag) {
-    set_interval(interval, [flag]() { *flag = true; });
+  inline void attach_flag_isr(unsigned int interval, volatile bool* flag) {
+    attach_isr(interval, [flag]() { *flag = true; });
   }
 }
 
