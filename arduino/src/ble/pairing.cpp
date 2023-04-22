@@ -26,7 +26,6 @@ namespace ble::pairing {
 
       if (BLE.advertise()) {
         mode::active = true;
-        mode::active_since = millis();
         led::set_color(led::BLUE); // TODO: define LED colors/status codes in a central location
 
         Serial.print("Ready to pair! Station address: ");
@@ -47,10 +46,11 @@ namespace ble::pairing {
 
   void setup() {
     buttons::setup(0, []() {
-      // don't enter pairing mode if already active
-      if (pairing::mode::active) {
-        return;
-      }
+      // reset timeout (so that pairing mode duration can be extended while already active)
+      mode::active_since = millis();
+
+      // only enter pairing mode if not already active
+      if (pairing::mode::active) return;
       pairing::mode::entering = true;
     });
     Serial.println("Press button 0 (rightmost) to begin pairing");
