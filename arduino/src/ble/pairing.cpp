@@ -26,7 +26,6 @@ namespace ble::pairing {
 
       if (BLE.advertise()) {
         mode::active = true;
-        mode::active_since = millis();
         led::set_status_code(LEDC_BLE_PAIRING);
 
         Serial.print("Ready to pair! Station address: ");
@@ -47,10 +46,11 @@ namespace ble::pairing {
 
   void setup() {
     buttons::setup(0, []() {
-      // don't enter pairing mode if already active
-      if (pairing::mode::active) {
-        return;
-      }
+      // reset timeout (so that pairing mode duration can be extended while already active)
+      mode::active_since = millis();
+
+      // only enter pairing mode if not already active
+      if (pairing::mode::active) return;
       pairing::mode::entering = true;
     });
 
