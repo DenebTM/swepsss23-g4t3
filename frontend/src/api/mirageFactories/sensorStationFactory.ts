@@ -8,7 +8,7 @@ import { Username, UserRole } from '~/models/user'
 import { AfterCreate, AppRegistry } from '../mirageTypes'
 
 /**
- * Return a new SensorValue with the containing the result of applying `comparisonFn`
+ * Return a new SensorValue containing the result of applying `comparisonFn`
  * to `prev` and `current`. Typecasts result to allow using in a reduce function.
  */
 const compareSensorVals =
