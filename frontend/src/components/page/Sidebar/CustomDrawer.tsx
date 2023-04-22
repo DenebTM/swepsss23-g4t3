@@ -63,7 +63,12 @@ export const CustomDrawer: React.FC<CustomDrawerProps> = forwardRef(
         variant="permanent"
         open={props.open}
         PaperProps={{
-          sx: { color: theme.onSurfaceVariant, background: theme.background },
+          sx: {
+            color: theme.onSurfaceVariant,
+            background: theme.background,
+            padding: theme.spacing(0, 0.5),
+            border: 'none',
+          },
         }}
         ref={ref}
       >

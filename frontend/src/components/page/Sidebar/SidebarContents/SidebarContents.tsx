@@ -15,7 +15,6 @@ import { PAGE_URL, SensorStationView } from '~/common'
 import { deleteJwt } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { SidebarElement, SidebarElementWithChildren } from './SidebarElement'
 import { SidebarListItem } from './SidebarListItem'
@@ -82,11 +81,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
 
   return (
     <>
-      <Divider
-        sx={{
-          borderColor: props.open ? 'transparent' : theme.outlineVariant,
-        }}
-      />
+      <Divider sx={{ borderColor: 'transparent' }} />
       {sensorStations && (
         <List>
           {topSidebarVals(sensorStations).map((el) => (
@@ -98,7 +93,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       <Divider
         sx={{
           marginTop: 'auto',
-          borderColor: props.open ? 'transparent' : theme.outlineVariant,
+          borderColor: 'transparent',
         }}
       />
 

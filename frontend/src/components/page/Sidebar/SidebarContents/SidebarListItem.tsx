@@ -59,7 +59,6 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
       disablePadding
       sx={{
         display: 'block',
-        margin: props.open ? 0 : '0 2px',
         background: props.selected ? theme.secondaryContainer : '',
         borderRadius: sidebarListItemBorderRadius,
         padding: props.open ? 0 : theme.spacing(0.5, 0),
