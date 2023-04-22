@@ -68,6 +68,21 @@ export const CustomDrawer: React.FC<CustomDrawerProps> = forwardRef(
             background: theme.background,
             padding: theme.spacing(0, 0.5),
             border: 'none',
+            '&::-webkit-scrollbar': {
+              width: theme.spacing(0.75),
+            },
+            '&::-webkit-scrollbar-track': {
+              boxShadow: theme.shadows[0],
+              background: theme.outlineVariant,
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: theme.outline,
+              borderRadius: 2,
+              '&:hover': {
+                backgroundColor: theme.onSurfaceVariant,
+                transition: theme.transitions.create('backgroundColor'),
+              },
+            },
           },
         }}
         ref={ref}
