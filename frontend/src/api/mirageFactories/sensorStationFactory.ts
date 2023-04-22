@@ -8,21 +8,19 @@ import { Username, UserRole } from '~/models/user'
 import { AfterCreate, AppRegistry } from '../mirageTypes'
 
 /**
- * Return a new SensorValue containing the result of applying `comparisonFn`
- * to `prev` and `current`. Typecasts result to allow using in a reduce function.
+ * Return function which applies `comparisonFn` to each value in `prev` and `current`
+ * and return the resulting `SensorValues` object.
  */
 const compareSensorVals =
   (comparisonFn: (...values: number[]) => number) =>
-  (prev: SensorValues, current: SensorValues): SensorValues =>
-    Object.fromEntries(
-      Object.keys(current).map((k) => [
-        k,
-        comparisonFn(
-          current[k as keyof SensorValues],
-          prev[k as keyof SensorValues]
-        ),
-      ])
-    ) as unknown as SensorValues
+  (prev: SensorValues, current: SensorValues): SensorValues => {
+    let k: keyof SensorValues
+    const output: SensorValues = { ...current }
+    for (k in current) {
+      output[k] = comparisonFn(current[k], prev[k])
+    }
+    return output
+  }
 
 /** Randomly jitter sensor values by a percentage of the current value */
 const randomJitter = (sensorValues: SensorValues, percentage = 0.2) =>
