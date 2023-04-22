@@ -10,7 +10,7 @@ namespace ble {
   BLEService sv_senswarn(BLE_UUID_SENSOR_WARNINGS);
 
   // array of BLE characteristics, their associated warning values (and sensor name to display in console; temporary)
-  auto senswarn_chars = std::vector<std::tuple<const char*, uint8_t*, BLEUnsignedCharCharacteristic*>>{
+  auto senswarn_chars = std::vector<std::tuple<const char*, bool*, BLEUnsignedCharCharacteristic*>>{
     { "air_pressure",  &sensors::current_warnings.air_pressure,  new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_PRESSURE,  BLEWrite) },
     { "temperature",   &sensors::current_warnings.temperature,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_TEMPERATURE,   BLEWrite) },
     { "humidity",      &sensors::current_warnings.humidity,      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_HUMIDITY,      BLEWrite) },
@@ -22,17 +22,17 @@ namespace ble {
   void senswarn_setup() {
     for (auto tup : senswarn_chars) {
       auto ble_char = std::get<BLEUnsignedCharCharacteristic*>(tup);
-      auto val_ptr = std::get<uint8_t*>(tup);
+      auto val_ptr = std::get<bool*>(tup);
       auto sensor_name = std::get<const char*>(tup);
 
       ble_char->setEventHandler(BLEWritten, [sensor_name, val_ptr](
         BLEDevice central,
         BLECharacteristic characteristic
       ) {
-        uint8_t warn = !!*characteristic.value();
-        if (*val_ptr != warn) {
-          *val_ptr = warn;
-          Serial.println(String(warn ? "Set" : "Cleared") + " sensor warning for " + String(sensor_name));
+        bool warning_active = *characteristic.value() != 0;
+        if (*val_ptr != warning_active) {
+          *val_ptr = warning_active;
+          Serial.println(String(*val_ptr ? "Set" : "Cleared") + " sensor warning for " + String(sensor_name));
         }
       });
 
