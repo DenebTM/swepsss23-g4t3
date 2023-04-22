@@ -39,9 +39,7 @@ export const Sidebar: React.FC = () => {
         sx={{
           justifyContent: appState.sidebarOpen ? 'space-between' : 'center',
           color: theme.outline,
-          paddingTop: 2,
-          paddingBottom: 1,
-          paddingRight: 0,
+          padding: theme.spacing(2, 0, 1),
         }}
       >
         {appState.sidebarOpen && (
@@ -64,7 +62,10 @@ export const Sidebar: React.FC = () => {
             <PlantIcon color={theme.outline} height={theme.spacing(2)} />
           </Box>
         )}
-        <Tooltip title="Hide sidebar" arrow>
+        <Tooltip
+          title={appState.sidebarOpen ? 'Hide sidebar' : 'Expand sidebar'}
+          arrow
+        >
           <IconButton onClick={toggleDrawerOpen} sx={{ color: 'inherit' }}>
             <MenuIcon />
           </IconButton>
