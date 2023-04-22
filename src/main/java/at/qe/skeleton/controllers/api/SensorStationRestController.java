@@ -132,22 +132,6 @@ public class SensorStationRestController implements BaseRestController {
     }
 
     /**
-     * Route to POST images to the photo gallery
-     * @param multipartImage
-     * @return the photoId
-     * @throws Exception
-     */
-    @PostMapping(value = SS_ID_PATH + "/photos")
-    Integer uploadImage(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws Exception {
-        PhotoData dbPhoto = new PhotoData();
-        dbPhoto.setName(multipartImage.getName());
-        dbPhoto.setContent(multipartImage.getBytes());
-        SensorStation ss = ssService.loadSSById(id);
-        dbPhoto.setSensorStation(ss);
-        return photoDataRepository.save(dbPhoto).getId();
-    }
-
-    /**
      * Route to DELete pictures from the gallery
      * @param photoId
      * @return the picture if found
