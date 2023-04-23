@@ -2,6 +2,7 @@ import React from 'react'
 
 import Grid from '@mui/material/Unstable_Grid2'
 
+import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { useSensorStations } from '~/hooks/appContext'
 
@@ -19,7 +20,7 @@ export const Dashboard: React.FC = () => {
   const sensorStations = useSensorStations()
 
   return (
-    <PageWrapper>
+    <PageWrapper permittedRoles={PAGE_URL.dashboard.permittedRoles}>
       <PageHeader right={<DashboardFilters />} />
 
       <Grid container spacing={3} padding={2}>
