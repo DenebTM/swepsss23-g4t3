@@ -3,6 +3,8 @@ import { SensorValues } from '~/models/measurement'
 import { SensorStationUuid } from './models/sensorStation'
 import { UserRole } from './models/user'
 
+import { theme } from './styles/theme'
+
 /** The root path for pages relating to greenhouses */
 export const GREENHOUSES_ROOT = 'greenhouses'
 
@@ -172,6 +174,8 @@ export const roundMetric = (n: number) => n.toFixed(1)
  * Each `GreenhouseMetricRange` will be mapped to a single table row.
  */
 export interface GreenhouseMetricRange {
+  /** Colour for line colour in charts and graphs */
+  colour: string
   /** Description of the metric */
   description?: string
   /** The display name of the metric. */
@@ -193,6 +197,7 @@ export interface GreenhouseMetricRange {
 
 export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
   {
+    colour: theme.purple,
     displayName: 'Temperature',
     valueKey: 'temperature',
     unit: '°C',
@@ -201,6 +206,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     step: 5,
   },
   {
+    colour: theme.tertiary,
     displayName: 'Soil Moisture',
     valueKey: 'soilMoisture',
     unit: '%',
@@ -209,6 +215,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     step: 5,
   },
   {
+    colour: theme.green,
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
@@ -217,6 +224,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     step: 20,
   },
   {
+    colour: theme.warn,
     displayName: 'Air Pressure',
     valueKey: 'airPressure',
     unit: 'hPa',
@@ -225,6 +233,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     step: 50,
   },
   {
+    colour: theme.pink,
     displayName: 'Humidity',
     valueKey: 'humidity',
     unit: '%',
@@ -233,6 +242,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     step: 5,
   },
   {
+    colour: theme.blue,
     displayName: 'Air Quality',
     description: 'Index of Air Quality (IAQ)',
     valueKey: 'airQuality',
