@@ -12,7 +12,7 @@ import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
 import { PAGE_URL, SensorStationView } from '~/common'
-import { deleteJwt } from '~/helpers/jwt'
+import { deleteJwt, isUserLoggedIn } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
 
@@ -21,6 +21,7 @@ import { SidebarListItem } from './SidebarListItem'
 
 /** Sidebar elements to render at the top of the sidebar */
 const topSidebarVals = (
+  isUserLoggedIn: boolean,
   sensorStations: SensorStation[]
 ): SidebarElementWithChildren[] => [
   {
@@ -28,7 +29,10 @@ const topSidebarVals = (
     icon: <HomeIcon />,
     childNodes: sensorStations.map((s) => ({
       pageTitle: PAGE_URL.greenhouseView.pageTitle(s.uuid),
-      href: PAGE_URL.greenhouseView.href(s.uuid, SensorStationView.GRAPHICAL),
+      href: PAGE_URL.greenhouseView.href(
+        s.uuid,
+        isUserLoggedIn ? SensorStationView.GRAPHICAL : SensorStationView.GALLERY
+      ),
       icon: (
         <Badge badgeContent={String(s.uuid)}>
           <LocalFloristIcon />
@@ -84,7 +88,7 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
       <Divider sx={{ borderColor: 'transparent' }} />
       {sensorStations && (
         <List>
-          {topSidebarVals(sensorStations).map((el) => (
+          {topSidebarVals(isUserLoggedIn(), sensorStations).map((el) => (
             <SidebarElement key={el.pageTitle} {...el} open={props.open} />
           ))}
         </List>
@@ -97,7 +101,11 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
         }}
       />
 
-      <SidebarListItem label="Logout" open={props.open} onClick={handleLogout}>
+      <SidebarListItem
+        label={isUserLoggedIn() ? 'Logout' : PAGE_URL.login.pageTitle}
+        open={props.open}
+        onClick={handleLogout}
+      >
         <LogoutIcon />
       </SidebarListItem>
     </>
