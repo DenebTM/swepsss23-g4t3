@@ -106,10 +106,24 @@ class SensorStationRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testAssignGardenerToSS() {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testRemoveGardenerFromSS() {
+        List<String> originalNames = ssService.getGardenersBySS(ss);
+        int originalSize = originalNames.size();
+        ResponseEntity response = this.ssRestController.removeGardenerFromSS(id,username);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        if (originalNames.contains(username)){
+            assertEquals(originalSize-1, ssService.getGardenersBySS(ss).size());
+        }
+
+        ResponseEntity response404 = this.ssRestController.removeGardenerFromSS(99999, username);
+        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
+        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 }
