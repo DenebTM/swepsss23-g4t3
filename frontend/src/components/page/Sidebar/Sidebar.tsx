@@ -3,8 +3,13 @@ import { useContext } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
 import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/system/Box'
 
+import { PlantIcon } from '@component-lib/PlantIcon'
+import { Tooltip } from '@component-lib/Tooltip'
 import { AppContext } from '~/contexts/AppContext/AppContext'
+import { theme } from '~/styles/theme'
 
 import { CustomDrawer } from './CustomDrawer'
 import { SidebarContents } from './SidebarContents/SidebarContents'
@@ -31,11 +36,40 @@ export const Sidebar: React.FC = () => {
   return (
     <CustomDrawer open={appState.sidebarOpen}>
       <DrawerHeader
-        sx={{ justifyContent: appState.sidebarOpen ? 'flex-end' : 'center' }}
+        sx={{
+          justifyContent: appState.sidebarOpen ? 'space-between' : 'center',
+          color: theme.outline,
+          padding: theme.spacing(2, 0, 1),
+        }}
       >
-        <IconButton onClick={toggleDrawerOpen} color="inherit">
-          <MenuIcon />
-        </IconButton>
+        {appState.sidebarOpen && (
+          <Box
+            component="div"
+            display="flex"
+            alignItems="center"
+            paddingLeft={1}
+          >
+            <Typography
+              variant="titleMedium"
+              color="inherit"
+              align="center"
+              sx={{
+                marginRight: '1px',
+              }}
+            >
+              PlantHealth
+            </Typography>
+            <PlantIcon color={theme.outline} height={theme.spacing(2)} />
+          </Box>
+        )}
+        <Tooltip
+          title={appState.sidebarOpen ? 'Hide sidebar' : 'Expand sidebar'}
+          arrow
+        >
+          <IconButton onClick={toggleDrawerOpen} sx={{ color: 'inherit' }}>
+            <MenuIcon />
+          </IconButton>
+        </Tooltip>
       </DrawerHeader>
       <SidebarContents open={appState.sidebarOpen} />
     </CustomDrawer>
