@@ -29,9 +29,12 @@ export const SidebarElement: React.FC<SidebarElementProps> = (props) => {
   const userRole = useUserRole()
   const { pathname } = useLocation()
 
-  if (!props.permittedRoles || props.permittedRoles.includes(userRole)) {
-    return (
-      <>
+  const showLink = (permittedRoles?: UserRole[]) =>
+    typeof permittedRoles === 'undefined' || permittedRoles.includes(userRole)
+
+  return (
+    <>
+      {showLink(props.permittedRoles) && (
         <SidebarListItem
           label={props.pageTitle}
           open={props.open}
@@ -40,26 +43,26 @@ export const SidebarElement: React.FC<SidebarElementProps> = (props) => {
         >
           {props.icon}
         </SidebarListItem>
-        {props.childNodes &&
-          props.childNodes.map(
-            (child: SidebarElement) =>
-              /** Render child elements in the sidebar only if open or if the child has an icon defined */
-              (props.open || child.icon) && (
-                <SidebarListItem
-                  key={child.pageTitle}
-                  label={child.pageTitle}
-                  open={props.open}
-                  onClick={() => navigate(child.href)}
-                  selected={pathname === child.href}
-                  variant="small"
-                >
-                  {props.open ? null : child.icon}
-                </SidebarListItem>
-              )
-          )}
-      </>
-    )
-  } else {
-    return null // If the user does not have the right to access the page
-  }
+      )}
+
+      {props.childNodes &&
+        props.childNodes.map(
+          (child: SidebarElement) =>
+            /** Render child elements in the sidebar only if open or if the child has an icon defined */
+            (props.open || child.icon) &&
+            showLink(child.permittedRoles) && (
+              <SidebarListItem
+                key={child.pageTitle}
+                label={child.pageTitle}
+                open={props.open}
+                onClick={() => navigate(child.href)}
+                selected={pathname === child.href.split('?')[0]} // Ignore query params
+                variant="small"
+              >
+                {props.open ? null : child.icon}
+              </SidebarListItem>
+            )
+        )}
+    </>
+  )
 }
