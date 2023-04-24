@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  */
 
 @Entity
-@Table(name = "IMAGE_DATA")
+@Table(name = "PHOTO_DATA")
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,13 +20,14 @@ public class PhotoData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Integer id;
 
     @Column(name = "NAME")
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "SENSOR_STATION")
+    @JoinColumn(name = "SS_ID")
     private SensorStation sensorStation;
 
     @Lob
