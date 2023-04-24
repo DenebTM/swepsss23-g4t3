@@ -1,47 +1,40 @@
 import unittest
-from unittest.mock import MagicMock, patch, AsyncMock
 import asyncio
+from unittest.mock import MagicMock
 
-from read_sensor_and_save_to_db import read_and_send_sensorvalues
-from databaseOperations import saveSensorValuesToDatabase
+from read_sensorvalues import read_and_send_sensorvalues
+from database_operations import saveSensorValuesToDatabase
 
-class TestMyModule(unittest.IsolatedAsyncioTestCase):
+class TestReadAndSendSensorValues(unittest.IsolatedAsyncioTestCase):
 
-    @patch('read_sensor_and_save_to_db.BleakClient', autospec=True)
-    async def test_read_and_send_sensorvalues(self, mock_client):
-        mock_sensorstation = MagicMock()
-        mock_temperature = MagicMock()
-        mock_humidity = MagicMock()
-        mock_air_pressure = MagicMock()
-        mock_illuminance = MagicMock()
-        mock_air_quality_index = MagicMock()
-        mock_soil_moisture = MagicMock()
+    async def test_read_and_send_sensorvalues(self):
+        # create mock bleak client?
+        mock_client = MagicMock()
+
+        # define mocked values
+        mock_temperature = 10
+        mock_humidity = 20
+        mock_air_pressure = 30
+        mock_illuminance = 40
+        mock_air_quality_index = 50
+        mock_soil_moisture = 60
         
-        # set up values to be returned by read_gatt_char method
-        mock_client.read_gatt_char = AsyncMock(side_effect=[
-            mock_temperature.to_bytes(),
-            mock_humidity.to_bytes(),
-            mock_air_pressure.to_bytes(),
-            mock_illuminance.to_bytes(),
-            mock_air_quality_index.to_bytes(),
-            mock_soil_moisture.to_bytes(),
-        ])
+        #set up gatt char values
+        mock_client.read_gatt_char.side_effect = [
+            mock_temperature.to_bytes(2, byteorder='little'),
+            mock_humidity.to_bytes(2, byteorder='little'),
+            mock_air_pressure.to_bytes(2, byteorder='little'),
+            mock_illuminance.to_bytes(2, byteorder='little'),
+            mock_air_quality_index.to_bytes(2, byteorder='little'),
+            mock_soil_moisture.to_bytes(2, byteorder='little')
+        ]
 
-        
-        # call the function and cancel cause forever loop and shit
-        task = asyncio.create_task(read_and_send_sensorvalues(mock_sensorstation))
-        task.cancel
+        # get expected arguments for 
+        expected_args = (mock_client.name, mock_temperature, mock_humidity, mock_air_pressure, mock_illuminance, mock_air_quality_index, mock_soil_moisture)
 
-        # assert that saveSensorValuesToDatabase was called with expected arguments
-        await saveSensorValuesToDatabase.assert_called_once_with(
-            mock_sensorstation.name,
-            mock_temperature,
-            mock_humidity,
-            mock_air_pressure,
-            mock_illuminance,
-            mock_air_quality_index,
-            mock_soil_moisture,
-        )
+        # Call the read_and_send_sensorvalues function with the mocked client object
+        await read_and_send_sensorvalues(mock_client)
 
-if __name__ == '__main__':
-    asyncio.run(unittest.main())
+        # Assert that the saveSensorValuesToDatabase function was called with the expected arguments
+        saveSensorValuesToDatabase.assert_called_once_with(*expected_args)
+
