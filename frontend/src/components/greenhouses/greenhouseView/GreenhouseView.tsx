@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { SensorStationView, SS_UUID_PARAM } from '~/common'
+import { PAGE_URL, SensorStationView, SS_UUID_PARAM } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -34,26 +34,26 @@ export const GreenhouseView: React.FC = () => {
     setView(getViewFromSearchParams(search))
   }, [search])
 
-  return (
-    <PageWrapper>
-      {
-        typeof uuid !== 'undefined' && typeof view !== 'undefined' && (
-          <>
-            <GreenhouseViewHeader view={view} uuid={uuid} />
-            {(() => {
-              switch (view) {
-                case SensorStationView.GALLERY:
-                  return <GreenhouseGallery uuid={uuid} />
-                case SensorStationView.TABLE:
-                  return <GreenhouseTabularView uuid={uuid} />
-                default:
-                  return <GreenhouseGraphicalView uuid={uuid} />
-              }
-            })()}
-          </>
-        )
-        // TODO qqjf add error handling if uuid or view are invalid
-      }
-    </PageWrapper>
-  )
+  // TODO qqjf add error handling if uuid or view are invalid
+  if (typeof uuid !== 'undefined' && typeof view !== 'undefined') {
+    return (
+      <PageWrapper
+        permittedRoles={PAGE_URL.greenhouseView.permittedRoles(view)}
+      >
+        <GreenhouseViewHeader view={view} uuid={uuid} />
+        {(() => {
+          switch (view) {
+            case SensorStationView.GALLERY:
+              return <GreenhouseGallery uuid={uuid} />
+            case SensorStationView.TABLE:
+              return <GreenhouseTabularView uuid={uuid} />
+            default:
+              return <GreenhouseGraphicalView uuid={uuid} />
+          }
+        })()}
+      </PageWrapper>
+    )
+  } else {
+    return null // qqjf TODO handle invalid view or uuid
+  }
 }

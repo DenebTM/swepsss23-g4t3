@@ -40,7 +40,8 @@ public class SensorStation {
     @Column(name = "AGGREGATION_PERIOD", nullable = false)
     private Long aggregationPeriod;
 
-    @JsonIgnore
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "GARDENER_SS",
             joinColumns = @JoinColumn(name = "SS_ID"),
