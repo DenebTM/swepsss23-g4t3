@@ -1,6 +1,6 @@
 import unittest
 import asyncio
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, AsyncMock, patch
 
 from read_sensorvalues import read_and_send_sensorvalues
 from database_operations import saveSensorValuesToDatabase
@@ -8,8 +8,8 @@ from database_operations import saveSensorValuesToDatabase
 class TestReadAndSendSensorValues(unittest.IsolatedAsyncioTestCase):
 
     async def test_read_and_send_sensorvalues(self):
-        # create mock bleak client?
-        mock_client = MagicMock()
+        # create mock bleak client
+        mock_client = AsyncMock()
 
         # define mocked values
         mock_temperature = 10
@@ -19,7 +19,7 @@ class TestReadAndSendSensorValues(unittest.IsolatedAsyncioTestCase):
         mock_air_quality_index = 50
         mock_soil_moisture = 60
         
-        #set up gatt char values
+        # set up gatt char values
         mock_client.read_gatt_char.side_effect = [
             mock_temperature.to_bytes(2, byteorder='little'),
             mock_humidity.to_bytes(2, byteorder='little'),
@@ -28,12 +28,14 @@ class TestReadAndSendSensorValues(unittest.IsolatedAsyncioTestCase):
             mock_air_quality_index.to_bytes(2, byteorder='little'),
             mock_soil_moisture.to_bytes(2, byteorder='little')
         ]
+        
+        # create mock for saveSensorValuesToDatabase
+        with patch('database_operations.saveSensorValuesToDatabase') as mock_save:
 
-        # get expected arguments for database call
-        expected_args = (mock_client.name, mock_temperature, mock_humidity, mock_air_pressure, mock_illuminance, mock_air_quality_index, mock_soil_moisture)
+            await read_and_send_sensorvalues(mock_client)
 
-        # call function with mock client
-        await read_and_send_sensorvalues(mock_client)
-
-        saveSensorValuesToDatabase.assert_called_once_with(*expected_args)
-
+            # assert that saveSensorValuesToDatabase was called once with the expected arguments
+            mock_save.assert_called_once_with(
+                mock_client.name, mock_temperature, mock_humidity, mock_air_pressure,
+                mock_illuminance, mock_air_quality_index, mock_soil_moisture
+            )
