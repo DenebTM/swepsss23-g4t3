@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import { PAGE_URL } from '~/common'
@@ -21,11 +20,8 @@ export const Dashboard: React.FC = () => {
   const sensorStations = useSensorStations()
 
   return (
-    <PageWrapper>
+    <PageWrapper permittedRoles={PAGE_URL.dashboard.permittedRoles}>
       <PageHeader right={<DashboardFilters />} />
-      <Typography variant="headlineLarge" color="onSurface" component="h1">
-        {PAGE_URL.dashboard.pageTitle}
-      </Typography>
 
       <Grid container spacing={3} padding={2}>
         {sensorStations && ( // TODO add loading states
