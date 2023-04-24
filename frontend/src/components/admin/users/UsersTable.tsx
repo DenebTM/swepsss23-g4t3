@@ -10,7 +10,7 @@ import { DataGrid, RowUpdateFunction } from '@component-lib/DataGrid'
 import { DeleteCell } from '@component-lib/DeleteCell'
 import dayjs from 'dayjs'
 import { deleteUser, getUsers, updateUser } from '~/api/endpoints/user'
-import { User, Username, UserRole } from '~/models/user'
+import { AuthUserRole, User, Username } from '~/models/user'
 
 interface UsersTableProps {
   setUsers: Dispatch<SetStateAction<User[] | undefined>>
@@ -47,9 +47,9 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       headerName: 'Role',
       type: 'singleSelect',
       valueOptions: [
-        { value: UserRole.ADMIN, label: 'ADMIN' },
-        { value: UserRole.GARDENER, label: 'GARDENER' },
-        { value: UserRole.USER, label: 'USER' },
+        { value: AuthUserRole.ADMIN, label: 'ADMIN' },
+        { value: AuthUserRole.GARDENER, label: 'GARDENER' },
+        { value: AuthUserRole.USER, label: 'USER' },
       ],
       headerAlign: 'center',
       align: 'center',
