@@ -1,7 +1,6 @@
 #ifndef _BLE_H
 #define _BLE_H
 
-#include <cstddef>
 #include <Arduino.h>
 #include <ArduinoBLE.h>
 

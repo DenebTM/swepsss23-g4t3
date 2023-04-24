@@ -2,23 +2,25 @@
 #define _HWTIMER_H
 
 #include <mbed.h>
+#include <chrono>
 
 namespace hwtimer {
   /**
-   * Set up a function `callback` to be called every `interval` milliseconds.
+   * Set up a `callback` to be run periodically by a timer interrupt.
    * 
-   * `callback` is run in an interrupt context and must thus adhere to certain
-   * limitations, such as not being able to use functions that themselves rely
-   * on interrupts
+   * Due to `callback` being run in an interrupt context, it must adhere to
+   * certain limitations, such as not being able to use functions that
+   * themselves rely on interrupts.
    */
-  void attach_isr(unsigned int interval, mbed::Callback<void()> callback);
+  void attach_isr(std::chrono::milliseconds interval, mbed::Callback<void()> callback);
   
   /**
-   * Sets up a simple callback to set `*flag` to `true` every `interval` milliseconds
+   * Set up `*flag` to be periodically set to `true` by a timer interrupt.
    * 
-   * Used by various modules' setup functions to set up their respective timers
+   * Used by various modules' setup functions to set up their respective
+   * periodic tasks.
    */
-  inline void attach_flag_isr(unsigned int interval, volatile bool* flag) {
+  inline void attach_flag_isr(std::chrono::milliseconds interval, volatile bool* flag) {
     attach_isr(interval, [flag]() { *flag = true; });
   }
 }
