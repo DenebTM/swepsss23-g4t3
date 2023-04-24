@@ -104,11 +104,27 @@ class SensorStationRestControllerTest {
         assertEquals(ss.getGardeners().contains(susi), ((List) response.getBody()).contains(username));
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testAssignGardenerToSS() {
+        List<String> originalNames = ssService.getGardenersBySS(ss);
+        int originalSize = originalNames.size();
+        ResponseEntity response = this.ssRestController.assignGardenerToSS(id,username);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        if (!originalNames.contains(username)){
+            assertEquals(originalSize+1, ((SensorStation) response.getBody()).getGardeners().size());
+        } else {
+            assertEquals(originalSize, ((SensorStation) response.getBody()).getGardeners().size());
+        }
+        ResponseEntity response404 = this.ssRestController.assignGardenerToSS(99999, username);
+        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        response404 = this.ssRestController.assignGardenerToSS(id, "notExistingUsername");
+        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+
     }
 
+    @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testRemoveGardenerFromSS() {
