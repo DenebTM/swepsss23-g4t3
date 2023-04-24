@@ -1,6 +1,5 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.services.SensorStationService;
@@ -118,9 +117,8 @@ class SensorStationRestControllerTest {
         ResponseEntity response = this.ssRestController.removeGardenerFromSS(id,username);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         if (originalNames.contains(username)){
-            assertEquals(originalSize-1, ssService.getGardenersBySS(ss).size());
+            assertEquals(originalSize-1, ((SensorStation) response.getBody()).getGardeners().size());
         }
-
         ResponseEntity response404 = this.ssRestController.removeGardenerFromSS(99999, username);
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
         response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
