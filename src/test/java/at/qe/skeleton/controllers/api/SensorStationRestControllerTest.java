@@ -74,9 +74,10 @@ class SensorStationRestControllerTest {
         Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
-    @Test
-    void testUpdateSS() {
-    }
+    // TODO write a test for updateSS()
+//    @Test
+//    void testUpdateSS() {
+//    }
 
     @DirtiesContext
     @Test
@@ -140,4 +141,9 @@ class SensorStationRestControllerTest {
         response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
+
+    // TODO write a test for getAllPhotosBySS()
+//    @Test
+//    void testGetAllPhotosBySS() {
+//    }
 }
