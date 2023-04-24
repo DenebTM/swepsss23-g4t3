@@ -29,6 +29,6 @@ polling_interval = 10
 with open("conf.example.yaml", "r") as f:
     config = yaml.safe_load(f)
     web_server_address = config["web_server_address"]
-    web_server_address = "http://" + web_server_address + "/accesspoints/"
+    web_server_address = "http://" + web_server_address
     access_point_name = config["access_point_name"]
     access_point_address = web_server_address + access_point_name
