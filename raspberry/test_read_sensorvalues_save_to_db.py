@@ -29,12 +29,11 @@ class TestReadAndSendSensorValues(unittest.IsolatedAsyncioTestCase):
             mock_soil_moisture.to_bytes(2, byteorder='little')
         ]
 
-        # get expected arguments for 
+        # get expected arguments for database call
         expected_args = (mock_client.name, mock_temperature, mock_humidity, mock_air_pressure, mock_illuminance, mock_air_quality_index, mock_soil_moisture)
 
-        # Call the read_and_send_sensorvalues function with the mocked client object
+        # call function with mock client
         await read_and_send_sensorvalues(mock_client)
 
-        # Assert that the saveSensorValuesToDatabase function was called with the expected arguments
         saveSensorValuesToDatabase.assert_called_once_with(*expected_args)
 
