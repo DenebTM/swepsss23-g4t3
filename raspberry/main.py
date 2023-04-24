@@ -26,8 +26,8 @@ async def spawn_sensorstation_tasks(sensorstations):
 
 
 async def main():
-    response = None
-    while response != 200:
+    response = requests.post(common.web_server_address + "/accesspoints")
+    while response.status_code != 200:
         response = requests.post(common.web_server_address + "/accesspoints")
 
     while True:
