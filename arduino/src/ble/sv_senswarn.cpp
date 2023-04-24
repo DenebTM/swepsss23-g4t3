@@ -9,7 +9,8 @@
 namespace ble {
   BLEService sv_senswarn(BLE_UUID_SENSOR_WARNINGS);
 
-  // array of BLE characteristics, their associated warning values (and sensor name to display in console; temporary)
+  // array of BLE characteristics and their associated warning values
+  // TODO: remove sensor name, this is temporary
   auto senswarn_chars = std::vector<std::tuple<const char*, bool*, BLEUnsignedCharCharacteristic*>>{
     { "air_pressure",  &sensors::current_warnings.air_pressure,  new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_PRESSURE,  BLEWrite) },
     { "temperature",   &sensors::current_warnings.temperature,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_TEMPERATURE,   BLEWrite) },

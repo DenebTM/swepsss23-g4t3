@@ -30,7 +30,7 @@ namespace ble {
     BLE.setAdvertisedService(ble::sv_devinfo);
 
     update_station_id();
-    hwtimer::attach_flag_isr(STATION_ID_CHECK_INTERVAL_MS, &shall_update_station_id);
+    hwtimer::attach_flag_isr(STATION_ID_CHECK_INTERVAL, &shall_update_station_id);
   }
 
   void devinfo_update() {
