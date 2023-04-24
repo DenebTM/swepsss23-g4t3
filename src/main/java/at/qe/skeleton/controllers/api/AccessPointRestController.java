@@ -4,6 +4,7 @@ import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.services.AccessPointService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -58,8 +59,9 @@ public class AccessPointRestController implements BaseRestController {
         if (ap == null) {
             return HelperFunctions.notFoundError("Access point", name);
         }
+        // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("name")) {
-            ap.setName((String)json.get("name"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("AP names are final and cannot be updated.");
         }
         if (json.containsKey("active")) {
             ap.setActive((Boolean)json.get("active"));
