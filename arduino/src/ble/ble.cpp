@@ -7,7 +7,6 @@
 #include <buttons.h>
 #include <led.h>
 #include <sensors/data.h>
-#include <Ticker.h>
 
 namespace ble {
   String paired_mac = BLE_NO_PAIRED_DEVICE;

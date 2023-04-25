@@ -10,6 +10,7 @@ import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { theme } from '~/styles/theme'
 
+import { GalleryCta } from './GalleryCta'
 import { LoginForm } from './LoginForm'
 
 /**
@@ -17,7 +18,7 @@ import { LoginForm } from './LoginForm'
  */
 export const Login: React.FC = () => {
   return (
-    <PageWrapper hideSidebar>
+    <PageWrapper hideSidebar permittedRoles={PAGE_URL.login.permittedRoles}>
       <Container maxWidth="sm" sx={{ paddingTop: 10 }} disableGutters>
         <Paper
           sx={{
@@ -40,6 +41,8 @@ export const Login: React.FC = () => {
             <PlantIcon color={theme.onSurface} />
           </Box>
           <LoginForm />
+
+          <GalleryCta />
         </Paper>
       </Container>
     </PageWrapper>
