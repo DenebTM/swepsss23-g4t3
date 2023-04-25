@@ -76,6 +76,8 @@ namespace sensors {
   };
 
   extern struct sensor_warnings current_warnings;
+
+  void update();
 }
 
 #endif

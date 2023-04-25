@@ -4,8 +4,6 @@
 
 namespace led {
   using namespace std::chrono_literals;
-  void clear_status_codes();
-  void add_status_code(StatusCode* const code);
   void restart_bg_thread();
 
   // background thread for blinking the LED
