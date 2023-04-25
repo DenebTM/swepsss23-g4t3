@@ -32,7 +32,7 @@ namespace ble {
   volatile bool shall_clear_warning = false;
 
   void senswarn_setup() {
-    buttons::setup(1, []() { shall_clear_warning = true; });
+    buttons::setup(BUTTON_ID_CLEAR_WARNING, []() { shall_clear_warning = true; });
     sv_senswarn.addCharacteristic(ch_any_warning_active);
 
     for (auto tup : senswarn_chars) {

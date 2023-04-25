@@ -45,7 +45,7 @@ namespace ble::pairing {
   }
 
   void setup() {
-    buttons::setup(0, []() {
+    buttons::setup(BUTTON_ID_BLE_PAIRING, []() {
       // reset timeout (so that pairing mode duration can be extended while already active)
       mode::active_since = millis();
 
