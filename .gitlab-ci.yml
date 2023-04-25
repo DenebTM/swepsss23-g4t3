@@ -32,7 +32,7 @@ frontend-unit-test-job:
 arduino-build-job:
   stage: test
   script:
-    - apk add --update python3 gcompat
+    - apk add --update python3 gcompat git
     - python3 -m ensurepip
     - pip3 install platformio
     - echo "Checking if Arduino code builds..."
