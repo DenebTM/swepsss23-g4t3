@@ -170,22 +170,6 @@ public class SensorStationRestController implements BaseRestController {
     }
 
     /**
-     * Route to GET all photos from a specific sensor-station by its ID
-     * @param id
-     * @return list of photos
-     */
-    @PreAuthorize("hasAnyRole('ADMIN', 'GARDENER', 'USER')")
-    @GetMapping(value = SS_PHOTOS_PATH)
-    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
-        SensorStation ss = ssService.loadSSById(id);
-        if (ss != null) {
-            List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
-            return ResponseEntity.ok(photos);
-        }
-        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
-    }
-
-    /**
      * Route to DELete pictures from the gallery
      * @param photoId
      * @return the picture if found
