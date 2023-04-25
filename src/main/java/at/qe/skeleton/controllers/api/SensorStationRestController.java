@@ -31,6 +31,7 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
+    private static final String SS_PHOTOS_PATH = SS_ID_PATH + "/photos";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -174,7 +175,7 @@ public class SensorStationRestController implements BaseRestController {
      * @return list of photos
      */
     @PreAuthorize("hasAnyRole('ADMIN', 'GARDENER', 'USER')")
-    @GetMapping(value = SS_ID_PATH + "/photos")
+    @GetMapping(value = SS_PHOTOS_PATH)
     public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
@@ -189,7 +190,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param photoId
      * @return the picture if found
      */
-    @DeleteMapping(value = SS_ID_PATH + "/photos/{photoId}")
+    @DeleteMapping(value = SS_PHOTOS_PATH + "/{photoId}")
     ResponseEntity<Object> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
