@@ -18,12 +18,12 @@ public class SensorStation {
 
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id"
+            property = "name"
     )
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("apId")
+    @JsonProperty("apName")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "AP_ID")
+    @JoinColumn(name = "AP_NAME")
     private AccessPoint accessPoint;
 
     @Enumerated(EnumType.STRING)
