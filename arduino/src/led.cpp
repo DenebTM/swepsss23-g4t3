@@ -26,11 +26,6 @@ namespace led {
 
           rtos::ThisThread::sleep_until(next_update);
         }
-
-        // if there is only one active status code, do not pause
-        if (active_status_codes_count > 1) {
-          rtos::ThisThread::sleep_for(LED_CYCLE_PAUSE_DURATION);
-        }
       }
     }
   }
