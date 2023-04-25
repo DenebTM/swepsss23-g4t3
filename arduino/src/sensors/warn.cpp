@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <ble/pairing.h>
+
 namespace sensors { 
   struct sensor_warnings current_warnings = { 0 };
   struct sensor_warnings last_warnings = { 0 };
@@ -13,6 +15,7 @@ namespace sensors {
       Serial.println("Sensor warnings have changed!");
       led::clear_status_codes();
 
+      bool any_warnings = false;
       for (auto tup : std::vector<std::pair<bool, led::StatusCode* const>>{
         { current_warnings.air_pressure,  LEDC_WARN_AIR_PRESSURE  },
         { current_warnings.temperature,   LEDC_WARN_TEMPERATURE   },
@@ -25,8 +28,14 @@ namespace sensors {
         auto code = std::get<led::StatusCode* const>(tup);
 
         if (warn) {
+          any_warnings = true;
           led::add_status_code(code);
         }
+      }
+
+      // return to the "all ok" status code if there are no active warnings
+      if (!any_warnings) {
+        led::set_status_code(LEDC_BLE_CONNECTED);
       }
     }
   }
