@@ -3,6 +3,7 @@
 #include <vector>
 #include <tuple>
 
+#include <buttons.h>
 #include <common.h>
 #include <sensors/warn.h>
 
@@ -20,11 +21,24 @@ namespace ble {
     { "soil_moisture", &sensors::current_warnings.soil_moisture, new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_SOIL_MOISTURE, BLEWrite) },
   };
 
+  /**
+   * denotes whether or not a warning has been set and not cleared yet
+   * 
+   * will only be set to `true` when a value != 0 is written to any of the `senswarn_chars`
+   * will only be set to `false` after a press to button 1
+   */
+  BLEUnsignedCharCharacteristic ch_any_warning_active(BLE_UUID_WARN_ANY_ACTIVE, BLERead | BLENotify);
+
+  volatile bool shall_clear_warning = false;
+
   void senswarn_setup() {
+    buttons::setup(1, []() { shall_clear_warning = true; });
+    sv_senswarn.addCharacteristic(ch_any_warning_active);
+
     for (auto tup : senswarn_chars) {
-      auto ble_char = std::get<BLEUnsignedCharCharacteristic*>(tup);
-      auto val_ptr = std::get<bool*>(tup);
-      auto sensor_name = std::get<const char*>(tup);
+      const auto ble_char = std::get<BLEUnsignedCharCharacteristic*>(tup);
+      const auto val_ptr = std::get<bool*>(tup);
+      const auto sensor_name = std::get<const char*>(tup);
 
       ble_char->setEventHandler(BLEWritten, [sensor_name, val_ptr](
         BLEDevice central,
@@ -34,6 +48,10 @@ namespace ble {
         if (*val_ptr != warning_active) {
           *val_ptr = warning_active;
           Serial.println(String(*val_ptr ? "Set" : "Cleared") + " sensor warning for " + String(sensor_name));
+
+          if (warning_active) {
+            ch_any_warning_active.writeValue(true);
+          }
         }
       });
 
@@ -41,5 +59,12 @@ namespace ble {
     }
 
     BLE.addService(sv_senswarn);
+  }
+
+  void senswarn_update() {
+    if (shall_clear_warning) {
+      shall_clear_warning = false;
+      ch_any_warning_active.writeValue(false);
+    }
   }
 }
