@@ -22,7 +22,7 @@ interface RemovableChipProps {
   /** Chip main label */
   label: string
   /** Handle click on the main body of the chip */
-  onClick: React.MouseEventHandler
+  onClick?: React.MouseEventHandler
   /** Tooltip title for the main body of the chip */
   tooltipTitle?: string
 }
@@ -38,7 +38,7 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
   /** Margin on sides of each chip component in px */
   const chipMarginSides = 2
   const chipOutline = alpha(theme.primary, 0.5)
-  const chipPaddingTopBottom = '4px'
+  const chipPaddingTopBottom = '3px'
 
   const handleDeleteClick: React.MouseEventHandler = (e) => {
     e.stopPropagation() // Prevent selecting table cell
@@ -71,15 +71,20 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
           aria-label={props.tooltipTitle}
           variant="text"
           color="primary"
-          disabled={deletePending}
+          disabled={deletePending || typeof props.onClick === 'undefined'}
           size="small"
           sx={{
             margin: `0 ${chipMarginSides}px`,
-            padding: `${chipPaddingTopBottom} 0`,
-            '&:hover': {
-              background: theme.primaryContainer,
-              transition: theme.transitions.create('background'),
-            },
+            padding: `${chipPaddingTopBottom} ${theme.spacing(1.5)}`,
+            minWidth: theme.spacing(6),
+            '&.Mui-disabled': { color: theme.primary },
+            '&:hover':
+              typeof props.onClick !== 'undefined'
+                ? {
+                    background: theme.primaryContainer,
+                    transition: theme.transitions.create('background'),
+                  }
+                : {},
             '&::after': {
               content: '""',
               width: '1px',
@@ -92,7 +97,7 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
           }}
           onClick={(e) => {
             e.stopPropagation()
-            props.onClick(e)
+            props.onClick?.(e)
           }}
         >
           {props.label}
