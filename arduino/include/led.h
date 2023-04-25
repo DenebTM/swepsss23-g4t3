@@ -40,6 +40,8 @@ namespace led {
   void set_color(Color color);
   void set_status_code(StatusCode* const code);
   void set_status_codes(StatusCode* const new_codes[], unsigned int new_codes_count);
+  void add_status_code(StatusCode* const code);
+  void clear_status_codes();
 }
 
 #endif
