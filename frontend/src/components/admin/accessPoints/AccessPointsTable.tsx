@@ -79,7 +79,7 @@ export const AccessPointsTable: React.FC = () => {
       flex: 1,
       renderCell: (
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
-      ) => <SensorStationChips {...params} />,
+      ) => <SensorStationChips {...params} setRows={setAccessPoints} />,
       ...centerCell,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
