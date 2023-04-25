@@ -14,8 +14,10 @@ namespace ble {
   /**
    * Initializes various internal variables, timers, services, etc.
    * intended to be run as part of the startup sequence
+   * 
+   * returns true on success, false if BLE could not be initialized
    */
-  int setup();
+  bool setup();
 
   /**
    * checks for new BLE device events and whether to enter or leave pairing mode
