@@ -197,7 +197,7 @@ public class SensorStationRestController implements BaseRestController {
             Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
             if (maybePhoto.isPresent()) {
                 photoDataRepository.delete(maybePhoto.get());
-                return ResponseEntity.ok(maybePhoto.get());
+                return ResponseEntity.ok("Photo deleted");
             }
         }
         return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
