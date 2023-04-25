@@ -32,7 +32,7 @@ export const Error: React.FC<ErrorProps> = (props) => {
   }
 
   return (
-    <PageWrapper hideSidebar>
+    <PageWrapper hideSidebar permittedRoles={PAGE_URL.error.permittedRoles}>
       <Typography variant="headlineLarge" color="onSurface" component="h1">
         {PAGE_URL.error.pageTitle}
       </Typography>
