@@ -53,9 +53,10 @@ namespace ble {
   }
 
 
-  int setup() {
+  bool setup() {
     if (!BLE.begin()) {
       Serial.println("Error initializing BLE!");
+      return false;
     }
 
     devinfo_setup();
@@ -66,7 +67,7 @@ namespace ble {
     BLE.setEventHandler(BLEConnected, connect_event_handler);
     BLE.setEventHandler(BLEDisconnected, disconnect_event_handler);
 
-    return 0;
+    return true;
   }
 
   void update() {
