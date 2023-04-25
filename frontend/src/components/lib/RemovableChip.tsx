@@ -18,7 +18,7 @@ interface RemovableChipProps {
   /** A short description of the entity shown in the chip. */
   entityName: string
   /** Function to (asynchronously) delete or remove the entity. */
-  handleDelete: () => Promise<void>
+  handleDelete: () => Promise<any>
   /** Chip main label */
   label: string
   /** Handle click on the main body of the chip */
