@@ -76,6 +76,7 @@ namespace ble {
     // run timers etc
     devinfo_update();
     envsense_update();
+    senswarn_update();
     pairing::update();
   }
 }
