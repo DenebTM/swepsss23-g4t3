@@ -38,7 +38,7 @@ public class VisitorController {
             photoDataRepository.save(dbPhoto);
             return ResponseEntity.ok(dbPhoto);
         }
-        return HelperFunctions.notFoundError("Photo", dbPhoto.getName());
+        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
 
     /**
