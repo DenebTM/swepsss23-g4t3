@@ -6,8 +6,9 @@ import {
   GridValueGetterParams,
 } from '@mui/x-data-grid'
 
-import { DataGrid, RowUpdateFunction } from '@component-lib/DataGrid'
-import { DeleteCell } from '@component-lib/DeleteCell'
+import { DataGrid, RowUpdateFunction } from '@component-lib/Table/DataGrid'
+import { DeleteCell } from '@component-lib/Table/DeleteCell'
+import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
 import dayjs from 'dayjs'
 import {
   deleteAccessPoint,
@@ -15,6 +16,11 @@ import {
   updateAccessPoint,
 } from '~/api/endpoints/accessPoints'
 import { AccessPoint, AccessPointId } from '~/models/accessPoint'
+
+const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
+  headerAlign: 'center',
+  align: 'center',
+}
 
 /**
  * Access point managment page for admins
@@ -32,29 +38,39 @@ export const AccessPointsTable: React.FC = () => {
   const columns: GridColDef<AccessPoint, any, AccessPoint>[] = [
     { field: 'name', headerName: 'Name', flex: 1, editable: true },
     {
+      field: 'status',
+      headerName: 'Status',
+      width: 100,
+      renderCell: (
+        params: GridRenderCellParams<AccessPoint, any, AccessPoint>
+      ) => (
+        <StatusCell
+          status={params.row.active ? 'online' : 'offline'}
+          variant={params.row.active ? StatusVariant.OK : StatusVariant.ERROR}
+        />
+      ),
+      ...centerCell,
+    },
+    {
       field: 'serverAddress',
       headerName: 'Server Address',
-      headerAlign: 'center',
-      align: 'center',
       flex: 1,
+      ...centerCell,
     },
     {
       field: 'lastUpdate',
       headerName: 'Last Update',
       description: 'When the access point was last updated',
       type: 'dateTime',
-      headerAlign: 'center',
-      align: 'center',
       flex: 1,
       valueGetter: (params: GridValueGetterParams<AccessPoint, string>) =>
         dayjs(params.value).toDate(),
+      ...centerCell,
     },
     {
       field: 'action',
       headerName: 'Delete',
       description: 'Delete the given access point',
-      headerAlign: 'center',
-      align: 'center',
       flex: 1,
       sortable: false,
       filterable: false,
@@ -69,6 +85,7 @@ export const AccessPointsTable: React.FC = () => {
           setRows={setAccessPoints}
         />
       ),
+      ...centerCell,
     },
   ]
 
