@@ -62,9 +62,18 @@ namespace ble {
   }
 
   void senswarn_update() {
+    // clear all active warnings after button has been pressed
+
+    // yes, this desyncs with the actual values stored inside the characteristics;
+    // I will consider that if it turns out to be a problem
     if (shall_clear_warning) {
       shall_clear_warning = false;
       ch_any_warning_active.writeValue(false);
+
+      for (auto tup : senswarn_chars) {
+        const auto val_ptr = std::get<bool*>(tup);
+        *val_ptr = false;
+      }
     }
   }
 }
