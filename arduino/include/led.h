@@ -16,6 +16,7 @@ using namespace std::chrono_literals;
 #define LED_GREEN_MAX 80
 #define LED_BLUE_MAX  80
 
+#define MAX_ACTIVE_STATUS_CODES 16
 #define LED_CYCLE_PAUSE_DURATION 2s
 
 namespace led {
@@ -38,7 +39,7 @@ namespace led {
 
   void set_color(Color color);
   void set_status_code(StatusCode* const code);
-  void set_status_codes(std::vector<StatusCode* const> new_codes);
+  void set_status_codes(StatusCode* const new_codes[], unsigned int new_codes_count);
 }
 
 #endif
