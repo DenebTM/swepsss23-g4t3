@@ -4,22 +4,30 @@
 
 namespace led {
   using namespace std::chrono_literals;
+  void clear_status_codes();
+  void add_status_code(StatusCode* const code);
+  void restart_bg_thread();
 
   // background thread for blinking the LED
   // this massively simplifies iterating over the currently active status code
   // versus a timer
   rtos::Thread* bg_thread;
-  void bg_thread_func(StatusCode* const active_status_code) {
+  std::vector<StatusCode> active_status_codes;
+  void bg_thread_func() {
     set_color(Color::OFF);
     for (;;) { // loop until terminated
-      for (auto tup : *active_status_code) {
-        const auto duration = std::get<ColorDuration>(tup);
-        auto next_update = rtos::Kernel::Clock::now() + duration;
+      for (auto code : active_status_codes) {
+        for (auto tup : code) {
+          const auto duration = std::get<ColorDuration>(tup);
+          auto next_update = rtos::Kernel::Clock::now() + duration;
 
-        const auto color = std::get<Color>(tup);
-        set_color(color);
+          const auto color = std::get<Color>(tup);
+          set_color(color);
 
-        rtos::ThisThread::sleep_until(next_update);
+          rtos::ThisThread::sleep_until(next_update);
+        }
+
+        rtos::ThisThread::sleep_for(LED_CYCLE_PAUSE_DURATION);
       }
     }
   }
@@ -46,12 +54,40 @@ namespace led {
   }
 
   void set_status_code(StatusCode* const code) {
+    active_status_codes.clear();
+    active_status_codes.push_back(*code);
+
+    restart_bg_thread();
+  }
+
+  void set_status_codes(std::vector<StatusCode* const> new_codes) {
+    clear_status_codes();
+
+    for (auto code : new_codes) {
+      active_status_codes.push_back(*code);
+    }
+
+    restart_bg_thread();
+  }
+
+
+  // Helper functions
+
+  void restart_bg_thread() {
     if (bg_thread) {
       bg_thread->terminate();
       delete bg_thread;
     }
 
     bg_thread = new rtos::Thread();
-    bg_thread->start([code]() { bg_thread_func(code); });
+    bg_thread->start(bg_thread_func);
+  }
+
+  void clear_status_codes() {
+    active_status_codes.clear();
+  }
+
+  void add_status_code(StatusCode* const code) {
+    active_status_codes.push_back(*code);
   }
 }
