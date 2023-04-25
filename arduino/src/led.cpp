@@ -81,8 +81,10 @@ namespace led {
     }
   }
   void start_bg_thread() {
-    bg_thread = new rtos::Thread();
-    bg_thread->start(bg_thread_func);
+    if (!bg_thread) {
+      bg_thread = new rtos::Thread();
+      bg_thread->start(bg_thread_func);
+    }
   }
 
   void restart_bg_thread() {
@@ -91,15 +93,16 @@ namespace led {
   }
 
   void clear_status_codes() {
-    stop_bg_thread();
+    active_status_codes_count = 0;
     for (unsigned int i = 0; i < active_status_codes_count; i++) {
       active_status_codes[i] = NULL;
     }
-    active_status_codes_count = 0;
   }
 
   void add_status_code(StatusCode* const code) {
     if (active_status_codes_count == MAX_ACTIVE_STATUS_CODES) return;
     active_status_codes[active_status_codes_count++] = code;
+
+    start_bg_thread();
   }
 }

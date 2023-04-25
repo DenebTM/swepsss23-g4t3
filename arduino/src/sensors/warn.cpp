@@ -6,9 +6,11 @@ namespace sensors {
   struct sensor_warnings current_warnings = { 0 };
   struct sensor_warnings last_warnings = { 0 };
 
-  void update() {
-    if (memcmp(&current_warnings, &last_warnings, sizeof(current_warnings))) {
-      Serial.println("Sensor warnings have changed!\n");
+  void warn_update() {
+    if (memcmp(&last_warnings, &current_warnings, sizeof(current_warnings))) {
+      memcpy(&last_warnings, &current_warnings, sizeof(current_warnings));
+
+      Serial.println("Sensor warnings have changed!");
       led::clear_status_codes();
 
       for (auto tup : std::vector<std::pair<bool, led::StatusCode* const>>{
