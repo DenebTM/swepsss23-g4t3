@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DateTimeException;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -196,17 +195,17 @@ public class SensorStationRestController implements BaseRestController {
      * @return List of historic measurements for given time frame or current/recent measurement
      */
     @GetMapping(value = SS_ID_PATH + "/measurements")
-    public ResponseEntity<Object> getMeasurements(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
+    public ResponseEntity<Object> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
         Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
         Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
 
-        // if keys "from" end "to" are missing in json body return the most recent measurement
+        // if keys "from" end "to" are missing in json body return the most recent/current measurement
         if (!json.containsKey("from") && !json.containsKey("to")){
-            Measurement recentMeasurement = ssService.getRecentMeasurement(id);
-            if (recentMeasurement == null){
+            Measurement currentMeasurement = ssService.getCurrentMeasurement(id);
+            if (currentMeasurement == null){
                 return ResponseEntity.ok(new ArrayList<>());
             } else {
-                return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(recentMeasurement)));
+                return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(currentMeasurement)));
             }
         }
         // return a 400 error if there is a "to"-date but no "from"-date given in json body
@@ -234,6 +233,15 @@ public class SensorStationRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date should be later than start date");
         }
         return ResponseEntity.ok(ssService.getMeasurements(id, from, to));
+    }
+
+    /**
+     * a route to Get a list of all current measurements
+     * @return An object containing the returned measurements indexed by sensor station
+     */
+    @GetMapping(value = "/measurements")
+    public ResponseEntity<Object> getAllCurrentMeasurements(){
+        return ResponseEntity.ok(ssService.getAllCurrentMeasurements());
     }
 
 }
