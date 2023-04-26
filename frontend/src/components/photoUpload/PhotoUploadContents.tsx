@@ -1,44 +1,45 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
-import { getAccessPoints } from '~/api/endpoints/accessPoints'
+import { getSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { AccessPoint } from '~/models/accessPoint'
 import { SensorStation } from '~/models/sensorStation'
+import { SensorStationUuid } from '~/models/sensorStation'
 
-import { StatusDonutCharts } from './StatusDonutCharts'
-
-interface DashboardStatusesProps {
-  sensorStations: SensorStation[]
+interface PhotoUploadContentsProps {
+  uuid: SensorStationUuid
 }
 
 /**
- * Component showing the statuses of access points and sensor stations in the dashboard
+ * Page body for photo upload
+ * Fetches the current sensor station from the backend and allows file upload
  */
-export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
+export const PhotoUploadContents: React.FC<PhotoUploadContentsProps> = (
+  props
+) => {
   const addSnackbarMessage = useAddSnackbarMessage()
 
-  const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
+  const [sensorStation, setSensorStation] = useState<SensorStation>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
   /** Load acccess points from the API on component mount */
   useEffect(() => {
-    const apPromise = cancelable(getAccessPoints())
-    apPromise
+    const ssPromise = cancelable(getSensorStation(props.uuid))
+    ssPromise
       .then((data) => {
-        setAccessPoints(data)
+        setSensorStation(data)
       })
       .catch((err: Error) =>
         setSnackbarMessage({
-          header: 'Could not load access points',
+          header: 'Could not load sensor station',
           body: err.message,
           type: MessageType.ERROR,
         })
       )
 
     // Cancel the promise callbacks on component unmount
-    return apPromise.cancel
+    return ssPromise.cancel
   }, [setSnackbarMessage])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
@@ -48,14 +49,5 @@ export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
     }
   }, [snackbarMessage])
 
-  return (
-    <>
-      {accessPoints && (
-        <StatusDonutCharts
-          accessPoints={accessPoints}
-          sensorStations={props.sensorStations}
-        />
-      )}
-    </>
-  )
+  return <div>{JSON.stringify(sensorStation)}</div>
 }
