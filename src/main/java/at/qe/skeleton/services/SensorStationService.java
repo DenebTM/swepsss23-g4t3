@@ -59,10 +59,17 @@ public class SensorStationService {
         return ss.getGardeners().stream().map(Userx::getUsername).collect(Collectors.toList());
     }
 
-    public ArrayList<Measurement> getMeasurements(Instant from, Instant to){
+    public ArrayList<Measurement> getMeasurements(Integer ssId, Instant from, Instant to){
         ArrayList<Measurement> measurements = new ArrayList<>();
         // return a List of all Measurements in teh given time frame [from, to]
         // if there are no Measurements return empty List
         return measurements;
+    }
+
+    public Measurement getLastMeasurement(Integer ssId) {
+        Measurement measurement = null;
+        // return the most recent Measurements for sensor station with id = ssId
+        // if there are no Measurements return empty
+        return measurement;
     }
 }
