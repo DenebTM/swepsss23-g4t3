@@ -13,11 +13,7 @@ import java.util.Set;
 public class AccessPoint {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "AP_ID")
-    private Integer id;
-
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "AP_NAME", nullable = false)
     private String name;
 
     @Column(name = "LAST_UPDATE")
@@ -43,10 +39,6 @@ public class AccessPoint {
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
@@ -69,10 +61,6 @@ public class AccessPoint {
 
     public void setServerAddress(InetAddress serverAddress) {
         this.serverAddress = serverAddress;
-    }
-
-    public void setId(Integer ID) {
-        this.id = ID;
     }
 
     public void setName(String name) {
