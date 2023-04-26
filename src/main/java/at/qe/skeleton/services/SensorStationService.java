@@ -7,7 +7,7 @@ import at.qe.skeleton.repositories.SensorStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,7 +59,7 @@ public class SensorStationService {
         return ss.getGardeners().stream().map(Userx::getUsername).collect(Collectors.toList());
     }
 
-    public ArrayList<Measurement> getMeasurements(LocalDateTime from, LocalDateTime to){
+    public ArrayList<Measurement> getMeasurements(Instant from, Instant to){
         ArrayList<Measurement> measurements = new ArrayList<>();
         // return a List of all Measurements in teh given time frame [from, to]
         // if there are no Measurements return empty List

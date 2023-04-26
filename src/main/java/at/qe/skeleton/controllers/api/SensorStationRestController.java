@@ -188,18 +188,18 @@ public class SensorStationRestController implements BaseRestController {
 
     @GetMapping(value = SS_ID_PATH + "/measurements")
     public ResponseEntity<Object> getMeasurements(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
-        LocalDateTime from = null;
-        LocalDateTime to = null;
+        Instant from = null;
+        Instant to = null;
         if (json.containsKey("from")) {
             try {
-                from = LocalDateTime.from(Instant.parse((String)json.get("from")));
+                from = Instant.parse((String)json.get("from"));
             } catch (DateTimeException e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
             }
         }
         if (json.containsKey("to")) {
             try {
-                to = LocalDateTime.from(Instant.parse((String)json.get("to")));
+                to = Instant.parse((String)json.get("to"));
             } catch (DateTimeException e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid end date");
             }
