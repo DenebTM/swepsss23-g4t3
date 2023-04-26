@@ -2,6 +2,7 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -190,6 +193,16 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<Object> getMeasurements(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
         Instant from = null;
         Instant to = null;
+
+        // if keys from end to are missing in json body return the most recent measurement
+        if (!json.containsKey("from") && !json.containsKey("to")){
+            return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(ssService.getLastMeasurement(id))));
+        }
+        // return a 400 error if there is a "to"-date but no "from" date given in json body
+        if (!json.containsKey("from") && json.containsKey("to")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
+        }
+        // return 400 error if "from"-date isn't iso formatted
         if (json.containsKey("from")) {
             try {
                 from = Instant.parse((String)json.get("from"));
@@ -197,6 +210,7 @@ public class SensorStationRestController implements BaseRestController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
             }
         }
+        // return 400 error if "to"-date isn't iso formatted
         if (json.containsKey("to")) {
             try {
                 to = Instant.parse((String)json.get("to"));
@@ -204,7 +218,15 @@ public class SensorStationRestController implements BaseRestController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid end date");
             }
         }
-        return ResponseEntity.ok(ssService.getMeasurements(from, to));
+        // if "to"-date is missing in json body, set it to current date
+        if (!json.containsKey("to")){
+            to = Instant.now();
+        }
+        // return 400 error if "from"-date is after "to"-date
+        if (from.isAfter(to)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date should be later than start date");
+        }
+        return ResponseEntity.ok(ssService.getMeasurements(id, from, to));
     }
 
 }
