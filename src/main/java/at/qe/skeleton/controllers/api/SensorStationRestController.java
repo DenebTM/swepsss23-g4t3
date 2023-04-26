@@ -189,16 +189,27 @@ public class SensorStationRestController implements BaseRestController {
         return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
 
+    /**
+     * a route to GET current or historic sensor station measurement values
+     * @param id
+     * @param json
+     * @return List of historic measurements for given time frame or current/ the latest measurement
+     */
     @GetMapping(value = SS_ID_PATH + "/measurements")
     public ResponseEntity<Object> getMeasurements(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
-        Instant from = null;
-        Instant to = null;
+        Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
+        Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
 
-        // if keys from end to are missing in json body return the most recent measurement
+        // if keys "from" end "to" are missing in json body return the most recent measurement
         if (!json.containsKey("from") && !json.containsKey("to")){
-            return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(ssService.getLastMeasurement(id))));
+            Measurement lastMeasurement = ssService.getLastMeasurement(id);
+            if (lastMeasurement == null){
+                return ResponseEntity.ok(new ArrayList<>());
+            } else {
+                return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(lastMeasurement)));
+            }
         }
-        // return a 400 error if there is a "to"-date but no "from" date given in json body
+        // return a 400 error if there is a "to"-date but no "from"-date given in json body
         if (!json.containsKey("from") && json.containsKey("to")){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
         }
@@ -217,10 +228,6 @@ public class SensorStationRestController implements BaseRestController {
             } catch (DateTimeException e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid end date");
             }
-        }
-        // if "to"-date is missing in json body, set it to current date
-        if (!json.containsKey("to")){
-            to = Instant.now();
         }
         // return 400 error if "from"-date is after "to"-date
         if (from.isAfter(to)){
