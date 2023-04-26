@@ -66,10 +66,15 @@ public class SensorStationService {
         return measurements;
     }
 
-    public Measurement getRecentMeasurement(Integer ssId) {
+    public Measurement getCurrentMeasurement(Integer ssId) {
         Measurement measurement=null;
-        // return the most recent Measurements for sensor station with id = ssId
+        // return the most recent/current Measurements for sensor station with id = ssId
         // if there are no Measurements yet return null
         return measurement;
+    }
+
+    public Object getAllCurrentMeasurements(){
+        // return an object containing the returned measurements indexed by sensor station
+        return null;
     }
 }
