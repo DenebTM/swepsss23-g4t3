@@ -63,10 +63,13 @@
         </encoder>
     </appender>
 
+    <logger name="infoLog">
+        <appender-ref ref="info" level="info"/>
+    </logger>
     <!-- the level of the root level is set to INFO by default. -->
     <root level="info">
         <appender-ref ref="stdout" level="info"/>
-        <!--<appender-ref ref="db" level="warn"/>-->
+        <appender-ref ref="db" level="warn"/>
         <appender-ref ref="info" level="info"/>
         <appender-ref ref="warnError" level="warn"/>
     </root>
