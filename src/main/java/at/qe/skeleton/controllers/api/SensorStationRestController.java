@@ -193,7 +193,7 @@ public class SensorStationRestController implements BaseRestController {
      * a route to GET current or historic sensor station measurement values
      * @param id
      * @param json
-     * @return List of historic measurements for given time frame or current/ the latest measurement
+     * @return List of historic measurements for given time frame or current/recent measurement
      */
     @GetMapping(value = SS_ID_PATH + "/measurements")
     public ResponseEntity<Object> getMeasurements(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
@@ -202,11 +202,11 @@ public class SensorStationRestController implements BaseRestController {
 
         // if keys "from" end "to" are missing in json body return the most recent measurement
         if (!json.containsKey("from") && !json.containsKey("to")){
-            Measurement lastMeasurement = ssService.getLastMeasurement(id);
-            if (lastMeasurement == null){
+            Measurement recentMeasurement = ssService.getRecentMeasurement(id);
+            if (recentMeasurement == null){
                 return ResponseEntity.ok(new ArrayList<>());
             } else {
-                return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(lastMeasurement)));
+                return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(recentMeasurement)));
             }
         }
         // return a 400 error if there is a "to"-date but no "from"-date given in json body

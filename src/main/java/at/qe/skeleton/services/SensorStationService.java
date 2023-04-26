@@ -66,7 +66,7 @@ public class SensorStationService {
         return measurements;
     }
 
-    public Measurement getLastMeasurement(Integer ssId) {
+    public Measurement getRecentMeasurement(Integer ssId) {
         Measurement measurement=null;
         // return the most recent Measurements for sensor station with id = ssId
         // if there are no Measurements yet return null
