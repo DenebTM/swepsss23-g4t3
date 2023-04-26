@@ -1,12 +1,10 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
-import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.ImageData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
-import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
@@ -16,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,12 +48,10 @@ public class SensorStationRestController implements BaseRestController {
     @GetMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
-
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
             return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
-
         return ResponseEntity.ok(ss);
     }
 
@@ -92,7 +87,6 @@ public class SensorStationRestController implements BaseRestController {
         }
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
-
 
     /**
      * DELETE route to delete a sensor station by its id, only allowed by ADMIN
@@ -166,7 +160,6 @@ public class SensorStationRestController implements BaseRestController {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
         }
         ss.getGardeners().remove(user);
-        ssService.saveSS(ss);
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
