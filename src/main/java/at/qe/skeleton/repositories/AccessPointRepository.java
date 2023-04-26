@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccessPointRepository extends AbstractRepository<AccessPoint, Long> {
 
-    AccessPoint findFirstById(Integer id);
+    AccessPoint findFirstByName(String name);
 }

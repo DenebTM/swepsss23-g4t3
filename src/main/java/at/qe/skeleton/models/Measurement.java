@@ -2,10 +2,12 @@ package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "MEASUREMENT")
 public class Measurement {
 
