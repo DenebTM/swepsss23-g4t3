@@ -1,5 +1,6 @@
 package at.qe.skeleton.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +27,12 @@ public class PhotoData {
     @Column(name = "NAME")
     private String name;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "SS_ID")
     private SensorStation sensorStation;
 
+    @JsonIgnore
     @Lob
     @Column(name = "CONTENT", length = 1000)
     private byte[] content;
