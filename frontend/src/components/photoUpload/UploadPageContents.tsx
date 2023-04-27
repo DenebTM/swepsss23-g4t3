@@ -1,13 +1,19 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
+import Box from '@mui/system/Box'
+
 import { getSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
 import { SensorStationUuid } from '~/models/sensorStation'
+import { theme } from '~/styles/theme'
 
-interface PhotoUploadContentsProps {
+import { PhotoUploadBox } from './PhotoUploadBox'
+import { UploadHeader } from './UploadHeader'
+
+interface UploadPageContentsProps {
   uuid: SensorStationUuid
 }
 
@@ -15,7 +21,7 @@ interface PhotoUploadContentsProps {
  * Page body for photo upload
  * Fetches the current sensor station from the backend and allows file upload
  */
-export const PhotoUploadContents: React.FC<PhotoUploadContentsProps> = (
+export const UploadPageContents: React.FC<UploadPageContentsProps> = (
   props
 ) => {
   const addSnackbarMessage = useAddSnackbarMessage()
@@ -49,5 +55,21 @@ export const PhotoUploadContents: React.FC<PhotoUploadContentsProps> = (
     }
   }, [snackbarMessage])
 
-  return <div>{JSON.stringify(sensorStation)}</div>
+  return (
+    <Box
+      component="div"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: theme.spacing(4, 2),
+      }}
+    >
+      <UploadHeader uuid={props.uuid} />
+
+      {typeof sensorStation !== 'undefined' && (
+        <PhotoUploadBox sensorStation={sensorStation} />
+      )}
+    </Box>
+  )
 }

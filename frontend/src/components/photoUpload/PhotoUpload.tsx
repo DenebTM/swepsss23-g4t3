@@ -5,7 +5,7 @@ import { decryptSensorStationUuid, PAGE_URL, SS_UUID_PARAM } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { SensorStationUuid } from '~/models/sensorStation'
 
-import { PhotoUploadContents } from './PhotoUploadContents'
+import { UploadPageContents } from './UploadPageContents'
 
 const INVALID_UUID = null
 
@@ -39,7 +39,7 @@ export const PhotoUpload: React.FC = () => {
       ) : typeof sensorStationUuid === 'undefined' ? (
         'TODO qqjf: loading'
       ) : (
-        <PhotoUploadContents uuid={sensorStationUuid} />
+        <UploadPageContents uuid={sensorStationUuid} />
       )}
     </PageWrapper>
   )
