@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
-import { alpha } from '@mui/material/styles'
+import { alpha, SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/system/Box'
 
 import { MessageType } from '~/contexts/SnackbarContext/types'
@@ -11,6 +11,29 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { theme } from '~/styles/theme'
 
 import { Tooltip } from './Tooltip'
+
+const chipMarginSides = 2
+const chipOutline = alpha(theme.primary, 0.5)
+const chipPaddingTopBottom = '3px'
+
+/**
+ * Styles for the main body of the chip
+ */
+const chipBodySx: SxProps<Theme> = {
+  margin: `0 ${chipMarginSides}px`,
+  padding: `${chipPaddingTopBottom} ${theme.spacing(1.5)}`,
+  minWidth: theme.spacing(6),
+  '&.Mui-disabled': { color: theme.primary },
+  '&::after': {
+    content: '""',
+    width: '1px',
+    height: '100%',
+    background: chipOutline,
+    right: `-${chipMarginSides}px`,
+    top: 0,
+    position: 'absolute',
+  },
+}
 
 interface RemovableChipProps {
   /** Function to run after successful removal. */
@@ -35,11 +58,6 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const [deletePending, setDeletePending] = useState(false)
 
-  /** Margin on sides of each chip component in px */
-  const chipMarginSides = 2
-  const chipOutline = alpha(theme.primary, 0.5)
-  const chipPaddingTopBottom = '3px'
-
   const handleDeleteClick: React.MouseEventHandler = (e) => {
     e.stopPropagation() // Prevent selecting table cell
     setDeletePending(true)
@@ -59,6 +77,11 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
       .finally(() => setDeletePending(false))
   }
 
+  const handleMainChipClick: React.MouseEventHandler = (e) => {
+    e.stopPropagation()
+    props.onClick?.(e)
+  }
+
   return (
     <Box
       sx={{
@@ -74,10 +97,7 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
           disabled={deletePending || typeof props.onClick === 'undefined'}
           size="small"
           sx={{
-            margin: `0 ${chipMarginSides}px`,
-            padding: `${chipPaddingTopBottom} ${theme.spacing(1.5)}`,
-            minWidth: theme.spacing(6),
-            '&.Mui-disabled': { color: theme.primary },
+            ...chipBodySx,
             '&:hover':
               typeof props.onClick !== 'undefined'
                 ? {
@@ -85,20 +105,8 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
                     transition: theme.transitions.create('background'),
                   }
                 : {},
-            '&::after': {
-              content: '""',
-              width: '1px',
-              height: '100%',
-              background: chipOutline,
-              right: `-${chipMarginSides}px`,
-              top: 0,
-              position: 'absolute',
-            },
           }}
-          onClick={(e) => {
-            e.stopPropagation()
-            props.onClick?.(e)
-          }}
+          onClick={handleMainChipClick}
         >
           {props.label}
         </Button>
