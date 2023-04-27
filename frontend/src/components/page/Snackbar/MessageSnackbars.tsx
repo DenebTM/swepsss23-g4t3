@@ -55,47 +55,51 @@ export const MessageSnackbars: React.FC<Record<string, never>> = (props) => {
     removeSnackbarMessage(messageId)
   }
 
-  return (
-    <Stack
-      spacing={snackbarSpacing}
-      direction="column"
-      sx={{
-        width: '100%',
-        position: 'fixed',
-        bottom: 0,
-        padding: snackbarSpacing,
-        alignItems: smallDisplay ? 'center' : 'flex-start',
-        zIndex: theme.zIndex.snackbar, // Show in front of main page body
-      }}
-    >
-      {snackbarState.messages.map((msg: MessageState) => (
-        <Snackbar
-          key={msg.id}
-          action={
-            <IconButton
-              size="small"
-              onClick={(e) => handleClose(e, msg.id)}
-              sx={{ '&:hover': { background: theme.outline } }}
-            >
-              <CloseIcon sx={{ color: 'white' }} fontSize="small" />
-            </IconButton>
-          }
-          autoHideDuration={snackbarState.autoHideDuration}
-          message={
-            <SnackbarMessage
-              borderRadius={snackbarBorderRadius}
-              message={msg}
-            />
-          }
-          open
-          onClose={(e, reason) => handleClose(e, msg.id, reason)}
-          ContentProps={{ sx: snackbarContentStyles }}
-          sx={{
-            position: 'sticky',
-            width: smallDisplay ? '100%' : undefined,
-          }}
-        />
-      ))}
-    </Stack>
-  )
+  if (snackbarState.messages.length > 0) {
+    return (
+      <Stack
+        spacing={snackbarSpacing}
+        direction="column"
+        sx={{
+          width: '100%',
+          position: 'fixed',
+          bottom: 0,
+          padding: snackbarSpacing,
+          alignItems: smallDisplay ? 'center' : 'flex-start',
+          zIndex: theme.zIndex.snackbar, // Show in front of main page body
+        }}
+      >
+        {snackbarState.messages.map((msg: MessageState) => (
+          <Snackbar
+            key={msg.id}
+            action={
+              <IconButton
+                size="small"
+                onClick={(e) => handleClose(e, msg.id)}
+                sx={{ '&:hover': { background: theme.outline } }}
+              >
+                <CloseIcon sx={{ color: 'white' }} fontSize="small" />
+              </IconButton>
+            }
+            autoHideDuration={snackbarState.autoHideDuration}
+            message={
+              <SnackbarMessage
+                borderRadius={snackbarBorderRadius}
+                message={msg}
+              />
+            }
+            open
+            onClose={(e, reason) => handleClose(e, msg.id, reason)}
+            ContentProps={{ sx: snackbarContentStyles }}
+            sx={{
+              position: 'sticky',
+              width: smallDisplay ? '100%' : undefined,
+            }}
+          />
+        ))}
+      </Stack>
+    )
+  } else {
+    return null
+  }
 }
