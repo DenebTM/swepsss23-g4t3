@@ -2,6 +2,10 @@
 #define _LED_H
 
 #include <Arduino.h>
+#include <chrono>
+#include <tuple>
+#include <vector>
+using namespace std::chrono_literals;
 
 #define LED_RED_PIN   A0
 #define LED_GREEN_PIN A1
@@ -11,6 +15,25 @@
 #define LED_RED_MAX   255
 #define LED_GREEN_MAX 80
 #define LED_BLUE_MAX  80
+
+#define MAX_ACTIVE_STATUS_CODES 16
+
+#define LED_CYCLE_PAUSE_DURATION 2s
+#define LED_BLINK_SHORT_DURATION 200ms
+#define LED_BLINK_LONG_DURATION 500ms
+
+#define LED_SOLID(color) \
+  { color, 100ms }
+
+#define LED_BLINK_ONCE(color, duration) \
+  { color, duration }, { led::Color::OFF, duration }
+#define LED_BLINK_ONCE_SHORT(color) LED_BLINK_ONCE(color, LED_BLINK_SHORT_DURATION)
+#define LED_BLINK_ONCE_LONG(color) LED_BLINK_ONCE(color, LED_BLINK_LONG_DURATION)
+
+#define LED_BLINK_LAST(color, duration) \
+  { color, duration }, { led::Color::OFF, LED_CYCLE_PAUSE_DURATION }
+#define LED_BLINK_LAST_SHORT(color) LED_BLINK_LAST(color, LED_BLINK_SHORT_DURATION)
+#define LED_BLINK_LAST_LONG(color) LED_BLINK_LAST(color, LED_BLINK_LONG_DURATION)
 
 namespace led {
   // some predefined 24-bit colours in 0xRRGGBB format, with the different
@@ -25,10 +48,16 @@ namespace led {
     PURPLE = RED | BLUE,                      // #ff0050
     WHITE = RED | GREEN | BLUE                // #ff5050
   };
+  typedef std::chrono::milliseconds ColorDuration;
+  typedef std::vector<std::pair<Color, ColorDuration>> StatusCode;
 
   void setup();
 
   void set_color(Color color);
+  void set_status_code(StatusCode* const code);
+  void set_status_codes(StatusCode* const new_codes[], unsigned int new_codes_count);
+  void add_status_code(StatusCode* const code);
+  void clear_status_codes();
 }
 
 #endif
