@@ -17,6 +17,6 @@ namespace sensors {
 
   // last-read sensor data, stored in the format required by BLE
   extern struct sensor_data current_data;
-}
+} // namespace sensors
 
 #endif
