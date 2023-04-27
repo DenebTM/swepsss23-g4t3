@@ -76,9 +76,12 @@ export const MessageSnackbars: React.FC<Record<string, never>> = (props) => {
               <IconButton
                 size="small"
                 onClick={(e) => handleClose(e, msg.id)}
-                sx={{ '&:hover': { background: theme.outline } }}
+                sx={{
+                  color: 'inherit',
+                  '&:hover': { background: theme.outline },
+                }}
               >
-                <CloseIcon sx={{ color: 'white' }} fontSize="small" />
+                <CloseIcon color="inherit" fontSize="small" />
               </IconButton>
             }
             autoHideDuration={snackbarState.autoHideDuration}

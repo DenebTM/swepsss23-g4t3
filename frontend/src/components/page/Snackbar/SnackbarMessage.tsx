@@ -8,7 +8,7 @@ import { MessageState, MessageType } from '~/contexts/SnackbarContext/types'
 import { theme } from '~/styles/theme'
 
 const messageTypographyProps: SxProps<Theme> = {
-  color: 'white',
+  color: 'inherit',
   wordBreak: 'break-word',
   display: 'block',
 }
