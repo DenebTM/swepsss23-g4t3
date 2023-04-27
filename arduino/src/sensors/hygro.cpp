@@ -1,18 +1,18 @@
-#include <sensors/hygro.h>
 #include <sensors/data.h>
+#include <sensors/hygro.h>
 
 #include <algorithm>
 
 #include <hwtimer.h>
 
-namespace sensors::hygro { 
+namespace sensors::hygro {
   int next_sample_idx = 0;
   int samples[HYGRO_SAMPLE_COUNT];
 
   // Flags for periodic tasks
-  volatile bool shall_read = false;
+  volatile bool shall_read   = false;
   volatile bool shall_output = false;
-}
+} // namespace sensors::hygro
 
 void sensors::hygro::setup() {
   pinMode(HYGRO_PIN, INPUT);
@@ -33,13 +33,13 @@ void sensors::hygro::update() {
     shall_read = false;
 
     samples[next_sample_idx] = read();
-    next_sample_idx = (next_sample_idx + 1) % HYGRO_SAMPLE_COUNT;
+    next_sample_idx          = (next_sample_idx + 1) % HYGRO_SAMPLE_COUNT;
   }
 
   if (shall_output) {
     shall_output = false;
 
-    int moisture = read_hum();
+    int moisture               = read_hum();
     current_data.soil_moisture = moisture;
     Serial.println("Soil moisture: " + String(moisture) + "%");
   }
@@ -47,9 +47,7 @@ void sensors::hygro::update() {
 
 int sensors::hygro::read_hum() {
   unsigned long long total = 0;
-  for (int i = 0; i < HYGRO_SAMPLE_COUNT; i++) {
-    total += samples[i];
-  }
+  for (int i = 0; i < HYGRO_SAMPLE_COUNT; i++) { total += samples[i]; }
   long avg = total / HYGRO_SAMPLE_COUNT;
 
   // ensure we can't get values >100% or <0% due to random variance

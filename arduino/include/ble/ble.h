@@ -4,11 +4,11 @@
 #include <Arduino.h>
 #include <ArduinoBLE.h>
 
-#define BLE_DEVICE_NAME               "PH SensorStation"
-#define BLE_DEVICE_MANUFACTURER       "UIBK SE G4T3"
-#define BLE_DEVICE_APPEARANCE         0x3621
+#define BLE_DEVICE_NAME         "PH SensorStation"
+#define BLE_DEVICE_MANUFACTURER "UIBK SE G4T3"
+#define BLE_DEVICE_APPEARANCE   0x3621
 
-#define BLE_NO_PAIRED_DEVICE          String("")
+#define BLE_NO_PAIRED_DEVICE String("")
 
 namespace ble {
   extern String paired_mac;
@@ -16,7 +16,7 @@ namespace ble {
   /**
    * Initializes various internal variables, timers, services, etc.
    * intended to be run as part of the startup sequence
-   * 
+   *
    * returns true on success, false if BLE could not be initialized
    */
   bool setup();
@@ -26,6 +26,6 @@ namespace ble {
    * intended to be run as part of the main loop
    */
   void update();
-}
+} // namespace ble
 
 #endif
