@@ -44,7 +44,7 @@ export const SensorStationsTable: React.FC = () => {
     useState<number>(1)
 
   useEffect(() => {
-    if (sensorStations === null) {
+    if (sensorStations === null || sensorStations.length === 0) {
       setMaxGardenersPerGreenhouse(0)
     } else {
       setMaxGardenersPerGreenhouse(
