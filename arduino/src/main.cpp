@@ -8,6 +8,7 @@ using namespace std::chrono_literals;
 #include <sensors/bme.h>
 #include <sensors/hygro.h>
 #include <sensors/light.h>
+#include <sensors/warn.h>
 
 void setup() {
   Serial.begin(9600);
@@ -19,7 +20,6 @@ void setup() {
   sensors::light::setup();
 
   led::setup();
-  led::set_color(led::RED); // TODO: define LED colors/status codes in a central location
 
   ble::setup();
 }
@@ -28,6 +28,7 @@ void loop() {
   sensors::bme::update();
   sensors::hygro::update();
   sensors::light::update();
+  sensors::warn_update();
 
   ble::update();
 
