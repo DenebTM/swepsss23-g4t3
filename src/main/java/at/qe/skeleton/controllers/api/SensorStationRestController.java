@@ -31,7 +31,7 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
-    private static final String SS_PHOTOS_PATH = SS_ID_PATH + "/photos";
+    private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -91,7 +91,6 @@ public class SensorStationRestController implements BaseRestController {
         }
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
-
 
     /**
      * DELETE route to delete a sensor station by its id, only allowed by ADMIN
@@ -174,7 +173,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param photoId
      * @return the picture if found
      */
-    @DeleteMapping(value = SS_PHOTOS_PATH + "/{photoId}")
+    @DeleteMapping(value = SS_ID_PHOTOS_PATH + "/{photoId}")
     ResponseEntity<Object> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
@@ -186,5 +185,4 @@ public class SensorStationRestController implements BaseRestController {
         }
         return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
     }
-
 }
