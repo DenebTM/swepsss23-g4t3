@@ -9,24 +9,17 @@
 namespace ble {
   BLEService sv_senswarn(BLE_UUID_SENSOR_WARNINGS);
 
-  // array of BLE characteristics, their associated warning values (and sensor
-  // name to display in console; temporary)
-  auto senswarn_chars = std::vector<
-      std::pair<bool*, BLEUnsignedCharCharacteristic*>> {
-    { &sensors::current_warnings.air_pressure,
-      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_PRESSURE, BLEWrite) },
-    { &sensors::current_warnings.temperature,
-      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_TEMPERATURE, BLEWrite) },
-    { &sensors::current_warnings.humidity,
-      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_HUMIDITY, BLEWrite) },
-    { &sensors::current_warnings.illuminance,
-      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_ILLUMINANCE, BLEWrite) },
-    { &sensors::current_warnings.air_quality,
-      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_QUALITY, BLEWrite) },
-    { &sensors::current_warnings.soil_moisture,
-      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_SOIL_MOISTURE,
-                                        BLEWrite) },
+  // array of BLE characteristics and their associated warning values
+  // clang-format off
+  auto senswarn_chars = std::vector<std::pair<bool*, BLEUnsignedCharCharacteristic*>>{
+    { &sensors::current_warnings.air_pressure,  new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_PRESSURE,  BLEWrite) },
+    { &sensors::current_warnings.temperature,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_TEMPERATURE,   BLEWrite) },
+    { &sensors::current_warnings.humidity,      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_HUMIDITY,      BLEWrite) },
+    { &sensors::current_warnings.illuminance,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_ILLUMINANCE,   BLEWrite) },
+    { &sensors::current_warnings.air_quality,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_QUALITY,   BLEWrite) },
+    { &sensors::current_warnings.soil_moisture, new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_SOIL_MOISTURE, BLEWrite) },
   };
+  // clang-format on
 
   void senswarn_setup() {
     for (auto tup : senswarn_chars) {
