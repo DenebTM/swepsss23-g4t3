@@ -6,17 +6,28 @@ namespace led {
   using namespace std::chrono_literals;
   void restart_bg_thread();
 
+  StatusCode* active_status_codes_prio_low[MAX_ACTIVE_STATUS_CODES] = { 0 };
+  StatusCode* active_status_codes_prio_high[MAX_ACTIVE_STATUS_CODES] = { 0 };
+  unsigned int active_status_codes_count_prio_low = 0;
+  unsigned int active_status_codes_count_prio_high = 0;
+
   // background thread for blinking the LED
   // this massively simplifies iterating over the currently active status code
   // versus a timer
   rtos::Thread* bg_thread = NULL;
-  unsigned int active_status_codes_count = 0;
-  StatusCode* active_status_codes[MAX_ACTIVE_STATUS_CODES] = { 0 };
   void bg_thread_func() {
     set_color(Color::OFF);
     for (;;) { // loop until terminated
-      for (unsigned int i = 0; i < active_status_codes_count; i++) {
-        auto code = active_status_codes[i];
+      auto codes = active_status_codes_count_prio_high > 0
+        ? active_status_codes_prio_high
+        : active_status_codes_prio_low;
+
+      auto codes_count = active_status_codes_count_prio_high > 0
+        ? active_status_codes_count_prio_high
+        : active_status_codes_count_prio_low;
+
+      for (unsigned int i = 0; i < codes_count; i++) {
+        auto code = codes[i];
         for (auto tup : *code) {
           const auto duration = std::get<ColorDuration>(tup);
           auto next_update = rtos::Kernel::Clock::now() + duration;
@@ -51,16 +62,16 @@ namespace led {
     analogWrite(LED_BLUE_PIN, blue);
   }
 
-  void set_status_code(StatusCode* const code) {
-    clear_status_codes();
-    add_status_code(code);
+  void set_status_code(StatusCode* const code, CodePriority prio) {
+    clear_status_codes(prio);
+    add_status_code(code, prio);
     restart_bg_thread();
   }
 
-  void set_status_codes(StatusCode* const new_codes[], unsigned int new_codes_count) {
-    clear_status_codes();
+  void set_status_codes(StatusCode* const new_codes[], unsigned int new_codes_count, CodePriority prio) {
+    clear_status_codes(prio);
     for (unsigned int i = 0; i < new_codes_count; i++) {
-      add_status_code(new_codes[i]);
+      add_status_code(new_codes[i], prio);
     }
     restart_bg_thread();
   }
@@ -87,16 +98,33 @@ namespace led {
     start_bg_thread();
   }
 
-  void clear_status_codes() {
-    active_status_codes_count = 0;
-    for (unsigned int i = 0; i < active_status_codes_count; i++) {
-      active_status_codes[i] = NULL;
+  void clear_status_codes(CodePriority prio) {
+    auto codes = (prio == CodePriority::HIGH)
+      ? active_status_codes_prio_high
+      : active_status_codes_prio_low;
+
+    auto codes_count = (prio == CodePriority::LOW)
+      ? &active_status_codes_count_prio_high
+      : &active_status_codes_count_prio_low;
+
+    unsigned int tmp_codes_count = *codes_count;
+    *codes_count = 0;
+    for (unsigned int i = 0; i < tmp_codes_count; i++) {
+      codes[i] = NULL;
     }
   }
 
-  void add_status_code(StatusCode* const code) {
-    if (active_status_codes_count == MAX_ACTIVE_STATUS_CODES) return;
-    active_status_codes[active_status_codes_count++] = code;
+  void add_status_code(StatusCode* const code, CodePriority prio) {
+    auto codes = (prio == CodePriority::HIGH)
+      ? active_status_codes_prio_high
+      : active_status_codes_prio_low;
+
+    auto codes_count = (prio == CodePriority::LOW)
+      ? &active_status_codes_count_prio_high
+      : &active_status_codes_count_prio_low;
+
+    if (*codes_count == MAX_ACTIVE_STATUS_CODES) return;
+    codes[*codes_count++] = code;
 
     start_bg_thread();
   }

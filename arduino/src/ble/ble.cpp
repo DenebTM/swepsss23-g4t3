@@ -22,7 +22,8 @@ namespace ble {
       Serial.println(paired_mac);
 
       pairing::mode::active = false;
-      led::set_status_code(LEDC_BLE_CONNECTED);
+      led::clear_status_codes(led::CodePriority::HIGH);
+      led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
     }
 
     // currently trying to reconnect to paired AP; reject unauthorized devices
@@ -31,7 +32,8 @@ namespace ble {
         Serial.print("Reconnected to access point: ");
         Serial.println(paired_mac);
 
-        led::set_status_code(LEDC_BLE_CONNECTED);
+        led::clear_status_codes(led::CodePriority::HIGH);
+        led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
       } else {
         Serial.print("Rejecting connection attempt from ");
         Serial.println(new_mac);
@@ -48,7 +50,7 @@ namespace ble {
       Serial.print("Lost connection with access point ");
       Serial.println(paired_mac);
 
-      led::set_status_code(LEDC_BLE_DISCONNECTED);
+      led::set_status_code(LEDC_BLE_DISCONNECTED, led::CodePriority::HIGH);
     }
   }
 

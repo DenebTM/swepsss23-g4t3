@@ -13,7 +13,7 @@ namespace sensors {
       memcpy(&last_warnings, &current_warnings, sizeof(current_warnings));
 
       Serial.println("Sensor warnings have changed!");
-      led::clear_status_codes();
+      led::clear_status_codes(led::CodePriority::LOW);
 
       bool any_warnings = false;
       for (auto tup : std::vector<std::pair<bool, led::StatusCode* const>>{
@@ -29,13 +29,13 @@ namespace sensors {
 
         if (warn) {
           any_warnings = true;
-          led::add_status_code(code);
+          led::add_status_code(code, led::CodePriority::LOW);
         }
       }
 
       // return to the "all ok" status code if there are no active warnings
       if (!any_warnings) {
-        led::set_status_code(LEDC_BLE_CONNECTED);
+        led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::HIGH);
       }
     }
   }
