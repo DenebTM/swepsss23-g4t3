@@ -29,7 +29,7 @@ async def get_sensor_data_averages(sensorstation):
             
             return dict(averages_query.fetchone())
         except:
-            print("database cant be accessed # log")
+            print("database cant be accessed") #TODO: Implement logging
 
 #returns a dictionary of the thresholds of the sensorstation
 async def get_sensor_data_threshholds(sensorstation):
@@ -46,7 +46,7 @@ async def get_sensor_data_threshholds(sensorstation):
         return dict(thresholds_query.fetchone())
 
     except:
-        print("database cant be accesse #log")
+        print("database cant be accesse") #TODO: implement log
 
 
 async def update_sensorstation(json_data):
@@ -86,6 +86,3 @@ async def update_sensorstation(json_data):
         except Exception as e:
             db_conn.rollback()
             print(f"Error inserting data for sensorstation {sensorstation_name}: {e}")
-
-         
-

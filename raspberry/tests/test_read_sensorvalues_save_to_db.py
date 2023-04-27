@@ -14,7 +14,7 @@ class test_read_sensor_values(unittest.IsolatedAsyncioTestCase):
     @patch('read_sensorvalues.BleakClient')
     async def test_read_sensorvalues(self, BleakClient, save_sensor_values_to_database):
 
-        #modify return value of gatt char to 10
+        #mock reading characteristic of BleakClient
         BleakClient().__aenter__.return_value.read_gatt_char.return_value=int(10).to_bytes(2,byteorder='little')
 
         # call function with mock client
