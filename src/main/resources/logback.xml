@@ -76,8 +76,8 @@
     <root level="info">
         <appender-ref ref="stdout" level="info"/>
         <appender-ref ref="db" level="warn"/>
-        <appender-ref ref="info" level="info"/>
         <appender-ref ref="warnError" level="warn"/>
+        <appender-ref ref="info" level="info"/>
     </root>
 
 </configuration>
