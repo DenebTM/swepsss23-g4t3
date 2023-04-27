@@ -53,12 +53,10 @@ public class SensorStationRestController implements BaseRestController {
     @GetMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
-
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
             return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
-
         return ResponseEntity.ok(ss);
     }
 
@@ -94,7 +92,6 @@ public class SensorStationRestController implements BaseRestController {
         }
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
-
 
     /**
      * DELETE route to delete a sensor station by its id, only allowed by ADMIN
@@ -168,7 +165,6 @@ public class SensorStationRestController implements BaseRestController {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
         }
         ss.getGardeners().remove(user);
-        ssService.saveSS(ss);
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
