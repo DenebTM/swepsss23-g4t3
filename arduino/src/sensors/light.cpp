@@ -1,21 +1,19 @@
-#include <sensors/light.h>
 #include <sensors/data.h>
+#include <sensors/light.h>
 
 #include <hwtimer.h>
 
 namespace sensors::light {
-  int next_sample_idx = 0;
+  int next_sample_idx             = 0;
   int samples[LIGHT_SAMPLE_COUNT] = { 0 };
 
   // Flags for periodic tasks
-  volatile bool shall_read = false;
+  volatile bool shall_read   = false;
   volatile bool shall_output = false;
 
   void do_output() {
     unsigned long long total = 0;
-    for (int i = 0; i < LIGHT_SAMPLE_COUNT; i++) {
-      total += samples[i];
-    }
+    for (int i = 0; i < LIGHT_SAMPLE_COUNT; i++) { total += samples[i]; }
     long avg = total / LIGHT_SAMPLE_COUNT;
 
     // perform linear interpolation between known values
@@ -26,7 +24,7 @@ namespace sensors::light {
       lx_val = map(avg, LIGHT_VAL_20LX, LIGHT_VAL_50LX, 20, 50);
     } else if (avg <= LIGHT_VAL_100LX) {
       lx_val = map(avg, LIGHT_VAL_50LX, LIGHT_VAL_100LX, 50, 100);
-    // interpolate between 100 and 200, and extrapolate beyond 200
+      // interpolate between 100 and 200, and extrapolate beyond 200
     } else {
       lx_val = map(avg, LIGHT_VAL_100LX, LIGHT_VAL_200LX, 100, 200);
     }
@@ -34,7 +32,7 @@ namespace sensors::light {
     current_data.illuminance = lx_val;
     Serial.println("Illuminance: " + String(lx_val) + " lx");
   }
-}
+} // namespace sensors::light
 
 void sensors::light::setup() {
   pinMode(LIGHT_PIN, INPUT);
@@ -48,7 +46,7 @@ void sensors::light::update() {
     shall_read = false;
 
     samples[next_sample_idx] = analogRead(LIGHT_PIN);
-    next_sample_idx = (next_sample_idx + 1) % LIGHT_SAMPLE_COUNT;
+    next_sample_idx          = (next_sample_idx + 1) % LIGHT_SAMPLE_COUNT;
   }
 
   if (shall_output) {
