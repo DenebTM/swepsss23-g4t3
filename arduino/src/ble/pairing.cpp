@@ -1,14 +1,16 @@
 #include <ble/pairing.h>
 
-#include <common.h>
 #include <buttons.h>
+#include <common.h>
 #include <led.h>
 
-#define PAIRING_MODE_TIMED_OUT (millis() >= mode::active_since + BLE_PAIRING_MODE_TIMEOUT_MS)
+#define PAIRING_MODE_TIMED_OUT \
+  (millis() >= mode::active_since + BLE_PAIRING_MODE_TIMEOUT_MS)
 
 namespace ble::pairing {
   namespace mode {
-    // signal set by ISR; when true, will enter pairing mode at next call to `update`
+    // signal set by ISR; when true, will enter pairing mode at next call to
+    // `update`
     volatile bool entering = false;
 
     // whether or not pairing mode is currently active
@@ -42,11 +44,12 @@ namespace ble::pairing {
       pairing::mode::active = false;
       led::set_status_code(LEDC_BLE_UNPAIRED, led::CodePriority::HIGH);
     }
-  }
+  } // namespace mode
 
   void setup() {
     buttons::setup(0, []() {
-      // reset timeout (so that pairing mode duration can be extended while already active)
+      // reset timeout (so that pairing mode duration can be extended while
+      // already active)
       mode::active_since = millis();
 
       // only enter pairing mode if not already active
@@ -68,8 +71,6 @@ namespace ble::pairing {
       mode::enter();
     }
 
-    if (mode::active && PAIRING_MODE_TIMED_OUT) {
-      mode::exit();
-    }
+    if (mode::active && PAIRING_MODE_TIMED_OUT) { mode::exit(); }
   }
-}
+} // namespace ble::pairing
