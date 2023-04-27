@@ -1,8 +1,6 @@
 import React from 'react'
 
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import PrintIcon from '@mui/icons-material/Print'
-import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
 
@@ -70,17 +68,6 @@ export const QrDialogActions: React.FC<QrDialogActionsProps> = (
         style={{ height: 0, width: 0, position: 'absolute' }}
         ref={iframeRef}
       ></iframe>
-      <LoadingButton
-        variant="outlined"
-        onClick={undefined}
-        loading={false}
-        loadingPosition="center"
-        startIcon={<ContentCopyIcon />}
-        color="primary"
-        sx={{ minWidth: buttonMinWidth }}
-      >
-        Copy
-      </LoadingButton>
       <Button
         variant="contained"
         color="primary"
