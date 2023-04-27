@@ -192,7 +192,7 @@ public class SensorStationRestController implements BaseRestController {
         Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
         Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
 
-        // if keys "from" end "to" are missing in json body return the most recent/current measurement
+        // if keys "from" and "to" are missing in json body return the most recent/current measurement
         if (!json.containsKey("from") && !json.containsKey("to")){
             Measurement currentMeasurement = ssService.getCurrentMeasurement(id);
             if (currentMeasurement == null){
