@@ -43,15 +43,16 @@ namespace led {
   // some predefined 24-bit colours in 0xRRGGBB format, with the different
   // brightness of each LED component pre-accounted for
   enum Color {
-    OFF    = 0,                  // #000000
-    RED    = LED_RED_MAX << 16,  // #ff0000
-    GREEN  = LED_GREEN_MAX << 8, // #005000
-    BLUE   = LED_BLUE_MAX,       // #000050
-    YELLOW = RED | (LED_GREEN_MAX / 8)
-                       << 8, // #ff0a00 (about as good of a yellow as I can get
-                             // out of our LED)
-    CYAN   = BLUE | GREEN,   // #005050
-    PURPLE = RED | BLUE,     // #ff0050
+    OFF   = 0,                  // #000000
+    RED   = LED_RED_MAX << 16,  // #ff0000
+    GREEN = LED_GREEN_MAX << 8, // #005000
+    BLUE  = LED_BLUE_MAX,       // #000050
+
+    // #ff0a00 (about as good of a yellow as I can get out of our LED)
+    YELLOW = RED | (LED_GREEN_MAX / 8) << 8,
+
+    CYAN   = BLUE | GREEN,      // #005050
+    PURPLE = RED | BLUE,        // #ff0050
     WHITE  = RED | GREEN | BLUE // #ff5050
   };
   typedef std::chrono::milliseconds ColorDuration;
