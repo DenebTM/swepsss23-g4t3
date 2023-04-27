@@ -6,10 +6,26 @@ namespace led {
   using namespace std::chrono_literals;
   void restart_bg_thread();
 
-  StatusCode* active_status_codes_prio_low[MAX_ACTIVE_STATUS_CODES]  = { 0 };
-  StatusCode* active_status_codes_prio_high[MAX_ACTIVE_STATUS_CODES] = { 0 };
-  unsigned int active_status_codes_count_prio_low                    = 0;
-  unsigned int active_status_codes_count_prio_high                   = 0;
+  struct status_codes_list {
+    StatusCode* list[MAX_ACTIVE_STATUS_CODES];
+    unsigned int count;
+
+    void append(StatusCode* code) {
+      if (count == MAX_ACTIVE_STATUS_CODES) return;
+      list[count++] = code;
+    }
+
+    void clear() {
+      int tmp_count = count;
+
+      count = 0;
+      for (unsigned int i = 0; i < tmp_count; i++) { list[i] = NULL; }
+    }
+
+  } active_status_codes[2] = {
+    { .list = { NULL }, .count = 0 }, // CodePriority::LOW
+    { .list = { NULL }, .count = 0 }  // CodePriority::HIGH
+  };
 
   // background thread for blinking the LED
   // this massively simplifies iterating over the currently active status code
@@ -18,15 +34,17 @@ namespace led {
   void bg_thread_func() {
     set_color(Color::OFF);
     for (;;) { // loop until terminated
-      auto codes = active_status_codes_count_prio_high > 0
-                       ? active_status_codes_prio_high
-                       : active_status_codes_prio_low;
 
-      auto codes_count = active_status_codes_count_prio_high > 0
-                             ? active_status_codes_count_prio_high
-                             : active_status_codes_count_prio_low;
+      // if any high-priority codes are set, iterate over those
+      // else, iterate over the low-priority codes
+      auto active_list = (active_status_codes[CodePriority::HIGH].count > 0)
+                             ? CodePriority::HIGH
+                             : CodePriority::LOW;
 
-      for (unsigned int i = 0; i < codes_count; i++) {
+      auto codes       = active_status_codes[active_list].list;
+      auto codes_count = active_status_codes[active_list].count;
+
+      for (auto i = 0; i < codes_count; i++) {
         auto code = codes[i];
         for (auto tup : *code) {
           const auto duration = std::get<ColorDuration>(tup);
@@ -62,12 +80,6 @@ namespace led {
     analogWrite(LED_BLUE_PIN, blue);
   }
 
-  void set_status_code(StatusCode* const code, CodePriority prio) {
-    clear_status_codes(prio);
-    add_status_code(code, prio);
-    restart_bg_thread();
-  }
-
   void set_status_codes(StatusCode* const new_codes[],
                         unsigned int new_codes_count,
                         CodePriority prio) {
@@ -76,6 +88,11 @@ namespace led {
       add_status_code(new_codes[i], prio);
     }
     restart_bg_thread();
+  }
+
+  void set_status_code(StatusCode* const code, CodePriority prio) {
+    StatusCode* const codes_list[1] = { code };
+    set_status_codes(codes_list, 1, prio);
   }
 
   // Helper functions
@@ -100,28 +117,11 @@ namespace led {
   }
 
   void clear_status_codes(CodePriority prio) {
-    auto codes = (prio == CodePriority::HIGH) ? active_status_codes_prio_high
-                                              : active_status_codes_prio_low;
-
-    auto codes_count = (prio == CodePriority::HIGH)
-                           ? &active_status_codes_count_prio_high
-                           : &active_status_codes_count_prio_low;
-
-    unsigned int tmp_codes_count = *codes_count;
-    *codes_count                 = 0;
-    for (unsigned int i = 0; i < tmp_codes_count; i++) { codes[i] = NULL; }
+    active_status_codes[prio].clear();
   }
 
   void add_status_code(StatusCode* const code, CodePriority prio) {
-    auto codes = (prio == CodePriority::HIGH) ? active_status_codes_prio_high
-                                              : active_status_codes_prio_low;
-
-    auto codes_count = (prio == CodePriority::HIGH)
-                           ? &active_status_codes_count_prio_high
-                           : &active_status_codes_count_prio_low;
-
-    if (*codes_count == MAX_ACTIVE_STATUS_CODES) return;
-    codes[(*codes_count)++] = code;
+    active_status_codes[prio].append(code);
 
     start_bg_thread();
   }
