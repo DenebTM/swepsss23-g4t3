@@ -10,7 +10,7 @@ namespace ble {
                                           strlen(BLE_DEVICE_MANUFACTURER));
   BLEByteCharacteristic ch_stationID(BLE_UUID_STATION_ID, BLERead | BLENotify);
   uint8_t val_stationID = 0;
-  
+
   // Flags for periodic tasks
   volatile bool shall_update_station_id = false;
 
@@ -25,12 +25,13 @@ namespace ble {
     ble::val_stationID = station_id();
     ble::ch_stationID.writeValue(ble::val_stationID);
     ble::sv_devinfo.addCharacteristic(ble::ch_stationID);
-    
+
     BLE.addService(ble::sv_devinfo);
     BLE.setAdvertisedService(ble::sv_devinfo);
 
     update_station_id();
-    hwtimer::attach_flag_isr(STATION_ID_CHECK_INTERVAL_MS, &shall_update_station_id);
+    hwtimer::attach_flag_isr(STATION_ID_CHECK_INTERVAL_MS,
+                             &shall_update_station_id);
   }
 
   void devinfo_update() {
@@ -51,9 +52,9 @@ namespace ble {
 
     // include current station ID in BLE service and advertising data
     ch_stationID.writeValue(val_stationID);
-    BLE.setAdvertisedServiceData(strtol(BLE_UUID_DEVINFO, NULL, 16),
-                                 &ble::val_stationID, 1);
+    BLE.setAdvertisedServiceData(
+        strtol(BLE_UUID_DEVINFO, NULL, 16), &ble::val_stationID, 1);
 
     // TODO: disallow changing station ID while paired, blink warning LED
   }
-}
+} // namespace ble

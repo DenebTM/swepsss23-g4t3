@@ -52,11 +52,8 @@ namespace ble {
     }
   }
 
-
   int setup() {
-    if (!BLE.begin()) {
-      Serial.println("Error initializing BLE!");
-    }
+    if (!BLE.begin()) { Serial.println("Error initializing BLE!"); }
 
     devinfo_setup();
     envsense_setup();
@@ -78,4 +75,4 @@ namespace ble {
     envsense_update();
     pairing::update();
   }
-}
+} // namespace ble

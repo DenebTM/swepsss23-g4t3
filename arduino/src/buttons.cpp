@@ -6,11 +6,11 @@
 
 int buttons::setup(unsigned int button_id, voidFuncPtr callback) {
   // don't attempt to set up a button on pins that don't have a button attached
-  if (button_id > 2)
-    return -1;
-  
+  if (button_id > 2) return -1;
+
   pinMode(BUTTON0_PIN + button_id, INPUT_PULLUP);
-  mbed::InterruptIn* button = new mbed::InterruptIn(digitalPinToPinName(BUTTON0_PIN + button_id));
+  mbed::InterruptIn* button =
+      new mbed::InterruptIn(digitalPinToPinName(BUTTON0_PIN + button_id));
 
   // debounce button press before running the callback
   button->rise([callback]() {

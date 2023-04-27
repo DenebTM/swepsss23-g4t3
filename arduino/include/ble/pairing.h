@@ -6,20 +6,16 @@
 #include <led.h>
 using namespace std::chrono_literals;
 
-#define BLE_PAIRING_MODE_TIMEOUT_MS   5 * 60 * 1000
+#define BLE_PAIRING_MODE_TIMEOUT_MS 5 * 60 * 1000
 
-static led::StatusCode* const LEDC_BLE_UNPAIRED = new led::StatusCode{
-  LED_SOLID(led::Color::RED)
-};
-static led::StatusCode* const LEDC_BLE_PAIRING = new led::StatusCode{
-  LED_BLINK_ONCE_SHORT(led::Color::BLUE)
-};
-static led::StatusCode* const LEDC_BLE_CONNECTED = new led::StatusCode{
-  LED_SOLID(led::Color::GREEN)
-};
-static led::StatusCode* const LEDC_BLE_DISCONNECTED = new led::StatusCode{
-  LED_BLINK_ONCE(led::Color::RED, 1s)
-};
+static led::StatusCode* const LEDC_BLE_UNPAIRED =
+    new led::StatusCode { LED_SOLID(led::Color::RED) };
+static led::StatusCode* const LEDC_BLE_PAIRING =
+    new led::StatusCode { LED_BLINK_ONCE_SHORT(led::Color::BLUE) };
+static led::StatusCode* const LEDC_BLE_CONNECTED =
+    new led::StatusCode { LED_SOLID(led::Color::GREEN) };
+static led::StatusCode* const LEDC_BLE_DISCONNECTED =
+    new led::StatusCode { LED_BLINK_ONCE(led::Color::RED, 1s) };
 
 namespace ble::pairing {
   /** enable pairing button */
@@ -35,7 +31,7 @@ namespace ble::pairing {
 
     void enter();
     void exit();
-  }
-}
+  } // namespace mode
+} // namespace ble::pairing
 
 #endif
