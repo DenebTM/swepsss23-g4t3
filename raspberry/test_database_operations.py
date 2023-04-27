@@ -61,7 +61,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
                                   "temperature_min": 70, "humidity_min": 80, "air_pressure_min": 90, "illuminance_min": 100, "air_quality_index_min": 100, "soil_moisture_min": 120})
     
     @patch('database_operations.db_conn')
-    async def test_update_sensorstations(self, db_conn):
+    async def test_update_sensorstation(self, db_conn):
 
         #set up json which is received 
         json_data = '''{
