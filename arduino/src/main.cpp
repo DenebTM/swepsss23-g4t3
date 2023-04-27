@@ -8,6 +8,7 @@ using namespace std::chrono_literals;
 #include <sensors/bme.h>
 #include <sensors/hygro.h>
 #include <sensors/light.h>
+#include <sensors/warn.h>
 
 void setup() {
   Serial.begin(9600);
@@ -28,6 +29,7 @@ void loop() {
   sensors::bme::update();
   sensors::hygro::update();
   sensors::light::update();
+  sensors::warn_update();
 
   ble::update();
 
