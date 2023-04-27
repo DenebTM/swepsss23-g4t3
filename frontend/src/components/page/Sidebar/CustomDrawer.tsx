@@ -12,6 +12,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
+  border: 0,
 })
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -62,7 +63,27 @@ export const CustomDrawer: React.FC<CustomDrawerProps> = forwardRef(
         variant="permanent"
         open={props.open}
         PaperProps={{
-          sx: { color: theme.onSurfaceVariant, background: theme.background },
+          sx: {
+            color: theme.onSurfaceVariant,
+            background: theme.background,
+            padding: theme.spacing(0, 0.5),
+            border: 'none',
+            '&::-webkit-scrollbar': {
+              width: theme.spacing(0.75),
+            },
+            '&::-webkit-scrollbar-track': {
+              boxShadow: theme.shadows[0],
+              background: theme.outlineVariant,
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: theme.outline,
+              borderRadius: 2,
+              '&:hover': {
+                backgroundColor: theme.onSurfaceVariant,
+                transition: theme.transitions.create('backgroundColor'),
+              },
+            },
+          },
         }}
         ref={ref}
       >

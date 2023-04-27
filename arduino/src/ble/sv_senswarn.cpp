@@ -1,43 +1,73 @@
 #include <ble/sv_senswarn.h>
 
+#include <tuple>
+#include <vector>
+
+#include <buttons.h>
 #include <common.h>
 #include <sensors/warn.h>
 
-#define _WARN_WRITTEN_HANDLER(sensor_name) \
-  void ch_warn_##sensor_name ## _written_handler ( \
-    BLEDevice central, \
-    BLECharacteristic characteristic \
-  ) { \
-    uint8_t warn = !!*characteristic.value(); \
-    if (sensors::current_warnings.sensor_name != warn) { \
-      sensors::current_warnings.sensor_name = warn; \
-      Serial.println(String(warn ? "Set" : "Cleared") + \
-        " sensor warning for " #sensor_name); \
-    } \
-  }
-
-#define _SETUP_WARN_CHAR(sensor_name) \
-    sv_senswarn.addCharacteristic(ch_warn_##sensor_name); \
-    ch_warn_##sensor_name.setEventHandler(BLEWritten, ch_warn_##sensor_name ## _written_handler);
-
 namespace ble {
   BLEService sv_senswarn(BLE_UUID_SENSOR_WARNINGS);
-  BLEUnsignedCharCharacteristic ch_warn_air_pressure (BLE_UUID_WARN_AIR_PRESSURE,  BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_temperature  (BLE_UUID_WARN_TEMPERATURE,   BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_humidity     (BLE_UUID_WARN_HUMIDITY,      BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_illuminance  (BLE_UUID_WARN_ILLUMINANCE,   BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_air_quality  (BLE_UUID_WARN_AIR_QUALITY,   BLEWrite);
-  BLEUnsignedCharCharacteristic ch_warn_soil_moisture(BLE_UUID_WARN_SOIL_MOISTURE, BLEWrite);
 
-  // define write handlers for warning characteristics
-  CALL_FOREACH(_WARN_WRITTEN_HANDLER,
-    air_pressure, temperature, humidity, illuminance, air_quality, soil_moisture)
+  // array of BLE characteristics and their associated warning values
+  // clang-format off
+  auto senswarn_chars = std::vector<std::pair<bool*, BLEUnsignedCharCharacteristic*>>{
+    { &sensors::current_warnings.air_pressure,  new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_PRESSURE,  BLEWrite) },
+    { &sensors::current_warnings.temperature,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_TEMPERATURE,   BLEWrite) },
+    { &sensors::current_warnings.humidity,      new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_HUMIDITY,      BLEWrite) },
+    { &sensors::current_warnings.illuminance,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_ILLUMINANCE,   BLEWrite) },
+    { &sensors::current_warnings.air_quality,   new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_AIR_QUALITY,   BLEWrite) },
+    { &sensors::current_warnings.soil_moisture, new BLEUnsignedCharCharacteristic(BLE_UUID_WARN_SOIL_MOISTURE, BLEWrite) },
+  };
+  // clang-format on
+
+  /**
+   * denotes whether or not a warning has been set and not cleared yet
+   *
+   * will only be set to `true` when a value != 0 is written to any of the
+   * `senswarn_chars` will only be set to `false` after a press to button 1
+   */
+  BLEUnsignedCharCharacteristic ch_any_warning_active(BLE_UUID_WARN_ANY_ACTIVE,
+                                                      BLERead | BLENotify);
+
+  volatile bool shall_clear_warning = false;
 
   void senswarn_setup() {
-    // assign write handlers for warning characteristics and add them to the service
-    CALL_FOREACH(_SETUP_WARN_CHAR,
-      air_pressure, temperature, humidity, illuminance, air_quality, soil_moisture)
+    buttons::setup(BUTTON_ID_CLEAR_WARNING,
+                   []() { shall_clear_warning = true; });
+    sv_senswarn.addCharacteristic(ch_any_warning_active);
+
+    for (auto tup : senswarn_chars) {
+      auto ble_char = std::get<BLEUnsignedCharCharacteristic*>(tup);
+      auto val_ptr  = std::get<bool*>(tup);
+
+      ble_char->setEventHandler(
+          BLEWritten,
+          [val_ptr](BLEDevice central, BLECharacteristic characteristic) {
+            bool warning_active = *characteristic.value() != 0;
+            if (*val_ptr != warning_active) { *val_ptr = warning_active; }
+          });
+
+      sv_senswarn.addCharacteristic(*ble_char);
+    }
 
     BLE.addService(sv_senswarn);
   }
-}
+
+  void senswarn_update() {
+    // clear all active warnings after button has been pressed
+
+    // yes, this desyncs with the actual values stored inside the
+    // characteristics; I will consider that if it turns out to be a problem
+    if (shall_clear_warning) {
+      shall_clear_warning = false;
+      ch_any_warning_active.writeValue(false);
+
+      for (auto tup : senswarn_chars) {
+        const auto val_ptr = std::get<bool*>(tup);
+        *val_ptr           = false;
+      }
+    }
+  }
+} // namespace ble

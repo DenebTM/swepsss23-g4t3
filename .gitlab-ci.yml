@@ -29,6 +29,18 @@ frontend-unit-test-job:
   allow_failure: false
   retry: 1
 
+arduino-build-job:
+  stage: test
+  script:
+    - apk add --update python3 gcompat git
+    - python3 -m ensurepip
+    - pip3 install platformio
+    - echo "Checking if Arduino code builds..."
+    - cd arduino
+    - pio run
+  allow_failure: false
+  retry: 1
+
 sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck

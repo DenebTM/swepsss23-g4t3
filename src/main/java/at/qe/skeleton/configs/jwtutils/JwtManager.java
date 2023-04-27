@@ -28,7 +28,7 @@ public class JwtManager {
     public static final long TOKEN_VALIDITY = 10 * 60 * 60;
 
     /**
-     * The JWT secret loaded from application.properteis
+     * The JWT secret loaded from application.properties
      */
     @Value("${app.security.jwt.secret}")
     private String jwtSecret;
