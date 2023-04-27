@@ -14,6 +14,9 @@ import { theme } from '~/styles/theme'
 import { QrDialogActions } from './QrDialogActions'
 import { QrDialogHeader } from './QrDialogHeader'
 
+/** Id used to locate and print the QR code in the window */
+const qrCodeId = 'qr-code-contents'
+
 interface GenerateQrCodeProps {
   uuid: SensorStationUuid
 }
@@ -58,7 +61,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = (
           uuid={props.uuid}
         />
 
-        <DialogContent sx={{ textAlign: 'center' }}>
+        <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>
           <QRCode
             size={256}
             style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
@@ -66,7 +69,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = (
             viewBox={`0 0 256 256`}
           />
         </DialogContent>
-        <QrDialogActions />
+        <QrDialogActions qrCodeId={qrCodeId} />
       </Dialog>
     </>
   )
