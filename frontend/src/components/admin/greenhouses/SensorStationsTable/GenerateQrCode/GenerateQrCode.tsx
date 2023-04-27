@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import QRCode from 'react-qr-code'
 
 import QrCode2Icon from '@mui/icons-material/QrCode2'
 import Dialog from '@mui/material/Dialog'
@@ -6,6 +7,7 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 
 import { Tooltip } from '@component-lib/Tooltip'
+import { PAGE_URL } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
@@ -46,7 +48,9 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = (
         onClose={handleClose}
         aria-labelledby="qr-dialog-title"
         aria-describedby="qr-dialog-description"
-        PaperProps={{ sx: { minWidth: '70%', padding: theme.spacing(2, 2) } }}
+        PaperProps={{
+          sx: { minWidth: '70%', padding: theme.spacing(1, 3, 2) },
+        }}
       >
         <QrDialogHeader
           handleClose={handleClose}
@@ -54,7 +58,14 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = (
           uuid={props.uuid}
         />
 
-        <DialogContent>QR CODE HERE</DialogContent>
+        <DialogContent sx={{ textAlign: 'center' }}>
+          <QRCode
+            size={256}
+            style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
+            value={PAGE_URL.photoUpload.href(props.uuid)}
+            viewBox={`0 0 256 256`}
+          />
+        </DialogContent>
         <QrDialogActions />
       </Dialog>
     </>
