@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -177,12 +179,19 @@ public class SensorStationRestController implements BaseRestController {
     ResponseEntity<Object> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
+            List<String> gardeners = ssService.getGardenersBySS(ss);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentPrincipalName = authentication.getName();
+            if (!gardeners.contains(currentPrincipalName) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN"))) {
+                return HelperFunctions.notFoundError("Gardener", currentPrincipalName);
+            }
             Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
             if (maybePhoto.isPresent()) {
                 photoDataRepository.delete(maybePhoto.get());
                 return ResponseEntity.ok("Photo deleted");
             }
+            return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
         }
-        return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
+        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
 }
