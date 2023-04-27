@@ -11,12 +11,24 @@ import { SensorStation } from '~/models/sensorStation'
  * If the values have not been set yet, then fetches and saves these.
  */
 export const useSensorStations = (): SensorStation[] | null => {
-  const { appState, setSensorStations } = React.useContext(AppContext)
-  const { addMessage } = React.useContext(SnackbarContext)
+  const { appState } = React.useContext(AppContext)
   const sensorStations: SensorStation[] | null = appState.sensorStations.data
+  const loadSensorStations = useLoadSensorStations()
 
   // If the sensor stations have not been fetched yet then load them from the API
   if (sensorStations === null) {
+    loadSensorStations()
+  }
+  return sensorStations
+}
+
+/**
+ * Load sensor stations from the backend and saves them in the global {@link AppContext}
+ */
+export const useLoadSensorStations = (): (() => void) => {
+  const { setSensorStations } = React.useContext(AppContext)
+  const { addMessage } = React.useContext(SnackbarContext)
+  return () =>
     getSensorStations()
       .then((data) => {
         setSensorStations(data)
@@ -28,6 +40,4 @@ export const useSensorStations = (): SensorStation[] | null => {
           type: MessageType.ERROR,
         })
       )
-  }
-  return sensorStations
 }

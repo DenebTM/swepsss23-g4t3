@@ -22,6 +22,7 @@ void setup() {
 
   led::setup();
 
+  // TODO: Show LED error code if this fails
   ble::setup();
 }
 

@@ -3,9 +3,41 @@ import { Factory, ModelInstance, Server } from 'miragejs'
 import { AccessPoint } from '~/models/accessPoint'
 import { Measurement, SensorValues } from '~/models/measurement'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
-import { Username, UserRole } from '~/models/user'
+import { AuthUserRole, Username } from '~/models/user'
 
 import { AfterCreate, AppRegistry } from '../mirageTypes'
+
+/**
+ * Return function which applies `comparisonFn` to each value in `prev` and `current`
+ * and return the resulting `SensorValues` object.
+ */
+const compareSensorVals =
+  (comparisonFn: (...values: number[]) => number) =>
+  (prev: SensorValues, current: SensorValues): SensorValues => {
+    let k: keyof SensorValues
+    const output: SensorValues = { ...current }
+    for (k in current) {
+      output[k] = comparisonFn(current[k], prev[k])
+    }
+    return output
+  }
+
+/** Randomly jitter sensor values by a percentage of the current value */
+const randomJitter = (sensorValues: SensorValues, percentage = 0.2) =>
+  Object.keys(sensorValues).reduce((a: SensorValues, k: string) => {
+    const val: number = a[k as keyof SensorValues]
+    const plusMinus = faker.helpers.arrayElement([-1, +1])
+    const jitter = faker.datatype.float({
+      min: 0,
+      max: percentage,
+      precision: 0.01,
+    })
+
+    return {
+      ...a,
+      [k]: val + val * plusMinus * jitter,
+    }
+  }, sensorValues)
 
 /**
  * Factory to generate a fake {@link SensorStation}.
@@ -44,38 +76,39 @@ export const sensorStationFactory = Factory.extend<
     for (let i = 0; i <= nGardeners; i++) {
       const userId = faker.name.middleName().toLowerCase()
       gardenerIds.push(userId)
-      server.create('user', { username: userId, role: UserRole.GARDENER })
+      server.create('user', { username: userId, role: AuthUserRole.GARDENER })
     }
-
-    // Create bound objects
-    const lowerBound: ModelInstance<SensorValues> = server.create('sensorValue')
-    const upperBound: ModelInstance<SensorValues> = server.create('sensorValue')
-    // Swap bounds so that the values of lowerBound are all <= upperBound
-    Object.keys(lowerBound.attrs).forEach((sensorValKey) => {
-      const castKey = sensorValKey as keyof SensorValues
-      const lowerVal = Math.min(
-        lowerBound.attrs[castKey],
-        upperBound.attrs[castKey]
-      )
-      upperBound.update({
-        [castKey]: Math.max(
-          lowerBound.attrs[castKey],
-          upperBound.attrs[castKey]
-        ),
-      })
-      lowerBound.update({
-        [castKey]: lowerVal,
-      })
-    })
 
     // Create access point
     const ap: ModelInstance<AccessPoint> = server.create('accessPoint')
+    ap.update('sensorStations', [sensorStation.attrs.uuid])
 
-    // Cerate measurements
+    // Create measurements
     const measurements = server.createList(
       'measurement',
       faker.datatype.number({ min: 0, max: 30 })
     ) as ModelInstance<Measurement>[]
+
+    // Create bound objects
+    const lowerBound: ModelInstance<SensorValues> = server.create('sensorValue')
+    const upperBound: ModelInstance<SensorValues> = server.create('sensorValue')
+
+    // Generate upper and lower bounds near the generated measurements
+    const measurementVals: SensorValues[] = measurements.map(
+      (m) => m.attrs.data
+    )
+    const minSensorValues = measurementVals.reduce(
+      compareSensorVals(Math.min),
+      lowerBound.attrs
+    )
+    const maxSensorValues = measurementVals.reduce(
+      compareSensorVals(Math.max),
+      upperBound.attrs
+    )
+
+    // Randomly jitter max and min values
+    lowerBound.update(randomJitter(minSensorValues))
+    upperBound.update(randomJitter(maxSensorValues))
 
     // Update sensorStation object
     sensorStation.update({

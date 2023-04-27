@@ -11,9 +11,13 @@
 #define BLE_UUID_WARN_ILLUMINANCE   "ff04"
 #define BLE_UUID_WARN_AIR_QUALITY   "ff05"
 #define BLE_UUID_WARN_SOIL_MOISTURE "ff06"
+#define BLE_UUID_WARN_ANY_ACTIVE    "ff80"
+
+#define BUTTON_ID_CLEAR_WARNING 1
 
 namespace ble {
   void senswarn_setup();
-}
+  void senswarn_update();
+} // namespace ble
 
 #endif
