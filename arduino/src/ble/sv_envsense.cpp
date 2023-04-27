@@ -12,14 +12,25 @@ namespace ble {
 
   // array of BLE characteristics and their associated sensor values
   std::vector<std::pair<BLECharacteristic*, void*>> envsense_chars = {
-    { new BLEUnsignedIntCharacteristic(BLE_UUID_AIR_PRESSURE, BLERead | BLENotify),   &sensors::current_data.air_pressure },
-    { new BLEShortCharacteristic(BLE_UUID_TEMPERATURE, BLERead | BLENotify),          &sensors::current_data.temperature },
-    { new BLEUnsignedShortCharacteristic(BLE_UUID_HUMIDITY, BLERead | BLENotify),     &sensors::current_data.humidity },
-    // illuminance is stored as uint32_t internally, the extra byte gets truncated upon write
-    // since this value cannot possibly go above ~1000, integer overflow is not a concern
-    { new BLECharacteristic(BLE_UUID_ILLUMINANCE, BLERead | BLENotify, 3, true),      &sensors::current_data.illuminance },
-    { new BLEUnsignedShortCharacteristic(BLE_UUID_AIR_QUALITY, BLERead | BLENotify),  &sensors::current_data.air_quality },
-    { new BLEUnsignedCharCharacteristic(BLE_UUID_SOIL_MOISTURE, BLERead | BLENotify), &sensors::current_data.soil_moisture },
+    { new BLEUnsignedIntCharacteristic(BLE_UUID_AIR_PRESSURE,
+                                       BLERead | BLENotify),
+      &sensors::current_data.air_pressure },
+    { new BLEShortCharacteristic(BLE_UUID_TEMPERATURE, BLERead | BLENotify),
+      &sensors::current_data.temperature },
+    { new BLEUnsignedShortCharacteristic(BLE_UUID_HUMIDITY,
+                                         BLERead | BLENotify),
+      &sensors::current_data.humidity },
+    // illuminance is stored as uint32_t internally, the extra byte gets
+    // truncated upon write since this value cannot possibly go above ~1000,
+    // integer overflow is not a concern
+    { new BLECharacteristic(BLE_UUID_ILLUMINANCE, BLERead | BLENotify, 3, true),
+      &sensors::current_data.illuminance },
+    { new BLEUnsignedShortCharacteristic(BLE_UUID_AIR_QUALITY,
+                                         BLERead | BLENotify),
+      &sensors::current_data.air_quality },
+    { new BLEUnsignedCharCharacteristic(BLE_UUID_SOIL_MOISTURE,
+                                        BLERead | BLENotify),
+      &sensors::current_data.soil_moisture },
   };
 
   // Flags for periodic tasks
@@ -34,7 +45,8 @@ namespace ble {
 
     BLE.addService(sv_envsense);
 
-    hwtimer::attach_flag_isr(BLE_ENVSENSE_TRANSMIT_INTERVAL_MS, &shall_write_sensor_data);
+    hwtimer::attach_flag_isr(BLE_ENVSENSE_TRANSMIT_INTERVAL_MS,
+                             &shall_write_sensor_data);
   }
 
   void envsense_update() {
@@ -50,4 +62,4 @@ namespace ble {
       }
     }
   }
-}
+} // namespace ble
