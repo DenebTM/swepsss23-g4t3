@@ -63,9 +63,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param json
      * @return updated sensor station
      */
-    // TODO: for now authority is ADMIN, but for example aggregationPeriod should be changeable also by GARDENERS
-    //  and I guess status should only be set automatically instead of manually by admin
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER)")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
