@@ -36,7 +36,7 @@ namespace ble {
 
     BLE.addService(sv_envsense);
 
-    hwtimer::attach_flag_isr(BLE_ENVSENSE_TRANSMIT_INTERVAL_MS,
+    hwtimer::attach_flag_isr(BLE_ENVSENSE_TRANSMIT_INTERVAL,
                              &shall_write_sensor_data);
   }
 

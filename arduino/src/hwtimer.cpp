@@ -10,9 +10,10 @@ using namespace std::chrono_literals;
 namespace hwtimer {
   std::vector<mbed::LowPowerTicker*> tickers;
 
-  void attach_isr(unsigned int interval, mbed::Callback<void()> callback) {
+  void attach_isr(std::chrono::milliseconds interval,
+                  mbed::Callback<void()> callback) {
     mbed::LowPowerTicker* t = new mbed::LowPowerTicker();
-    t->attach(callback, interval * 1ms);
+    t->attach(callback, interval);
     tickers.push_back(t);
   }
 } // namespace hwtimer

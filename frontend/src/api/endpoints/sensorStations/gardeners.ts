@@ -1,7 +1,7 @@
 import { Server } from 'miragejs'
 import { _delete, _get, _post } from '~/api/intercepts'
 import { SensorStationUuid } from '~/models/sensorStation'
-import { Username, UserRole } from '~/models/user'
+import { AuthUserRole, Username } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
 import { API_URI, notFound, success, unauthorised } from '../consts'
@@ -48,7 +48,9 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
     const user = schema.findBy('user', { username: username })
     if (!user) {
       return notFound(`user ${username}`)
-    } else if (![UserRole.GARDENER, UserRole.ADMIN].includes(user.attrs.role)) {
+    } else if (
+      ![AuthUserRole.GARDENER, AuthUserRole.ADMIN].includes(user.attrs.role)
+    ) {
       return unauthorised()
     }
 

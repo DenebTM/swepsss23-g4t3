@@ -1,12 +1,11 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
-import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
-import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.repositories.ImageDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
@@ -16,9 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.util.*;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
@@ -51,12 +50,10 @@ public class SensorStationRestController implements BaseRestController {
     @GetMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
-
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
             return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
-
         return ResponseEntity.ok(ss);
     }
 
@@ -92,7 +89,6 @@ public class SensorStationRestController implements BaseRestController {
         }
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
-
 
     /**
      * DELETE route to delete a sensor station by its id, only allowed by ADMIN
@@ -166,7 +162,6 @@ public class SensorStationRestController implements BaseRestController {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
         }
         ss.getGardeners().remove(user);
-        ssService.saveSS(ss);
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
@@ -184,6 +179,62 @@ public class SensorStationRestController implements BaseRestController {
             return ResponseEntity.ok(images);
         }
         return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
+    }
+
+    /**
+     * a route to GET current or historic sensor station measurement values
+     * @param id
+     * @param json
+     * @return List of historic measurements for given time frame or current/recent measurement
+     */
+    @GetMapping(value = SS_ID_PATH + "/measurements")
+    public ResponseEntity<Object> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
+        Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
+        Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
+
+        // if keys "from" and "to" are missing in json body return the most recent/current measurement
+        if (!json.containsKey("from") && !json.containsKey("to")){
+            Measurement currentMeasurement = ssService.getCurrentMeasurement(id);
+            if (currentMeasurement == null){
+                return ResponseEntity.ok(new ArrayList<>());
+            } else {
+                return ResponseEntity.ok(new ArrayList<>(Arrays.asList(currentMeasurement)));
+            }
+        }
+        // return a 400 error if there is a "to"-date but no "from"-date given in json body
+        if (!json.containsKey("from") && json.containsKey("to")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
+        }
+        // return 400 error if "from"-date isn't iso formatted
+        if (json.containsKey("from")) {
+            try {
+                from = Instant.parse((String)json.get("from"));
+            } catch (DateTimeException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
+            }
+        }
+        // return 400 error if "to"-date isn't iso formatted
+        if (json.containsKey("to")) {
+            try {
+                to = Instant.parse((String)json.get("to"));
+            } catch (DateTimeException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid end date");
+            }
+        }
+        // return 400 error if "from"-date is after "to"-date
+        if (from.isAfter(to)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date should be later than start date");
+        }
+        return ResponseEntity.ok(ssService.getMeasurements(id, from, to));
+    }
+
+    /**
+     * a route to Get a list of all current measurements
+     * @return An object containing the returned measurements indexed by sensor station
+     */
+    @GetMapping(value = "/measurements")
+    public ResponseEntity<Object> getAllCurrentMeasurements(){
+        return ResponseEntity.ok(ssService.getAllCurrentMeasurements());
     }
 
 }

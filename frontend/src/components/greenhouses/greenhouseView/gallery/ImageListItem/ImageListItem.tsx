@@ -4,7 +4,7 @@ import MuiImageListItem from '@mui/material/ImageListItem'
 
 import { useUserRole } from '~/hooks/user'
 import { Photo } from '~/models/photo'
-import { UserRole } from '~/models/user'
+import { AuthUserRole, UserRole } from '~/models/user'
 
 import { DeleteImageBar } from './DeleteImageBar'
 
@@ -26,7 +26,11 @@ export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
 
   /** Show the overlay with a button to delete images if the user is a gardener or admin */
   const handleShowItemBar = () => {
-    if ([UserRole.ADMIN, UserRole.GARDENER].includes(userRole)) {
+    const canDeleteImages: UserRole[] = [
+      AuthUserRole.ADMIN,
+      AuthUserRole.GARDENER,
+    ]
+    if (canDeleteImages.includes(userRole)) {
       setShowItemBar(true)
     }
   }
