@@ -36,7 +36,7 @@ export const Login: React.FC = () => {
               component="h1"
               marginRight={1}
             >
-              {PAGE_URL.login.pageTitle}
+              Log in to PlantHealth
             </Typography>
             <PlantIcon color={theme.onSurface} />
           </Box>
