@@ -6,7 +6,7 @@ import common
 from search_for_sensorstations import search_for_sensorstations
 
 
-class test_search_for_sensorstations(unittest.IsolatedAsyncioTestCase):
+class TestSearchForSensorstations(unittest.IsolatedAsyncioTestCase):
 
     @patch('search_for_sensorstations.BleakScanner')
     async def test_search_for_sensorstations(self, BleakScanner):
@@ -32,4 +32,3 @@ class test_search_for_sensorstations(unittest.IsolatedAsyncioTestCase):
 
         # Check that the function returns the correct list of sensor stations
         self.assertEqual(sensorstations, [mock_device_1, mock_device_2])
-

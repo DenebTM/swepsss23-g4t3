@@ -6,7 +6,7 @@ import time
 
 from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensor_data_threshholds, update_sensorstation
 
-class test_database_operations(unittest.IsolatedAsyncioTestCase):
+class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
     
     @patch('database_operations.db_conn')
     async def test_save_sensor_values_to_database(self, db_conn):
