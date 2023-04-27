@@ -112,13 +112,6 @@ namespace led {
     for (unsigned int i = 0; i < tmp_codes_count; i++) {
       codes[i] = NULL;
     }
-
-    Serial.print("codes_high: ");
-    Serial.println(active_status_codes_count_prio_high);
-    Serial.print("codes_low: ");
-    Serial.println(active_status_codes_count_prio_low);
-    Serial.print("codes: ");
-    Serial.println(*codes_count);
   }
 
   void add_status_code(StatusCode* const code, CodePriority prio) {
@@ -132,12 +125,6 @@ namespace led {
 
     if (*codes_count == MAX_ACTIVE_STATUS_CODES) return;
     codes[(*codes_count)++] = code;
-    Serial.print("codes_high: ");
-    Serial.println(active_status_codes_count_prio_high);
-    Serial.print("codes_low: ");
-    Serial.println(active_status_codes_count_prio_low);
-    Serial.print("codes: ");
-    Serial.println(*codes_count);
 
     start_bg_thread();
   }
