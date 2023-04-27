@@ -25,7 +25,7 @@ namespace ble::pairing {
   /** enable pairing button */
   void setup();
 
-  /** check if button was pressed, handle connection requests */
+  /** check if button was pressed and handle connection requests */
   void update();
 
   namespace mode {

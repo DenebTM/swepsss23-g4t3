@@ -11,6 +11,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 
 import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
+import { PageTitle } from '~/components/page/PageTitle'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -66,7 +67,9 @@ export const AdminHome: React.FC = () => {
 
   return (
     <PageWrapper permittedRoles={PAGE_URL.adminHome.permittedRoles}>
-      <PageHeader left="Admin Home" />
+      <PageHeader
+        left={<PageTitle>{PAGE_URL.adminHome.pageTitle}</PageTitle>}
+      />
       <Grid container spacing={2} padding={2}>
         {adminHomeLinks.map((link) => (
           <Grid xs={12} sm={6} md={4} key={link.title}>
