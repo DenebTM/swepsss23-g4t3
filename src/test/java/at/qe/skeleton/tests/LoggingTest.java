@@ -1,7 +1,5 @@
 package at.qe.skeleton.tests;
 
-import ch.qos.logback.classic.LoggerContext;
-import org.jboss.weld.environment.util.Files;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -23,4 +21,19 @@ public class LoggingTest {
         Assertions.assertTrue(info.length() > 0);
     }
 
+    @Test
+    void testWarnLog() {
+        logger.warn("Test warn message");
+        File warn = new File("/logs/warnError.log");
+        Assertions.assertTrue(warn.exists());
+        Assertions.assertTrue(warn.length() > 0);
+    }
+
+    @Test
+    void testErrorLog() {
+        logger.error("Test error message");
+        File error = new File("/logs/warnError.log");
+        Assertions.assertTrue(error.exists());
+        Assertions.assertTrue(error.length() > 0);
+    }
 }
