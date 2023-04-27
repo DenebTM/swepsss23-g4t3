@@ -81,6 +81,7 @@ export const sensorStationFactory = Factory.extend<
 
     // Create access point
     const ap: ModelInstance<AccessPoint> = server.create('accessPoint')
+    ap.update('sensorStations', [sensorStation.attrs.uuid])
 
     // Create measurements
     const measurements = server.createList(
