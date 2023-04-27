@@ -2,6 +2,8 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.PhotoData;
+import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
@@ -16,6 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.util.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,9 +72,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param json
      * @return updated sensor station
      */
-    // TODO: for now authority is ADMIN, but for example aggregationPeriod should be changeable also by GARDENERS
-    //  and I guess status should only be set automatically instead of manually by admin
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER)")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
@@ -194,4 +197,61 @@ public class SensorStationRestController implements BaseRestController {
         }
         return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
+
+    /**
+     * a route to GET current or historic sensor station measurement values
+     * @param id
+     * @param json
+     * @return List of historic measurements for given time frame or current/recent measurement
+     */
+    @GetMapping(value = SS_ID_PATH + "/measurements")
+    public ResponseEntity<Object> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
+        Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
+        Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
+
+        // if keys "from" and "to" are missing in json body return the most recent/current measurement
+        if (!json.containsKey("from") && !json.containsKey("to")){
+            Measurement currentMeasurement = ssService.getCurrentMeasurement(id);
+            if (currentMeasurement == null){
+                return ResponseEntity.ok(new ArrayList<>());
+            } else {
+                return ResponseEntity.ok(new ArrayList<>(Arrays.asList(currentMeasurement)));
+            }
+        }
+        // return a 400 error if there is a "to"-date but no "from"-date given in json body
+        if (!json.containsKey("from") && json.containsKey("to")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
+        }
+        // return 400 error if "from"-date isn't iso formatted
+        if (json.containsKey("from")) {
+            try {
+                from = Instant.parse((String)json.get("from"));
+            } catch (DateTimeException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
+            }
+        }
+        // return 400 error if "to"-date isn't iso formatted
+        if (json.containsKey("to")) {
+            try {
+                to = Instant.parse((String)json.get("to"));
+            } catch (DateTimeException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid end date");
+            }
+        }
+        // return 400 error if "from"-date is after "to"-date
+        if (from.isAfter(to)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date should be later than start date");
+        }
+        return ResponseEntity.ok(ssService.getMeasurements(id, from, to));
+    }
+
+    /**
+     * a route to Get a list of all current measurements
+     * @return An object containing the returned measurements indexed by sensor station
+     */
+    @GetMapping(value = "/measurements")
+    public ResponseEntity<Object> getAllCurrentMeasurements(){
+        return ResponseEntity.ok(ssService.getAllCurrentMeasurements());
+    }
+
 }

@@ -6,8 +6,8 @@ import {
   GridValueGetterParams,
 } from '@mui/x-data-grid'
 
-import { DataGrid, RowUpdateFunction } from '@component-lib/DataGrid'
-import { DeleteCell } from '@component-lib/DeleteCell'
+import { DataGrid, RowUpdateFunction } from '@component-lib/Table/DataGrid'
+import { DeleteCell } from '@component-lib/Table/DeleteCell'
 import dayjs from 'dayjs'
 import { deleteUser, getUsers, updateUser } from '~/api/endpoints/user'
 import { AuthUserRole, User, Username } from '~/models/user'
