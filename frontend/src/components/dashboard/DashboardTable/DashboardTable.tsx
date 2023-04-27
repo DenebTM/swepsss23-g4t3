@@ -3,7 +3,7 @@ import React from 'react'
 import Paper from '@mui/material/Paper'
 import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
-import { DataGrid } from '@component-lib/DataGrid'
+import { DataGrid } from '@component-lib/Table/DataGrid'
 import dayjs from 'dayjs'
 import {
   emDash,
