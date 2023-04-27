@@ -30,6 +30,8 @@ namespace led {
     void clear() {
       unsigned int tmp_count = count;
 
+      // set count to 0 early, to ensure bg_thread does not attempt to read NULL
+      // codes
       count = 0;
       for (unsigned int i = 0; i < tmp_count; i++) { list[i] = NULL; }
     }
