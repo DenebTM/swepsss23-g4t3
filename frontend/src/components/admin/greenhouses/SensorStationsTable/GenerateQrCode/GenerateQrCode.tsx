@@ -23,54 +23,57 @@ interface GenerateQrCodeProps {
 
 /**
  * Button which opens a modal containing a QR code for a given greenhouse.
+ * Memoised using `React.memo` as otherwise DataGrid causes rerenders which in turn cause QR code regeneration.
  */
-export const GenerateQrCode: React.FC<GenerateQrCodeProps> = (
-  props
-): JSX.Element => {
-  const [qrDialogOpen, setQrDialogOpen] = useState(false)
+export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
+  (props): JSX.Element => {
+    const [qrDialogOpen, setQrDialogOpen] = useState(false)
 
-  /** Open the QR generation dialog when the icon is clicked */
-  const handleIconClick = (e: React.MouseEvent) => {
-    e.stopPropagation() // Prevent selecting the cell on click
-    setQrDialogOpen(true)
-  }
+    const uploadUri: string = PAGE_URL.photoUpload.href(props.uuid)
 
-  const handleClose = () => {
-    setQrDialogOpen(false)
-  }
+    /** Open the QR generation dialog when the icon is clicked */
+    const handleIconClick = (e: React.MouseEvent) => {
+      e.stopPropagation() // Prevent selecting the cell on click
+      setQrDialogOpen(true)
+    }
 
-  return (
-    <>
-      <Tooltip title="Generate QR code" arrow>
-        <IconButton onClick={handleIconClick} sx={{ color: theme.outline }}>
-          <QrCode2Icon />
-        </IconButton>
-      </Tooltip>
-      <Dialog
-        open={qrDialogOpen}
-        onClose={handleClose}
-        aria-labelledby="qr-dialog-title"
-        aria-describedby="qr-dialog-description"
-        PaperProps={{
-          sx: { minWidth: '70%', padding: theme.spacing(1, 3, 2) },
-        }}
-      >
-        <QrDialogHeader
-          handleClose={handleClose}
-          titleId="qr-dialog-title"
-          uuid={props.uuid}
-        />
+    const handleClose = () => {
+      setQrDialogOpen(false)
+    }
 
-        <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>
-          <QRCode
-            size={256}
-            style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
-            value={PAGE_URL.photoUpload.href(props.uuid)}
-            viewBox={`0 0 256 256`}
+    return (
+      <>
+        <Tooltip title="Generate QR code" arrow>
+          <IconButton onClick={handleIconClick} sx={{ color: theme.outline }}>
+            <QrCode2Icon />
+          </IconButton>
+        </Tooltip>
+        <Dialog
+          open={qrDialogOpen}
+          onClose={handleClose}
+          aria-labelledby="qr-dialog-title"
+          aria-describedby="qr-dialog-description"
+          PaperProps={{
+            sx: { minWidth: '70%', padding: theme.spacing(1, 3, 2) },
+          }}
+        >
+          <QrDialogHeader
+            handleClose={handleClose}
+            titleId="qr-dialog-title"
+            uuid={props.uuid}
           />
-        </DialogContent>
-        <QrDialogActions qrCodeId={qrCodeId} />
-      </Dialog>
-    </>
-  )
-}
+
+          <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>
+            <QRCode
+              size={256}
+              style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
+              value={uploadUri}
+              viewBox={`0 0 256 256`}
+            />
+          </DialogContent>
+          <QrDialogActions qrCodeId={qrCodeId} />
+        </Dialog>
+      </>
+    )
+  }
+)
