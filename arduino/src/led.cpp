@@ -1,25 +1,45 @@
 #include <led.h>
 
+#include <iterator>
 #include <rtos.h>
 
 namespace led {
   using namespace std::chrono_literals;
   void restart_bg_thread();
 
-  struct status_codes_list {
+  /**
+   * iterable list of active status codes
+   *
+   * this exists because some of the built-in libraries can't seem to handle
+   * storing a vector of (pointers to (vectors of vectors))
+   *
+   * two instances are initialized immediately after this class declaration,
+   * one for each priority level
+   */
+  struct StatusCodesList {
     StatusCode* list[MAX_ACTIVE_STATUS_CODES];
     unsigned int count;
 
+    /// append a new status code
     void append(StatusCode* code) {
       if (count == MAX_ACTIVE_STATUS_CODES) return;
       list[count++] = code;
     }
 
+    /// remove all active status codes
     void clear() {
-      int tmp_count = count;
+      unsigned int tmp_count = count;
 
       count = 0;
       for (unsigned int i = 0; i < tmp_count; i++) { list[i] = NULL; }
+    }
+
+    // allow iterating over all currently active status codes
+    auto begin() {
+      return list;
+    }
+    auto end() {
+      return list + count;
     }
 
   } active_status_codes[2] = {
@@ -41,11 +61,7 @@ namespace led {
                              ? CodePriority::HIGH
                              : CodePriority::LOW;
 
-      auto codes       = active_status_codes[active_list].list;
-      auto codes_count = active_status_codes[active_list].count;
-
-      for (auto i = 0; i < codes_count; i++) {
-        auto code = codes[i];
+      for (auto code : active_status_codes[active_list]) {
         for (auto tup : *code) {
           const auto duration = std::get<ColorDuration>(tup);
           auto next_update    = rtos::Kernel::Clock::now() + duration;
@@ -122,7 +138,6 @@ namespace led {
 
   void add_status_code(StatusCode* const code, CodePriority prio) {
     active_status_codes[prio].append(code);
-
     start_bg_thread();
   }
 } // namespace led

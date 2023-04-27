@@ -57,6 +57,7 @@ namespace led {
   typedef std::chrono::milliseconds ColorDuration;
   typedef std::vector<std::pair<Color, ColorDuration>> StatusCode;
 
+  /// low priority codes are only shown if no high priority codes are set
   enum CodePriority { LOW = 0, HIGH = 1 };
 
   void setup();
