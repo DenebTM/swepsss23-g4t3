@@ -1,23 +1,28 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
-import at.qe.skeleton.models.ImageData;
+import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
-import at.qe.skeleton.repositories.ImageDataRepository;
+import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
@@ -25,13 +30,14 @@ public class SensorStationRestController implements BaseRestController {
     @Autowired
     private SensorStationService ssService;
     @Autowired
-    private ImageDataRepository imageDataRepository;
+    private PhotoDataRepository photoDataRepository;
     @Autowired
     private UserService userService;
 
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
+    private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -50,10 +56,12 @@ public class SensorStationRestController implements BaseRestController {
     @GetMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> getSSById(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
+
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
             return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
         }
+
         return ResponseEntity.ok(ss);
     }
 
@@ -160,21 +168,31 @@ public class SensorStationRestController implements BaseRestController {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
         }
         ss.getGardeners().remove(user);
+        ssService.saveSS(ss);
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
 
     /**
-     * Route to GET all photos from a specific sensor-station by its ID
-     * @param id
-     * @return list of photos
+     * Route to DELete pictures from the gallery
+     * @param photoId
+     * @return the picture if found
      */
-
-    @GetMapping(value = SS_PATH + "/{uuid}/photos")
-    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
+    @DeleteMapping(value = SS_ID_PHOTOS_PATH + "/{photoId}")
+    ResponseEntity<Object> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
-            List<ImageData> images = imageDataRepository.findAllBySensorStation(ss);
-            return ResponseEntity.ok(images);
+            List<String> gardeners = ssService.getGardenersBySS(ss);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentPrincipalName = authentication.getName();
+            if (!gardeners.contains(currentPrincipalName) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN"))) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Gardener is not assigned to Sensor Station.");
+            }
+            Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
+            if (maybePhoto.isPresent()) {
+                photoDataRepository.delete(maybePhoto.get());
+                return ResponseEntity.ok("Photo deleted");
+            }
+            return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
         }
         return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
     }
