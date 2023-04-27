@@ -14,6 +14,8 @@ import { theme } from '~/styles/theme'
  * @param T The type of the id of objects of type R
  */
 interface DeleteCellProps<R extends GridValidRowModel, T = number> {
+  /** Children will be displayed before the delete icon */
+  children: React.ReactNode
   /** Function to delete a table row by entityId */
   deleteEntity: (entityId: T) => Promise<any>
   /** The name of the entity shown in the table. Used to display informative messages to users. */
@@ -43,12 +45,12 @@ export const DeleteCell = <R extends GridValidRowModel, T = string>(
 
   return (
     <>
+      {props.children}
       <Tooltip title={`Delete ${props.entityName}`} arrow>
         <IconButton onClick={handleIconClick} sx={{ color: theme.outline }}>
           <DeleteIcon />
         </IconButton>
       </Tooltip>
-
       <DeleteDialog
         afterDelete={() => {
           props.setRows((oldRows) => {
