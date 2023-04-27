@@ -35,7 +35,7 @@ namespace sensors {
 
       // return to the "all ok" status code if there are no active warnings
       if (!any_warnings) {
-        led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::HIGH);
+        led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
       }
     }
   }

@@ -23,7 +23,6 @@ namespace ble {
 
       pairing::mode::active = false;
       led::clear_status_codes(led::CodePriority::HIGH);
-      led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
     }
 
     // currently trying to reconnect to paired AP; reject unauthorized devices
@@ -33,7 +32,6 @@ namespace ble {
         Serial.println(paired_mac);
 
         led::clear_status_codes(led::CodePriority::HIGH);
-        led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
       } else {
         Serial.print("Rejecting connection attempt from ");
         Serial.println(new_mac);

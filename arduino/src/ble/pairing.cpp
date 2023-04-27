@@ -54,6 +54,9 @@ namespace ble::pairing {
       pairing::mode::entering = true;
     });
 
+    // this code is only shown while paired and no warnings are active
+    led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
+
     Serial.println("Press button 0 (rightmost) to begin pairing");
     led::set_status_code(LEDC_BLE_UNPAIRED, led::CodePriority::HIGH);
   }
