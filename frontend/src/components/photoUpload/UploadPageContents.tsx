@@ -29,7 +29,7 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
   const [sensorStation, setSensorStation] = useState<SensorStation>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
-  /** Load acccess points from the API on component mount */
+  /** Load sensor station from the API on component mount */
   useEffect(() => {
     const ssPromise = cancelable(getSensorStation(props.uuid))
     ssPromise
