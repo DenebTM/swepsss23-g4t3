@@ -14,8 +14,11 @@ import { theme } from '~/styles/theme'
 import { QrDialogActions } from './QrDialogActions'
 import { QrDialogHeader } from './QrDialogHeader'
 
-/** Id used to locate and print the QR code in the window */
+/** ID used to locate and print the QR code in the window */
 const qrCodeId = 'qr-code-contents'
+
+/** QR code side length in px */
+const qrSize = 256
 
 interface GenerateQrCodeProps {
   uuid: SensorStationUuid
@@ -65,10 +68,10 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
 
           <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>
             <QRCode
-              size={256}
+              size={qrSize}
               style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
               value={uploadUri}
-              viewBox={`0 0 256 256`}
+              viewBox={`0 0 ${qrSize} ${qrSize}`}
             />
           </DialogContent>
           <QrDialogActions qrCodeId={qrCodeId} />
