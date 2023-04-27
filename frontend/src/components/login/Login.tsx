@@ -45,8 +45,10 @@ export const Login: React.FC = () => {
           justifyContent: 'center',
           alignItems: 'center',
           position: 'relative',
-          width: `calc(100% - ${loginSidewaveWidth})`,
-          left: loginSidewaveWidth,
+          width: breakpointDownMd
+            ? '100%'
+            : `calc(100% - ${loginSidewaveWidth})`,
+          left: breakpointDownMd ? 0 : loginSidewaveWidth,
         }}
       >
         <Paper
