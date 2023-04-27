@@ -19,7 +19,6 @@ void setup() {
   sensors::light::setup();
 
   led::setup();
-  led::set_color(led::RED); // TODO: define LED colors/status codes in a central location
 
   // TODO: Show LED error code if this fails
   ble::setup();

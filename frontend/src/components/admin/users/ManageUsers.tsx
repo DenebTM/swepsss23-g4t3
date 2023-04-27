@@ -17,7 +17,6 @@ export const ManageUsers: React.FC = () => {
   return (
     <PageWrapper permittedRoles={PAGE_URL.manageUsers.permittedRoles}>
       <PageHeader left={<AdminBreadcrumbs currentPageName="Manage Users" />} />
-      Manage users
       <UsersTable setUsers={setUsers} users={users} />
     </PageWrapper>
   )

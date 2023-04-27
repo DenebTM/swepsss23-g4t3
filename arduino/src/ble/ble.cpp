@@ -22,7 +22,7 @@ namespace ble {
       Serial.println(paired_mac);
 
       pairing::mode::active = false;
-      led::set_color(led::GREEN); // TODO: define LED colors/status codes in a central location
+      led::set_status_code(LEDC_BLE_CONNECTED);
     }
 
     // currently trying to reconnect to paired AP; reject unauthorized devices
@@ -31,7 +31,7 @@ namespace ble {
         Serial.print("Reconnected to access point: ");
         Serial.println(paired_mac);
 
-        led::set_color(led::GREEN); // TODO: define LED colors/status codes in a central location
+        led::set_status_code(LEDC_BLE_CONNECTED);
       } else {
         Serial.print("Rejecting connection attempt from ");
         Serial.println(new_mac);
@@ -48,7 +48,7 @@ namespace ble {
       Serial.print("Lost connection with access point ");
       Serial.println(paired_mac);
 
-      led::set_color(led::YELLOW); // TODO: define LED colors/status codes in a central location
+      led::set_status_code(LEDC_BLE_DISCONNECTED);
     }
   }
 
