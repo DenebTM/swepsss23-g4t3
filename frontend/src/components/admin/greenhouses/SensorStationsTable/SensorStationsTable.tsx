@@ -73,8 +73,9 @@ export const SensorStationsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
-    { field: 'uuid', headerName: 'UUID', ...centerCell },
+    { ...centerCell, field: 'uuid', headerName: 'UUID' },
     {
+      ...centerCell,
       field: 'status',
       headerName: 'Status',
       width: 100,
@@ -86,22 +87,22 @@ export const SensorStationsTable: React.FC = () => {
           variant={sensorStationToVariant[params.row.status]}
         />
       ),
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'aggregationPeriod',
       headerName: 'Aggregation Period (s)',
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'accessPoint',
       headerName: 'Access Point ID',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => params.value,
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'gardeners',
       sortable: false,
       filterable: false,
@@ -110,12 +111,12 @@ export const SensorStationsTable: React.FC = () => {
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => <GardenerChips {...params} />,
-      ...centerCell,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
       width: 135 * maxGardenersPerGreenhouse,
     },
     {
+      ...centerCell,
       field: 'action',
       headerName: 'Actions',
       sortable: false,
@@ -132,7 +133,6 @@ export const SensorStationsTable: React.FC = () => {
           setRows={handleUpdateSensorStations}
         />
       ),
-      ...centerCell,
     },
   ]
 
