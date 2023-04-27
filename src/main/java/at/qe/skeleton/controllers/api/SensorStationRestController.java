@@ -198,7 +198,7 @@ public class SensorStationRestController implements BaseRestController {
             if (currentMeasurement == null){
                 return ResponseEntity.ok(new ArrayList<>());
             } else {
-                return ResponseEntity.ok(new ArrayList<Measurement>(Arrays.asList(currentMeasurement)));
+                return ResponseEntity.ok(new ArrayList<>(Arrays.asList(currentMeasurement)));
             }
         }
         // return a 400 error if there is a "to"-date but no "from"-date given in json body
