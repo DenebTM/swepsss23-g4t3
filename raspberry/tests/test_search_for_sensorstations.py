@@ -6,7 +6,7 @@ import common
 from search_for_sensorstations import search_for_sensorstations
 
 
-class TestSearchForSensorStations(unittest.IsolatedAsyncioTestCase):
+class test_search_for_sensorstations(unittest.IsolatedAsyncioTestCase):
 
     @patch('search_for_sensorstations.BleakScanner')
     async def test_search_for_sensorstations(self, BleakScanner):
