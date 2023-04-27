@@ -33,7 +33,7 @@ import { GreenhouseView } from '~/components/greenhouses/greenhouseView/Greenhou
 import { MyGreenhouses } from '~/components/greenhouses/myGreenhouses/MyGreenhouses'
 import { Login } from '~/components/login/Login'
 import { Error } from '~/components/page/error/Error'
-import { MessageSnackbars } from '~/components/page/MessageSnackbars'
+import { MessageSnackbars } from '~/components/page/Snackbar/MessageSnackbars'
 import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
 import { isUserLoggedIn } from '~/helpers/jwt'
 import '~/styles/index.css'
