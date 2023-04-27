@@ -2,6 +2,9 @@
 #define _LED_H
 
 #include <Arduino.h>
+#include <chrono>
+#include <tuple>
+#include <vector>
 
 #define LED_RED_PIN   A0
 #define LED_GREEN_PIN A1
@@ -25,10 +28,13 @@ namespace led {
     PURPLE = RED | BLUE,                      // #ff0050
     WHITE = RED | GREEN | BLUE                // #ff5050
   };
+  typedef std::chrono::milliseconds ColorDuration;
+  typedef std::vector<std::pair<Color, ColorDuration>> StatusCode;
 
   void setup();
 
   void set_color(Color color);
+  void set_status_code(StatusCode* const code);
 }
 
 #endif
