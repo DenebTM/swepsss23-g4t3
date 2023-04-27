@@ -5,19 +5,22 @@ app = Flask(__name__)
 
 time_now = int(time.time())
 
+#Route that initiates connection
 @app.route('/access-points/', methods=['POST'])
 def status():
     response = {'name': 'office1', 'serverAddress': 'localhost'}
     return jsonify(response), 200
 
+#Route that polls for connection-update
 @app.route('/access-points/1/', methods=['GET'])
 def accesspoint_connection():
     if time_now == time_now + 500:
-        response = {status: 'offline'}
+        response = {"status": 'offline'}
     else:
-        response = {status: 'searching'}
+        response = {"status": 'searching'}
     return jsonify(response), 200
 
+#Route that updates Sensorstation Thressholds
 @app.route('/access-points/1/sensor-stations/1/', methods=['GET'])
 def thresshold_update():
     response = {
@@ -41,7 +44,7 @@ def thresshold_update():
     
     return jsonify(response), 200
 
-
+# Route that asks for Instructions for each Sensorstation
 @app.route('/access-points/1/sensor-stations/', methods=['GET'])
 def ask_for_instructions_ss():
     response = [
@@ -50,7 +53,6 @@ def ask_for_instructions_ss():
         {103: "PAIRING"}
         ]
 
-    
     return jsonify(response), 200
 
 
