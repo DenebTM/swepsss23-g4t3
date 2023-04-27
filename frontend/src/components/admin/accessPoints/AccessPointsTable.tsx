@@ -38,6 +38,7 @@ export const AccessPointsTable: React.FC = () => {
   const columns: GridColDef<AccessPoint, any, AccessPoint>[] = [
     { field: 'name', headerName: 'Name', flex: 1, editable: true },
     {
+      ...centerCell,
       field: 'status',
       headerName: 'Status',
       width: 100,
@@ -49,15 +50,15 @@ export const AccessPointsTable: React.FC = () => {
           variant={params.row.active ? StatusVariant.OK : StatusVariant.ERROR}
         />
       ),
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'serverAddress',
       headerName: 'Server Address',
       flex: 1,
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'lastUpdate',
       headerName: 'Last Update',
       description: 'When the access point was last updated',
@@ -65,9 +66,9 @@ export const AccessPointsTable: React.FC = () => {
       flex: 1,
       valueGetter: (params: GridValueGetterParams<AccessPoint, string>) =>
         dayjs(params.value).toDate(),
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'action',
       headerName: 'Delete',
       description: 'Delete the given access point',
@@ -85,7 +86,6 @@ export const AccessPointsTable: React.FC = () => {
           setRows={setAccessPoints}
         />
       ),
-      ...centerCell,
     },
   ]
 
