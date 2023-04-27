@@ -1,21 +1,12 @@
-version: "3.7"
+version: '3'
+
 services:
-  api_service:
-    build: .
-    restart: always
-    ports:
-      - 8080:8080
-    depends_on:
-      - maria_db
-    links:
-      - maria_db:app_db
-  maria_db:
-    image: "mariadb:10.11.2"
-    restart: always
-    ports:
-      - 3306:3306
+
+  mysql-development:
+    image: mysql:8.0.17
     environment:
-      MYSQL_DATABASE: java_to_dev_app_db
-      MYSQL_USER: java_to_dev
-      MYSQL_PASSWORD: nE5kMc7JCGNqwDQM
-      MYSQL_ROOT_PASSWORD: nE5kMc7JCGNqwDQN
+      MYSQL_ROOT_PASSWORD: helloworld
+      MYSQL_DATABASE: testapp
+    ports:
+      - "8080:3306"
+#see https://betterprogramming.pub/setting-up-mysql-database-in-a-docker-d6c69a3e9afe
