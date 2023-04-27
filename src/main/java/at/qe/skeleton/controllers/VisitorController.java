@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,14 +25,19 @@ public class VisitorController {
     /**
      * Route to POST images to the photo gallery
      * @param multipartImage
-     * @return the photoId
-     * @throws Exception
+     * @param id
+     * @return id and name of Photo
+     * @throws IOException
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws Exception {
+    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws IOException {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setName(multipartImage.getName());
-        dbPhoto.setContent(multipartImage.getBytes());
+        try {
+            dbPhoto.setContent(multipartImage.getBytes());
+        } catch (IOException e) {
+            return HelperFunctions.notFoundError("Getting Bytes from Photo failed", String.valueOf(dbPhoto.getId()));
+        }
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
             dbPhoto.setSensorStation(ss);
