@@ -22,10 +22,11 @@ export const PhotoUpload: React.FC = () => {
   /** Read sensor station UUID from search params and set in state */
   useEffect(() => {
     const encryptedUuid = search.get(SS_UUID_PARAM)
+
     setSensorStationUuid(
       encryptedUuid === null
         ? INVALID_UUID
-        : decryptSensorStationUuid(encryptedUuid)
+        : decryptSensorStationUuid(encryptedUuid) ?? INVALID_UUID
     )
   }, [search])
 
