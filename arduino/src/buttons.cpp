@@ -4,10 +4,10 @@
 
 #include <common.h>
 
-int buttons::setup(unsigned int button_id, voidFuncPtr callback) {
+bool buttons::setup(unsigned int button_id, voidFuncPtr callback) {
   // don't attempt to set up a button on pins that don't have a button attached
   if (button_id > 2)
-    return -1;
+    return false;
   
   pinMode(BUTTON0_PIN + button_id, INPUT_PULLUP);
   mbed::InterruptIn* button = new mbed::InterruptIn(digitalPinToPinName(BUTTON0_PIN + button_id));
@@ -22,5 +22,5 @@ int buttons::setup(unsigned int button_id, voidFuncPtr callback) {
     last_isr_timestamp = isr_timestamp;
   });
 
-  return 0;
+  return true;
 }
