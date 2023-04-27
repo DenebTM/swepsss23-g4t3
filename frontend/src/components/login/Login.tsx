@@ -1,9 +1,8 @@
 import React from 'react'
 
-import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import Box from '@mui/system/Box'
 
 import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
@@ -14,38 +13,64 @@ import { LoginForm } from './LoginForm'
 import { LoginHeader } from './LoginHeader'
 import { LoginSidewave } from './LoginSidewave'
 
+const loginSidewaveWidth = '36%'
+
 /**
  * Login page
  */
 export const Login: React.FC = () => {
-  const narrowScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const breakpointDownMd = useMediaQuery(theme.breakpoints.down('md'))
+  const breakpointDownSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <PageWrapper hideSidebar permittedRoles={PAGE_URL.login.permittedRoles}>
-      <Grid container spacing={2} padding={2}>
-        {!narrowScreen && (
-          <Grid xs={12} md={4}>
-            <LoginSidewave />
-          </Grid>
-        )}
-        <Grid xs={12} md={8}>
-          <Container maxWidth="sm" sx={{ paddingTop: 10 }} disableGutters>
-            <Paper
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                padding: 4,
-              }}
-            >
-              <LoginHeader />
-              <LoginForm />
-
-              <GalleryCta />
-            </Paper>
-          </Container>
-        </Grid>
-      </Grid>
+    <PageWrapper
+      hideSidebar
+      permittedRoles={PAGE_URL.login.permittedRoles}
+      sx={{ padding: 0, flexDirection: 'row' }}
+    >
+      {!breakpointDownMd && (
+        <Box
+          sx={{
+            position: 'fixed',
+            width: loginSidewaveWidth,
+          }}
+        >
+          <LoginSidewave />
+        </Box>
+      )}
+      <Box
+        sx={{
+          padding: theme.spacing(2, 3, 8),
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+          width: `calc(100% - ${loginSidewaveWidth})`,
+          left: loginSidewaveWidth,
+        }}
+      >
+        <Paper
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            height: 'fit-content',
+            padding: breakpointDownSm
+              ? theme.spacing(3, 5)
+              : theme.spacing(4, 8),
+            width: '90%',
+            maxWidth: '600px',
+          }}
+        >
+          <LoginHeader
+            padding={
+              breakpointDownSm ? theme.spacing(3, 1.5) : theme.spacing(4, 3)
+            }
+          />
+          <LoginForm />
+          <GalleryCta />
+        </Paper>
+      </Box>
     </PageWrapper>
   )
 }
