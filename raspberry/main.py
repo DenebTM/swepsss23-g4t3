@@ -17,7 +17,7 @@ async def poll_for_connection():
 
         return response.json['status']
     except:
-        print("cant connect to webserver log")
+        print("cant connect to webserver") #TODO: Implement logging
 
 
 async def spawn_sensorstation_tasks(sensorstations):
@@ -25,6 +25,7 @@ async def spawn_sensorstation_tasks(sensorstations):
         await asyncio.create_task(read_sensorvalues(sensorstation))
 
 
+#TODO: here will be the asyncstructure implemented
 async def main():
     response = requests.post(common.web_server_address + "/accesspoints")
     while response.status_code != 200:

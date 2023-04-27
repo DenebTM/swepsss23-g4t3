@@ -18,7 +18,7 @@ async def send_error_to_sensorstation(sensor_station_client, sensor):
         sensor_uuid = common.sensor_uuids[sensor]
         await sensor_station_client.write_gatt_char(sensor_uuid, errorCodeByteArray)
     except:
-         print("couldnt write to gatt todo log")
+         print("couldnt write to gatt")
     #TODO log error code
 
 

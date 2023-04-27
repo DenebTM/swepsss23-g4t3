@@ -21,6 +21,3 @@ async def read_sensorvalues(sensorstation):
 
     except BleakError:
         pass #TODO 
-
-
-
