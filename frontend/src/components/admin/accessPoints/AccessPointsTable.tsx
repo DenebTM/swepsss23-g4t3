@@ -17,6 +17,8 @@ import {
 } from '~/api/endpoints/accessPoints'
 import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 
+import { SensorStationChips } from './SensorStationChips'
+
 const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
   headerAlign: 'center',
   align: 'center',
@@ -33,6 +35,19 @@ export const AccessPointsTable: React.FC = () => {
     newAp: AccessPoint,
     oldAp: AccessPoint
   ) => updateAccessPoint(oldAp.apId, newAp)
+
+  /**
+   * Calculate the largest number of sensor stations assigned to a single access point as dynamic
+   * column width is not supported yet by DataGrid: https://github.com/mui/mui-x/issues/1241
+   */
+  const getMaxGreenhousesPerAp = (): number =>
+    typeof accessPoints === 'undefined'
+      ? 1
+      : accessPoints.reduce((prev: AccessPoint, current: AccessPoint) =>
+          prev.sensorStations.length > current.sensorStations.length
+            ? prev
+            : current
+        ).sensorStations.length
 
   /** Columns for the access point management table */
   const columns: GridColDef<AccessPoint, any, AccessPoint>[] = [
@@ -56,6 +71,19 @@ export const AccessPointsTable: React.FC = () => {
       field: 'serverAddress',
       headerName: 'Server Address',
       flex: 1,
+    },
+    {
+      field: 'sensorStations',
+      headerName: 'Greenhouses',
+      description: 'Greenhouses which transmit data to this access point',
+      flex: 1,
+      renderCell: (
+        params: GridRenderCellParams<AccessPoint, any, AccessPoint>
+      ) => <SensorStationChips {...params} setRows={setAccessPoints} />,
+      ...centerCell,
+      // Dynamic column width is not supported yet, so hard code a width for each chip:
+      // https://github.com/mui/mui-x/issues/1241
+      width: 105 * getMaxGreenhousesPerAp(),
     },
     {
       ...centerCell,
