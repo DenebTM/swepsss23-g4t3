@@ -22,6 +22,17 @@ illuminance_failure_uuid = base_uuid.format("ff04")
 air_quality_failure_uuid = base_uuid.format("ff05")
 soil_moisture_failure_uuid = base_uuid.format("ff06")
 
+#global dictionary of constants
+sensor_uuids = {
+    "air_pressure": air_pressure_uuid,
+    "temperature": temperature_uuid,
+    "humidity": humidity_uuid,
+    "illuminance": illuminance_uuid,
+    "air_quality_index": air_quality_index_uuid,
+    "soil_moisture": soil_moisture_uuid
+}
+
+
 # in seconds
 polling_interval = 10
 
