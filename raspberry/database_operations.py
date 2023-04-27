@@ -11,7 +11,7 @@ async def save_sensor_values_to_database(sensorstation_name, temperature, humidi
                         (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
         db_conn.commit()
     except:
-        pass #TODO log the failure and send to backend etc
+        pass #TODO: log the failure and send to backend etc
 
 
 #returns a mean of the values of the last 5 minutes

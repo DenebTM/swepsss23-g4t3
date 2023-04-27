@@ -8,7 +8,7 @@ from read_sensorvalues import read_sensorvalues
 from database_operations import save_sensor_values_to_database
 
 
-class test_read_sensor_values(unittest.IsolatedAsyncioTestCase):
+class TestReadSensorValue(unittest.IsolatedAsyncioTestCase):
 
     @patch('read_sensorvalues.save_sensor_values_to_database')
     @patch('read_sensorvalues.BleakClient')
@@ -31,6 +31,3 @@ class test_read_sensor_values(unittest.IsolatedAsyncioTestCase):
     #     BleakClient().__aenter__.return_value.read_gatt_char.side_effect=BleakError
 
     #     await read_sensorvalues(BleakClient)
-
-
-
