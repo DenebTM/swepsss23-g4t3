@@ -8,7 +8,7 @@ from read_sensorvalues import read_sensorvalues
 from database_operations import saveSensorValuesToDatabase
 
 
-class TestReadAndSendSensorValues(unittest.IsolatedAsyncioTestCase):
+class TestReadSensorValues(unittest.IsolatedAsyncioTestCase):
 
     @patch('read_sensorvalues.saveSensorValuesToDatabase')
     @patch('read_sensorvalues.BleakClient')

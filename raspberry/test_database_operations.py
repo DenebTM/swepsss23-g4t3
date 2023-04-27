@@ -1,12 +1,13 @@
 import unittest
+import json
 from unittest.mock import MagicMock, patch
 import time
 
 #TODO: implement logging testing
 
-from database_operations import saveSensorValuesToDatabase, get_sensor_data_averages, get_sensor_data_threshholds
+from database_operations import saveSensorValuesToDatabase, get_sensor_data_averages, get_sensor_data_threshholds, update_sensorstation
 
-class TestSensorFunctions(unittest.IsolatedAsyncioTestCase):
+class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
     
     @patch('database_operations.db_conn')
     async def test_saveSensorValuesToDatabase(self, db_conn):
@@ -58,3 +59,39 @@ class TestSensorFunctions(unittest.IsolatedAsyncioTestCase):
         # Assert that the function returned the correct result
         self.assertEqual(result, {"temperature_max": 10, "humidity_max": 20, "air_pressure_max": 30, "illuminance_max": 40, "air_quality_index_max": 50, "soil_moisture_max": 60,
                                   "temperature_min": 70, "humidity_min": 80, "air_pressure_min": 90, "illuminance_min": 100, "air_quality_index_min": 100, "soil_moisture_min": 120})
+    
+    @patch('database_operations.db_conn')
+    async def test_update_sensorstations(self, db_conn):
+
+        #set up json which is received 
+        json_data = '''{
+            "name": "station1",
+            "transmissioninterval": 60,
+            "thresholds": {
+                "temperature_max": 25,
+                "temperature_min": 10,
+                "humidity_max": 80,
+                "humidity_min": 30,
+                "air_pressure_max": 1000,
+                "air_pressure_min": 900,
+                "illuminance_max": 1000,
+                "illuminance_min": 100,
+                "air_quality_index_max": 50,
+                "air_quality_index_min": 0,
+                "soil_moisture_max": 50,
+                "soil_moisture_min": 10
+            }
+        }'''
+        
+        await update_sensorstation(json_data)
+
+        # check if the data is inserted correctly
+        db_conn.execute.assert_called_once_with(
+                '''INSERT OR REPLACE INTO sensorstations
+                (sensorstationname, transmissioninterval,
+                temperature_max, humidity_max, air_pressure_max, illuminance_max,
+                air_quality_index_max, soil_moisture_max,
+                temperature_min, humidity_min, air_pressure_min, illuminance_min,
+                air_quality_index_min, soil_moisture_min)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                ("station1", 60, 25, 80, 1000, 1000, 50, 50, 10, 30, 900, 100, 0, 10))
