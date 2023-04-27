@@ -153,11 +153,13 @@ const encryptSensorStationUuid = (uuid: SensorStationUuid): string =>
   CryptoJS.AES.encrypt(String(uuid), SECRET).toString()
 
 /** Decrypt a sensor station UUID for photo upload */
-export const decryptSensorStationUuid = (uri: string): SensorStationUuid => {
+export const decryptSensorStationUuid = (
+  uri: string
+): SensorStationUuid | undefined => {
   const stringUuid = CryptoJS.AES.decrypt(uri, SECRET).toString(
     CryptoJS.enc.Utf8
   )
-  return Number(stringUuid)
+  return stringUuid === '' ? undefined : Number(stringUuid)
 }
 
 /** Enum for the URL parameters controlling the view of a single sensor station.
