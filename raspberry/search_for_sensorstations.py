@@ -1,4 +1,3 @@
-import requests
 from bleak import BleakScanner
 from bleak.exc import BleakError
 

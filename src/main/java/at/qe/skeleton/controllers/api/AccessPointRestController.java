@@ -4,6 +4,7 @@ import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.services.AccessPointService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class AccessPointRestController implements BaseRestController {
     private AccessPointService apService;
 
     private static final String AP_PATH = "/access-points";
-    private static final String AP_ID_PATH = AP_PATH + "/{id}";
+    private static final String AP_NAME_PATH = AP_PATH + "/{name}";
 
 
     /**
@@ -31,35 +32,36 @@ public class AccessPointRestController implements BaseRestController {
 
     /**
      * Route to GET a specific access point by its ID
-     * @param id
+     * @param name
      * @return access point
      */
-    @GetMapping(value = AP_ID_PATH)
-    public ResponseEntity<Object> getAPById(@PathVariable(value = "id") Integer id) {
-        AccessPoint ap = apService.loadAPById(id);
+    @GetMapping(value = AP_NAME_PATH)
+    public ResponseEntity<Object> getAPByName(@PathVariable(value = "name") String name) {
+        AccessPoint ap = apService.loadAPByName(name);
         // Return a 404 error if the access point is not found
         if (ap == null) {
-            return HelperFunctions.notFoundError("Access point", String.valueOf(id));
+            return HelperFunctions.notFoundError("Access point", name);
         }
         return ResponseEntity.ok(ap);
     }
 
     /**
      * a PUT route to update an existing access point
-     * @param id
+     * @param name
      * @param json
      * @return updated access point
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping(value = AP_ID_PATH)
-    public ResponseEntity<Object> updateAP(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
-        AccessPoint ap = apService.loadAPById(id);
+    @PutMapping(value = AP_NAME_PATH)
+    public ResponseEntity<Object> updateAP(@PathVariable(value = "name") String name,  @RequestBody Map<String, Object> json) {
+        AccessPoint ap = apService.loadAPByName(name);
         // return a 404 error if the access point to be updated does not exist
         if (ap == null) {
-            return HelperFunctions.notFoundError("Access point", String.valueOf(id));
+            return HelperFunctions.notFoundError("Access point", name);
         }
+        // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("name")) {
-            ap.setName((String)json.get("name"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("AP names are final and cannot be updated.");
         }
         if (json.containsKey("active")) {
             ap.setActive((Boolean)json.get("active"));
@@ -70,16 +72,16 @@ public class AccessPointRestController implements BaseRestController {
 
         /**
          * DELETE route to delete a access point by its id, only allowed by ADMIN
-         * @param id
+         * @param name
          * @return the deleted ap
          */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping(value = AP_ID_PATH)
-    public ResponseEntity<Object> deleteAPById(@PathVariable(value = "id") Integer id) {
-        AccessPoint ap = apService.loadAPById(id);
+    @DeleteMapping(value = AP_NAME_PATH)
+    public ResponseEntity<Object> deleteAPById(@PathVariable(value = "name") String name) {
+        AccessPoint ap = apService.loadAPByName(name);
         // return a 404 error if the access point to be deleted does not exist
         if (ap == null) {
-            return HelperFunctions.notFoundError("Access point", String.valueOf(id));
+            return HelperFunctions.notFoundError("Access point", name);
         }
         apService.deleteAP(ap);
         return ResponseEntity.ok(ap);

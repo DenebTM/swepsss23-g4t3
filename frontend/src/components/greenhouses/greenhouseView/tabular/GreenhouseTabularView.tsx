@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
-import { DataGrid } from '@component-lib/DataGrid'
+import { DataGrid } from '@component-lib/Table/DataGrid'
 import dayjs from 'dayjs'
 import { getSensorStationMeasurements } from '~/api/endpoints/sensorStations/measurements'
 import {

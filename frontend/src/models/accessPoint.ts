@@ -1,3 +1,4 @@
+import { SensorStationUuid } from './sensorStation'
 import { Timestamp } from './timestamp'
 
 export type AccessPointId = number
@@ -8,5 +9,6 @@ export interface AccessPoint {
   lastUpdate: Timestamp
   apId: AccessPointId
   name: string
+  sensorStations: SensorStationUuid[]
   serverAddress: string // IP address
 }
