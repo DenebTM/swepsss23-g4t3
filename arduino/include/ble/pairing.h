@@ -9,18 +9,16 @@ using namespace std::chrono_literals;
 #define BLE_PAIRING_MODE_TIMEOUT_MS   5 * 60 * 1000
 
 static led::StatusCode* const LEDC_BLE_UNPAIRED = new led::StatusCode{
-  { led::Color::RED, 100ms },
+  LED_SOLID(led::Color::RED)
 };
 static led::StatusCode* const LEDC_BLE_PAIRING = new led::StatusCode{
-  { led::Color::BLUE, 250ms },
-  { led::Color::OFF, 250ms },
+  LED_BLINK_ONCE_SHORT(led::Color::BLUE)
 };
 static led::StatusCode* const LEDC_BLE_CONNECTED = new led::StatusCode{
-  { led::Color::GREEN, 100ms }
+  LED_SOLID(led::Color::GREEN)
 };
 static led::StatusCode* const LEDC_BLE_DISCONNECTED = new led::StatusCode{
-  { led::Color::RED, 1s },
-  { led::Color::OFF, 1s },
+  LED_BLINK_ONCE(led::Color::RED, 1s)
 };
 
 namespace ble::pairing {
