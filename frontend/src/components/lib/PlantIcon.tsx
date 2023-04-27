@@ -21,6 +21,7 @@ export const PlantIcon: React.FC<PlantIconProps> = (props) => {
         userSelect: 'none',
         display: 'inline-flex',
         fontSize: '1.5rem',
+        overflow: 'hidden',
       }}
       {...spanProps}
     >
