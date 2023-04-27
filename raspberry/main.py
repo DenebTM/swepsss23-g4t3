@@ -6,7 +6,7 @@ import time
 import logging
 
 import common
-from read_sensorvalues import read_and_send_sensorvalues
+from read_sensorvalues import read_sensorvalues
 from db import db_conn
 from search_for_sensorstations import search_for_sensorstations
 
@@ -22,7 +22,7 @@ async def poll_for_connection():
 
 async def spawn_sensorstation_tasks(sensorstations):
     for sensorstation in sensorstations:
-        await asyncio.create_task(read_and_send_sensorvalues(sensorstation, db_conn))
+        await asyncio.create_task(read_sensorvalues(sensorstation))
 
 
 async def main():
