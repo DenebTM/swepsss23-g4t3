@@ -51,13 +51,18 @@ namespace led {
   typedef std::chrono::milliseconds ColorDuration;
   typedef std::vector<std::pair<Color, ColorDuration>> StatusCode;
 
+  enum CodePriority {
+    LOW = 0,
+    HIGH = 1
+  };
+
   void setup();
 
   void set_color(Color color);
-  void set_status_code(StatusCode* const code);
-  void set_status_codes(StatusCode* const new_codes[], unsigned int new_codes_count);
-  void add_status_code(StatusCode* const code);
-  void clear_status_codes();
+  void set_status_code(StatusCode* const code, CodePriority prio);
+  void set_status_codes(StatusCode* const new_codes[], unsigned int new_codes_count, CodePriority prio);
+  void add_status_code(StatusCode* const code, CodePriority prio);
+  void clear_status_codes(CodePriority prio);
 }
 
 #endif

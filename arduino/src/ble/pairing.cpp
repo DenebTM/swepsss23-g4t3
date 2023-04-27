@@ -26,7 +26,7 @@ namespace ble::pairing {
 
       if (BLE.advertise()) {
         mode::active = true;
-        led::set_status_code(LEDC_BLE_PAIRING);
+        led::set_status_code(LEDC_BLE_PAIRING, led::CodePriority::HIGH);
 
         Serial.print("Ready to pair! Station address: ");
         Serial.println(BLE.address());
@@ -40,7 +40,7 @@ namespace ble::pairing {
       BLE.stopAdvertise();
 
       pairing::mode::active = false;
-      led::set_status_code(LEDC_BLE_UNPAIRED);
+      led::set_status_code(LEDC_BLE_UNPAIRED, led::CodePriority::HIGH);
     }
   }
 
@@ -55,7 +55,7 @@ namespace ble::pairing {
     });
 
     Serial.println("Press button 0 (rightmost) to begin pairing");
-    led::set_status_code(LEDC_BLE_UNPAIRED);
+    led::set_status_code(LEDC_BLE_UNPAIRED, led::CodePriority::HIGH);
   }
 
   void update() {
