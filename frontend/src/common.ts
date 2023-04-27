@@ -2,7 +2,6 @@ import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
-
 import { theme } from './styles/theme'
 
 /** The root path for pages relating to greenhouses */
