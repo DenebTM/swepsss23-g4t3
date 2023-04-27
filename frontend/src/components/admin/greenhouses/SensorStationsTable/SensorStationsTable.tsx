@@ -120,7 +120,7 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       ...centerCell,
-      flex: 1,
+      width: 135,
       field: 'action',
       headerName: 'Actions',
       sortable: false,

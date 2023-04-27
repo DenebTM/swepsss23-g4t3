@@ -2,6 +2,7 @@ import React from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
+import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
@@ -27,14 +28,30 @@ export const QrDialogHeader: React.FC<QrDialogHeaderProps> = (
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-between',
-        padding: theme.spacing(2, 3),
+        padding: theme.spacing(2, 1),
       }}
     >
-      <Typography color="onSurface" variant="headlineMedium" id={props.titleId}>
-        Greenhouse {props.uuid}
-      </Typography>
+      <Stack spacing={0.5}>
+        <Typography
+          color="onSurface"
+          variant="headlineMedium"
+          id={props.titleId}
+        >
+          Greenhouse {props.uuid}
+        </Typography>
+        <Typography color="onSurfaceVariant" variant="bodySmall">
+          Display this QR code on greenhouses so that users can upload photos
+        </Typography>
+      </Stack>
 
-      <IconButton onClick={props.handleClose} sx={{ color: theme.outline }}>
+      <IconButton
+        onClick={props.handleClose}
+        sx={{
+          color: theme.outline,
+          height: theme.spacing(6),
+          width: theme.spacing(6),
+        }}
+      >
         <CloseIcon />
       </IconButton>
     </Box>
