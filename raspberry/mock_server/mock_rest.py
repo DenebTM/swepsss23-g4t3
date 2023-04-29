@@ -55,6 +55,20 @@ def ask_for_instructions_ss():
 
     return jsonify(response), 200
 
+# Route to send sensor failures to backend
+@app.route("sensor-stations/101", methods=["PUT"])
+def report_connection_to_ss_to_backend():
+    return 200
+
+# Route to send sensor failures to backend
+@app.route("/access-points/1/sensor-stations/101", methods=["PUT"])
+def send_sensor_failures():
+    return 200
+
+#Route to send sensor data
+@app.route("/access-points/1/sensor-stations/101", methods=["POST"])
+def send_sensor_data():
+    return 200
 
 if __name__ == '__main__':
     app.run()
