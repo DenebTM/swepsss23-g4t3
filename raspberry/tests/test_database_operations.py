@@ -64,26 +64,34 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
     async def test_update_sensorstation(self, db_conn):
 
         #set up json which is received 
-        json_data = '''{
-            "name": "station1",
-            "transmissioninterval": 60,
-            "thresholds": {
-                "temperature_max": 25,
-                "temperature_min": 10,
-                "humidity_max": 80,
-                "humidity_min": 30,
-                "air_pressure_max": 1000,
-                "air_pressure_min": 900,
-                "illuminance_max": 1000,
-                "illuminance_min": 100,
-                "air_quality_index_max": 50,
-                "air_quality_index_min": 0,
-                "soil_moisture_max": 50,
-                "soil_moisture_min": 10
+        json_data = {
+            'id': 'station1',
+            'status': 'OK',
+            'gardeners':[
+                'user1',
+                'user2'
+            ],
+            'transmission_interval': 500,
+            'accessPoint': 'AccessPoint1',
+            'lowerBound': {
+                'airPressure': 0,
+                'airQuality': 0,
+                'humidity': 0,
+                'lightIntensity': 0,
+                'soilMoisture': 0,
+                'temperature': 0
+            },
+            'upperBound': {
+                'airPressure': 20,  
+                'airQuality': 20,
+                'humidity': 20,
+                'lightIntensity': 20,
+                'soilMoisture': 20,
+                'temperature': 20
             }
-        }'''
+        }
         
-        await update_sensorstation(json_data)
+        await update_sensorstation(json.dumps(json_data))
 
         # check if the data is inserted correctly
         db_conn.execute.assert_called_once_with(
@@ -94,4 +102,4 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                ("station1", 60, 25, 80, 1000, 1000, 50, 50, 10, 30, 900, 100, 0, 10))
+                ("station1", 500, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0))
