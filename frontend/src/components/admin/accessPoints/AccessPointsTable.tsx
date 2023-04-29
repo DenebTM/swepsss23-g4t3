@@ -41,7 +41,7 @@ export const AccessPointsTable: React.FC = () => {
    * column width is not supported yet by DataGrid: https://github.com/mui/mui-x/issues/1241
    */
   const getMaxGreenhousesPerAp = (): number =>
-    typeof accessPoints === 'undefined'
+    typeof accessPoints === 'undefined' || accessPoints.length === 0
       ? 1
       : accessPoints.reduce((prev: AccessPoint, current: AccessPoint) =>
           prev.sensorStations.length > current.sensorStations.length

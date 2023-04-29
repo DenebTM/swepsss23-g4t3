@@ -6,9 +6,9 @@
 using namespace std::chrono_literals;
 
 // UUIDs for device information service
-#define BLE_UUID_DEVINFO              "180a"
-#define BLE_UUID_MANUFACTURER_NAME    "2a29"
-#define BLE_UUID_STATION_ID           "f001"  // not part of BLE Device Information spec
+#define BLE_UUID_DEVINFO           "180a"
+#define BLE_UUID_MANUFACTURER_NAME "2a29"
+#define BLE_UUID_STATION_ID        "f001" // not part of BLE spec
 
 // how often the station ID is checked for changes
 #define STATION_ID_CHECK_INTERVAL 1s
@@ -27,6 +27,6 @@ namespace ble {
 
   /** check station ID for changes */
   void update_station_id();
-}
+} // namespace ble
 
 #endif

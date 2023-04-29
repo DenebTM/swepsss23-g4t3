@@ -7,7 +7,7 @@ using namespace std::chrono_literals;
 
 /**
  * ================ Best-effort explanation of the calculation ================
- * 
+ *
  *   Depending on the light level, the photo-transistor drops a certain amount
  * of voltage. This can be visualized using a load line on the datasheet.
  *   The analogue reference voltage Vref is 3.3V. By subtracting Vce from Vref,
@@ -17,7 +17,7 @@ using namespace std::chrono_literals;
  * - arduino/light_loadline.png
  * - https://electronics.stackexchange.com/a/447084
  * - https://en.wikipedia.org/wiki/Load_line_(electronics
- * 
+ *
  *   The ADC has a resolution of 10 bits (by default); 0 corresponds to 0V,
  * 1023 corresponds to Vref (3.3V).
  * Thus:
@@ -26,7 +26,7 @@ using namespace std::chrono_literals;
  * -  50lx ~ 0.25V ~ 78
  * - 100lx ~ 0.50V ~ 155
  * - 200lx ~ 0.80V ~ 248
- * 
+ *
  *   Then linear interpolation is used to get the LUX value from the input.
  * Unfortunately our phototransistor is complete garbage and only ever measures
  * values below 50 unless a flashlight is pressed to its face, even out in
@@ -35,8 +35,8 @@ using namespace std::chrono_literals;
 
 #define LIGHT_PIN A7
 
-#define LIGHT_VAL_20LX   53
-#define LIGHT_VAL_50LX   78
+#define LIGHT_VAL_20LX  53
+#define LIGHT_VAL_50LX  78
 #define LIGHT_VAL_100LX 155
 #define LIGHT_VAL_200LX 248
 
@@ -52,6 +52,6 @@ namespace sensors::light {
 
   // runs internal timers; call this in the main loop
   void update();
-}
+} // namespace sensors::light
 
 #endif
