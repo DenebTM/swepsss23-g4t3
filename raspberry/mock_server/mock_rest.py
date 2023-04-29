@@ -65,7 +65,7 @@ def ask_for_instructions_ss():
         return 401
 
 # Route to send sensor failures to backend
-@app.route('sensor-stations/101', methods=['PUT'])
+@app.route('/sensor-stations/101', methods=['PUT'])
 def report_connection_to_ss_to_backend():
     if status_called:
         return 200
