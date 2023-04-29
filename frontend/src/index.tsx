@@ -33,12 +33,13 @@ import { GreenhouseView } from '~/components/greenhouses/greenhouseView/Greenhou
 import { MyGreenhouses } from '~/components/greenhouses/myGreenhouses/MyGreenhouses'
 import { Login } from '~/components/login/Login'
 import { Error } from '~/components/page/error/Error'
-import { MessageSnackbars } from '~/components/page/MessageSnackbars'
+import { MessageSnackbars } from '~/components/page/Snackbar/MessageSnackbars'
 import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
 import { isUserLoggedIn } from '~/helpers/jwt'
 import '~/styles/index.css'
 import { theme } from '~/styles/theme'
 
+import { PhotoUpload } from './components/photoUpload/PhotoUpload'
 import { AppProvider } from './contexts/AppContext/AppProvider'
 
 /**
@@ -100,8 +101,8 @@ const router = createBrowserRouter([
     loader: loginLoader,
   },
   {
-    path: `/${UPLOAD_ROOT}/:${SS_UUID_PARAM}`,
-    element: <Error />,
+    path: `/${UPLOAD_ROOT}`,
+    element: <PhotoUpload />,
     errorElement: <Error />,
   },
   {
