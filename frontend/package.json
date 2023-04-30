@@ -28,6 +28,7 @@
         "prop-types": "^15.6.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-qr-code": "^2.0.11",
         "react-router-dom": "^6.9.0",
         "recharts": "^2.5.0",
         "typescript": "^5.0.2",

@@ -15,6 +15,7 @@ import {
 } from '~/models/sensorStation'
 
 import { GardenerChips } from './GardenerChips'
+import { GenerateQrCode } from './GenerateQrCode/GenerateQrCode'
 
 /** Map values from {@link StationStatus} to {@link StatusVariant} for display in {@link StatusCell} */
 const sensorStationToVariant: { [key in StationStatus]: StatusVariant } = {
@@ -73,7 +74,7 @@ export const SensorStationsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
-    { ...centerCell, field: 'uuid', headerName: 'UUID' },
+    { ...centerCell, flex: 1, field: 'uuid', headerName: 'UUID' },
     {
       ...centerCell,
       field: 'status',
@@ -90,11 +91,13 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       ...centerCell,
+      flex: 1,
       field: 'aggregationPeriod',
       headerName: 'Aggregation Period (s)',
     },
     {
       ...centerCell,
+      flex: 1,
       field: 'accessPoint',
       headerName: 'Access Point ID',
       renderCell: (
@@ -117,6 +120,7 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       ...centerCell,
+      width: 135,
       field: 'action',
       headerName: 'Actions',
       sortable: false,
@@ -131,7 +135,9 @@ export const SensorStationsTable: React.FC = () => {
           entityName="sensor station"
           getEntityId={(r) => r.uuid}
           setRows={handleUpdateSensorStations}
-        />
+        >
+          <GenerateQrCode uuid={params.row.uuid} />
+        </DeleteCell>
       ),
     },
   ]
