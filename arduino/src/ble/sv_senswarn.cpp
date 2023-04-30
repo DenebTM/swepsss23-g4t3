@@ -46,7 +46,10 @@ namespace ble {
           BLEWritten,
           [val_ptr](BLEDevice central, BLECharacteristic characteristic) {
             bool warning_active = *characteristic.value() != 0;
+
             if (*val_ptr != warning_active) { *val_ptr = warning_active; }
+
+            if (warning_active) { ch_any_warning_active.writeValue(true); }
           });
 
       sv_senswarn.addCharacteristic(*ble_char);
