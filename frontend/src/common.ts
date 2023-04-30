@@ -150,7 +150,7 @@ const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
 
 /** Encrypt a sensor station UUID for photo upload */
 const encryptSensorStationUuid = (uuid: SensorStationUuid): string =>
-  CryptoJS.AES.encrypt(String(uuid), SECRET).toString()
+  encodeURIComponent(CryptoJS.AES.encrypt(String(uuid), SECRET).toString())
 
 /** Decrypt a sensor station UUID for photo upload */
 export const decryptSensorStationUuid = (
