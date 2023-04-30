@@ -32,7 +32,9 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
   (props): JSX.Element => {
     const [qrDialogOpen, setQrDialogOpen] = useState(false)
 
-    const uploadUri: string = PAGE_URL.photoUpload.href(props.uuid)
+    const uploadUri = `${window.location.origin}${PAGE_URL.photoUpload.href(
+      props.uuid
+    )}`
 
     /** Open the QR generation dialog when the icon is clicked */
     const handleIconClick = (e: React.MouseEvent) => {
