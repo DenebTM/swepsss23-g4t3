@@ -1,5 +1,5 @@
 import { Server } from 'miragejs'
-import { _delete, _get, _post } from '~/api/intercepts'
+import { _delete, _post } from '~/api/intercepts'
 import { SensorStationUuid } from '~/models/sensorStation'
 import { AuthUserRole, Username } from '~/models/user'
 
@@ -59,7 +59,7 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
     if (sensorStation) {
       const oldGardeners: Username[] = sensorStation.attrs.gardeners
       sensorStation.update({
-        gardeners: [username, ...(oldGardeners as string[])],
+        gardeners: [username, ...oldGardeners],
       })
       return success(sensorStation.attrs)
     } else {
@@ -77,7 +77,7 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
     if (sensorStation) {
       const oldGardeners: Username[] = sensorStation.attrs.gardeners
       sensorStation.update({
-        gardeners: (oldGardeners as string[]).filter((g) => g !== username),
+        gardeners: oldGardeners.filter((g) => g !== username),
       })
       return success(sensorStation.attrs)
     } else {
