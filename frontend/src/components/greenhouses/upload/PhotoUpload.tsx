@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
 
@@ -8,7 +9,7 @@ import { PageWrapper } from '~/components/page/PageWrapper'
  */
 export const PhotoUpload: React.FC = () => {
   return (
-    <PageWrapper>
+    <PageWrapper permittedRoles={PAGE_URL.photoUpload.permittedRoles}>
       <PageHeader />
       Photo upload page
     </PageWrapper>

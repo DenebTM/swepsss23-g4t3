@@ -1,8 +1,8 @@
 #ifndef _STATION_ID_H
 #define _STATION_ID_H
 
-#include <cstddef>
 #include <Arduino.h>
+#include <cstddef>
 
 #define ID_DIP_START_PIN 5
 

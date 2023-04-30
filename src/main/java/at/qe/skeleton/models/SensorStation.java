@@ -18,12 +18,12 @@ public class SensorStation {
 
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id"
+            property = "name"
     )
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("apId")
+    @JsonProperty("apName")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "AP_ID")
+    @JoinColumn(name = "AP_NAME")
     private AccessPoint accessPoint;
 
     @Enumerated(EnumType.STRING)
@@ -40,7 +40,8 @@ public class SensorStation {
     @Column(name = "AGGREGATION_PERIOD", nullable = false)
     private Long aggregationPeriod;
 
-    @JsonIgnore
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "GARDENER_SS",
             joinColumns = @JoinColumn(name = "SS_ID"),

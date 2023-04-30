@@ -18,7 +18,7 @@ async def poll_for_connection(connection_request):
         return response.json['status']
         asyncio.sleep(50)
     except:
-        print("cant connect to webserver log")
+        print("cant connect to webserver") #TODO: Implement logging
 
 
 async def spawn_sensorstation_tasks(sensorstations):

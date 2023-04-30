@@ -5,13 +5,13 @@ from db import db_conn
 current_time = int(time.time())
 five_min_ago = current_time - 300
 
-async def saveSensorValuesToDatabase(sensorstationname, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture):
+async def save_sensor_values_to_database(sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture):
     try:
         db_conn.execute("INSERT INTO sensordata (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                        (sensorstationname, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
+                        (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
         db_conn.commit()
     except:
-        pass #TODO log the failure and send to backend etc
+        pass #TODO: log the failure and send to backend etc
 
 
 #returns a mean of the values of the last 5 minutes
@@ -29,7 +29,7 @@ async def get_sensor_data_averages(sensorstation):
             
             return dict(averages_query.fetchone())
         except:
-            print("database cant be accessed # log")
+            print("database cant be accessed") #TODO: Implement logging
 
 #returns a dictionary of the thresholds of the sensorstation
 async def get_sensor_data_threshholds(sensorstation):
@@ -46,7 +46,7 @@ async def get_sensor_data_threshholds(sensorstation):
         return dict(thresholds_query.fetchone())
 
     except:
-        print("database cant be accesse #log")
+        print("database cant be accesse") #TODO: implement log
 
 
 async def update_sensorstation(json_data):
@@ -54,22 +54,25 @@ async def update_sensorstation(json_data):
 
     with db_conn:
         try:
-            sensorstationname = sensorstation["name"]
-            transmisstioninterval = sensorstation["transmissioninterval"]
-            thresholds = sensorstation["thresholds"]
-            temperature_max = thresholds["temperature_max"]
-            humidity_max = thresholds["humidity_max"]
-            air_pressure_max = thresholds["air_pressure_max"]
-            illuminance_max = thresholds["illuminance_max"]
-            air_quality_index_max = thresholds["air_quality_index_max"]
-            soil_moisture_max = thresholds["soil_moisture_max"]
-            temperature_min = thresholds["temperature_min"]
-            humidity_min = thresholds["humidity_min"]
-            air_pressure_min = thresholds["air_pressure_min"]
-            illuminance_min = thresholds["illuminance_min"]
-            air_quality_index_min = thresholds["air_quality_index_min"]
-            soil_moisture_min = thresholds["soil_moisture_min"]
 
+            sensorstation_name = sensorstation['id']
+            transmission_interval = sensorstation['transmission_interval']
+
+            upper_bounds = sensorstation['upperBound']
+            temperature_max = upper_bounds['temperature']
+            humidity_max = upper_bounds['humidity']
+            air_pressure_max = upper_bounds['airPressure']
+            illuminance_max = upper_bounds['lightIntensity']
+            air_quality_index_max = upper_bounds['airQuality']
+            soil_moisture_max = upper_bounds['soilMoisture']
+
+            lower_bounds = sensorstation['lowerBound']
+            temperature_min = lower_bounds['temperature']
+            humidity_min = lower_bounds['humidity']
+            air_pressure_min = lower_bounds['airPressure']
+            illuminance_min = lower_bounds['lightIntensity']
+            air_quality_index_min = lower_bounds['airQuality']
+            soil_moisture_min = lower_bounds['soilMoisture']
             db_conn.execute(
                 '''INSERT OR REPLACE INTO sensorstations
                 (sensorstationname, transmissioninterval,
@@ -78,14 +81,11 @@ async def update_sensorstation(json_data):
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (sensorstationname, transmisstioninterval,
+                (sensorstation_name, transmission_interval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min))
         except Exception as e:
             db_conn.rollback()
-            print(f"Error inserting data for sensorstation {sensorstationname}: {e}")
-
-         
-
+            print(f"Error inserting data for sensorstation {sensorstation_name}: {e}")

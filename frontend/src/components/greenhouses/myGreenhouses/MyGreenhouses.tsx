@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 
-import Typography from '@mui/material/Typography'
-
 import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
+import { PageTitle } from '~/components/page/PageTitle'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStationUuid } from '~/models/sensorStation'
@@ -22,15 +21,7 @@ export const MyGreenhouses: React.FC = () => {
   return (
     <PageWrapper permittedRoles={PAGE_URL.myGreenhouses.permittedRoles}>
       <PageHeader
-        left={
-          <Typography
-            variant="headlineLarge"
-            color="onSurfaceVariant"
-            component="h1"
-          >
-            {PAGE_URL.myGreenhouses.pageTitle}
-          </Typography>
-        }
+        left={<PageTitle>{PAGE_URL.myGreenhouses.pageTitle}</PageTitle>}
       />
       {sensorStations &&
         sensorStations.map((s) => (
