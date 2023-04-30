@@ -129,6 +129,14 @@ const generateTheme = (mode: PaletteMode) => {
           },
         },
       },
+      MuiSnackbarContent: {
+        styleOverrides: {
+          root: {
+            backgroundColor: tokens.onBackground,
+            color: tokens.background,
+          },
+        },
+      },
     },
   }
 }
