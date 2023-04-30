@@ -1,8 +1,9 @@
+import CryptoJS from 'crypto-js'
+
 import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
-
 import { theme } from './styles/theme'
 
 /** The root path for pages relating to greenhouses */
@@ -133,16 +134,37 @@ export const PAGE_URL: {
 
   /**
    * Page for uploading photos for a single sensor station.
-   * TODO qqjf encrypt the sensor station UUID for security
-   * @param sensorStationId The UUID of the sensor station
-   * @returns The relative path to the page
    */
   photoUpload: {
     pageTitle: 'Photo Upload',
     href: (sensorStationId: SensorStationUuid) =>
-      `/${UPLOAD_ROOT}/${sensorStationId}`,
+      `/${UPLOAD_ROOT}?${SS_UUID_PARAM}=${encryptSensorStationUuid(
+        sensorStationId
+      )}`,
     permittedRoles: _ALL_ROLES,
   },
+}
+
+/** Salt used to encrypt and decrypt sensor station UUIDs for photo upload */
+const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
+
+/** Encrypt a sensor station UUID for photo upload */
+const encryptSensorStationUuid = (uuid: SensorStationUuid): string =>
+  CryptoJS.AES.encrypt(String(uuid), SECRET).toString()
+
+/** Decrypt a sensor station UUID for photo upload */
+export const decryptSensorStationUuid = (
+  uri: string
+): SensorStationUuid | undefined => {
+  try {
+    const stringUuid = CryptoJS.AES.decrypt(uri, SECRET).toString(
+      CryptoJS.enc.Utf8
+    )
+    return stringUuid === '' ? undefined : Number(stringUuid)
+  } catch (error) {
+    // If the data can not be parsed as UTF-8 then catch this here
+    return undefined
+  }
 }
 
 /** Enum for the URL parameters controlling the view of a single sensor station.
