@@ -1,19 +1,18 @@
 import unittest
-import json
 from unittest.mock import MagicMock, patch
 import time
 
 #TODO: implement logging testing
 
-from database_operations import saveSensorValuesToDatabase, get_sensor_data_averages, get_sensor_data_threshholds, update_sensorstation
+from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensor_data_threshholds, update_sensorstation
 
 class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
     
     @patch('database_operations.db_conn')
-    async def test_saveSensorValuesToDatabase(self, db_conn):
+    async def test_save_sensor_values_to_database(self, db_conn):
 
         # Call the function with test input
-        await saveSensorValuesToDatabase("station1", 10, 20, 30, 40, 50, 60)
+        await save_sensor_values_to_database("station1", 10, 20, 30, 40, 50, 60)
 
         # Assert that the mock database connection was called with the correct SQL query and parameters
         db_conn.execute.assert_called_once_with("INSERT INTO sensordata (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",

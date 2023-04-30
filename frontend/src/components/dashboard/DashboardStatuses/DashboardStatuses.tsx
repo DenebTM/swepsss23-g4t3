@@ -31,7 +31,7 @@ export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
       })
       .catch((err: Error) =>
         setSnackbarMessage({
-          header: 'Could not load sensor stations',
+          header: 'Could not load access points',
           body: err.message,
           type: MessageType.ERROR,
         })

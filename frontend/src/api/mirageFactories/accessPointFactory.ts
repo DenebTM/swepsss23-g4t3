@@ -23,4 +23,7 @@ export const accessPointFactory = Factory.extend<AccessPoint>({
       .between('2023-03-29T00:00:00.000Z', '2023-03-30T00:00:00.000Z')
       .toISOString()
   },
+  sensorStations() {
+    return []
+  },
 })

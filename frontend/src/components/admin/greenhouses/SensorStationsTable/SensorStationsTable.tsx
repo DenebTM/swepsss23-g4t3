@@ -2,14 +2,26 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
-import { DataGrid } from '@component-lib/DataGrid'
-import { DeleteCell } from '@component-lib/DeleteCell'
+import { DataGrid } from '@component-lib/Table/DataGrid'
+import { DeleteCell } from '@component-lib/Table/DeleteCell'
+import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
 import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { useSensorStations } from '~/hooks/appContext'
-import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
+import {
+  SensorStation,
+  SensorStationUuid,
+  StationStatus,
+} from '~/models/sensorStation'
 
 import { GardenerChips } from './GardenerChips'
+
+/** Map values from {@link StationStatus} to {@link StatusVariant} for display in {@link StatusCell} */
+const sensorStationToVariant: { [key in StationStatus]: StatusVariant } = {
+  [StationStatus.OK]: StatusVariant.OK,
+  [StationStatus.WARNING]: StatusVariant.WARNING,
+  [StationStatus.OFFLINE]: StatusVariant.ERROR,
+}
 
 /** Type of a `DataGrid` row */
 type R = SensorStation[] | undefined
@@ -32,7 +44,7 @@ export const SensorStationsTable: React.FC = () => {
     useState<number>(1)
 
   useEffect(() => {
-    if (sensorStations === null) {
+    if (sensorStations === null || sensorStations.length === 0) {
       setMaxGardenersPerGreenhouse(0)
     } else {
       setMaxGardenersPerGreenhouse(
@@ -61,29 +73,36 @@ export const SensorStationsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
-    { field: 'uuid', headerName: 'UUID', ...centerCell },
+    { ...centerCell, field: 'uuid', headerName: 'UUID' },
     {
+      ...centerCell,
       field: 'status',
       headerName: 'Status',
+      width: 100,
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
-      ) => <div>{JSON.stringify(params.value)}</div>,
-      ...centerCell,
+      ) => (
+        <StatusCell
+          status={params.row.status.toLowerCase()}
+          variant={sensorStationToVariant[params.row.status]}
+        />
+      ),
     },
     {
+      ...centerCell,
       field: 'aggregationPeriod',
       headerName: 'Aggregation Period (s)',
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'accessPoint',
       headerName: 'Access Point ID',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => params.value,
-      ...centerCell,
     },
     {
+      ...centerCell,
       field: 'gardeners',
       sortable: false,
       filterable: false,
@@ -92,12 +111,12 @@ export const SensorStationsTable: React.FC = () => {
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => <GardenerChips {...params} />,
-      ...centerCell,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
       width: 135 * maxGardenersPerGreenhouse,
     },
     {
+      ...centerCell,
       field: 'action',
       headerName: 'Actions',
       sortable: false,
@@ -114,7 +133,6 @@ export const SensorStationsTable: React.FC = () => {
           setRows={handleUpdateSensorStations}
         />
       ),
-      ...centerCell,
     },
   ]
 
