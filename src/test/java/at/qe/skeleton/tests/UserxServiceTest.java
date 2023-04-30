@@ -167,6 +167,7 @@ public class UserxServiceTest {
         });
     }
 
+    @Test
     @WithMockUser(username = "susi", authorities = {"USER"})
     public void testAuthorizedLoadUser() {
         String username = "susi";
