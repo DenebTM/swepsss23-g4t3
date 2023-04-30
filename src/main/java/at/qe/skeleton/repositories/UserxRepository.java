@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository for managing {@link Userx} entities.
@@ -13,6 +14,7 @@ import org.springframework.data.repository.query.Param;
  * This class is part of the skeleton project provided for students of the
  * course "Software Engineering" offered by the University of Innsbruck.
  */
+@Repository
 public interface UserxRepository extends AbstractRepository<Userx, String> {
 
 

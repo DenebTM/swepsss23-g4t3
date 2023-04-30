@@ -5,5 +5,5 @@ import { Error } from './Error'
  * restricted page.
  */
 export const AccessDenied: React.FC = () => {
-  return <Error message="Must be signed in as admin to access this page." />
+  return <Error message="Insufficient permissions to view this page." />
 }

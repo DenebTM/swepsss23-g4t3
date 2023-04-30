@@ -23,11 +23,11 @@ public class AccessPointService {
     /**
      * Loads a single access point identified by its id.
      *
-     * @param id the id of access point to search for
+     * @param name the name of the AP to search for
      * @return the access point with the given id
      */
-    public AccessPoint loadAPById(Integer id) {
-        return apRepository.findFirstById(id);
+    public AccessPoint loadAPByName(String name) {
+        return apRepository.findFirstByName(name);
     }
 
     /**

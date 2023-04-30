@@ -5,23 +5,23 @@ from bleak import BleakError
 
 
 from read_sensorvalues import read_sensorvalues
-from database_operations import saveSensorValuesToDatabase
+from database_operations import save_sensor_values_to_database
 
 
-class TestReadSensorValues(unittest.IsolatedAsyncioTestCase):
+class TestReadSensorValue(unittest.IsolatedAsyncioTestCase):
 
-    @patch('read_sensorvalues.saveSensorValuesToDatabase')
+    @patch('read_sensorvalues.save_sensor_values_to_database')
     @patch('read_sensorvalues.BleakClient')
-    async def test_read_sensorvalues(self, BleakClient, saveSensorValuesToDatabase):
+    async def test_read_sensorvalues(self, BleakClient, save_sensor_values_to_database):
 
-        #modify return value of gatt char to 10
+        #mock reading characteristic of BleakClient
         BleakClient().__aenter__.return_value.read_gatt_char.return_value=int(10).to_bytes(2,byteorder='little')
 
         # call function with mock client
         await read_sensorvalues(BleakClient)
 
         # assert that saveSensorValuesToDatabase was called once with the expected arguments
-        saveSensorValuesToDatabase.assert_called_once_with(BleakClient.name, 10, 10, 10, 10, 10, 10)
+        save_sensor_values_to_database.assert_called_once_with(BleakClient.name, 10, 10, 10, 10, 10, 10)
 
 #TODO: implement test for logging when something is down
     # @patch('read_sensorvalues.BleakClient')
@@ -31,6 +31,3 @@ class TestReadSensorValues(unittest.IsolatedAsyncioTestCase):
     #     BleakClient().__aenter__.return_value.read_gatt_char.side_effect=BleakError
 
     #     await read_sensorvalues(BleakClient)
-
-
-

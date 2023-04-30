@@ -7,13 +7,14 @@ import { DashboardCard } from '@component-lib/DashboardCard'
 import dayjs from 'dayjs'
 import { getSensorStationMeasurements } from '~/api/endpoints/sensorStations/measurements'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
+import { useSensorStations } from '~/hooks/appContext'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Measurement } from '~/models/measurement'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GreenhouseAirMetrics } from './GreenhouseAirMetrics'
 import { GreenhouseDonuts } from './GreenhouseDonuts'
-import { GreenhouseGraph } from './GreenhouseGraph'
+import { GreenhouseGraph } from './GreenhouseGraph/GreenhouseGraph'
 
 interface GreenhouseGraphicalViewProps {
   uuid: SensorStationUuid
@@ -25,6 +26,7 @@ interface GreenhouseGraphicalViewProps {
 export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
   props
 ) => {
+  const sensorStations = useSensorStations()
   const addSnackbarMessage = useAddSnackbarMessage()
   const [measurements, setMeasurements] = useState<Measurement[]>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
@@ -88,7 +90,13 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
           </Grid>
           <Grid xs={12}>
             <DashboardCard>
-              <GreenhouseGraph measurements={measurements} uuid={props.uuid} />
+              <GreenhouseGraph
+                measurements={measurements}
+                sensorStation={sensorStations?.find(
+                  (s) => s.uuid == props.uuid
+                )}
+                uuid={props.uuid}
+              />
             </DashboardCard>
           </Grid>
         </>
