@@ -3,6 +3,7 @@ import time
 
 app = Flask(__name__)
 status_called = False
+
 #Route that initiates connection
 @app.route('/access-points/', methods=['POST'])
 def status():

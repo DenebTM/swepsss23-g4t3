@@ -89,6 +89,3 @@ async def update_sensorstation(json_data):
         except Exception as e:
             db_conn.rollback()
             print(f"Error inserting data for sensorstation {sensorstation_name}: {e}")
-
-         
-
