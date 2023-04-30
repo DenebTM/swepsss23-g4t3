@@ -1,8 +1,8 @@
 #include <hwtimer.h>
 
+#include <chrono>
 #include <drivers/LowPowerTicker.h>
 #include <vector>
-#include <chrono>
 using namespace std::chrono_literals;
 
 #define INTERNAL_TIMER_INTERVAL_US 1000
@@ -10,9 +10,10 @@ using namespace std::chrono_literals;
 namespace hwtimer {
   std::vector<mbed::LowPowerTicker*> tickers;
 
-  void attach_isr(std::chrono::milliseconds interval, mbed::Callback<void()> callback) {
-    mbed::LowPowerTicker *t = new mbed::LowPowerTicker();
+  void attach_isr(std::chrono::milliseconds interval,
+                  mbed::Callback<void()> callback) {
+    mbed::LowPowerTicker* t = new mbed::LowPowerTicker();
     t->attach(callback, interval);
     tickers.push_back(t);
   }
-}
+} // namespace hwtimer

@@ -156,10 +156,15 @@ const encryptSensorStationUuid = (uuid: SensorStationUuid): string =>
 export const decryptSensorStationUuid = (
   uri: string
 ): SensorStationUuid | undefined => {
-  const stringUuid = CryptoJS.AES.decrypt(uri, SECRET).toString(
-    CryptoJS.enc.Utf8
-  )
-  return stringUuid === '' ? undefined : Number(stringUuid)
+  try {
+    const stringUuid = CryptoJS.AES.decrypt(uri, SECRET).toString(
+      CryptoJS.enc.Utf8
+    )
+    return stringUuid === '' ? undefined : Number(stringUuid)
+  } catch (error) {
+    // If the data can not be parsed as UTF-8 then catch this here
+    return undefined
+  }
 }
 
 /** Enum for the URL parameters controlling the view of a single sensor station.
