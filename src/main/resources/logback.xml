@@ -63,21 +63,20 @@
         </encoder>
     </appender>
 
-    <logger name="infoLog" additivity="false">
+    <logger name="infoLogger">
         <appender-ref ref="info" level="info"/>
     </logger>
     <logger name="warnErrorLog" additivity="false">
         <appender-ref ref="warnError" level="warn"/>
     </logger>
     <logger name="dbLog" additivity="false">
-        <appender-ref ref="db" level="info"/>
-    </logger>
-    <!-- the level of the root level is set to INFO by default. -->
-    <root level="info">
-        <appender-ref ref="stdout" level="info"/>
         <appender-ref ref="db" level="warn"/>
-        <appender-ref ref="warnError" level="warn"/>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="stdout"/>
         <appender-ref ref="info" level="info"/>
+        <appender-ref ref="warnError" level="warn"/>
     </root>
 
 </configuration>
