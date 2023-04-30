@@ -12,9 +12,10 @@ using namespace std::chrono_literals;
 
 void setup() {
   Serial.begin(9600);
-  // wait for the Serial port to be initialized so that error messages during
-  // setup don't get lost
-  while (!Serial) {}
+  // uncomment the following line to wait for the Serial port to be initialized,
+  // so that error messages during setup don't get lost
+
+  // while (!Serial) {}
 
   sensors::bme::setup();
   sensors::hygro::setup();

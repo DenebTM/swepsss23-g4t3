@@ -41,9 +41,9 @@ using namespace std::chrono_literals;
 #define LIGHT_VAL_200LX 248
 
 // keep track of this many samples for averaging
-#define LIGHT_SAMPLE_COUNT 15
+#define LIGHT_SAMPLE_COUNT 30
 // time between each measurement
-#define LIGHT_READ_INTERVAL 200ms
+#define LIGHT_READ_INTERVAL 100ms
 // output/transmit data after each full sample cycle
 #define LIGHT_OUTPUT_INTERVAL (LIGHT_SAMPLE_COUNT * LIGHT_READ_INTERVAL)
 
