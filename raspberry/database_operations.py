@@ -55,8 +55,9 @@ async def update_sensorstation(json_data):
     with db_conn:
         try:
 
-            sensorstationname = sensorstation['id']
-            transmisstioninterval = sensorstation['transmission_interval']
+            sensorstation_name = sensorstation['id']
+            transmission_interval = sensorstation['transmission_interval']
+
             upper_bounds = sensorstation['upperBound']
             temperature_max = upper_bounds['temperature']
             humidity_max = upper_bounds['humidity']
@@ -64,6 +65,7 @@ async def update_sensorstation(json_data):
             illuminance_max = upper_bounds['lightIntensity']
             air_quality_index_max = upper_bounds['airQuality']
             soil_moisture_max = upper_bounds['soilMoisture']
+
             lower_bounds = sensorstation['lowerBound']
             temperature_min = lower_bounds['temperature']
             humidity_min = lower_bounds['humidity']
@@ -71,7 +73,6 @@ async def update_sensorstation(json_data):
             illuminance_min = lower_bounds['lightIntensity']
             air_quality_index_min = lower_bounds['airQuality']
             soil_moisture_min = lower_bounds['soilMoisture']
-
             db_conn.execute(
                 '''INSERT OR REPLACE INTO sensorstations
                 (sensorstationname, transmissioninterval,
@@ -80,7 +81,7 @@ async def update_sensorstation(json_data):
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (sensorstation_name, transmisstioninterval,
+                (sensorstation_name, transmission_interval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
@@ -88,3 +89,6 @@ async def update_sensorstation(json_data):
         except Exception as e:
             db_conn.rollback()
             print(f"Error inserting data for sensorstation {sensorstation_name}: {e}")
+
+         
+

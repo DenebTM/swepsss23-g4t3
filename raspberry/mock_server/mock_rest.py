@@ -15,13 +15,13 @@ def status():
 @app.route('/access-points/1/', methods=['GET'])
 def accesspoint_connection():
     if status_called: 
-        if int(time.time()) >= time_now + 180:
+        if int(time.time()) >= time_now + 300:
             response = {'status': 'offline'}
         else:
             response = {'status': 'searching'}
         return jsonify(response), 200
     else:
-        return jsonify("Forbidden"), 401
+        return jsonify('Forbidden'), 401
 
 #Route that updates Sensorstation Thressholds
 @app.route('/access-points/1/sensor-stations/1/', methods=['GET'])
@@ -56,7 +56,7 @@ def thresshold_update():
         
         return jsonify(response), 200
     else:
-        return jsonify("Forbidden"), 401
+        return jsonify('Forbidden'), 401
 
 # Route that asks for Instructions for each Sensorstation
 @app.route('/access-points/1/sensor-stations/', methods=['GET'])
@@ -70,32 +70,32 @@ def ask_for_instructions_ss():
 
         return jsonify(response), 200
     else:
-        return jsonify("Forbidden"), 401
+        return jsonify('Forbidden'), 401
 
 # Route to send sensor failures to backend
 @app.route('/sensor-stations/101', methods=['PUT'])
 def report_connection_to_ss_to_backend():
     if status_called:
-        return jsonify("OK"), 200
+        return jsonify('OK'), 200
     else:
-        return jsonify("Forbidden"), 401
+        return jsonify('Forbidden'), 401
     
 # Route to send sensor failures to backend
 @app.route('/access-points/1/sensor-stations/101', methods=['PUT'])
 def send_sensor_failures():
     if status_called:
-        return jsonify("OK"), 200
+        return jsonify('OK'), 200
     else:
-        return jsonify("Forbidden"), 401
+        return jsonify('Forbidden'), 401
     
 
 #Route to send sensor data
 @app.route('/access-points/1/sensor-stations/101', methods=['POST'])
 def send_sensor_data():
     if status_called:
-        return jsonify("OK"),200
+        return jsonify('OK'), 200
     else:
-        return jsonify("Forbidden"),401
+        return jsonify('Forbidden'), 401
     
 
 if __name__ == '__main__':
