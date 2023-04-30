@@ -32,7 +32,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
   (props): JSX.Element => {
     const [qrDialogOpen, setQrDialogOpen] = useState(false)
 
-    const uploadUri = `${window.location.origin}${PAGE_URL.photoUpload.href(
+    const uploadUrl = `${window.location.origin}${PAGE_URL.photoUpload.href(
       props.uuid
     )}`
 
@@ -72,7 +72,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
             <QRCode
               size={qrSize}
               style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
-              value={uploadUri}
+              value={uploadUrl}
               viewBox={`0 0 ${qrSize} ${qrSize}`}
             />
           </DialogContent>
