@@ -32,6 +32,19 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
   const breakMd = useMediaQuery(theme.breakpoints.up('md'))
   const breakLg = useMediaQuery(theme.breakpoints.up('lg'))
 
+  /** Determine the page sides padding in usings of `theme.spacing` */
+  const getPageSidePadding = (): number => {
+    if (breakLg) {
+      return 8
+    } else if (breakMd) {
+      return 6
+    } else if (breakSm) {
+      return 4
+    } else {
+      return 1
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -51,10 +64,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
           flex: '1',
           minHeight: '100vh',
           minWidth: 0,
-          padding: theme.spacing(
-            0,
-            breakLg ? 8 : breakMd ? 6 : breakSm ? 4 : 1
-          ),
+          padding: theme.spacing(0, getPageSidePadding()),
           flexDirection: 'column',
         }}
       >

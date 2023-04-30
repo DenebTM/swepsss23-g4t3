@@ -75,12 +75,9 @@ const greenhousePagesLoader: LoaderFunction = async (
   const sensorStationView = search.get(GREENHOUSE_VIEW_QUERY)
 
   // Allow viewing the greenhouses gallery when not logged in
-  switch (sensorStationView) {
-    case SensorStationView.GALLERY:
-      return null
-    default:
-      return authorizationLoader(args)
-  }
+  return sensorStationView === SensorStationView.GALLERY
+    ? null
+    : authorizationLoader(args)
 }
 
 /** Wrapper for routes that require the user to be logged in to view */
