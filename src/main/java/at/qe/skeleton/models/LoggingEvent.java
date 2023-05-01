@@ -1,5 +1,6 @@
 package at.qe.skeleton.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     private String formattedMessage;
 
+    @JsonIgnore
     @Column(name = "logger_name", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String loggerName;
@@ -32,30 +34,37 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String levelString;
 
+    @JsonIgnore
     @Column(name = "thread_name")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String threadName;
 
+    @JsonIgnore
     @Column(name = "reference_flag")
     @JdbcTypeCode(SqlTypes.SMALLINT)
     private String referenceFlag;
 
+    @JsonIgnore
     @Column(name = "arg0")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String arg0;
 
+    @JsonIgnore
     @Column(name = "arg1")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String arg1;
 
+    @JsonIgnore
     @Column(name = "arg2")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String arg2;
 
+    @JsonIgnore
     @Column(name = "arg3")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String arg3;
 
+    @JsonIgnore
     @Column(name = "caller_filename")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerFilename;
@@ -64,14 +73,17 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerClass;
 
+    @JsonIgnore
     @Column(name = "caller_method")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerMethod;
 
+    @JsonIgnore
     @Column(name = "caller_line")
     @JdbcTypeCode(SqlTypes.CHAR)
     private String callerLine;
 
+    @JsonIgnore
     @Id
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
