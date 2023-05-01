@@ -18,9 +18,9 @@ export const GardenerChips: React.FC<
 
   return (
     <Stack spacing={1} padding={2} direction="row">
-      {props.row.gardeners.map((username: string) => (
+      {props.row.gardeners.map((username: string, idx) => (
         <RemovableChip
-          key={username}
+          key={`${username}-${idx}`}
           entityName="gardener"
           handleDelete={() =>
             Promise.reject({
