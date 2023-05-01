@@ -12,8 +12,8 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Measurement } from '~/models/measurement'
 import { SensorStationUuid } from '~/models/sensorStation'
 
-import { GreenhouseAirMetrics } from './GreenhouseAirMetrics'
-import { GreenhouseDonuts } from './GreenhouseDonuts'
+import { GreenhouseAirMetrics } from './GreenhouseDonuts/GreenhouseAirMetrics'
+import { GreenhouseDonuts } from './GreenhouseDonuts/GreenhouseDonuts'
 import { GreenhouseGraph } from './GreenhouseGraph/GreenhouseGraph'
 
 interface GreenhouseGraphicalViewProps {
