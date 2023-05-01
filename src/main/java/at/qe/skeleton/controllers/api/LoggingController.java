@@ -1,8 +1,9 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.repositories.LoggingEventRepository;
+import at.qe.skeleton.services.LoggingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoggingController {
 
     @Autowired
-    LoggingEventRepository loggingEventRepository;
+    LoggingService loggingService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/logs")
     public ResponseEntity<Object> getAllLogs() {
-        return ResponseEntity.ok(loggingEventRepository.findAll());
+        return ResponseEntity.ok(loggingService.loadLogs());
     }
 }
