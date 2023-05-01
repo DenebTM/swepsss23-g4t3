@@ -17,7 +17,7 @@ import { GreenhouseDonut } from './GreenhouseDonut/GreenhouseDonut'
 
 const donutIconProps: Partial<SvgIconTypeMap['props']> = {
   fontSize: 'small',
-  sx: { color: theme.outline },
+  color: 'inherit',
 }
 
 interface GreenhouseDonutsProps {
