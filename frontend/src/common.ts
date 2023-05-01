@@ -172,7 +172,7 @@ export const decryptSensorStationUuid = (
 export enum SensorStationView {
   /** The graphical view of sensor station information. */
   GRAPHICAL = '',
-  /** The tabuler view of sensor station data */
+  /** The tabular view of sensor station data */
   TABLE = 'table',
   /** The gallery for a given sensor station */
   GALLERY = 'gallery',
@@ -299,3 +299,6 @@ export const greenhouseMetricWithUnit = (
   (metricRange.unit === '' ? '' : ` (${metricRange.unit})`)
 
 export const emDash = '—'
+
+/** FormData key for uploaded sensor station photos */
+export const UPLOADED_PHOTO_KEY = 'multipartImage'
