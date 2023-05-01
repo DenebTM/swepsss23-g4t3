@@ -1,50 +1,78 @@
 import React from 'react'
 
-import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
-import Typography from '@mui/material/Typography'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
-import { PlantIcon } from '@component-lib/PlantIcon'
 import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { theme } from '~/styles/theme'
 
 import { GalleryCta } from './GalleryCta'
 import { LoginForm } from './LoginForm'
+import { LoginHeader } from './LoginHeader'
+import { LoginSidewave } from './LoginSidewave'
+
+const loginSidewaveWidth = '36%'
 
 /**
  * Login page
  */
 export const Login: React.FC = () => {
+  const breakpointDownMd = useMediaQuery(theme.breakpoints.down('md'))
+  const breakpointDownSm = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
-    <PageWrapper hideSidebar permittedRoles={PAGE_URL.login.permittedRoles}>
-      <Container maxWidth="sm" sx={{ paddingTop: 10 }} disableGutters>
+    <PageWrapper
+      hideSidebar
+      permittedRoles={PAGE_URL.login.permittedRoles}
+      sx={{ padding: 0, flexDirection: 'row' }}
+    >
+      {!breakpointDownMd && (
+        <Box
+          sx={{
+            position: 'fixed',
+            width: loginSidewaveWidth,
+          }}
+        >
+          <LoginSidewave />
+        </Box>
+      )}
+      <Box
+        sx={{
+          padding: theme.spacing(2, 3, 8),
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+          width: breakpointDownMd
+            ? '100%'
+            : `calc(100% - ${loginSidewaveWidth})`,
+          left: breakpointDownMd ? 0 : loginSidewaveWidth,
+        }}
+      >
         <Paper
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            padding: 4,
+            height: 'fit-content',
+            padding: breakpointDownSm
+              ? theme.spacing(3, 5)
+              : theme.spacing(4, 8),
+            width: '90%',
+            maxWidth: '600px',
           }}
         >
-          <Box component="div" display="flex" alignItems="center" padding={2}>
-            <Typography
-              variant="headlineLarge"
-              align="center"
-              color="onSurface"
-              component="h1"
-              marginRight={1}
-            >
-              {PAGE_URL.login.pageTitle}
-            </Typography>
-            <PlantIcon color={theme.onSurface} />
-          </Box>
+          <LoginHeader
+            padding={
+              breakpointDownSm ? theme.spacing(3, 1.5) : theme.spacing(4, 3)
+            }
+          />
           <LoginForm />
-
           <GalleryCta />
         </Paper>
-      </Container>
+      </Box>
     </PageWrapper>
   )
 }

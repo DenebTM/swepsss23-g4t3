@@ -54,12 +54,12 @@ export const LoginForm: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '80%',
+        width: '100%',
       }}
       noValidate
       autoComplete="off"
     >
-      <Stack spacing={2} width="100%" maxWidth={350}>
+      <Stack spacing={2} width="100%" maxWidth={400}>
         {Boolean(loginError) && <div>TODO (ErrorBox): {loginError}</div>}
 
         <TextField
