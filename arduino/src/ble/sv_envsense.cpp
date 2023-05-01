@@ -11,6 +11,7 @@ namespace ble {
   BLEService sv_envsense(BLE_UUID_ESS);
 
   // array of BLE characteristics and their associated sensor values
+  // clang-format off
   std::vector<std::pair<BLECharacteristic*, void*>> envsense_chars = {
     { new BLEUnsignedIntCharacteristic(BLE_UUID_AIR_PRESSURE, BLERead | BLENotify),   &sensors::current_data.air_pressure },
     { new BLEShortCharacteristic(BLE_UUID_TEMPERATURE, BLERead | BLENotify),          &sensors::current_data.temperature },
@@ -21,6 +22,7 @@ namespace ble {
     { new BLEUnsignedShortCharacteristic(BLE_UUID_AIR_QUALITY, BLERead | BLENotify),  &sensors::current_data.air_quality },
     { new BLEUnsignedCharCharacteristic(BLE_UUID_SOIL_MOISTURE, BLERead | BLENotify), &sensors::current_data.soil_moisture },
   };
+  // clang-format on
 
   // Flags for periodic tasks
   volatile bool shall_write_sensor_data = false;
@@ -34,7 +36,8 @@ namespace ble {
 
     BLE.addService(sv_envsense);
 
-    hwtimer::attach_flag_isr(BLE_ENVSENSE_TRANSMIT_INTERVAL, &shall_write_sensor_data);
+    hwtimer::attach_flag_isr(BLE_ENVSENSE_TRANSMIT_INTERVAL,
+                             &shall_write_sensor_data);
   }
 
   void envsense_update() {
@@ -50,4 +53,4 @@ namespace ble {
       }
     }
   }
-}
+} // namespace ble
