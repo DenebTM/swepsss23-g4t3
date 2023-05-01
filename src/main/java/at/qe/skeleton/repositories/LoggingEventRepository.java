@@ -1,10 +1,12 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.models.LoggingEvent;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository
 public interface LoggingEventRepository extends AbstractRepository<LoggingEvent, String> {
 
     LoggingEvent findByTimestmp(LocalDateTime timestmp);

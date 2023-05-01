@@ -3,13 +3,16 @@ package at.qe.skeleton.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "logging_event")
 public class LoggingEvent {
 
@@ -69,11 +72,10 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.CHAR)
     private String callerLine;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "event_id", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    private String eventId;
+    @Id
+    @Column(name = "event_id", nullable = false)
+    @JdbcTypeCode(SqlTypes.BIGINT)
+    private Long eventId;
 
 
 }
