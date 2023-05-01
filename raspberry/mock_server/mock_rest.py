@@ -1,5 +1,5 @@
 from flask import Flask,jsonify
-import time 
+import time
 
 app = Flask(__name__)
 status_called = False
@@ -13,13 +13,15 @@ def status():
     return jsonify(response), 200
 
 #Route that polls for connection-update
-@app.route('/access-points/1/', methods=['GET'])
+@app.route('/access-points/'+ 'AP1', methods=['GET'])
 def accesspoint_connection():
     if status_called: 
-        if int(time.time()) >= time_now + 300:
+        if int(time.time()) >= time_now + 50 and int(time.time()) <= time_now + 100:
             response = {'status': 'offline'}
+        elif (int(time.time())) >= time_now + 100:
+            response = {'status': 'online'}
         else:
-            response = {'status': 'searching'}
+            response = {'status': 'online'}
         return jsonify(response), 200
     else:
         return jsonify('Forbidden'), 401
@@ -60,7 +62,7 @@ def thresshold_update():
         return jsonify('Forbidden'), 401
 
 # Route that asks for Instructions for each Sensorstation
-@app.route('/access-points/1/sensor-stations/', methods=['GET'])
+@app.route('/access-points/AP1/sensor-stations', methods=['GET'])
 def ask_for_instructions_ss():
     if status_called:
         response = [
