@@ -13,14 +13,8 @@ from search_for_sensorstations import search_for_sensorstations
 #amal alles aiohttp machen weil nid mischen
 #define den return als a future dass i des im manage sensorstations sieh
 
-async def spawn_sensorstation_tasks(sensorstations):
-    for sensorstation in sensorstations:
-        await asyncio.create_task(read_sensorvalues(sensorstation))
-
-async def cancel_sensorstation_tasks(sensorstation, sensorstation_tasks):
-    for sensorstation in sensorstation:
-        pass #TODO cancel tasks marked as offline
-
+async def spawn_sensorstation_tasks(sensorstation):
+    pass
 
 async def get_ap_status(session):
     async with session.get(common.web_server_address + "/access-points/" + common.access_point_name) as response:
@@ -35,21 +29,29 @@ async def get_sensorstation_instructions(session):
 async def sensor_station_manager(connection_request, session):
     tasks = {}  
     while not connection_request.done():
-        print("these 2 tasks should run concurrently")
-        instructions = await get_sensorstation_instructions(session)
-        print(instructions)
-        
+        sensorstations = await get_sensorstation_instructions(session)
+        for sensorstation in sensorstations:
+            print("number of this is sensorstations i think?")
+            for ss, instruction in sensorstation.items():
+                if instruction == "OFFLINE":
+                    try:
+                        tasks[ss].cancel()
+                    except:
+                        print(f"task_not_found", ss)
+                elif instruction == "PAIRING":
+                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, 123))
+        print("Finished SS Manager Loop")
         await asyncio.sleep(10)
 
 async def sensor_station_tasks(connection_request, session, bleak_conn):
-    pass
-
-
+    while not connection_request.done():
+        print("Inside sensor station task")
+        await asyncio.sleep(10)
 
 
 async def polling_loop(connection_request, session):
         while not connection_request.done():
-            print("inside the inner loop")
+            print("Inside AP Loop")
             status = await get_ap_status(session)
             if status == 'offline':
                 connection_request.set_result("Done")
@@ -62,7 +64,7 @@ async def main():
     async with aiohttp.ClientSession() as session:
         connection_request = asyncio.Future()
         while True:
-            print("i should only print this when the access point is offline or once at start")
+            print("This should only be Printed at the start and when AP is offline")
             async with session.post(common.web_server_address + "/access-points") as response:
                 if response.status == 200:
                     ap_status = await get_ap_status(session)
