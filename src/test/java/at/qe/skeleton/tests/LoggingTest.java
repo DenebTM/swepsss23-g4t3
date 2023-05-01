@@ -20,7 +20,7 @@ public class LoggingTest {
     @Test
     void testInfoLog() {
         logger.info("Test info message");
-        File info = new File("/logs/info.log");
+        File info = new File("logs/info.log");
         Assertions.assertTrue(info.exists());
         Assertions.assertTrue(info.length() > 0);
     }
@@ -28,7 +28,7 @@ public class LoggingTest {
     @Test
     void testWarnLog() {
         logger.warn("Test warn message");
-        File warn = new File("/logs/warnError.log");
+        File warn = new File("logs/warnError.log");
         Assertions.assertTrue(warn.exists());
         Assertions.assertTrue(warn.length() > 0);
     }
@@ -36,7 +36,7 @@ public class LoggingTest {
     @Test
     void testErrorLog() {
         logger.error("Test error message");
-        File error = new File("/logs/warnError.log");
+        File error = new File("logs/warnError.log");
         Assertions.assertTrue(error.exists());
         Assertions.assertTrue(error.length() > 0);
     }
