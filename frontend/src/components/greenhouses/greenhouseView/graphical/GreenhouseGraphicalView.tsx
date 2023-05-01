@@ -13,7 +13,7 @@ import { Measurement } from '~/models/measurement'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { GreenhouseAirMetrics } from './GreenhouseDonuts/GreenhouseAirMetrics'
-import { GreenhouseDonuts } from './GreenhouseDonuts/GreenhouseDonuts'
+import { GreenhouseMetricDonuts } from './GreenhouseDonuts/GreenhouseMetricDonuts'
 import { GreenhouseGraph } from './GreenhouseGraph/GreenhouseGraph'
 
 interface GreenhouseGraphicalViewProps {
@@ -74,7 +74,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
         <>
           <Grid xs={12} md={8}>
             <DashboardCard>
-              <GreenhouseDonuts
+              <GreenhouseMetricDonuts
                 measurement={measurements.length > 0 ? measurements[0] : null}
                 uuid={props.uuid}
               />
