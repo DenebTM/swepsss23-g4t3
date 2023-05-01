@@ -7,6 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Rest Controller to display all available logs in the frontend.
+ */
 @RestController
 public class LoggingController {
 
