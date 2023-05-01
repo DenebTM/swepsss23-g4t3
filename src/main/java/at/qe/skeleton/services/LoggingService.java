@@ -13,6 +13,10 @@ public class LoggingService {
     @Autowired
     LoggingEventRepository loggingEventRepository;
 
+    /**
+     * Gets all available logs from the repository
+     * @return list of logs
+     */
     public List<LoggingEvent> loadLogs() {
         return loggingEventRepository.findAll();
     }

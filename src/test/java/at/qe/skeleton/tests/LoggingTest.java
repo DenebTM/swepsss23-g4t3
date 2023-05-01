@@ -11,6 +11,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.io.File;
 import java.sql.*;
 
+/**
+ * Tests logging with logback in four different cases: writing info, warning and error messages to a file
+ * separately and logging to the database.
+ */
 @SpringBootTest
 @WebAppConfiguration
 public class LoggingTest {
