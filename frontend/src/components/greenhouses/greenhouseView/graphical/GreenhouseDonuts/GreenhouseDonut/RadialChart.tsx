@@ -1,6 +1,8 @@
 import React from 'react'
 import { PolarAngleAxis, RadialBar, RadialBarChart, Tooltip } from 'recharts'
 
+import { alpha } from '@mui/material/styles'
+
 import { emDash, GreenhouseMetricRange, roundMetric } from '~/common'
 import { theme } from '~/styles/theme'
 
@@ -13,6 +15,8 @@ interface RadialChartProps {
   /** Chart height in px */
   height: number
   metricRange: GreenhouseMetricRange
+  sensorStationMin: number
+  sensorStationMax: number
   value: number
   /** Chart width in px */
   width: number
@@ -59,7 +63,9 @@ export const RadialChart: React.FC<RadialChartProps> = (props) => {
         tick={false}
       />
       <RadialBar
-        background
+        background={{
+          fill: alpha(props.metricRange.colour, 0.15),
+        }}
         dataKey={DATA_KEY}
         angleAxisId={props.metricRange.valueKey}
       />
@@ -71,7 +77,10 @@ export const RadialChart: React.FC<RadialChartProps> = (props) => {
           }`
         }
         formatter={(value: number | string, name, payload, index) => {
-          return `${props.metricRange.min} ${emDash} ${props.metricRange.max}${props.metricRange.unit}`
+          const min = roundMetric(props.sensorStationMin)
+          const max = roundMetric(props.sensorStationMax)
+
+          return `${min} ${emDash} ${max}${props.metricRange.unit}`
         }}
       />
     </RadialBarChart>
