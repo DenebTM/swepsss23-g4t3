@@ -2,7 +2,7 @@ import React from 'react'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Box from '@mui/system/Box'
+import Box, { BoxTypeMap } from '@mui/system/Box'
 
 import { useUserRole } from '~/hooks/user'
 import { UserRole } from '~/models/user'
@@ -20,6 +20,9 @@ interface PageWrapperProps {
 
   /** Restrict viewing the page to users with certain roles */
   permittedRoles: UserRole[]
+
+  /** Optionally override styles passed to the page wrapper */
+  sx?: BoxTypeMap['props']['sx']
 }
 
 /**
@@ -66,6 +69,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
           minWidth: 0,
           padding: theme.spacing(0, getPageSidePadding()),
           flexDirection: 'column',
+          ...(typeof props.sx !== 'undefined' ? props.sx : {}),
         }}
       >
         {!props.permittedRoles.includes(userRole) ? (
