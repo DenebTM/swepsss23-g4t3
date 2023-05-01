@@ -11,8 +11,7 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "logging_event_exception")
 public class LoggingEventException {
 
-    @PrimaryKeyJoinColumn
-    @OneToOne(mappedBy = "event_id", cascade = CascadeType.ALL)
+    @Id
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private String eventID;

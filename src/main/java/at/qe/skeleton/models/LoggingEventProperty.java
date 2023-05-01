@@ -12,8 +12,7 @@ import org.hibernate.type.SqlTypes;
 public class LoggingEventProperty {
 
 
-    @PrimaryKeyJoinColumn
-    @OneToOne(mappedBy = "event_id", cascade = CascadeType.ALL)
+    @Id
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private String eventID;
