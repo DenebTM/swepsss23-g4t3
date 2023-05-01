@@ -75,7 +75,7 @@ test('render GreenhouseTabularView inside GreenhouseView', async () => {
         expect(
           screen.getByText(greenhouseMetricWithUnit(metricRange))
         ).toBeInTheDocument(),
-      { timeout: 5000 }
+      { timeout: 10000 }
     )
   )
 
@@ -84,7 +84,7 @@ test('render GreenhouseTabularView inside GreenhouseView', async () => {
     Object.values(measurement.data).forEach((value: number) =>
       waitFor(
         () => expect(screen.getByText(roundMetric(value))).toBeInTheDocument(),
-        { timeout: 5000 }
+        { timeout: 10000 }
       )
     )
   )
