@@ -13,7 +13,7 @@ import { Measurement } from '~/models/measurement'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
-import { GreenhouseDonut } from './GreenhouseDonut'
+import { GreenhouseDonut } from './GreenhouseDonut/GreenhouseDonut'
 
 const donutIconProps: Partial<SvgIconTypeMap['props']> = {
   fontSize: 'small',
@@ -28,7 +28,9 @@ interface GreenhouseDonutsProps {
 /**
  * Metric donuts showing greenhouse temperature, soil moisture, and light intensity
  */
-export const GreenhouseDonuts: React.FC<GreenhouseDonutsProps> = (props) => {
+export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
+  props
+) => {
   const sensorStations = useSensorStations()
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
   const [sensorStation, setSensorStation] = useState<SensorStation | null>()
