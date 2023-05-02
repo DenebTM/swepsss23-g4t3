@@ -57,7 +57,6 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
           open={qrDialogOpen}
           onClose={handleClose}
           aria-labelledby="qr-dialog-title"
-          aria-describedby="qr-dialog-description"
           PaperProps={{
             sx: { minWidth: '70%', padding: theme.spacing(1, 3, 2) },
           }}

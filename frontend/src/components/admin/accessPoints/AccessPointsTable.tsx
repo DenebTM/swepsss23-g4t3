@@ -17,6 +17,7 @@ import {
 } from '~/api/endpoints/accessPoints'
 import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 
+import { AddSensorStation } from './AddSensorStation/AddSensorStation'
 import { SensorStationChips } from './SensorStationChips'
 
 const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
@@ -98,8 +99,7 @@ export const AccessPointsTable: React.FC = () => {
     {
       ...centerCell,
       field: 'action',
-      headerName: 'Delete',
-      description: 'Delete the given access point',
+      headerName: 'Actions',
       flex: 1,
       sortable: false,
       filterable: false,
@@ -112,7 +112,9 @@ export const AccessPointsTable: React.FC = () => {
           entityName="access point"
           getEntityId={(r) => r.apId}
           setRows={setAccessPoints}
-        />
+        >
+          <AddSensorStation accessPointId={params.row.apId} />
+        </DeleteCell>
       ),
     },
   ]

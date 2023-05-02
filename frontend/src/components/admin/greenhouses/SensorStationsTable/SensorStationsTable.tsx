@@ -128,7 +128,6 @@ export const SensorStationsTable: React.FC = () => {
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => (
-        // TODO qqjf add links and actions here
         <DeleteCell<SensorStation, SensorStationUuid>
           deleteEntity={deleteSensorStation}
           entityId={params.row.uuid}
