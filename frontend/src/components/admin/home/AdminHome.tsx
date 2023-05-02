@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import AddIcon from '@mui/icons-material/Add'
@@ -13,9 +13,8 @@ import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageTitle } from '~/components/page/PageTitle'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
 
+import { AddSensorStationModal } from '../AddSensorStationDialog/AddSensorStationDialog'
 import { AdminHomeButton, AdminHomeButtonProps } from './AdminHomeButton'
 
 const iconFontSize: SvgIconTypeMap['props']['fontSize'] = 'large'
@@ -25,7 +24,13 @@ const iconFontSize: SvgIconTypeMap['props']['fontSize'] = 'large'
  */
 export const AdminHome: React.FC = () => {
   const navigate = useNavigate()
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const [addSsModalOpen, setAddSsModalOpen] = useState(false)
+
+  /** Handle closing the modal to add a sensor station */
+  const handleCloseSsModal = () => {
+    setAddSsModalOpen(false)
+    // qqjf TODO reload
+  }
 
   const adminHomeLinks: AdminHomeButtonProps[] = [
     {
@@ -50,12 +55,7 @@ export const AdminHome: React.FC = () => {
       title: 'Add Greenhouses',
       description: 'Connect a new greenhouse',
       icon: <AddIcon fontSize={iconFontSize} />,
-      onClick: () =>
-        addSnackbarMessage({
-          header: 'Not Implemented',
-          body: 'Adding greenhouses has not been implemented yet.',
-          type: MessageType.ERROR,
-        }),
+      onClick: () => setAddSsModalOpen(true),
     },
     {
       title: 'Manage Greenhouses',
@@ -77,6 +77,10 @@ export const AdminHome: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+      <AddSensorStationModal
+        open={addSsModalOpen}
+        onClose={handleCloseSsModal}
+      />
     </PageWrapper>
   )
 }
