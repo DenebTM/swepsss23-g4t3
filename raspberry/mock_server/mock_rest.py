@@ -23,7 +23,7 @@ def accesspoint_connection():
         elif (int(time.time())) >= time_now + 100:
             response = {'status': 'online'}
         else:
-            response = {'status': 'online'}
+            response = {'status': 'searching'}
         return jsonify(response), 200
     else:
         return jsonify('Forbidden'), 401
@@ -93,17 +93,17 @@ def send_sensor_failures():
     else:
         return jsonify('Forbidden'), 401
 
-# TODO: This will be the route to send back the Sensorstations
-# @app.route('/access-points/AP1/sensor-stations/', method=['POST'])
-# def send_found_ss():
-#     global sensorstations
-#     if status_called:
-#         json_data = request.get_json()
-#         sensorstations.append(json_data)
-#         print(sensorstations)
-#         return jsonify('OK'), 200
-#     else:
-#         return jsonify('Forbidden'), 401
+#Route to send back the Sensorstations
+@app.route('/access-points/AP1/sensor-stations', methods=['POST'])
+def send_found_ss():
+    global sensorstations
+    if status_called:
+        json_data = request.get_json()
+        sensorstations.append(json_data)
+        print(sensorstations)
+        return jsonify('OK'), 200
+    else:
+        return jsonify('Forbidden'), 401
 
     
 

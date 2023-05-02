@@ -1,15 +1,16 @@
 from bleak import BleakScanner
 from bleak.exc import BleakError
-
+import json
 import common
 
+#Should return a dictionary of all found sensorstations with key = name, value = ID
 async def search_for_sensorstations():
     try:
-        sensorstations = []
+        sensorstations = {}
         devices = await BleakScanner.discover()
         for d in devices:
             if common.sensor_station_name in d.name:
-                sensorstations.append(d)
+                sensorstations[d.name] = d.details['props']['ServiceData'][common.device_information_uuid]
         
         if len(sensorstations) > 0:
             print("Found sensor stations:", sensorstations)
@@ -35,3 +36,11 @@ async def search_for_sensorstations():
         # write error to audit log
         print(f"Error: {e}")
         return []
+    
+
+async def send_sensorstations_to_backend(session, sensorstations):
+    sensorstation_json = json.dumps(sensorstations)
+    print(sensorstation_json)
+    async with session.post(common.web_server_address + "/access-points/" + common.access_point_name + "/sensor-stations", json=sensorstation_json) as response:
+        data = await response.json()
+        print(data)
