@@ -8,7 +8,7 @@ import { GreenhouseIcon } from '~/common'
 import { AccessPointId } from '~/models/accessPoint'
 import { theme } from '~/styles/theme'
 
-import { AddSensorStationModal } from '../../AddSensorStationDialog/AddSensorStationDialog'
+import { AddSensorStationDialog } from '../../AddSensorStationDialog/AddSensorStationDialog'
 
 /** Size of "+" badge icon */
 const plusBadgeSize = '14px'
@@ -18,22 +18,22 @@ interface AddSensorStationProps {
 }
 
 /**
- * Button which opens a modal to add a new sensor station to a given greenhouse.
+ * Button which opens a dialog to add a new sensor station to a given greenhouse.
  * Memoised using `React.memo` as otherwise DataGrid causes unnecessary rerenders.
  */
 export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
   (props): JSX.Element => {
-    const [addSsModalOpen, setAddSsModalOpen] = useState(false)
+    const [addSsDialogOpen, setAddSsDialogOpen] = useState(false)
 
-    /** Open the modal to add a sensor station when the icon is clicked */
+    /** Open the dialog to add a sensor station when the icon is clicked */
     const handleIconClick = (e: React.MouseEvent) => {
       e.stopPropagation() // Prevent selecting the cell on click
-      setAddSsModalOpen(true)
+      setAddSsDialogOpen(true)
     }
 
-    /** Handle closing the modal to add a sensor station */
+    /** Handle closing the dialog to add a sensor station */
     const handleClose = () => {
-      setAddSsModalOpen(false)
+      setAddSsDialogOpen(false)
       // qqjf TODO trigger reload
     }
 
@@ -57,9 +57,9 @@ export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
             </Badge>
           </IconButton>
         </Tooltip>
-        <AddSensorStationModal
+        <AddSensorStationDialog
           accessPointId={props.accessPointId}
-          open={addSsModalOpen}
+          open={addSsDialogOpen}
           onClose={handleClose}
         />
       </>

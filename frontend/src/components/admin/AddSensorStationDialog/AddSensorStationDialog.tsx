@@ -9,16 +9,16 @@ import { theme } from '~/styles/theme'
 
 const dialogTitleId = 'add-sensorstation-dialog-title'
 
-interface AddSensorStationModalProps {
+interface AddSensorStationDialogProps {
   accessPointId?: AccessPointId
   onClose: () => void
   open: boolean
 }
 
 /**
- * Modal to add a new sensor station to a given greenhouse.
+ * Dialog to add a new sensor station to a given greenhouse.
  */
-export const AddSensorStationModal: React.FC<AddSensorStationModalProps> = (
+export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
   props
 ): JSX.Element => {
   return (
