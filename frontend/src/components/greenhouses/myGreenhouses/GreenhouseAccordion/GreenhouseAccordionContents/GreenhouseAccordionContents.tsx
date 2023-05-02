@@ -24,6 +24,9 @@ import { EditableCellProps, EditableTableRow } from './EditableTableRow'
 
 const aggregationPeriodAriaLabel = 'title-aggregationPeriod'
 
+/** Minimum supported aggregation period value (in seconds) */
+const minAggregationPeriod = 20
+
 interface GreenhouseAccordionContentsProps {
   sensorStation: SensorStation
 }
@@ -140,15 +143,16 @@ export const GreenhouseAccordionContents: React.FC<
             editableCell={(editableCellProps: EditableCellProps<number>) => (
               <AggregationPeriodEditableCell
                 labelledBy={aggregationPeriodAriaLabel}
+                minAggregationPeriod={minAggregationPeriod}
                 sensorStation={props.sensorStation}
                 {...editableCellProps}
               />
             )}
             editing={editing === AGGREGATION_PERIOD}
-            saveRow={(aggregationPeriod: number) =>
+            saveRow={(newValue: number) =>
               handleSaveRow(
                 updateSensorStation(props.sensorStation.uuid, {
-                  aggregationPeriod: aggregationPeriod,
+                  aggregationPeriod: Math.max(minAggregationPeriod, newValue),
                 })
               )
             }
