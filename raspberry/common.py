@@ -6,6 +6,8 @@ sensor_station_name = "PH SensorStation"
 
 # global constants taken out of the BLE Communication Spec
 base_uuid = "0000{}-0000-1000-8000-00805f9b34fb"
+device_information_uuid = base_uuid.format("180a")
+
 air_pressure_uuid = base_uuid.format("2a6d")
 temperature_uuid = base_uuid.format("2a6e")
 humidity_uuid = base_uuid.format("2a6f")

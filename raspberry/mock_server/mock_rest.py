@@ -1,5 +1,7 @@
-from flask import Flask,jsonify
+from flask import Flask,jsonify, request
 import time
+
+sensorstations = []
 
 app = Flask(__name__)
 status_called = False
@@ -90,6 +92,19 @@ def send_sensor_failures():
         return jsonify('OK'), 200
     else:
         return jsonify('Forbidden'), 401
+
+# TODO: This will be the route to send back the Sensorstations
+# @app.route('/access-points/AP1/sensor-stations/', method=['POST'])
+# def send_found_ss():
+#     global sensorstations
+#     if status_called:
+#         json_data = request.get_json()
+#         sensorstations.append(json_data)
+#         print(sensorstations)
+#         return jsonify('OK'), 200
+#     else:
+#         return jsonify('Forbidden'), 401
+
     
 
 #Route to send sensor data

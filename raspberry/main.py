@@ -1,9 +1,7 @@
 import asyncio
 import sys
 import aiohttp
-import requests
-import time
-import logging
+from bleak import BleakClient, BleakError
 
 import common
 from read_sensorvalues import read_sensorvalues
@@ -12,9 +10,6 @@ from search_for_sensorstations import search_for_sensorstations
 
 #amal alles aiohttp machen weil nid mischen
 #define den return als a future dass i des im manage sensorstations sieh
-
-async def spawn_sensorstation_tasks(sensorstation):
-    pass
 
 async def get_ap_status(session):
     async with session.get(common.web_server_address + "/access-points/" + common.access_point_name) as response:
@@ -31,7 +26,6 @@ async def sensor_station_manager(connection_request, session):
     while not connection_request.done():
         sensorstations = await get_sensorstation_instructions(session)
         for sensorstation in sensorstations:
-            print("number of this is sensorstations i think?")
             for ss, instruction in sensorstation.items():
                 if instruction == "OFFLINE":
                     try:
@@ -39,15 +33,18 @@ async def sensor_station_manager(connection_request, session):
                     except:
                         print(f"task_not_found", ss)
                 elif instruction == "PAIRING":
-                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, 123))
+                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss))
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
 
-async def sensor_station_tasks(connection_request, session, bleak_conn):
-    while not connection_request.done():
-        print("Inside sensor station task")
-        await asyncio.sleep(10)
+async def sensor_station_tasks(connection_request, session, sensorstation):
+    try:
+        while not connection_request.done():
+            async with BleakClient(sensorstation) as client:
+                await read_sensorvalues(sensorstation)
 
+    except BleakError as e:
+        print("couldnt connect to sensorstation") #TODO: log and send to backend
 
 async def polling_loop(connection_request, session):
         while not connection_request.done():
@@ -56,8 +53,7 @@ async def polling_loop(connection_request, session):
             if status == 'offline':
                 connection_request.set_result("Done")
             elif status == 'searching':
-                await search_for_sensorstations()
-
+                sensorstations = await search_for_sensorstations()
             await asyncio.sleep(10)
 
 async def main():
