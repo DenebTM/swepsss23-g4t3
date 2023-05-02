@@ -32,7 +32,7 @@ export const snackbarReducer: Reducer<SnackbarState, SnackbarReducerAction> = (
       return {
         ...snackbarState,
         messages: snackbarState.messages.filter(
-          (m: MessageState) => m.id != action.payload
+          (m: MessageState) => m.id !== action.payload
         ),
       }
     }
