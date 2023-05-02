@@ -27,7 +27,7 @@ interface GenerateQrCodeProps {
 }
 
 /**
- * Button which opens a modal containing a QR code for a given greenhouse.
+ * Button which opens a dialog containing a QR code for a given greenhouse.
  * Memoised using `React.memo` as otherwise DataGrid causes rerenders which in turn cause QR code regeneration.
  */
 export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
