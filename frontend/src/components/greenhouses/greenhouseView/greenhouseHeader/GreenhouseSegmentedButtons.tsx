@@ -62,6 +62,16 @@ export const GreenhouseSegmentedButtons: React.FC<
     navigate(PAGE_URL.greenhouseView.href(props.uuid, targetView))
   }
 
+  const getBtnBorderRadius = (index: number, numberOfButtons: number) => {
+    if (index === 0) {
+      return `${borderRadius} 0 0 ${borderRadius}`
+    } else if (index === numberOfButtons - 1) {
+      return `0 ${borderRadius} ${borderRadius} 0`
+    } else {
+      return ''
+    }
+  }
+
   return (
     <div>
       <StyledButtonGroup>
@@ -74,12 +84,7 @@ export const GreenhouseSegmentedButtons: React.FC<
             aria-label={'Navigate to greenhouse ' + btn.key.toLowerCase()}
             loggedInOnly={btn.loggedInOnly}
             sx={{
-              borderRadius:
-                index === 0
-                  ? `${borderRadius} 0 0 ${borderRadius}`
-                  : index === views.length - 1
-                  ? `0 ${borderRadius} ${borderRadius} 0`
-                  : '',
+              borderRadius: getBtnBorderRadius(index, views.length),
             }}
           >
             {btn.name}
