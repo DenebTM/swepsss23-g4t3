@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableContainer from '@mui/material/TableContainer'
-import Typography, { TypographyTypeMap } from '@mui/material/Typography'
+import { TypographyTypeMap } from '@mui/material/Typography'
 
 import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import {
@@ -18,12 +18,16 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
+import { AggregationPeriodEditableCell } from './EditableCell/AggregationPeriodEditableCell'
 import { GreenhouseEditableRangeCell } from './EditableCell/GreenhouseEditableRangeCell'
 import { EditableCellProps, EditableTableRow } from './EditableTableRow'
+
+const aggregationPeriodAriaLabel = 'title-aggregationPeriod'
 
 interface GreenhouseAccordionContentsProps {
   sensorStation: SensorStation
 }
+
 /**
  * Contents of an expanded greenhouse accordion.
  * Shows options to update greenhouse boundary values and aggregation period.
@@ -132,11 +136,13 @@ export const GreenhouseAccordionContents: React.FC<
             )
           })}
           <EditableTableRow<number>
-            ariaLabel={`title-aggregationPeriod`}
+            ariaLabel={aggregationPeriodAriaLabel}
             editableCell={(editableCellProps: EditableCellProps<number>) => (
-              <Typography {...typographyProps}>
-                {props.sensorStation.aggregationPeriod} seconds
-              </Typography>
+              <AggregationPeriodEditableCell
+                labelledBy={aggregationPeriodAriaLabel}
+                sensorStation={props.sensorStation}
+                {...editableCellProps}
+              />
             )}
             editing={editing === AGGREGATION_PERIOD}
             saveRow={(aggregationPeriod: number) =>
