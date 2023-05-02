@@ -6,7 +6,7 @@ from bleak import BleakClient, BleakError
 import common
 from read_sensorvalues import read_sensorvalues
 from db import db_conn
-from search_for_sensorstations import search_for_sensorstations
+from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend
 
 #amal alles aiohttp machen weil nid mischen
 #define den return als a future dass i des im manage sensorstations sieh
@@ -54,6 +54,7 @@ async def polling_loop(connection_request, session):
                 connection_request.set_result("Done")
             elif status == 'searching':
                 sensorstations = await search_for_sensorstations()
+                await send_sensorstations_to_backend(session, sensorstations)
             await asyncio.sleep(10)
 
 async def main():
