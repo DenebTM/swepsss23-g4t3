@@ -29,7 +29,7 @@ export const AdminHome: React.FC = () => {
   /** Handle closing the modal to add a sensor station */
   const handleCloseSsModal = () => {
     setAddSsModalOpen(false)
-    // qqjf TODO reload
+    // qqjf TODO trigger reload
   }
 
   const adminHomeLinks: AdminHomeButtonProps[] = [

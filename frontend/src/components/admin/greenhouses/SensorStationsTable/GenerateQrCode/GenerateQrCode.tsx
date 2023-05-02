@@ -6,19 +6,21 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 
+import { DialogHeader } from '@component-lib/DialogHeader'
 import { Tooltip } from '@component-lib/Tooltip'
 import { PAGE_URL } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 import { QrDialogActions } from './QrDialogActions'
-import { QrDialogHeader } from './QrDialogHeader'
 
 /** ID used to locate and print the QR code in the window */
 const qrCodeId = 'qr-code-contents'
 
 /** QR code side length in px */
 const qrSize = 256
+
+const dialogTitleId = 'qr-dialog-title'
 
 interface GenerateQrCodeProps {
   uuid: SensorStationUuid
@@ -56,15 +58,16 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
         <Dialog
           open={qrDialogOpen}
           onClose={handleClose}
-          aria-labelledby="qr-dialog-title"
+          aria-labelledby={dialogTitleId}
           PaperProps={{
             sx: { minWidth: '70%', padding: theme.spacing(1, 3, 2) },
           }}
         >
-          <QrDialogHeader
+          <DialogHeader
             handleClose={handleClose}
-            titleId="qr-dialog-title"
-            uuid={props.uuid}
+            subtitle="Display this QR code on greenhouses so that users can upload photos"
+            titleId={`Greenhouse ${props.uuid}`}
+            title={`Greenhouse ${props.uuid}`}
           />
 
           <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>

@@ -10,6 +10,9 @@ import { theme } from '~/styles/theme'
 
 import { AddSensorStationModal } from '../../AddSensorStationDialog/AddSensorStationDialog'
 
+/** Size of "+" badge icon */
+const plusBadgeSize = '14px'
+
 interface AddSensorStationProps {
   accessPointId: AccessPointId
 }
@@ -31,22 +34,22 @@ export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
     /** Handle closing the modal to add a sensor station */
     const handleClose = () => {
       setAddSsModalOpen(false)
-      // qqjf TODO reload
+      // qqjf TODO trigger reload
     }
 
     return (
       <>
-        <Tooltip title="Pair with a new greenhouse" arrow>
+        <Tooltip title="Add a new greenhouse" arrow>
           <IconButton onClick={handleIconClick} sx={{ color: theme.outline }}>
             <Badge
-              badgeContent={'+'}
+              badgeContent="+"
               color="primary"
               overlap="circular"
               sx={{
                 '& .MuiBadge-badge': {
-                  minWidth: '14px',
-                  width: '14px',
-                  height: '14px',
+                  minWidth: plusBadgeSize,
+                  width: plusBadgeSize,
+                  height: plusBadgeSize,
                 },
               }}
             >
