@@ -6,19 +6,21 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
-import { SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
-interface QrDialogHeaderProps {
+interface DialogHeaderProps {
   handleClose: () => void
+  subtitle: string
+  /** Id of the title element (for a11y props) */
   titleId: string
-  uuid: SensorStationUuid
+  title: string
 }
 
 /**
- * Header component of the QR generation dialog
+ * Header component for a dialog
+ * Shows a title, subtitle, and quit icon
  */
-export const QrDialogHeader: React.FC<QrDialogHeaderProps> = (
+export const DialogHeader: React.FC<DialogHeaderProps> = (
   props
 ): JSX.Element => {
   return (
@@ -37,10 +39,10 @@ export const QrDialogHeader: React.FC<QrDialogHeaderProps> = (
           variant="headlineMedium"
           id={props.titleId}
         >
-          Greenhouse {props.uuid}
+          {props.title}
         </Typography>
         <Typography color="onSurfaceVariant" variant="bodySmall">
-          Display this QR code on greenhouses so that users can upload photos
+          {props.subtitle}
         </Typography>
       </Stack>
 
