@@ -5,10 +5,10 @@ from db import db_conn
 current_time = int(time.time())
 five_min_ago = current_time - 300
 
-async def save_sensor_values_to_database(sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture):
+async def save_sensor_values_to_database(sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture):
     try:
-        db_conn.execute("INSERT INTO sensordata (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                        (sensorstation_name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
+        db_conn.execute("INSERT INTO sensordata (id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        (sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
         db_conn.commit()
     except:
         pass #TODO: log the failure and send to backend etc
