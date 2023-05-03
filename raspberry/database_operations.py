@@ -10,8 +10,9 @@ async def save_sensor_values_to_database(sensorstation_id, temperature, humidity
         db_conn.execute("INSERT INTO sensordata (id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                         (sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
         db_conn.commit()
-    except:
-        pass #TODO: log the failure and send to backend etc
+    except Exception as e:
+        print(e)
+        #TODO: log the failure and send to backend etc
 
 
 #returns a mean of the values of the last 5 minutes
@@ -114,6 +115,3 @@ async def update_sensorstation(json_data):
         except Exception as e:
             db_conn.rollback()
             print(f"Error inserting data for sensorstation {sensorstation_name}: {e}")
-
-
-
