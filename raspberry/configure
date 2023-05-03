@@ -4,10 +4,10 @@ echo "Enter web_server_address: "
 read web_server_address
 
 # Check if web_server_address is a valid IP address
-if ! [[ "$web_server_address" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-    echo "Error: web_server_address must be a valid IP address."
-    exit 1
-fi
+# if ! [[ "$web_server_address" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+#     echo "Error: web_server_address must be a valid IP address."
+#     exit 1
+# fi
 
 echo "Enter initial_transfer_interval in seconds: "
 read initial_transfer_interval
