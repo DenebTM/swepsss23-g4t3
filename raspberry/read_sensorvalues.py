@@ -6,7 +6,7 @@ import json
 
 import common
 
-async def read_sensorvalues(client):
+async def read_sensorvalues(client, sensorstation_id):
     try:
         temperature = int.from_bytes(await client.read_gatt_char(common.temperature_uuid), "little", signed=False)
         humidity = int.from_bytes(await client.read_gatt_char(common.humidity_uuid), "little", signed=False)
@@ -14,7 +14,7 @@ async def read_sensorvalues(client):
         illuminance = int.from_bytes(await client.read_gatt_char(common.illuminance_uuid), "little", signed=False)
         air_quality_index = int.from_bytes(await client.read_gatt_char(common.air_quality_index_uuid), "little", signed=False)
         soil_moisture = int.from_bytes(await client.read_gatt_char(common.soil_moisture_uuid), "little", signed=False)        
-        await save_sensor_values_to_database(client.name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture)
+        await save_sensor_values_to_database(sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture)
         await asyncio.sleep(30)
     except BleakError:
         pass #TODO: logging
