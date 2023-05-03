@@ -34,6 +34,7 @@ sensor_uuids = {
     "soil_moisture": soil_moisture_uuid
 }
 
+known_sensorstations = {}
 
 # in seconds
 polling_interval = 30
