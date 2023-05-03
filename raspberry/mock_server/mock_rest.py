@@ -7,7 +7,7 @@ app = Flask(__name__)
 status_called = False
 
 #Route that initiates connection
-@app.route('/access-points/', methods=['POST'])
+@app.route('/access-points', methods=['POST'])
 def status():
     global status_called
     status_called = True
@@ -17,10 +17,10 @@ def status():
 #Route that polls for connection-update
 @app.route('/access-points/'+ 'AP1', methods=['GET'])
 def accesspoint_connection():
-    if status_called: 
-        if int(time.time()) >= time_now + 50 and int(time.time()) <= time_now + 100:
+    if status_called:
+        if int(time.time()) >= time_now + 10 and int(time.time()) <= time_now + 70:
             response = {'status': 'offline'}
-        elif (int(time.time())) >= time_now + 100:
+        elif (int(time.time())) >= time_now + 70:
             response = {'status': 'online'}
         else:
             response = {'status': 'searching'}
@@ -100,7 +100,6 @@ def send_found_ss():
     if status_called:
         json_data = request.get_json()
         sensorstations.append(json_data)
-        print(sensorstations)
         return jsonify('OK'), 200
     else:
         return jsonify('Forbidden'), 401

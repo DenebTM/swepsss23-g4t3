@@ -8,6 +8,7 @@ from read_sensorvalues import read_sensorvalues
 from db import db_conn
 from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend
 
+
 #amal alles aiohttp machen weil nid mischen
 #define den return als a future dass i des im manage sensorstations sieh
 
@@ -34,6 +35,7 @@ async def sensor_station_manager(connection_request, session):
                         print(f"task_not_found", ss)
                 elif instruction == "PAIRING":
                     task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss))
+                    
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
 
@@ -41,15 +43,18 @@ async def sensor_station_tasks(connection_request, session, sensorstation):
     try:
         while not connection_request.done():
             async with BleakClient(sensorstation) as client:
+                print("inside sensorstation tasks and inside connection")
                 await read_sensorvalues(sensorstation)
 
     except BleakError as e:
+        print(e)
         print("couldnt connect to sensorstation") #TODO: log and send to backend
 
 async def polling_loop(connection_request, session):
         while not connection_request.done():
             print("Inside AP Loop")
             status = await get_ap_status(session)
+            print("this is inside the ap loop and the status is" + status)
             if status == 'offline':
                 connection_request.set_result("Done")
             elif status == 'searching':
@@ -63,6 +68,8 @@ async def main():
         while True:
             print("This should only be Printed at the start and when AP is offline")
             async with session.post(common.web_server_address + "/access-points") as response:
+                data = await response.json()
+                print(data)
                 if response.status == 200:
                     ap_status = await get_ap_status(session)
                     if ap_status == 'online' or ap_status == 'searching':
