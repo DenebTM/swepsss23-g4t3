@@ -23,26 +23,29 @@ public class LoggingTest {
 
     @Test
     void testInfoLog() {
-        logger.info("Test info message");
         File info = new File("logs/info.log");
-        Assertions.assertTrue(info.exists());
-        Assertions.assertTrue(info.length() > 0);
+        long oldFileLength = info.length();
+        logger.info("Test info message");
+        long newFileLength = info.length();
+        Assertions.assertTrue(newFileLength > oldFileLength);
     }
 
     @Test
     void testWarnLog() {
-        logger.warn("Test warn message");
         File warn = new File("logs/warnError.log");
-        Assertions.assertTrue(warn.exists());
-        Assertions.assertTrue(warn.length() > 0);
+        long oldFileLength = warn.length();
+        logger.warn("Test warn message");
+        long newFileLength = warn.length();
+        Assertions.assertTrue(newFileLength > oldFileLength);
     }
 
     @Test
     void testErrorLog() {
-        logger.error("Test error message");
         File error = new File("logs/warnError.log");
-        Assertions.assertTrue(error.exists());
-        Assertions.assertTrue(error.length() > 0);
+        long oldFileLength = error.length();
+        logger.error("Test warn message");
+        long newFileLength = error.length();
+        Assertions.assertTrue(newFileLength > oldFileLength);
     }
 
     @Test
