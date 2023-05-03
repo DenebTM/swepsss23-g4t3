@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Rest Controller to display all available logs in the frontend.
  */
 @RestController
-public class LoggingController {
+public class LoggingController implements BaseRestController{
 
     @Autowired
     LoggingService loggingService;
