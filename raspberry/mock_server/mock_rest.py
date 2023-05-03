@@ -83,6 +83,7 @@ def report_connection_to_ss_to_backend(id):
     if status_called:
         idx = [True if id in station else False for station in stations].index(True)
         stations[idx] = { id: 'ONLINE' }
+        print(stations)
         return jsonify('OK'), 200
     else:
         return jsonify('Forbidden'), 401

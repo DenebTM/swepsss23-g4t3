@@ -36,6 +36,8 @@ async def sensor_station_manager(connection_request, session):
                         print(f"task_not_found", ss_id)
                 elif instruction == "PAIRING":
                     task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss_id))
+                    # TODO add to tasks
+                    # TODO update status in backend (PUT /sensor-stations/<ss_id>)
                     
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
