@@ -18,7 +18,7 @@ def status():
 @app.route('/access-points/'+ 'AP1', methods=['GET'])
 def accesspoint_connection():
     if status_called:
-        if int(time.time()) >= time_now + 10 and int(time.time()) <= time_now + 70:
+        if int(time.time()) >= time_now + 50 and int(time.time()) <= time_now + 70:
             response = {'status': 'offline'}
         elif (int(time.time())) >= time_now + 70:
             response = {'status': 'online'}
@@ -66,6 +66,7 @@ def thresshold_update():
 # Route that asks for Instructions for each Sensorstation
 @app.route('/access-points/AP1/sensor-stations', methods=['GET'])
 def ask_for_instructions_ss():
+    global sensorstations
     if status_called:
         response = [
             {201: 'OFFLINE'},
