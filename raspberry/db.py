@@ -22,7 +22,7 @@ db_conn.execute('''CREATE TABLE IF NOT EXISTS sensorstations
               soil_moisture_min REAL)''')
 
 db_conn.execute('''CREATE TABLE IF NOT EXISTS sensordata
-             (sensorstationname TEXT,
+             (id INTEGER PRIMARY KEY UNIQUE,
               temperature REAL,
               humidity REAL,
               air_pressure REAL,
