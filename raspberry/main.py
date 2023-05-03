@@ -4,7 +4,7 @@ import aiohttp
 from bleak import BleakClient, BleakError
 
 import common
-from read_sensorvalues import read_sensorvalues
+from read_sensorvalues import read_sensorvalues, send_sensorvalues_to_backend
 from db import db_conn
 from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend
 
@@ -27,28 +27,34 @@ async def sensor_station_manager(connection_request, session):
     while not connection_request.done():
         sensorstations = await get_sensorstation_instructions(session)
         for sensorstation in sensorstations:
-            for ss, instruction in sensorstation.items():
+            for ss_id, instruction in sensorstation.items():
                 if instruction == "OFFLINE":
                     try:
-                        tasks[ss].cancel()
+                        await tasks[ss_id].cancel()
                     except:
-                        print(f"task_not_found", ss)
+                        print(f"task_not_found", ss_id)
                 elif instruction == "PAIRING":
-                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss))
+                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss_id))
                     
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
 
-async def sensor_station_tasks(connection_request, session, sensorstation):
-    try:
-        while not connection_request.done():
-            async with BleakClient(sensorstation) as client:
-                print("inside sensorstation tasks and inside connection")
-                await read_sensorvalues(sensorstation)
+async def sensor_station_tasks(connection_request, session, sensorstation_id):
+    try: 
+        sensorstation_mac = common.known_sensorstations[sensorstation_id]
+        try:
+            transmission_interval = common.polling_interval
+            while not connection_request.done():
+                async with BleakClient(sensorstation_mac) as client:
+                    await read_sensorvalues(client, sensorstation_id)
+                    await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
 
-    except BleakError as e:
-        print(e)
-        print("couldnt connect to sensorstation") #TODO: log and send to backend
+        except BleakError as e:
+            print(e)
+            print("couldnt connect to sensorstation") #TODO: log and send to backend
+    except Exception as e:
+        print("Sensorstation " + sensorstation_id + " was never known before")
+        #TODO: log and send to backend failure
 
 async def polling_loop(connection_request, session):
         while not connection_request.done():
