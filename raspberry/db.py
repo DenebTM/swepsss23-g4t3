@@ -6,7 +6,6 @@ db_conn = sqlite3.connect('sensorstations.db')
 # triple quotation mark for multi line strings in python
 db_conn.execute('''CREATE TABLE IF NOT EXISTS sensorstations
              (id INTEGER PRIMARY KEY UNIQUE,
-              sensorstationname TEXT,
               transmissioninterval INTEGER,
               temperature_max REAL,
               humidity_max REAL,

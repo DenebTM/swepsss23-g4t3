@@ -1,6 +1,8 @@
 import common
 import requests
 
+#TODO: deneb fragen wo die ID gspeichert is
+
 async def check_values_for_thresholds(sensorstationClient, averages_dict, thresholds_dict):
     for sensor, average_value in averages_dict.items():
                 if sensor in thresholds_dict:

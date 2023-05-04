@@ -4,13 +4,11 @@ import aiohttp
 from bleak import BleakClient, BleakError
 
 import common
+import database_operations
 from read_sensorvalues import read_sensorvalues, send_sensorvalues_to_backend
 from db import db_conn
-from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend
+from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
 
-
-#amal alles aiohttp machen weil nid mischen
-#define den return als a future dass i des im manage sensorstations sieh
 
 async def get_ap_status(session):
     async with session.get(common.web_server_address + "/access-points/" + common.access_point_name) as response:
@@ -22,48 +20,64 @@ async def get_sensorstation_instructions(session):
         data = await response.json()
         return data
     
-async def sensor_station_manager(connection_request, session):
-    tasks = {}  
+async def sensor_station_manager(connection_request, session): 
     while not connection_request.done():
         sensorstations = await get_sensorstation_instructions(session)
         for sensorstation in sensorstations:
-            for ss_id, instruction in sensorstation.items():
-                ss_id = int(ss_id)
+            for sensorstation_id, instruction in sensorstation.items():
+                sensorstation_id = int(sensorstation_id)
                 if instruction == "OFFLINE":
                     try:
-                        await tasks[ss_id].cancel()
+                        common.connected_sensorstations_with_tasks[sensorstation_id].cancel()
+                        del common.connected_sensorstations_with_tasks[sensorstation_id]
                     except:
-                        print(f"task_not_found", ss_id)
+                        print(f"task_not_found", sensorstation_id)
                 elif instruction == "PAIRING":
-                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss_id))
-                    # TODO add to tasks
+                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, sensorstation_id))
+                    common.connected_sensorstations_with_tasks[sensorstation_id] = task
                     # TODO update status in backend (PUT /sensor-stations/<ss_id>)
                     
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
 
 async def sensor_station_tasks(connection_request, session, sensorstation_id):
+    #TODO: Catch cancelled Error and error handle stuff
     try: 
         sensorstation_mac = common.known_sensorstations[sensorstation_id]
         try:
             transmission_interval = common.polling_interval
-            while not connection_request.done():
-                async with BleakClient(sensorstation_mac) as client:
+            async with BleakClient(sensorstation_mac) as client:
+                await send_sensorstation_connection_status(session, sensorstation_id, "ONLINE")
+                await database_operations.initialize_sensorstation(sensorstation_id)
+
+                while not connection_request.done():
                     await read_sensorvalues(client, sensorstation_id)
                     await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
+                    #TODO: Update sensorstations_thressholds
+                    #TODO: Check for thressholds
 
         except BleakError as e:
+            await send_sensorstation_pairing_failed(session, sensorstation_id, "PAIRING_FAILED")
             print(e)
             print("couldnt connect to sensorstation") #TODO: log and send to backend
     except Exception as e:
         print("Sensorstation " + str(sensorstation_id) + " was never known before")
+        await send_sensorstation_pairing_failed(session, sensorstation_id, "PAIRING_FAILED")
+
         #TODO: log and send to backend failure
+
+
+async def send_sensorstation_pairing_failed(session, sensorstation_id, message):
+        await send_sensorstation_connection_status(session, sensorstation_id, message)
+        common.connected_sensorstations_with_tasks[sensorstation_id].cancel()
+        del common.connected_sensorstations_with_tasks[sensorstation_id]
+        
 
 async def polling_loop(connection_request, session):
         while not connection_request.done():
             print("Inside AP Loop")
             status = await get_ap_status(session)
-            print("this is inside the ap loop and the status is" + status)
+            print("this is inside the ap loop and the status is " + status)
             if status == 'offline':
                 connection_request.set_result("Done")
             elif status == 'searching':
