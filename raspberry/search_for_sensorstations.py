@@ -1,7 +1,7 @@
 from bleak import BleakScanner
 from bleak.exc import BleakError
+import yaml
 import json
-import asyncio
 import common
 
 
@@ -19,6 +19,8 @@ async def search_for_sensorstations():
                     ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed= False)
                     sensorstations[d.name] = ss_uuid
                     common.known_sensorstations[ss_uuid] = d.address
+                    with open ('known_sensorstations.yaml', 'w') as file:
+                        yaml.dump(common.known_sensorstations, file)
             await scanner.stop()
             if len(sensorstations) > 0:
                 #TODO: Implement logging info with which sensorstations are found
@@ -52,4 +54,5 @@ async def send_sensorstation_connection_status(session, sensorstation, status):
     async with session.put(common.web_server_address+'/sensor-stations/'+ str(sensorstation), json=json_data) as response:
         response = await response.json()
         print(response)
+
 

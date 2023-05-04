@@ -2,6 +2,8 @@ import asyncio
 import sys
 import aiohttp
 from bleak import BleakClient, BleakError
+import json
+import yaml
 
 import common
 import database_operations
@@ -20,12 +22,18 @@ async def get_sensorstation_instructions(session):
         data = await response.json()
         return data
     
-async def sensor_station_manager(connection_request, session): 
+async def sensor_station_manager(connection_request, session):
     while not connection_request.done():
+        common.known_sensorstations = await load_or_create_known_sensorstation_json()
+        print(common.known_sensorstations)
         sensorstations = await get_sensorstation_instructions(session)
         for sensorstation in sensorstations:
             for sensorstation_id, instruction in sensorstation.items():
                 sensorstation_id = int(sensorstation_id)
+                if instruction == "ONLINE":
+                    if not sensorstation_id in common.connected_sensorstations_with_tasks and sensorstation_id in common.known_sensorstations:
+                        task = asyncio.create_task(sensor_station_tasks(connection_request, session, sensorstation_id))
+                        common.connected_sensorstations_with_tasks[sensorstation_id] = task
                 if instruction == "OFFLINE":
                     try:
                         common.connected_sensorstations_with_tasks[sensorstation_id].cancel()
@@ -36,10 +44,19 @@ async def sensor_station_manager(connection_request, session):
                     if not sensorstation_id in common.connected_sensorstations_with_tasks:
                         task = asyncio.create_task(sensor_station_tasks(connection_request, session, sensorstation_id))
                         common.connected_sensorstations_with_tasks[sensorstation_id] = task
-                    # TODO update status in backend (PUT /sensor-stations/<ss_id>)
                     
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
+
+async def load_or_create_known_sensorstation_json():
+    try:
+        with open ('known_sensorstations.yaml', 'r') as file:
+                known_sensorstations = yaml.safe_load(file)    
+    except FileNotFoundError:
+        with open ('known_sensorstations.yaml', 'w') as file:
+            known_sensorstations = {}
+            yaml.dump(known_sensorstations, file)
+    return known_sensorstations
 
 async def sensor_station_tasks(connection_request, session, sensorstation_id):
     #TODO: Catch cancelled Error and error handle stuff
