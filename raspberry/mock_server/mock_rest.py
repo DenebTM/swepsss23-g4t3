@@ -1,14 +1,17 @@
 from flask import Flask,jsonify, request
 import time
+import json
 
 app = Flask(__name__)
 status_called = False
 
-stations = [
-    {'201': 'OFFLINE'},
-    {'202': 'ONLINE'},
-    {'103': 'PAIRING'}
-]
+stations = []
+def station_idx(id):
+    try:
+        return [True if id in station else False for station in stations].index(True)
+    except ValueError:
+        return -1
+
 
 #Route that initiates connection
 @app.route('/access-points', methods=['POST'])
@@ -22,12 +25,13 @@ def status():
 @app.route('/access-points/AP1', methods=['GET'])
 def accesspoint_connection():
     if status_called:
-        if int(time.time()) >= time_now + 50 and int(time.time()) <= time_now + 70:
-            response = {'status': 'offline'}
-        elif (int(time.time())) >= time_now + 70:
-            response = {'status': 'online'}
-        else:
-            response = {'status': 'searching'}
+        response = {'status': 'searching'}
+        # if int(time.time()) >= time_now + 50 and int(time.time()) <= time_now + 70:
+        #     response = {'status': 'searching'}
+        # elif (int(time.time())) >= time_now + 70:
+        #     response = {'status': 'online'}
+        # else:
+        #     response = {'status': 'searching'}
         return jsonify(response), 200
     else:
         return jsonify('Forbidden'), 401
@@ -81,9 +85,16 @@ def ask_for_instructions_ss():
 def report_connection_to_ss_to_backend(id):
     global stations
     if status_called:
-        idx = [True if id in station else False for station in stations].index(True)
-        stations[idx] = { id: 'ONLINE' }
-        print(stations)
+        try:
+            idx = station_idx(id)
+            if idx == -1:
+                raise ValueError
+            stations[idx] = { id: 'ONLINE' }
+            print(f'station {id} set to ONLINE; current stations:', stations)
+        except ValueError:
+            print(f'Sensor station {id} not known')
+        except Exception as e:
+            print(e)
         return jsonify('OK'), 200
     else:
         return jsonify('Forbidden'), 401
@@ -99,10 +110,16 @@ def send_sensor_failures(id):
 # Route to send back the sensor stations
 @app.route('/access-points/AP1/sensor-stations', methods=['POST'])
 def send_found_ss():
-    # global sensorstations
+    global stations
     if status_called:
-        # json_data = request.get_json()
-        # sensorstations.append(json_data)
+        json_data = request.get_json()
+        ss_dict = json.loads(json_data)
+        for _,v in ss_dict.items():
+            v = f'{v}'
+            if station_idx(v) == -1:
+                stations.append({ v: 'PAIRING' })
+        print('new station added; current stations: ', stations)
+
         return jsonify('OK'), 200
     else:
         return jsonify('Forbidden'), 401
