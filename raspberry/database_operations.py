@@ -48,7 +48,7 @@ async def clear_sensor_data(sensorstation_id):
      
 
 #returns a dictionary of the thresholds of the sensorstation
-async def get_sensor_data_threshholds(sensorstation):
+async def get_sensor_data_thresholds(sensorstation_id):
     try:
         thresholds_query = db_conn.execute(
             f'''SELECT temperature_max, humidity_max, air_pressure_max, 
@@ -57,14 +57,12 @@ async def get_sensor_data_threshholds(sensorstation):
                 illuminance_min, air_quality_index_min, soil_moisture_min
                 FROM sensorstations
                 WHERE id = ?''',
-            (sensorstation.name)
+            (sensorstation_id)
         )
         return dict(thresholds_query.fetchone())
 
     except:
-        print("database cant be accesse") #TODO: implement log
-
-
+        print("database cant be accessed") #TODO: implement log
 
 async def get_sensorstation_transmissioninterval(sensorstation_id):
     try:
@@ -79,7 +77,7 @@ async def initialize_sensorstation(sensorstation_id):
     json_data = {
             'id': sensorstation_id,
 
-            'transmission_interval': common.initial_transfer_interval,
+            'transmission_interval': common.default_transmission_interval,
             'accessPoint': common.access_point_name,
             'lowerBound': {
                 'airPressure': 0,
@@ -98,8 +96,7 @@ async def initialize_sensorstation(sensorstation_id):
                 'temperature': 1000000
             }
         }
-    await update_sensorstation(json_data)
-
+    await update_sensorstation(json.dumps(json_data))
 
 async def update_sensorstation(json_data):
     sensorstation = json.loads(json_data)
