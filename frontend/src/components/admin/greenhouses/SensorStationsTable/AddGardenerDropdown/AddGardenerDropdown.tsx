@@ -96,6 +96,7 @@ export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
           <IconButton
             onClick={handleIconClick}
             disabled={!canAssignNewGardeners()}
+            sx={{ background: selectOpen ? theme.outlineVariant : '' }}
           >
             <PersonAddIcon
               sx={{
