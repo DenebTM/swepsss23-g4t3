@@ -39,7 +39,7 @@ export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
     const [selectOpen, setSelectOpen] = useState(false)
     const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
-    /** Load users from the API on component mount */
+    /** Load users from the API on component mount and whenever `props.sensorStation` has been updated */
     useEffect(() => {
       const usersPromise = cancelable(getUsers())
       usersPromise
@@ -74,9 +74,9 @@ export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
       }
     }, [snackbarMessage])
 
-    /** Open the QR generation dialog when the icon is clicked */
+    /** Open the gardener select when the icon is clicked */
     const handleIconClick = (e: React.MouseEvent) => {
-      e.stopPropagation() // Prevent selecting the cell on click
+      e.stopPropagation() // Prevent selecting the table cell on click
       setSelectOpen(true)
     }
 
@@ -89,7 +89,7 @@ export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
           title={
             canAssignNewGardeners()
               ? 'Assign gardener to greenhouse'
-              : 'All possible gardeners are already assigned'
+              : 'No more users can be assigned to this greenhouse'
           }
           arrow
         >
