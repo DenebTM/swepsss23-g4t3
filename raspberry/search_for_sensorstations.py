@@ -49,8 +49,7 @@ async def send_sensorstation_connection_status(session, sensorstation, status):
         'status': status
     }
     json_data = json.dumps(data)
-    async with session.put(common.web_server_address+'/sensor-stations/'+ str(sensorstation), json=data) as response:
-        response = await response.data()
+    async with session.put(common.web_server_address+'/sensor-stations/'+ str(sensorstation), json=json_data) as response:
+        response = await response.json()
         print(response)
-    await asyncio.sleep(3600)
 

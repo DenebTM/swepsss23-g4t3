@@ -9,12 +9,12 @@ read web_server_address
 #     exit 1
 # fi
 
-echo "Enter initial_transfer_interval in seconds: "
-read initial_transfer_interval
+echo "Enter default_transmission_interval in seconds: "
+read default_transmission_interval
 
-# Check if initial_transfer_interval is an integer
-if ! [[ "$initial_transfer_interval" =~ ^[0-9]+$ ]]; then
-    echo "Error: initial_transfer_interval must be an integer."
+# Check if default_transmission_interval is an integer
+if ! [[ "$default_transmission_interval" =~ ^[0-9]+$ ]]; then
+    echo "Error: default_transmission_interval must be an integer."
     exit 1
 fi
 
@@ -29,7 +29,7 @@ fi
 
 # Write configuration to conf.yaml
 echo "web_server_address: $web_server_address" > conf.yaml
-echo "initial_transfer_interval: $initial_transfer_interval" >> conf.yaml
+echo "default_transmission_interval: $default_transmission_interval" >> conf.yaml
 echo "access_point_name: $access_point_name" >> conf.yaml
 
 echo "Configuration complete!"

@@ -5,7 +5,7 @@ import time
 
 #TODO: implement logging testing
 
-from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensor_data_threshholds, update_sensorstation
+from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensor_data_thresholds, update_sensorstation
 
 class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
     
@@ -54,7 +54,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         mock_Sensorstation.name.return_value = "station1"
 
         # Call the function with test input
-        result = await get_sensor_data_threshholds(mock_Sensorstation)
+        result = await get_sensor_data_thresholds(mock_Sensorstation)
 
         # Assert that the function returned the correct result
         self.assertEqual(result, {"temperature_max": 10, "humidity_max": 20, "air_pressure_max": 30, "illuminance_max": 40, "air_quality_index_max": 50, "soil_moisture_max": 60,

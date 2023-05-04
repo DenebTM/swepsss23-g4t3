@@ -51,7 +51,7 @@ try:
         web_server_address = config["web_server_address"]
         web_server_address = "http://" + web_server_address
         access_point_name = config["access_point_name"]
-        initial_transfer_interval = config["initial_transfer_interval"]
+        default_transmission_interval = config["default_transmission_interval"]
 
 except:
     print("Caught Exception. Probably conf.yaml doesnt exist yet. Program will start with dev-config")
@@ -61,4 +61,4 @@ except:
         web_server_address = "http://" + web_server_address
         access_point_name = config["access_point_name"]
         access_point_address = web_server_address + "/" + access_point_name
-        initial_transfer_interval = config["initial_transfer_interval"]
+        default_transmission_interval = config["default_transmission_interval"]
