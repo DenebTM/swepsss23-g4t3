@@ -20,7 +20,6 @@ interface GardenerChipsProps
 export const GardenerChips: React.FC<GardenerChipsProps> = (props) => {
   /** Update table rows after gardener is removed from sensor station */
   const afterDelete = (removedGardener: Username): void => {
-    console.log(removedGardener)
     props.setRows((oldRows) => {
       if (typeof oldRows === 'undefined') {
         return []

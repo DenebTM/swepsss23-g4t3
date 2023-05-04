@@ -1,6 +1,6 @@
 import { Server } from 'miragejs'
 import { _delete, _post } from '~/api/intercepts'
-import { SensorStationUuid } from '~/models/sensorStation'
+import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { AuthUserRole, Username } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
@@ -13,11 +13,10 @@ import { API_URI, notFound, success, unauthorised } from '../consts'
 export const assignGardener = async (
   sensorStationUuid: SensorStationUuid,
   username: Username
-): Promise<void> => {
-  return _post(
+): Promise<SensorStation> =>
+  _post(
     `${API_URI.sensorStations}/${sensorStationUuid}${API_URI.gardeners}/${username}`
   )
-}
 
 /**
  * DEL /api/sensor-stations/{uuid}/gardeners/{username}
@@ -26,11 +25,10 @@ export const assignGardener = async (
 export const removeGardener = async (
   sensorStationUuid: SensorStationUuid,
   username: Username
-): Promise<void> => {
-  return _delete(
+): Promise<void> =>
+  _delete(
     `${API_URI.sensorStations}/${sensorStationUuid}${API_URI.gardeners}/${username}`
   )
-}
 
 /** Path to update sensor station gardeners for mocked routes */
 export const GARDENER_PATH = `${API_URI.sensorStations}/:uuid${API_URI.gardeners}/:username`
@@ -46,12 +44,13 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
 
     // Check that user exists
     const user = schema.findBy('user', { username: username })
+
     if (!user) {
       return notFound(`user ${username}`)
     } else if (
       ![AuthUserRole.GARDENER, AuthUserRole.ADMIN].includes(user.attrs.role)
     ) {
-      return unauthorised()
+      return unauthorised('Can only assign gardeners and users to greenhouses')
     }
 
     const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
