@@ -74,37 +74,37 @@ async def send_sensorstation_pairing_failed(session, sensorstation_id, message):
         
 
 async def polling_loop(connection_request, session):
-        while not connection_request.done():
-            print("Inside AP Loop")
-            status = await get_ap_status(session)
-            print("this is inside the ap loop and the status is " + status)
-            if status == 'offline':
-                connection_request.set_result("Done")
-            elif status == 'searching':
-                sensorstations = await search_for_sensorstations()
-                await send_sensorstations_to_backend(session, sensorstations)
-            await asyncio.sleep(10)
+    while not connection_request.done():
+        print("Inside AP Loop")
+        status = await get_ap_status(session)
+        print("this is inside the ap loop and the status is " + status)
+        if status == 'offline':
+            connection_request.set_result("Done")
+        elif status == 'searching':
+            sensorstations = await search_for_sensorstations()
+            await send_sensorstations_to_backend(session, sensorstations)
+        await asyncio.sleep(10)
 
 async def main():
-        while True:
-            async with aiohttp.ClientSession() as session:
-                connection_request = asyncio.Future()
-                print("This should only be Printed at the start and when AP is offline")
-                async with session.post(common.web_server_address + "/access-points") as response:
-                    data = await response.json()
-                    print(data)
-                    if response.status == 200:
-                        ap_status = await get_ap_status(session)
-                        if ap_status == 'online' or ap_status == 'searching':
-                            polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
-                            sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
-                            await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-                        else:
-                            print('Access point is offline')
-                            connection_request = asyncio.Future()
-                            await asyncio.sleep(30)
+    while True:
+        async with aiohttp.ClientSession() as session:
+            connection_request = asyncio.Future()
+            print("This should only be Printed at the start and when AP is offline")
+            async with session.post(common.web_server_address + "/access-points") as response:
+                data = await response.json()
+                print(data)
+                if response.status == 200:
+                    ap_status = await get_ap_status(session)
+                    if ap_status == 'online' or ap_status == 'searching':
+                        polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
+                        sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
+                        await asyncio.gather(polling_loop_task, sensor_station_manager_task)
                     else:
-                        print('webserver seems to be offline')
+                        print('Access point is offline')
+                        connection_request = asyncio.Future()
                         await asyncio.sleep(30)
+                else:
+                    print('webserver seems to be offline')
+                    await asyncio.sleep(30)
 
 asyncio.run(main())

@@ -18,19 +18,19 @@ async def save_sensor_values_to_database(sensorstation_id, temperature, humidity
 
 #returns a mean of the values of the sensorstation
 async def get_sensor_data_averages(sensorstation_id):
-        try:
-            averages_query = db_conn.execute(
-                f'''SELECT AVG(temperature) AS temp_avg, AVG(humidity) AS humidity_avg,
-                AVG(air_pressure) AS air_pressure_avg, AVG(illuminance) AS illuminance_avg,
-                AVG(air_quality_index) AS air_quality_index_avg, AVG(soil_moisture) AS soil_moisture_avg
-                FROM sensordata
-                WHERE id = ?''',
-                (sensorstation_id,)
-            )
-            
-            return dict(averages_query.fetchone())
-        except:
-            print("database cant be accessed") #TODO: Implement logging
+    try:
+        averages_query = db_conn.execute(
+            f'''SELECT AVG(temperature) AS temp_avg, AVG(humidity) AS humidity_avg,
+            AVG(air_pressure) AS air_pressure_avg, AVG(illuminance) AS illuminance_avg,
+            AVG(air_quality_index) AS air_quality_index_avg, AVG(soil_moisture) AS soil_moisture_avg
+            FROM sensordata
+            WHERE id = ?''',
+            (sensorstation_id,)
+        )
+        
+        return dict(averages_query.fetchone())
+    except:
+        print("database cant be accessed") #TODO: Implement logging
 
 
 async def clear_sensor_data(sensorstation_id):

@@ -5,12 +5,12 @@ import requests
 
 async def check_values_for_thresholds(sensorstationClient, averages_dict, thresholds_dict):
     for sensor, average_value in averages_dict.items():
-                if sensor in thresholds_dict:
-                    max_threshold = thresholds_dict[sensor+"_max"]
-                    min_threshold = thresholds_dict[sensor+"_min"]
-                    if max_threshold is not None and average_value > max_threshold or average_value < min_threshold:
-                         send_error_to_sensorstation(sensorstationClient, sensor)
-                         send_error_to_backend(sensorstationClient, sensor)
+        if sensor in thresholds_dict:
+            max_threshold = thresholds_dict[sensor+"_max"]
+            min_threshold = thresholds_dict[sensor+"_min"]
+            if max_threshold is not None and average_value > max_threshold or average_value < min_threshold:
+                send_error_to_sensorstation(sensorstationClient, sensor)
+                send_error_to_backend(sensorstationClient, sensor)
    
                         
 async def send_error_to_sensorstation(sensor_station_client, sensor):
