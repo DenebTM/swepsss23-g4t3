@@ -27,7 +27,6 @@ async def get_sensor_data_averages(sensorstation_id):
             WHERE id = ?''',
             (sensorstation_id,)
         )
-        
         return dict(averages_query.fetchone())
     #except:
     #    print("database cant be accessed") #TODO: Implement logging
@@ -57,7 +56,7 @@ async def get_sensor_data_thresholds(sensorstation_id):
                 illuminance_min, air_quality_index_min, soil_moisture_min
                 FROM sensorstations
                 WHERE id = ?''',
-            (sensorstation_id)
+            (sensorstation_id,)
         )
         return dict(thresholds_query.fetchone())
 
