@@ -50,10 +50,10 @@ namespace ble {
   }
 
   void disconnect_event_handler(BLEDevice central) {
-    String new_mac = central.address();
     is_advertising = true;
+    BLE.advertise();
 
-    if (new_mac.equals(paired_mac)) {
+    if (central.address().equals(paired_mac)) {
       Serial.print("Lost connection with access point ");
       Serial.println(paired_mac);
 
