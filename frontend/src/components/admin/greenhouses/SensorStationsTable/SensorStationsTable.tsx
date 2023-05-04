@@ -14,6 +14,7 @@ import {
   StationStatus,
 } from '~/models/sensorStation'
 
+import { AddGardenerDropdown } from './AddGardenerDropdown/AddGardenerDropdown'
 import { GardenerChips } from './GardenerChips'
 import { GenerateQrCode } from './GenerateQrCode/GenerateQrCode'
 
@@ -116,7 +117,7 @@ export const SensorStationsTable: React.FC = () => {
       ) => <GardenerChips {...params} setRows={handleUpdateSensorStations} />,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 135 * maxGardenersPerGreenhouse,
+      width: 130 * maxGardenersPerGreenhouse,
     },
     {
       ...centerCell,
@@ -128,7 +129,6 @@ export const SensorStationsTable: React.FC = () => {
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => (
-        // TODO qqjf add links and actions here
         <DeleteCell<SensorStation, SensorStationUuid>
           deleteEntity={deleteSensorStation}
           entityId={params.row.uuid}
@@ -136,6 +136,10 @@ export const SensorStationsTable: React.FC = () => {
           getEntityId={(r) => r.uuid}
           setRows={handleUpdateSensorStations}
         >
+          <AddGardenerDropdown
+            sensorStation={params.row}
+            setSensorStations={handleUpdateSensorStations}
+          />
           <GenerateQrCode uuid={params.row.uuid} />
         </DeleteCell>
       ),
