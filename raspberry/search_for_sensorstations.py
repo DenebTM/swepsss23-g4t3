@@ -1,6 +1,7 @@
 from bleak import BleakScanner
 from bleak.exc import BleakError
 import json
+import asyncio
 import common
 
 
@@ -31,7 +32,7 @@ async def search_for_sensorstations():
     except BleakError as e:
         # write error to audit log
         print(f"Error: {e}")
-        return []
+        return sensorstations
     
 
 async def send_sensorstations_to_backend(session, sensorstations):
@@ -40,3 +41,16 @@ async def send_sensorstations_to_backend(session, sensorstations):
     async with session.post(common.web_server_address + "/access-points/" + common.access_point_name + "/sensor-stations", json=sensorstation_json) as response:
         data = await response.json()
         print(data)
+
+
+async def send_sensorstation_connection_status(session, sensorstation, status):
+    data = {
+        'accessPoint': common.access_point_name,
+        'status': status
+    }
+    json_data = json.dumps(data)
+    async with session.put(common.web_server_address+'/sensor-stations/'+ str(sensorstation), json=data) as response:
+        response = await response.data()
+        print(response)
+    await asyncio.sleep(3600)
+

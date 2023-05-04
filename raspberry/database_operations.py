@@ -1,6 +1,7 @@
 import time
 import json
 from db import db_conn
+import common
 
 current_time = int(time.time())
 five_min_ago = current_time - 300
@@ -15,7 +16,7 @@ async def save_sensor_values_to_database(sensorstation_id, temperature, humidity
         #TODO: log the failure and send to backend etc
 
 
-#returns a mean of the values of the last 5 minutes
+#returns a mean of the values of the sensorstation
 async def get_sensor_data_averages(sensorstation_id):
         try:
             averages_query = db_conn.execute(
@@ -74,6 +75,31 @@ async def get_sensorstation_transmissioninterval(sensorstation_id):
             db_conn.rollback()
             print(f"Error fetching data for sensorstation {sensorstation_id}: {e}")
 
+async def initialize_sensorstation(sensorstation_id):        
+    json_data = {
+            'id': sensorstation_id,
+
+            'transmission_interval': common.initial_transfer_interval,
+            'accessPoint': common.access_point_name,
+            'lowerBound': {
+                'airPressure': 0,
+                'airQuality': 0,
+                'humidity': 0,
+                'lightIntensity': 0,
+                'soilMoisture': 0,
+                'temperature': 0
+            },
+            'upperBound': {
+                'airPressure': 1000000,  
+                'airQuality': 1000000,
+                'humidity': 1000000,
+                'lightIntensity': 1000000,
+                'soilMoisture': 1000000,
+                'temperature': 1000000
+            }
+        }
+    await update_sensorstation(json_data)
+
 
 async def update_sensorstation(json_data):
     sensorstation = json.loads(json_data)
@@ -81,7 +107,7 @@ async def update_sensorstation(json_data):
     with db_conn:
         try:
 
-            sensorstation_name = sensorstation['id']
+            sensorstation_id = sensorstation['id']
             transmission_interval = sensorstation['transmission_interval']
 
             upper_bounds = sensorstation['upperBound']
@@ -101,17 +127,17 @@ async def update_sensorstation(json_data):
             soil_moisture_min = lower_bounds['soilMoisture']
             db_conn.execute(
                 '''INSERT OR REPLACE INTO sensorstations
-                (sensorstationname, transmissioninterval,
+                (id, transmissioninterval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (sensorstation_name, transmission_interval,
+                (sensorstation_id, transmission_interval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min))
         except Exception as e:
             db_conn.rollback()
-            print(f"Error inserting data for sensorstation {sensorstation_name}: {e}")
+            print(f"Error inserting data for sensorstation {sensorstation_id}: {e}")
