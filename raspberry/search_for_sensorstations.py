@@ -8,14 +8,14 @@ import common
 #await scanner.stop() is to end process for sure so it doesnt conflict 
 async def search_for_sensorstations():
     try:
-        sensorstations = {}
+        sensorstations = []
         async with BleakScanner() as scanner:
             await scanner.stop()
             devices = await scanner.discover(timeout=10.0)
             for d in devices:
                 if common.sensor_station_name in d.name:
                     ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed= False)
-                    sensorstations[d.name] = ss_uuid
+                    sensorstations.append(ss_uuid)
 
                     common.known_ss[ss_uuid] = d.address
                     common.save_known_ss()
@@ -36,21 +36,18 @@ async def search_for_sensorstations():
 
 
 async def send_sensorstations_to_backend(session, sensorstations):
-    stations_avail = map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations)
-    json_data = json.dumps(stations_avail)
-    print(json_data)
+    ss_avail = list(map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations))
 
-    async with session.post(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations', json=json_data) as response:
+    async with session.post(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail) as response:
         data = await response.json()
         print(data)
 
 
 async def send_sensorstation_connection_status(session, sensorstation, status):
-    data = {
+    ss_status = {
         'accessPoint': common.access_point_name,
         'status': status
     }
-    json_data = json.dumps(data)
-    async with session.put(common.web_server_address + '/sensor-stations/' + str(sensorstation), json=json_data) as response:
+    async with session.put(common.web_server_address + '/sensor-stations/' + str(sensorstation), json=ss_status) as response:
         response = await response.json()
         print(response)
