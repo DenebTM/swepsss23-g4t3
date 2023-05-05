@@ -27,7 +27,8 @@ namespace ble::pairing {
       }
 
       if (BLE.advertise()) {
-        mode::active = true;
+        is_advertising = true;
+        mode::active   = true;
         led::set_status_code(LEDC_BLE_PAIRING, led::CodePriority::HIGH);
 
         Serial.print("Ready to pair! Station address: ");
@@ -40,6 +41,7 @@ namespace ble::pairing {
     void exit() {
       Serial.println("Pairing timed out.");
       BLE.stopAdvertise();
+      is_advertising = false;
 
       pairing::mode::active = false;
       led::set_status_code(LEDC_BLE_UNPAIRED, led::CodePriority::HIGH);
