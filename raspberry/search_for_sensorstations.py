@@ -18,9 +18,9 @@ async def search_for_sensorstations():
                 if common.sensor_station_name in d.name:
                     ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed= False)
                     sensorstations[d.name] = ss_uuid
+
                     common.known_ss[ss_uuid] = d.address
-                    with open ('known_sensorstations.yaml', 'w') as file:
-                        yaml.dump(common.known_ss, file)
+                    common.save_known_ss()
             await scanner.stop()
             if len(sensorstations) > 0:
                 #TODO: Implement logging info with which sensorstations are found
