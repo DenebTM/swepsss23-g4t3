@@ -2,6 +2,8 @@ package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.net.InetAddress;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ public class AccessPoint {
     private InetAddress serverAddress;
 
     @Column(name = "ACTIVE")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private Boolean active;
 
     @JsonBackReference
