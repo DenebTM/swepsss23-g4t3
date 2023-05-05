@@ -9,7 +9,7 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
-import { PhotoUploadBox } from './PhotoUploadBox'
+import { PhotoUploadBox } from './PhotoUploadBox/PhotoUploadBox'
 import { UploadHeader } from './UploadHeader'
 
 interface UploadPageContentsProps {

@@ -304,3 +304,6 @@ export const greenhouseMetricWithUnit = (
   (metricRange.unit === '' ? '' : ` (${metricRange.unit})`)
 
 export const emDash = '—'
+
+/** FormData key for uploaded sensor station photos */
+export const UPLOADED_PHOTO_KEY = 'multipartImage'

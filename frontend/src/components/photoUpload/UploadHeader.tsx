@@ -38,7 +38,12 @@ export const UploadHeader: React.FC<UploadHeaderProps> = (props) => {
         </Typography>
         <PlantIcon color={theme.onSurface} height={theme.spacing(3)} />
       </Box>
-      <Typography variant="bodyMedium" color="onSurfaceVariant" align="center">
+      <Typography
+        variant="bodyMedium"
+        color="onSurfaceVariant"
+        align="center"
+        marginBottom={3}
+      >
         Upload your photo of greenhouse {props.uuid} below
       </Typography>
     </>

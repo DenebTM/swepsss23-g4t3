@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
 import { _delete, _get, _put } from '~/api/intercepts'
+import { UPLOADED_PHOTO_KEY } from '~/common'
 import { Photo, PhotoId } from '~/models/photo'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
@@ -59,6 +60,9 @@ export const getSensorStationPhotos = async (
 /** Route for mocking calls to an individual sensor station */
 const mockedSensorStationRoute = `${API_URI.sensorStations}/:uuid`
 
+/** Route for mocking calls related to photos for an individual sensor station */
+const mockedSsPhotosRoute = `${mockedSensorStationRoute}${API_URI.photos}`
+
 /** Mocked sensor station functions */
 export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getSensorStations} */
@@ -91,33 +95,30 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
   })
 
   /** Mock {@link getSensorStationPhotos} */
-  server.get(
-    `${mockedSensorStationRoute}${API_URI.photos}`,
-    (schema: AppSchema, request) => {
-      const uuid: SensorStationUuid = Number(request.params.uuid)
-      const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+  server.get(mockedSsPhotosRoute, (schema: AppSchema, request) => {
+    const uuid: SensorStationUuid = Number(request.params.uuid)
+    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
 
-      if (sensorStation === null) {
-        return notFound(`sensor station ${uuid}`)
-      }
-
-      // Generate a list of random URLs to example images
-      const fakePhotoIds = faker.helpers.arrayElements([...Array(20).keys()])
-      const fakePhotos: Photo[] = fakePhotoIds.map((photoId: PhotoId) => ({
-        id: photoId,
-        url: faker.image.nature(
-          faker.datatype.number({ min: 300, max: 900 }),
-          faker.datatype.number({ min: 200, max: 600 }),
-          true
-        ),
-        uploaded: faker.date
-          .between('2023-03-29T00:00:00.000Z', '2023-03-30T00:00:00.000Z')
-          .toISOString(),
-      }))
-
-      return success(fakePhotos)
+    if (sensorStation === null) {
+      return notFound(`sensor station ${uuid}`)
     }
-  )
+
+    // Generate a list of random URLs to example images
+    const fakePhotoIds = faker.helpers.arrayElements([...Array(20).keys()])
+    const fakePhotos: Photo[] = fakePhotoIds.map((photoId: PhotoId) => ({
+      id: photoId,
+      url: faker.image.nature(
+        faker.datatype.number({ min: 300, max: 900 }),
+        faker.datatype.number({ min: 200, max: 600 }),
+        true
+      ),
+      uploaded: faker.date
+        .between('2023-03-29T00:00:00.000Z', '2023-03-30T00:00:00.000Z')
+        .toISOString(),
+    }))
+
+    return success(fakePhotos)
+  })
 
   /** Mock {@link updateSensorStation} */
   server.put(mockedSensorStationRoute, (schema: AppSchema, request) => {
@@ -128,6 +129,21 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
     if (sensorStation) {
       sensorStation.update(newParams)
       return success(sensorStation.attrs)
+    } else {
+      return notFound(`sensor station ${uuid}`)
+    }
+  })
+
+  /** Mock uploading a photo */
+  server.post(mockedSsPhotosRoute, (schema: AppSchema, request) => {
+    const uuid: SensorStationUuid = Number(request.params.uuid)
+    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    if (sensorStation) {
+      const formData: FormData = request.requestBody as unknown as FormData
+      const uploadFile: File = formData.get(UPLOADED_PHOTO_KEY) as File
+
+      // Return the file in the success for now. qqjf TODO update photo models
+      return success(uploadFile)
     } else {
       return notFound(`sensor station ${uuid}`)
     }
