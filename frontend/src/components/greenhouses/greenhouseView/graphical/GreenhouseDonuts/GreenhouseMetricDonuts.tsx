@@ -63,7 +63,10 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
         spacing={1}
         padding={2}
         direction={breakMd ? 'column' : 'row'}
-        alignItems="center"
+        sx={{
+          alignItems: 'center',
+          placeContent: 'center',
+        }}
       >
         {props.measurement !== null ? (
           <>
