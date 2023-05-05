@@ -1,7 +1,7 @@
 package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.*;
-import at.qe.skeleton.models.enums.Status;
+import at.qe.skeleton.models.enums.SensorStationStatus;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -28,7 +28,7 @@ public class SensorStation {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
-    private Status status;
+    private SensorStationStatus status;
 
     @JsonBackReference
     @OneToMany(mappedBy = "sensorStation",
@@ -72,7 +72,7 @@ public class SensorStation {
         return accessPoint;
     }
 
-    public Status getStatus() {
+    public SensorStationStatus getStatus() {
         return status;
     }
 
@@ -100,7 +100,7 @@ public class SensorStation {
         this.accessPoint = accessPoint;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(SensorStationStatus status) {
         this.status = status;
     }
 

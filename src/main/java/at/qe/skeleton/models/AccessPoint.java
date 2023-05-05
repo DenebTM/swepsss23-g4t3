@@ -1,9 +1,10 @@
 package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import at.qe.skeleton.models.enums.AccessPointStatus;
 import jakarta.persistence.*;
 
-import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,10 +21,14 @@ public class AccessPoint {
     private LocalDateTime lastUpdate;
 
     @Column(name = "SERVER_ADDRESS")
-    private InetAddress serverAddress;
+    private String serverAddress;
 
     @Column(name = "ACTIVE")
     private Boolean active;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS")
+    private AccessPointStatus status;
 
     @JsonBackReference
     @OneToMany(mappedBy = "accessPoint",
@@ -47,20 +52,12 @@ public class AccessPoint {
         return lastUpdate;
     }
 
-    public InetAddress getServerAddress() {
+    public String getServerAddress() {
         return serverAddress;
     }
 
     public Boolean getActive() {
         return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public void setServerAddress(InetAddress serverAddress) {
-        this.serverAddress = serverAddress;
     }
 
     public void setName(String name) {
@@ -69,5 +66,13 @@ public class AccessPoint {
 
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }
