@@ -5,13 +5,12 @@ import HomeIcon from '@mui/icons-material/Home'
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
-import YardIcon from '@mui/icons-material/Yard'
 import Badge from '@mui/material/Badge'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
-import { PAGE_URL, SensorStationView } from '~/common'
+import { GreenhouseIcon, PAGE_URL, SensorStationView } from '~/common'
 import { deleteJwt, isUserLoggedIn } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
@@ -46,7 +45,7 @@ const topSidebarVals = (
   },
   {
     ...PAGE_URL.myGreenhouses,
-    icon: <YardIcon />,
+    icon: <GreenhouseIcon />,
   },
   {
     ...PAGE_URL.adminHome,
