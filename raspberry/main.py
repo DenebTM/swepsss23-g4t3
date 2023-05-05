@@ -19,22 +19,28 @@ async def get_ap_status(session):
     
 async def get_sensorstation_instructions(session):
     async with session.get(common.web_server_address + "/access-points/" + common.access_point_name + "/sensor-stations") as response:
-        data = await response.json()
-        return data
+        json_data = await response.json()
+
+        paired_stations = {}
+        for station in json_data:
+            ss_id = station['id']
+            ss_status = station['status']
+            paired_stations[ss_id] = ss_status
+
+        return paired_stations
     
 async def sensor_station_manager(connection_request, session):
     tasks = {}  
     while not connection_request.done():
         sensorstations = await get_sensorstation_instructions(session)
-        for sensorstation in sensorstations:
-            for ss, instruction in sensorstation.items():
-                if instruction == "OFFLINE":
-                    try:
-                        tasks[ss].cancel()
-                    except:
-                        print(f"task_not_found", ss)
-                elif instruction == "PAIRING":
-                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss))
+        for ss, status in sensorstations.items():
+            if status == "OFFLINE":
+                try:
+                    tasks[ss].cancel()
+                except:
+                    print(f"task_not_found", ss)
+            elif status == "PAIRING":
+                task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss))
                     
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
