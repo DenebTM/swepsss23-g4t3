@@ -21,17 +21,17 @@ air_pressure_failure_uuid = base_uuid.format('ff01')
 temperature_failure_uuid = base_uuid.format('ff02')
 humidity_failure_uuid = base_uuid.format('ff03')
 illuminance_failure_uuid = base_uuid.format('ff04')
-air_quality_failure_uuid = base_uuid.format('ff05')
+air_quality_index_failure_uuid = base_uuid.format('ff05')
 soil_moisture_failure_uuid = base_uuid.format('ff06')
 
-#global dictionary of constants
-sensor_uuids = {
-    'air_pressure': air_pressure_uuid,
-    'temperature': temperature_uuid,
-    'humidity': humidity_uuid,
-    'illuminance': illuminance_uuid,
-    'air_quality_index': air_quality_index_uuid,
-    'soil_moisture': soil_moisture_uuid
+#global dictionary failure_uuids
+failure_uuids = {
+    'air_pressure': air_pressure_failure_uuid,
+    'temperature': temperature_failure_uuid,
+    'humidity': humidity_failure_uuid,
+    'illuminance': illuminance_failure_uuid,
+    'air_quality_index': air_quality_index_failure_uuid,
+    'soil_moisture': soil_moisture_failure_uuid
 }
 
 known_ss_filename = 'known_sensorstations.yaml'
