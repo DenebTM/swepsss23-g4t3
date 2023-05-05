@@ -75,15 +75,13 @@ async def sensor_station_task(connection_request, session, sensorstation_id):
             await send_sensorstation_connection_status(session, sensorstation_id, 'PAIRING_FAILED')
             await send_sensorstation_pairing_failed(session, sensorstation_id, 'PAIRING_FAILED')
             print(e)
-            print('couldnt connect to sensorstation') #TODO: log and send to backend
+            print('couldnt connect to sensorstation') 
+            #TODO: log and send to backend
         except Exception as e:
             print('Other exception in sensorstation task', e.with_traceback())
-        except:
-            print('??????????')
     except Exception as e:
         print('Pairing failed', e.with_traceback())
         await send_sensorstation_pairing_failed(session, sensorstation_id, 'PAIRING_FAILED')
-
         #TODO: log and send to backend failure
 
 
