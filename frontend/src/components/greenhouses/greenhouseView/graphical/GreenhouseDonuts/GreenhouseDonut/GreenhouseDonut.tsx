@@ -16,8 +16,8 @@ interface GreenhouseDonutProps {
   donutHeight: number
   icon: React.ReactNode
   metricRange: GreenhouseMetricRange
-  sensorStationMax: number
-  sensorStationMin: number
+  maxThreshold: number
+  minThreshold: number
   value: number
 }
 
@@ -28,7 +28,7 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const outOfRange =
-    props.value < props.sensorStationMin || props.value > props.sensorStationMax
+    props.value < props.minThreshold || props.value > props.maxThreshold
 
   return (
     <Box width={props.donutHeight * 2} height={props.donutHeight}>
@@ -36,8 +36,8 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
         <RadialChart
           height={props.donutHeight}
           metricRange={props.metricRange}
-          sensorStationMin={props.sensorStationMin}
-          sensorStationMax={props.sensorStationMax}
+          minThreshold={props.minThreshold}
+          maxThreshold={props.maxThreshold}
           value={props.value}
           width={props.donutHeight * 2}
         />
