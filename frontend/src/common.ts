@@ -6,6 +6,17 @@ import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
 import { theme } from './styles/theme'
 
+/** Enum for the URL parameters controlling the view of a single sensor station.
+ */
+export enum SensorStationView {
+  /** The graphical view of sensor station information. */
+  GRAPHICAL = '',
+  /** The tabuler view of sensor station data */
+  TABLE = 'table',
+  /** The gallery for a given sensor station */
+  GALLERY = 'gallery',
+}
+
 /** The root path for pages relating to greenhouses */
 export const GREENHOUSES_ROOT = 'greenhouses'
 
@@ -165,17 +176,6 @@ export const decryptSensorStationUuid = (
     // If the data can not be parsed as UTF-8 then catch this here
     return undefined
   }
-}
-
-/** Enum for the URL parameters controlling the view of a single sensor station.
- */
-export enum SensorStationView {
-  /** The graphical view of sensor station information. */
-  GRAPHICAL = '',
-  /** The tabular view of sensor station data */
-  TABLE = 'table',
-  /** The gallery for a given sensor station */
-  GALLERY = 'gallery',
 }
 
 /** The key of JWT authorisation cookie */

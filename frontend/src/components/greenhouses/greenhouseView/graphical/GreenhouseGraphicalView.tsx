@@ -93,7 +93,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
               <GreenhouseGraph
                 measurements={measurements}
                 sensorStation={sensorStations?.find(
-                  (s) => s.uuid == props.uuid
+                  (s) => s.uuid === props.uuid
                 )}
                 uuid={props.uuid}
               />
