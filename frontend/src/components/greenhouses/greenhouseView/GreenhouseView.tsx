@@ -54,6 +54,6 @@ export const GreenhouseView: React.FC = () => {
       </PageWrapper>
     )
   } else {
-    return null // qqjf TODO handle invalid view or uuid
+    return null // TODO add loading state
   }
 }
