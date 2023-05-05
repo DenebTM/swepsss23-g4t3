@@ -36,7 +36,7 @@ async def search_for_sensorstations():
 
 
 async def send_sensorstations_to_backend(session, sensorstations):
-    stations_avail = map(lambda id: { 'id': id, 'status': 'AVAILABLE' })
+    stations_avail = map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations)
     json_data = json.dumps(stations_avail)
     print(json_data)
 
