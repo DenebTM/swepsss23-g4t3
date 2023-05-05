@@ -40,12 +40,12 @@ async def sensor_station_manager(connection_request, session):
                 except:
                     print(f"task_not_found", ss)
             elif status == "PAIRING":
-                task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss))
+                task = asyncio.create_task(sensor_station_task(connection_request, session, ss))
                     
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
 
-async def sensor_station_tasks(connection_request, session, sensorstation):
+async def sensor_station_task(connection_request, session, sensorstation):
     try:
         while not connection_request.done():
             async with BleakClient(sensorstation) as client:
