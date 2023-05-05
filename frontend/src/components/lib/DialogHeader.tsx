@@ -11,7 +11,7 @@ import { theme } from '~/styles/theme'
 interface DialogHeaderProps {
   handleClose: () => void
   subtitle: string
-  /** Id of the title element (for a11y props) */
+  /** ID of the title element (for a11y props) */
   titleId: string
   title: string
 }

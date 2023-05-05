@@ -27,7 +27,11 @@ export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
       onClose={props.onClose}
       aria-labelledby={dialogTitleId}
       PaperProps={{
-        sx: { minWidth: '70%', padding: theme.spacing(1, 3, 2) },
+        sx: {
+          padding: theme.spacing(1, 3, 2),
+          width: '70%',
+          maxWidth: '800px',
+        },
       }}
     >
       <DialogHeader

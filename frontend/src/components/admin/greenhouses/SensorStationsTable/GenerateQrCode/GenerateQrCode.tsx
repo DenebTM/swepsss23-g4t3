@@ -66,7 +66,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
           <DialogHeader
             handleClose={handleClose}
             subtitle="Display this QR code on greenhouses so that users can upload photos"
-            titleId={`Greenhouse ${props.uuid}`}
+            titleId={dialogTitleId}
             title={`Greenhouse ${props.uuid}`}
           />
 
