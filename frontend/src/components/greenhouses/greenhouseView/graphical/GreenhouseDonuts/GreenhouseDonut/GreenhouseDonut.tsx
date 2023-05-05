@@ -7,7 +7,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
 import { GreenhouseMetricRange, roundMetric } from '~/common'
-import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 import { DonutLabel } from './DonutLabel'
@@ -17,7 +16,8 @@ interface GreenhouseDonutProps {
   donutHeight: number
   icon: React.ReactNode
   metricRange: GreenhouseMetricRange
-  sensorStation: SensorStation
+  sensorStationMax: number
+  sensorStationMin: number
   value: number
 }
 
@@ -26,13 +26,9 @@ interface GreenhouseDonutProps {
  */
 export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
-  const sensorStationMin =
-    props.sensorStation.lowerBound[props.metricRange.valueKey]
-  const sensorStationMax =
-    props.sensorStation.upperBound[props.metricRange.valueKey]
 
   const outOfRange =
-    props.value < sensorStationMin || props.value > sensorStationMax
+    props.value < props.sensorStationMin || props.value > props.sensorStationMax
 
   return (
     <Box width={props.donutHeight * 2} height={props.donutHeight}>
@@ -40,8 +36,8 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
         <RadialChart
           height={props.donutHeight}
           metricRange={props.metricRange}
-          sensorStationMin={sensorStationMin}
-          sensorStationMax={sensorStationMax}
+          sensorStationMin={props.sensorStationMin}
+          sensorStationMax={props.sensorStationMax}
           value={props.value}
           width={props.donutHeight * 2}
         />
