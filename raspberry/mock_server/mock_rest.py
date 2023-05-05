@@ -58,12 +58,12 @@ def threshold_update(id):
                 'temperature': 0
             },
             'upperBound': {
-                'airPressure': 20,  
-                'airQuality': 20,
-                'humidity': 20,
-                'lightIntensity': 20,
-                'soilMoisture': 20,
-                'temperature': 20
+                'airPressure': 1000000,  
+                'airQuality': 1000000,
+                'humidity': 1000000,
+                'lightIntensity': 1000000,
+                'soilMoisture': 1000000,
+                'temperature': 1000000
             }
         }
         

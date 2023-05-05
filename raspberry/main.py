@@ -1,14 +1,10 @@
 import asyncio
-import sys
 import aiohttp
 from bleak import BleakClient, BleakError
-import json
-import yaml
 
 import common
 import database_operations
 from read_sensorvalues import read_sensorvalues, send_sensorvalues_to_backend
-from db import db_conn
 from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
 from check_thresholds import check_values_for_thresholds
 
