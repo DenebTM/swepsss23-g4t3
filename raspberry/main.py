@@ -10,7 +10,7 @@ import database_operations
 from read_sensorvalues import read_sensorvalues, send_sensorvalues_to_backend
 from db import db_conn
 from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
-from check_threshholds import check_values_for_thresholds
+from check_thresholds import check_values_for_thresholds
 
 async def get_ap_status(session):
     async with session.get(common.web_server_address + "/access-points/" + common.access_point_name) as response:
@@ -76,8 +76,8 @@ async def sensor_station_tasks(connection_request, session, sensorstation_id):
                     await read_sensorvalues(client, sensorstation_id)
                     await check_values_for_thresholds(client, sensorstation_id, transmission_interval)
                     await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
-                    #TODO: Update sensorstations_thressholds
-                    #TODO: Check for thressholds
+                    #TODO: Update sensorstations_thresholds
+                    #TODO: Check for thresholds
 
         except BleakError as e:
             await send_sensorstation_connection_status(session, sensorstation_id, "PAIRING_FAILED")

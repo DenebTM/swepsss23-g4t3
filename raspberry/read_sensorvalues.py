@@ -1,5 +1,5 @@
 import database_operations
-from check_threshholds import check_values_for_thresholds
+from check_thresholds import check_values_for_thresholds
 from bleak import BleakError
 import asyncio
 import json
@@ -33,5 +33,3 @@ async def send_sensorvalues_to_backend(sensorstation_id, session, transmission_i
         else:
             pass
             #TODO: Log this and error handle
-
-
