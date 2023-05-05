@@ -1,5 +1,5 @@
 import { Server } from 'miragejs'
-import { _delete, _get } from '~/api/intercepts'
+import { _delete } from '~/api/intercepts'
 import { PhotoId } from '~/models/photo'
 import { SensorStation } from '~/models/sensorStation'
 
