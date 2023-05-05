@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import { GREENHOUSE_METRICS } from '~/common'
+import { GREENHOUSE_METRICS, GreenhouseMetricRange } from '~/common'
 import { useSensorStations } from '~/hooks/appContext'
 import { Measurement } from '~/models/measurement'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
@@ -51,10 +51,13 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   } else if (sensorStation === null) {
     return <div>TODO qqjf loading state</div>
   } else {
-    const donutProps = {
+    const donutProps = (metricRange: GreenhouseMetricRange) => ({
       donutHeight: donutHeight,
+      metricRange: metricRange,
       sensorStation: sensorStation,
-    }
+      sensorStationMax: sensorStation.upperBound[metricRange.valueKey],
+      sensorStationMin: sensorStation.lowerBound[metricRange.valueKey],
+    })
     return (
       <Stack
         spacing={1}
@@ -65,21 +68,18 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
         {props.measurement !== null ? (
           <>
             <GreenhouseDonut
-              {...donutProps}
+              {...donutProps(GREENHOUSE_METRICS[0])}
               icon={<ThermostatIcon {...donutIconProps} />}
-              metricRange={GREENHOUSE_METRICS[0]}
               value={props.measurement.data.temperature}
             />
             <GreenhouseDonut
-              {...donutProps}
+              {...donutProps(GREENHOUSE_METRICS[1])}
               icon={<WaterDropOutlinedIcon {...donutIconProps} />}
-              metricRange={GREENHOUSE_METRICS[1]}
               value={props.measurement.data.soilMoisture}
             />
             <GreenhouseDonut
-              {...donutProps}
+              {...donutProps(GREENHOUSE_METRICS[2])}
               icon={<LightModeOutlinedIcon {...donutIconProps} />}
-              metricRange={GREENHOUSE_METRICS[2]}
               value={props.measurement.data.lightIntensity}
             />
           </>
