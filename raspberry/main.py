@@ -39,11 +39,11 @@ async def sensor_station_manager(connection_request, session):
             ss_id = int(ss_id)
             if status == "ONLINE":
                 if ss_id in common.known_ss and not ss_id in ss_tasks:
-                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss_id))
+                    task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id))
                     ss_tasks[ss_id] = task
             elif status == "PAIRING":
                 if not ss_id in common.ss_tasks:
-                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss_id))
+                    task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id))
                     ss_tasks[ss_id] = task
             if status == "OFFLINE":
                 try:
@@ -55,7 +55,7 @@ async def sensor_station_manager(connection_request, session):
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
 
-async def sensor_station_tasks(connection_request, session, sensorstation_id):
+async def sensor_station_task(connection_request, session, sensorstation_id):
     #TODO: Catch cancelled Error and error handle stuff
     try:
         if not sensorstation_id in common.known_ss:
