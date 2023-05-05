@@ -55,7 +55,7 @@ public class SensorStationRestController implements BaseRestController {
      * @return List of all sensor stations
      */
     @GetMapping(value = SS_AP_PATH)
-    public ResponseEntity<Object> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
+    public ResponseEntity<Collection<SensorStation>> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
         return ResponseEntity.ok(ssService.getSSForAccessPoint(apName));
     }
 
