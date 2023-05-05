@@ -1,10 +1,10 @@
-import { Server } from 'miragejs'
+import { Response, Server } from 'miragejs'
 import { _delete, _post } from '~/api/intercepts'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { AuthUserRole, Username } from '~/models/user'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
-import { API_URI, notFound, success, unauthorised } from '../consts'
+import { API_URI, notFound, success } from '../consts'
 
 /**
  * Assign a gardener (by username) to a sensor station
@@ -50,7 +50,11 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
     } else if (
       ![AuthUserRole.GARDENER, AuthUserRole.ADMIN].includes(user.attrs.role)
     ) {
-      return unauthorised('Can only assign gardeners and users to greenhouses')
+      return new Response(
+        400,
+        {},
+        'Can only assign gardeners and users to greenhouses'
+      )
     }
 
     const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
