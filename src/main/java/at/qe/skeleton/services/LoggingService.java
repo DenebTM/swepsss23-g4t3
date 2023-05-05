@@ -18,7 +18,7 @@ public class LoggingService {
      * Gets all available logs from the repository
      * @return list of logs
      */
-    public List<LoggingEvent> loadLogs() {
+    public List<LoggingEvent> getAllLogs() {
         return loggingEventRepository.findAll();
     }
 
