@@ -13,9 +13,9 @@ class TestSearchForSensorstations(unittest.IsolatedAsyncioTestCase):
 
         # Set up mock devices
         mock_device_1 = AsyncMock()
-        mock_device_1.name = common.sensor_station_name + "1"
+        mock_device_1.name = common.sensor_station_name + '1'
         mock_device_2 = AsyncMock()
-        mock_device_2.name = common.sensor_station_name + "2"
+        mock_device_2.name = common.sensor_station_name + '2'
         mock_device_3 = AsyncMock()
         mock_device_3.name = 'other_device'
 
