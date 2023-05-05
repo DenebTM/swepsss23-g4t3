@@ -27,6 +27,7 @@ async def send_sensorvalues_to_backend(sensorstation_id, session, transmission_i
     averages_json = json.dumps(averages_dict)
     async with session.post(common.web_server_address + "/access-points/" + common.access_point_name + "/sensor-stations/" + sensorstation_id, json=averages_json) as response:
         if response.status == 200:
+            print(response.status)
             await database_operations.clear_sensor_data(sensorstation_id)
             #TODO:Log this communication
         else:

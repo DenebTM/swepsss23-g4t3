@@ -31,7 +31,7 @@ async def sensor_station_manager(connection_request, session):
             for sensorstation_id, instruction in sensorstation.items():
                 sensorstation_id = int(sensorstation_id)
                 if instruction == "ONLINE":
-                    if not sensorstation_id in common.connected_sensorstations_with_tasks and sensorstation_id in common.known_sensorstations:
+                    if sensorstation_id in common.known_sensorstations and not sensorstation_id in common.connected_sensorstations_with_tasks:
                         task = asyncio.create_task(sensor_station_tasks(connection_request, session, sensorstation_id))
                         common.connected_sensorstations_with_tasks[sensorstation_id] = task
                 if instruction == "OFFLINE":
