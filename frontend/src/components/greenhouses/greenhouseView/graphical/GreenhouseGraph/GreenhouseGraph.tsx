@@ -62,10 +62,10 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
       }))
 
       // Save data values sorted by timestamp
-      const sortedData = dataVals.sort((a, b) =>
-        dayjs(a[TIMESTAMP_KEY]).isBefore(dayjs(b[TIMESTAMP_KEY])) ? 1 : -1
+      dataVals.sort((a, b) =>
+        dayjs(a[TIMESTAMP_KEY]).isBefore(dayjs(b[TIMESTAMP_KEY])) ? -1 : 1
       )
-      setData(sortedData)
+      setData(dataVals)
     } else {
       setData([])
     }
