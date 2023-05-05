@@ -1,5 +1,7 @@
 import CryptoJS from 'crypto-js'
 
+import YardIcon from '@mui/icons-material/Yard'
+
 import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
@@ -155,6 +157,9 @@ export const PAGE_URL: {
     permittedRoles: _ALL_ROLES,
   },
 }
+
+/** Icon used for greenhouses in the sidebar and tables */
+export const GreenhouseIcon = YardIcon
 
 /** Salt used to encrypt and decrypt sensor station UUIDs for photo upload */
 const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
