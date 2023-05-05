@@ -25,7 +25,7 @@ export const DonutLabel: React.FC<DonutLabelProps> = (props) => {
         justifyContent: 'center',
         display: 'flex',
         bottom: props.bottom,
-        color: props.outOfRange ? theme.error : theme.outline,
+        color: props.outOfRange ? theme.error : theme.onSurfaceVariant,
       }}
     >
       {props.children}
