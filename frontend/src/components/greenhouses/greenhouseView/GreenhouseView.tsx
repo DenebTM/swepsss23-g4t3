@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { PAGE_URL, SensorStationView, SS_UUID_PARAM } from '~/common'
+import { PAGE_URL, SensorStationView } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -27,7 +27,7 @@ export const GreenhouseView: React.FC = () => {
   /** Get sensor station UUID from URL params */
   useEffect(() => {
     setUuid(getSsUuidFromParams(params))
-  }, [params[SS_UUID_PARAM]])
+  }, [params])
 
   /** Get page view from seach (query) params */
   useEffect(() => {
@@ -54,6 +54,6 @@ export const GreenhouseView: React.FC = () => {
       </PageWrapper>
     )
   } else {
-    return null // qqjf TODO handle invalid view or uuid
+    return null // TODO add loading state
   }
 }
