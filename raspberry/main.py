@@ -57,16 +57,16 @@ async def sensor_station_tasks(connection_request, session, sensorstation):
         print("couldnt connect to sensorstation") #TODO: log and send to backend
 
 async def polling_loop(connection_request, session):
-        while not connection_request.done():
-            print("Inside AP Loop")
-            status = await get_ap_status(session)
-            print("this is inside the ap loop and the status is" + status)
-            if status == 'offline':
-                connection_request.set_result("Done")
-            elif status == 'searching':
-                sensorstations = await search_for_sensorstations()
-                await send_sensorstations_to_backend(session, sensorstations)
-            await asyncio.sleep(10)
+    while not connection_request.done():
+        print("Inside AP Loop")
+        status = await get_ap_status(session)
+        print("this is inside the ap loop and the status is" + status)
+        if status == 'OFFLINE':
+            connection_request.set_result("Done")
+        elif status in ['ONLINE', 'PAIRING']:
+            sensorstations = await search_for_sensorstations()
+            await send_sensorstations_to_backend(session, sensorstations)
+        await asyncio.sleep(10)
 
 async def main():
     async with aiohttp.ClientSession() as session:
