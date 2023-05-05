@@ -34,12 +34,24 @@ sensor_uuids = {
     "soil_moisture": soil_moisture_uuid
 }
 
+known_ss_filename = 'known_sensorstations.yaml'
+def load_known_ss():
+    try:
+        with open (known_ss_filename, 'r') as file:
+            known_ss = yaml.safe_load(file)    
+    except FileNotFoundError:
+        with open (known_ss_filename, 'w') as file:
+            known_ss = {}
+            yaml.dump(known_ss, file)
+    return known_ss
+
+def save_known_ss():
+    with open (known_ss_filename, 'w') as file:
+        yaml.dump(known_ss, file)
+
 #The decision to saves this in variables comes from the fact that it seemed kind of overkill to save at max 8 things in a sensorstation with only 2 values
 #This variable exists to keep track of all the sensorstations ever found and their MAC-addresses
-known_sensorstations = {}
-
-#This variable existst to manage the Tasks of the 
-connected_sensorstations_with_tasks = {}
+known_ss = load_known_ss()
 
 # in seconds
 polling_interval = 30
