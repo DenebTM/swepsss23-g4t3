@@ -4,8 +4,6 @@ import yaml
 import json
 import common
 
-
-
 #Should return a dictionary of all found sensorstations with key = name, value = ID
 #await scanner.stop() is to end process for sure so it doesnt conflict 
 async def search_for_sensorstations():

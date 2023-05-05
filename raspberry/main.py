@@ -105,7 +105,7 @@ async def polling_loop(connection_request, session):
         print('this is inside the ap loop and the status is ' + status)
         if status == 'OFFLINE':
             connection_request.set_result('Done')
-        elif status in ['ONLINE', 'PAIRING']:
+        elif status in ['ONLINE', 'SEARCHING']:
             sensorstations = await search_for_sensorstations()
             await send_sensorstations_to_backend(session, sensorstations)
         await asyncio.sleep(10)

@@ -25,7 +25,7 @@ def status():
 @app.route('/access-points/AP1', methods=['GET'])
 def accesspoint_connection():
     if status_called:
-        response = {'status': 'searching'}
+        response = {'status': 'SEARCHING'}
         # if int(time.time()) >= time_now + 50 and int(time.time()) <= time_now + 70:
         #     response = {'status': 'searching'}
         # elif (int(time.time())) >= time_now + 70:
