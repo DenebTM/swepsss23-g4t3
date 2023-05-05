@@ -62,11 +62,10 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
       }))
 
       // Save data values sorted by timestamp
-      setData(
-        dataVals.sort((a, b) =>
-          dayjs(a[TIMESTAMP_KEY]).isBefore(dayjs(b[TIMESTAMP_KEY])) ? 1 : -1
-        )
+      dataVals.sort((a, b) =>
+        dayjs(a[TIMESTAMP_KEY]).isBefore(dayjs(b[TIMESTAMP_KEY])) ? -1 : 1
       )
+      setData(dataVals)
     } else {
       setData([])
     }
@@ -103,7 +102,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
             const key = String(payload.dataKey)
             const trueValue: number = payload.payload[RAW_VALUES_KEY][key]
             return `${roundMetric(trueValue)}${
-              GREENHOUSE_METRICS.find((m) => m.valueKey == payload.dataKey)
+              GREENHOUSE_METRICS.find((m) => m.valueKey === payload.dataKey)
                 ?.unit
             }`
           }}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { decryptSensorStationUuid, PAGE_URL, SS_UUID_PARAM } from '~/common'
+import { Error } from '~/components/page/error/Error'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -36,7 +37,7 @@ export const PhotoUpload: React.FC = () => {
       permittedRoles={PAGE_URL.photoUpload.permittedRoles}
     >
       {sensorStationUuid === INVALID_UUID ? (
-        'TODO qqjf: invalid uuid error'
+        <Error message="Unable to parse greenhouse UUID" />
       ) : typeof sensorStationUuid === 'undefined' ? (
         'TODO qqjf: loading'
       ) : (
