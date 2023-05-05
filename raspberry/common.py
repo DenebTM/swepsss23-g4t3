@@ -36,10 +36,10 @@ sensor_uuids = {
 
 #The decision to saves this in variables comes from the fact that it seemed kind of overkill to save at max 8 things in a sensorstation with only 2 values
 #This variable exists to keep track of all the sensorstations ever found and their MAC-addresses
-known_ss = {}
+known_sensorstations = {}
 
 #This variable existst to manage the Tasks of the 
-ss_tasks = {}
+connected_sensorstations_with_tasks = {}
 
 # in seconds
 polling_interval = 30
