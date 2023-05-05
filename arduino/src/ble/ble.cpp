@@ -10,7 +10,8 @@
 #include <sensors/warn.h>
 
 namespace ble {
-  String paired_mac = BLE_NO_PAIRED_DEVICE;
+  String paired_mac   = BLE_NO_PAIRED_DEVICE;
+  bool is_advertising = false;
 
   void connect_event_handler(BLEDevice central) {
     String new_mac = central.address();
@@ -27,6 +28,7 @@ namespace ble {
       memset(&sensors::current_warnings, 0, sizeof sensors::current_warnings);
 
       pairing::mode::active = false;
+      is_advertising        = false;
       led::clear_status_codes(led::CodePriority::HIGH);
     }
 
@@ -36,6 +38,7 @@ namespace ble {
         Serial.print("Reconnected to access point: ");
         Serial.println(paired_mac);
 
+        is_advertising = false;
         led::clear_status_codes(led::CodePriority::HIGH);
       } else {
         Serial.print("Rejecting connection attempt from ");
@@ -47,9 +50,10 @@ namespace ble {
   }
 
   void disconnect_event_handler(BLEDevice central) {
-    String new_mac = central.address();
+    is_advertising = true;
+    BLE.advertise();
 
-    if (new_mac.equals(paired_mac)) {
+    if (central.address().equals(paired_mac)) {
       Serial.print("Lost connection with access point ");
       Serial.println(paired_mac);
 
