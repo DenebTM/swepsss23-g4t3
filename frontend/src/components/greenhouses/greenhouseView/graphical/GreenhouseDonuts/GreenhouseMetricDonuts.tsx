@@ -55,8 +55,8 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
       donutHeight: donutHeight,
       metricRange: metricRange,
       sensorStation: sensorStation,
-      sensorStationMax: sensorStation.upperBound[metricRange.valueKey],
-      sensorStationMin: sensorStation.lowerBound[metricRange.valueKey],
+      maxThreshold: sensorStation.upperBound[metricRange.valueKey],
+      minThreshold: sensorStation.lowerBound[metricRange.valueKey],
     })
     return (
       <Stack

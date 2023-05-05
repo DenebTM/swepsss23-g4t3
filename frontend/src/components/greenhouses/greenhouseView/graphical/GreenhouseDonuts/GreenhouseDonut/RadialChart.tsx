@@ -15,8 +15,8 @@ interface RadialChartProps {
   /** Chart height in px */
   height: number
   metricRange: GreenhouseMetricRange
-  sensorStationMin: number
-  sensorStationMax: number
+  minThreshold: number
+  maxThreshold: number
   value: number
   /** Chart width in px */
   width: number
@@ -77,8 +77,8 @@ export const RadialChart: React.FC<RadialChartProps> = (props) => {
           }`
         }
         formatter={(value: number | string, name, payload, index) => {
-          const min = roundMetric(props.sensorStationMin)
-          const max = roundMetric(props.sensorStationMax)
+          const min = roundMetric(props.minThreshold)
+          const max = roundMetric(props.maxThreshold)
 
           return `${min} ${emDash} ${max}${props.metricRange.unit}`
         }}
