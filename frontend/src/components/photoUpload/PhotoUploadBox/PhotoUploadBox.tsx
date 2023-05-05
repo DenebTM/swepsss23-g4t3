@@ -22,7 +22,7 @@ export const PhotoUploadBox: React.FC<PhotoUploadBoxProps> = (props) => {
   )
 
   /** Pass the state setting function into the Uploady child to keep track of uploads in the parent */
-  const UploadArea = getUploadArea(setUploadStatus)
+  const UploadArea = getUploadArea(uploadStatus, setUploadStatus)
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
