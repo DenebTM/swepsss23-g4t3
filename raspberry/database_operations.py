@@ -19,7 +19,8 @@ async def save_sensor_values_to_database(sensorstation_id, temperature, humidity
 #returns a mean of the values of the sensorstation
 async def get_sensor_data_averages(sensorstation_id):
     try:
-        averages_query = db_conn.execute(
+        cursor = db_conn.cursor()
+        averages_query = cursor.execute(
             f'''SELECT AVG(temperature) AS temp_avg, AVG(humidity) AS humidity_avg,
             AVG(air_pressure) AS air_pressure_avg, AVG(illuminance) AS illuminance_avg,
             AVG(air_quality_index) AS air_quality_index_avg, AVG(soil_moisture) AS soil_moisture_avg
@@ -30,13 +31,15 @@ async def get_sensor_data_averages(sensorstation_id):
         results = averages_query.fetchone()
 
         averages_dict = {
-            'temperature': results['temp_avg'],
-            'humidity': results['humidity_avg'],
-            'air_pressure': results['air_pressure_avg'],
-            'illuminance': results['illuminance_avg'],
-            'air_quality_index': results['air_quality_index_avg'],
-            'soil_moisture': results['soil_moisture_avg']
+            'temperature': results[0],
+            'humidity': results[1],
+            'air_pressure': results[2],
+            'illuminance': results[3],
+            'air_quality_index': results[4],
+            'soil_moisture': results[5]
         }
+        cursor.close()
+
         return averages_dict
     except Exception as e:
         print("Database access error:", e)
@@ -59,10 +62,10 @@ async def clear_sensor_data(sensorstation_id):
      
      
 
-#returns a dictionary of the thresholds of the sensorstation
 async def get_sensor_data_thresholds(sensorstation_id):
-    #try:
-        thresholds_query = db_conn.execute(
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute(
             f'''SELECT temperature_max, humidity_max, air_pressure_max, 
                 illuminance_max, air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, 
@@ -71,7 +74,30 @@ async def get_sensor_data_thresholds(sensorstation_id):
                 WHERE id = ?''',
             (sensorstation_id,)
         )
-        return dict(thresholds_query.fetchone())
+        thresholds_query = cursor.fetchone()
+        cursor.close()
+        if thresholds_query:
+            thresholds_dict = {
+                'temperature_max': thresholds_query[0],
+                'humidity_max': thresholds_query[1],
+                'air_pressure_max': thresholds_query[2],
+                'illuminance_max': thresholds_query[3],
+                'air_quality_index_max': thresholds_query[4],
+                'soil_moisture_max': thresholds_query[5],
+                'temperature_min': thresholds_query[6],
+                'humidity_min': thresholds_query[7],
+                'air_pressure_min': thresholds_query[8],
+                'illuminance_min': thresholds_query[9],
+                'air_quality_index_min': thresholds_query[10],
+                'soil_moisture_min': thresholds_query[11]
+            }
+            return thresholds_dict
+        else:
+            return {}
+    except Exception as e:
+        print("Database access error:", e)
+        # TODO: Implement logging
+        return {}
 
     #except:
     #    print("database cant be accessed") #TODO: implement log
@@ -147,6 +173,7 @@ async def update_sensorstation(json_data):
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min))
+            db_conn.commit()
         except Exception as e:
             db_conn.rollback()
             print(f"Error inserting data for sensorstation {sensorstation_id}: {e}")
