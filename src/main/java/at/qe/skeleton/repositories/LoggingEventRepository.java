@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface LoggingEventRepository extends AbstractRepository<LoggingEvent, String> {
 
-    LoggingEvent findByTimestmp(LocalDateTime timestmp);
+    List<LoggingEvent> findAllByTimestmp(LocalDateTime timestmp);
 
     @Override
     List<LoggingEvent> findAll();

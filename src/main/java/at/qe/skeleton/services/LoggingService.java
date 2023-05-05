@@ -5,6 +5,7 @@ import at.qe.skeleton.repositories.LoggingEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,5 +20,9 @@ public class LoggingService {
      */
     public List<LoggingEvent> loadLogs() {
         return loggingEventRepository.findAll();
+    }
+
+    public List<LoggingEvent> loadLogsByTimestamp(LocalDateTime timestamp) {
+        return loggingEventRepository.findAllByTimestmp(timestamp);
     }
 }
