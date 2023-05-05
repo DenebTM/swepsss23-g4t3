@@ -12,6 +12,7 @@
 
 namespace ble {
   extern String paired_mac;
+  extern bool is_advertising;
 
   /**
    * Initializes various internal variables, timers, services, etc.
