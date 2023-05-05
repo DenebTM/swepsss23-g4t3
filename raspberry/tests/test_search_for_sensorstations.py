@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, patch
 import asyncio
 import common
 
-from search_for_sensorstations import search_for_sensorstations
+from sensorstation_operations import search_for_sensorstations
 
 
 class TestSearchForSensorstations(unittest.IsolatedAsyncioTestCase):

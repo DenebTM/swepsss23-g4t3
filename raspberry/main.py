@@ -4,8 +4,8 @@ from bleak import BleakClient, BleakError
 
 import common
 import database_operations
-from read_sensorvalues import read_sensorvalues, send_sensorvalues_to_backend
-from search_for_sensorstations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
+from sensorvalues_operations import read_sensorvalues, send_sensorvalues_to_backend
+from sensorstation_operations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
 from check_thresholds import check_values_for_thresholds
 
 async def get_ap_status(session):
@@ -61,10 +61,9 @@ async def sensor_station_task(connection_request, session, sensorstation_id):
         try:
             transmission_interval = common.polling_interval
             async with BleakClient(sensorstation_mac) as client:
-                print('i was connected to the sensorstation')
                 await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
                 await database_operations.initialize_sensorstation(sensorstation_id)
-
+                #TODO: Logging
                 while not connection_request.done():
                     await read_sensorvalues(client, sensorstation_id)
                     await check_values_for_thresholds(client, sensorstation_id, transmission_interval)
