@@ -8,7 +8,7 @@ status_called = False
 stations = []
 def station_idx(id):
     try:
-        return [True if id in station else False for station in stations].index(True)
+        return [station['id'] == id for station in stations].index(True)
     except ValueError:
         return -1
 
@@ -18,7 +18,7 @@ def station_idx(id):
 def status():
     global status_called
     status_called = True
-    response = {'name': 'office1', 'serverAddress': 'localhost'}
+    response = {'name': 'AP1', 'serverAddress': 'localhost'}
     return jsonify(response), 200
 
 # Route that polls for connection-update
@@ -85,14 +85,16 @@ def ask_for_instructions_ss():
 def report_connection_to_ss_to_backend(id):
     global stations
     if status_called:
+        id = int(id)
         try:
-            idx = station_idx(id)
+            idx = station_idx(int(id))
             if idx == -1:
                 raise ValueError
-            stations[idx] = { id: 'ONLINE' }
+            stations[idx]['status'] = 'ONLINE'
             print(f'station {id} set to ONLINE; current stations:', stations)
         except ValueError:
             print(f'Sensor station {id} not known')
+            return jsonify(f'Sensor station {id} not known'), 404
         except Exception as e:
             print(e)
         return jsonify('OK'), 200
@@ -112,13 +114,13 @@ def send_sensor_failures(id):
 def send_found_ss():
     global stations
     if status_called:
-        json_data = request.get_json()
-        ss_dict = json.loads(json_data)
-        for _,v in ss_dict.items():
-            v = f'{v}'
-            if station_idx(v) == -1:
-                stations.append({ v: 'PAIRING' })
-        print('new station added; current stations: ', stations)
+        new_ss = request.get_json()
+        for ss in new_ss:
+            ss_id = ss['id']
+            idx = station_idx(ss_id)
+            if idx == -1:
+                stations.append({ 'id': ss_id, 'status': 'PAIRING' })
+                print('new station added; current stations: ', stations)
 
         return jsonify('OK'), 200
     else:
