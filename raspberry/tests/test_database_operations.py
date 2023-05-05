@@ -39,9 +39,9 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         # Assert that the function returned the correct result
         self.assertEqual(result, {"temp_avg": 10, "humidity_avg": 20, "air_pressure_avg": 30, "illuminance_avg": 40, "air_quality_index_avg": 50, "soil_moisture_avg": 60})
 
-    # Test get_sensor_data_threshholds function
+    # Test get_sensor_data_thresholds function
     @patch('database_operations.db_conn')
-    async def test_get_sensor_data_threshholds(self, db_conn):
+    async def test_get_sensor_data_thresholds(self, db_conn):
 
         # Set up the mock database connection to return some test data
         mock_cursor = MagicMock()

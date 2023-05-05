@@ -38,7 +38,7 @@ def accesspoint_connection():
 
 # Route that updates Sensorstation thresholds
 @app.route('/access-points/AP1/sensor-stations/<id>', methods=['GET'])
-def thresshold_update(id):
+def threshold_update(id):
     if status_called:
         response = {
             'id': 'SensorStation1',
