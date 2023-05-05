@@ -68,9 +68,18 @@ def thresshold_update():
 def ask_for_instructions_ss():
     if status_called:
         response = [
-            {201: 'OFFLINE'},
-            {202: 'ONLINE'},
-            {103: 'PAIRING'}
+            {
+                "id": 101,
+                "status": "AVAILABLE"
+            },
+            {
+                "id": 102,
+                "status": "AVAILABLE"
+            },
+            {
+                "id": 103,
+                "status": "AVAILABLE"
+            }
         ]
 
         return jsonify(response), 200
