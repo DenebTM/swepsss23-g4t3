@@ -8,7 +8,7 @@ five_min_ago = current_time - 300
 
 async def save_sensor_values_to_database(sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture):
     try:
-        db_conn.execute("INSERT INTO sensordata (id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        db_conn.execute('INSERT INTO sensordata (id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                         (sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
         db_conn.commit()
     except Exception as e:
@@ -42,7 +42,7 @@ async def get_sensor_data_averages(sensorstation_id):
 
         return averages_dict
     except Exception as e:
-        print("Database access error:", e)
+        print('Database access error:', e)
         # TODO: Implement logging
 
 
@@ -95,21 +95,21 @@ async def get_sensor_data_thresholds(sensorstation_id):
         else:
             return {}
     except Exception as e:
-        print("Database access error:", e)
+        print('Database access error:', e)
         # TODO: Implement logging
         return {}
 
     #except:
-    #    print("database cant be accessed") #TODO: implement log
+    #    print('database cant be accessed') #TODO: implement log
 
 async def get_sensorstation_transmissioninterval(sensorstation_id):
     try:
-        result = db_conn.execute("SELECT transmissioninterval FROM sensorstations WHERE id = ?", (sensorstation_id,))
+        result = db_conn.execute('SELECT transmissioninterval FROM sensorstations WHERE id = ?', (sensorstation_id,))
         transmission_interval = result.fetchone()[0]
         return transmission_interval
     except Exception as e:
             db_conn.rollback()
-            print(f"Error fetching data for sensorstation {sensorstation_id}: {e}")
+            print(f'Error fetching data for sensorstation {sensorstation_id}: {e}')
 
 async def initialize_sensorstation(sensorstation_id):        
     json_data = {
@@ -176,4 +176,4 @@ async def update_sensorstation(json_data):
             db_conn.commit()
         except Exception as e:
             db_conn.rollback()
-            print(f"Error inserting data for sensorstation {sensorstation_id}: {e}")
+            print(f'Error inserting data for sensorstation {sensorstation_id}: {e}')

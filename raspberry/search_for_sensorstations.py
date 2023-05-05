@@ -24,16 +24,16 @@ async def search_for_sensorstations():
             await scanner.stop()
             if len(sensorstations) > 0:
                 #TODO: Implement logging info with which sensorstations are found
-                print("Found sensor stations:", sensorstations)
+                print('Found sensor stations:', sensorstations)
             else:
                 #TODO: Implement logging warning that no sensorstations are found
-                print("No sensor stations found...")
+                print('No sensor stations found...')
             
         return sensorstations   
     
     except BleakError as e:
         # write error to audit log
-        print(f"Error: {e}")
+        print(f'Error: {e}')
         return sensorstations
 
 
@@ -42,7 +42,7 @@ async def send_sensorstations_to_backend(session, sensorstations):
     json_data = json.dumps(stations_avail)
     print(json_data)
 
-    async with session.post(common.web_server_address + "/access-points/" + common.access_point_name + "/sensor-stations", json=json_data) as response:
+    async with session.post(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations', json=json_data) as response:
         data = await response.json()
         print(data)
 
