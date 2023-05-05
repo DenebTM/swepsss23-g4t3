@@ -2,23 +2,23 @@ import requests
 
 base_url = 'http://localhost:5000'
 
-response = requests.post(f'{base_url}/access-points/')
+response = requests.post(f'{base_url}/access-points')
 print(response.json())
 
-response = requests.get(f'{base_url}/access-points/1/')
+response = requests.get(f'{base_url}/access-points/AP1')
 print(response.json())
 
-response = requests.get(f'{base_url}/access-points/1/sensor-stations/1/')
+response = requests.get(f'{base_url}/access-points/AP1/sensor-stations/1')
 print(response.json())
 
-response = requests.get(f'{base_url}/access-points/1/sensor-stations/')
+response = requests.get(f'{base_url}/access-points/AP1/sensor-stations')
 print(response.json())
 
 response = requests.put(f'{base_url}/sensor-stations/101')
 print(response.json())
 
-response = requests.put(f'{base_url}/access-points/1/sensor-stations/101')
+response = requests.put(f'{base_url}/access-points/AP1/sensor-stations/101')
 print(response.json())
 
-response = requests.post(f'{base_url}/access-points/1/sensor-stations/101')
+response = requests.post(f'{base_url}/access-points/AP1/sensor-stations/101')
 print(response.json())

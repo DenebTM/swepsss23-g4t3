@@ -19,31 +19,37 @@ async def get_ap_status(session):
     
 async def get_sensorstation_instructions(session):
     async with session.get(common.web_server_address + "/access-points/" + common.access_point_name + "/sensor-stations") as response:
-        data = await response.json()
-        return data
+        json_data = await response.json()
+
+        paired_stations = {}
+        for station in json_data:
+            ss_id = station['id']
+            ss_status = station['status']
+            paired_stations[ss_id] = ss_status
+
+        return paired_stations
     
 async def sensor_station_manager(connection_request, session):
     while not connection_request.done():
         common.known_sensorstations = await load_or_create_known_sensorstation_json()
         print(common.known_sensorstations)
         sensorstations = await get_sensorstation_instructions(session)
-        for sensorstation in sensorstations:
-            for sensorstation_id, instruction in sensorstation.items():
-                sensorstation_id = int(sensorstation_id)
-                if instruction == "ONLINE":
-                    if sensorstation_id in common.known_sensorstations and not sensorstation_id in common.connected_sensorstations_with_tasks:
-                        task = asyncio.create_task(sensor_station_tasks(connection_request, session, sensorstation_id))
-                        common.connected_sensorstations_with_tasks[sensorstation_id] = task
-                if instruction == "OFFLINE":
-                    try:
-                        common.connected_sensorstations_with_tasks[sensorstation_id].cancel()
-                        del common.connected_sensorstations_with_tasks[sensorstation_id]
-                    except:
-                        print(f"task_not_found", sensorstation_id)
-                elif instruction == "PAIRING":
-                    if not sensorstation_id in common.connected_sensorstations_with_tasks:
-                        task = asyncio.create_task(sensor_station_tasks(connection_request, session, sensorstation_id))
-                        common.connected_sensorstations_with_tasks[sensorstation_id] = task
+        for ss_id, status in sensorstations.items():
+            ss_id = int(ss_id)
+            if status == "ONLINE":
+                if ss_id in common.known_sensorstations and not ss_id in common.connected_sensorstations_with_tasks:
+                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss_id))
+                    common.connected_sensorstations_with_tasks[ss_id] = task
+            elif status == "PAIRING":
+                if not ss_id in common.connected_sensorstations_with_tasks:
+                    task = asyncio.create_task(sensor_station_tasks(connection_request, session, ss_id))
+                    common.connected_sensorstations_with_tasks[ss_id] = task
+            if status == "OFFLINE":
+                try:
+                    common.connected_sensorstations_with_tasks[ss_id].cancel()
+                    del common.connected_sensorstations_with_tasks[ss_id]
+                except:
+                    print(f"task_not_found", ss_id)
                     
         print("Finished SS Manager Loop")
         await asyncio.sleep(10)
@@ -102,16 +108,16 @@ async def send_sensorstation_pairing_failed(session, sensorstation_id, message):
         
 
 async def polling_loop(connection_request, session):
-        while not connection_request.done():
-            print("Inside AP Loop")
-            status = await get_ap_status(session)
-            print("this is inside the ap loop and the status is " + status)
-            if status == 'offline':
-                connection_request.set_result("Done")
-            elif status == 'searching':
-                sensorstations = await search_for_sensorstations()
-                await send_sensorstations_to_backend(session, sensorstations)
-            await asyncio.sleep(10)
+    while not connection_request.done():
+        print("Inside AP Loop")
+        status = await get_ap_status(session)
+        print("this is inside the ap loop and the status is " + status)
+        if status == 'OFFLINE':
+            connection_request.set_result("Done")
+        elif status in ['ONLINE', 'PAIRING']:
+            sensorstations = await search_for_sensorstations()
+            await send_sensorstations_to_backend(session, sensorstations)
+        await asyncio.sleep(10)
 
 async def main():
         while True:
@@ -123,7 +129,7 @@ async def main():
                     print(data)
                     if response.status == 200:
                         ap_status = await get_ap_status(session)
-                        if ap_status == 'online' or ap_status == 'searching':
+                        if ap_status in ['ONLINE', 'SEARCHING']:
                             polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
                             sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
                             await asyncio.gather(polling_loop_task, sensor_station_manager_task)
