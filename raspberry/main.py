@@ -42,7 +42,7 @@ async def sensor_station_manager(connection_request, session):
                     task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id))
                     ss_tasks[ss_id] = task
             elif status == 'PAIRING':
-                if not ss_id in common.ss_tasks:
+                if not ss_id in ss_tasks:
                     task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id))
                     ss_tasks[ss_id] = task
             if status == 'OFFLINE':
