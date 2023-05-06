@@ -94,7 +94,10 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_AP_PATH)
-    public ResponseEntity<Object> addSS(@PathVariable(value = "name") String apName, @RequestBody Collection<SensorStation> newSSList) {
+    public ResponseEntity<Collection<SensorStation>> addSS(
+        @PathVariable(value = "name") String apName,
+        @RequestBody Collection<SensorStation> newSSList
+    ) {
         AccessPoint ap = apService.loadAPByName(apName);
 
         List<SensorStation> retSSList = new ArrayList<>();
