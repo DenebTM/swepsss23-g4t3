@@ -2,11 +2,13 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.PhotoData;
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,13 @@ public class SensorStationRestController implements BaseRestController {
 
     @Autowired
     private SensorStationService ssService;
+
+    @Autowired
+    private AccessPointService apService;
+
     @Autowired
     private PhotoDataRepository photoDataRepository;
+
     @Autowired
     private UserService userService;
 
@@ -55,7 +62,13 @@ public class SensorStationRestController implements BaseRestController {
      * @return List of all sensor stations
      */
     @GetMapping(value = SS_AP_PATH)
-    public ResponseEntity<Collection<SensorStation>> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
+    public ResponseEntity<Object> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
+        // Return a 404 error if the sensor-station is not found
+        AccessPoint ap = apService.loadAPByName(apName);
+        if (ap == null) {
+            return HelperFunctions.notFoundError("Access point", String.valueOf(apName));
+        }
+
         return ResponseEntity.ok(ssService.getSSForAccessPoint(apName));
     }
 
