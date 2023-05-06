@@ -97,7 +97,7 @@ class SensorStationRestControllerTest {
         AccessPoint apTest = createTestAP();
 
         var initialSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
-        int initialSSCount = initialSSResponse.getBody().size();
+        int initialSSCount = ((Collection<?>)initialSSResponse.getBody()).size();
 
         List<SensorStation> newSS = new ArrayList<>();
         SensorStation ssTest1 = new SensorStation(apTest, 30L);
@@ -115,18 +115,18 @@ class SensorStationRestControllerTest {
 
         // ASSERTIONS
         var finalSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
-        int finalSSCount = finalSSResponse.getBody().size();
+        int finalSSCount = ((Collection<?>)finalSSResponse.getBody()).size();
 
         // check all sensor stations inserted
         assertEquals(initialSSCount + newSSCount, finalSSCount);
 
         // check sensor stations inserted for correct AP
-        for (SensorStation ss : finalSSResponse.getBody()) {
+        for (SensorStation ss : (Collection<SensorStation>)finalSSResponse.getBody()) {
             assertEquals(ss.getAccessPoint().getName(), apTest.getName());
         }
         
         // check sensor station status matches
-        for (SensorStation ss : finalSSResponse.getBody()) {
+        for (SensorStation ss : (Collection<SensorStation>)finalSSResponse.getBody()) {
             assertEquals(SensorStationStatus.AVAILABLE, ss.getStatus());
         }
     }

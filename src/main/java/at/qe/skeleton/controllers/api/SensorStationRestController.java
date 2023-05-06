@@ -100,11 +100,15 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_AP_PATH)
-    public ResponseEntity<Collection<SensorStation>> addSS(
+    public ResponseEntity<Object> addSS(
         @PathVariable(value = "name") String apName,
         @RequestBody Collection<SensorStation> newSSList
     ) {
+        // Return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
+        if (ap == null) {
+            return HelperFunctions.notFoundError("Access point", String.valueOf(apName));
+        }
 
         List<SensorStation> retSSList = new ArrayList<>();
         for (SensorStation newSS : newSSList) {
