@@ -66,7 +66,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id):
                 #TODO: Logging
                 while not connection_request.done():
                     await read_sensorvalues(client, sensorstation_id)
-                    await check_values_for_thresholds(client, sensorstation_id, transmission_interval)
+                    await check_values_for_thresholds(client, sensorstation_id, transmission_interval, session)
                     await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
                     #TODO: Update sensorstations_thresholds
                     #TODO: Check for thresholds
