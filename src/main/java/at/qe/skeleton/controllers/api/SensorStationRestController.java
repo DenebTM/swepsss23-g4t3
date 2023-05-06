@@ -71,7 +71,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param json
      * @return updated sensor station
      */
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
