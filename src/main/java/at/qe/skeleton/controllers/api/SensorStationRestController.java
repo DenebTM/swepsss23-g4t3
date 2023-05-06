@@ -2,11 +2,13 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.PhotoData;
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,13 @@ public class SensorStationRestController implements BaseRestController {
 
     @Autowired
     private SensorStationService ssService;
+
+    @Autowired
+    private AccessPointService apService;
+
     @Autowired
     private PhotoDataRepository photoDataRepository;
+
     @Autowired
     private UserService userService;
 
@@ -74,6 +81,28 @@ public class SensorStationRestController implements BaseRestController {
         }
 
         return ResponseEntity.ok(ss);
+    }
+
+    /**
+     * Route to add a list of sensor stations to the db
+     * 
+     * This is used by the access point to report found sensor stations
+     * while it is in SEARCHING Mode
+     *
+     * @param newSSList list of new sensor stations
+     * @return the new sensor stations as added to the database
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = SS_AP_PATH)
+    public ResponseEntity<Object> addSS(@PathVariable(value = "name") String apName, @RequestBody Collection<SensorStation> newSSList) {
+        AccessPoint ap = apService.loadAPByName(apName);
+
+        List<SensorStation> retSSList = new ArrayList<>();
+        for (SensorStation newSS : newSSList) {
+            newSS.setAccessPoint(ap);
+            retSSList.add(ssService.saveSS(newSS));
+        }
+        return ResponseEntity.ok(retSSList);
     }
 
     /**
