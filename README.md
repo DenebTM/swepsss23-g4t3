@@ -8,11 +8,11 @@ The goal was to implement a system for monitoring greenhouses. The three main co
 
 ### Sensor station
 
-A sensor station is the combination of a mini greenhouse and an Arduino Nano equipped with sensors to monitor its various vitals. It possesses a Bluetooth® Low Energy radio receiver/transmitter, which is used to communicate with an...
+A sensor station is the combination of a mini greenhouse and an Arduino Nano, equipped with sensors to monitor the greenhouse's various vitals such as air quality, soil moisture and light level. It possesses a Bluetooth® Low Energy radio receiver/transmitter, which is used to communicate with an...
 
 ### Access point
 
-This is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is reading the sensor values transmitted by multiple sensor stations, average them, and pass the averaged values onto the ReSt backend. Furthermore, it checks if each sensor station's sensor values are within acceptable (configurable) bounds, and commands the corresponding sensor station to emit a warning otherwise.
+This is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is to read the sensor values transmitted by multiple sensor stations, average data over a configurable period, and pass the averaged values onto the ReSt backend. Furthermore, it checks if each sensor station's sensor values are within acceptable (configurable) bounds, and commands the corresponding sensor station to emit a warning otherwise.
 
 ### Backend
 
