@@ -3,6 +3,7 @@ package at.qe.skeleton.controllers.api;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
@@ -17,6 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -65,23 +67,68 @@ class SensorStationRestControllerTest {
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         Assertions.assertEquals(number, ((Collection) response.getBody()).size());
     }
+
+    AccessPoint createTestAP() {
+        String apName = "AP Test";
+        return apRepository.save(new AccessPoint(apName));
+    }
     
     @Test
     void testGetSSForAccessPoint() {
-        String apName = "AP Test";
-        AccessPoint apTest = apRepository.save(new AccessPoint(apName));
+        AccessPoint apTest = createTestAP();
 
         SensorStation ssTest = new SensorStation(apTest, 30L);
         ssTest.setId(127);
 
-        var response = this.ssRestController.getSSForAccessPoint(apName);
+        var response = this.ssRestController.getSSForAccessPoint(apTest.getName());
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         Assertions.assertEquals(0, response.getBody().size());
         ssService.saveSS(ssTest);
 
-        var response2 = this.ssRestController.getSSForAccessPoint(apName);
+        var response2 = this.ssRestController.getSSForAccessPoint(apTest.getName());
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
         Assertions.assertEquals(1, response2.getBody().size());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testAddSS() {
+        // INITIALIZATION
+        AccessPoint apTest = createTestAP();
+
+        var initialSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
+        int initialSSCount = initialSSResponse.getBody().size();
+
+        List<SensorStation> newSS = new ArrayList<>();
+        SensorStation ssTest1 = new SensorStation(apTest, 30L);
+        ssTest1.setId(127);
+        ssTest1.setStatus(SensorStationStatus.AVAILABLE);
+        newSS.add(ssTest1);
+        SensorStation ssTest2 = new SensorStation(apTest, 30L);
+        ssTest2.setId(128);
+        ssTest2.setStatus(SensorStationStatus.AVAILABLE);
+        newSS.add(ssTest2);
+        int newSSCount = newSS.size();
+
+        // TEST
+        ssRestController.addSS(apTest.getName(), newSS);
+
+        // ASSERTIONS
+        var finalSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
+        int finalSSCount = finalSSResponse.getBody().size();
+
+        // check all sensor stations inserted
+        assertEquals(initialSSCount + newSSCount, finalSSCount);
+
+        // check sensor stations inserted for correct AP
+        for (SensorStation ss : finalSSResponse.getBody()) {
+            assertEquals(ss.getAccessPoint().getName(), apTest.getName());
+        }
+        
+        // check sensor station status matches
+        for (SensorStation ss : finalSSResponse.getBody()) {
+            assertEquals(SensorStationStatus.AVAILABLE, ss.getStatus());
+        }
     }
 
     @Test
