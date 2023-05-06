@@ -6,7 +6,6 @@ import json
 async def check_values_for_thresholds(sensorstation_client, sensorstation_id, transmission_interval,session):
     await asyncio.sleep(transmission_interval)
     try:
-        await send_error_to_sensorstation(sensorstation_client, sensorstation_id, 'humidity', session)
         thresholds_dict = await get_sensor_data_thresholds(sensorstation_id)
         averages_dict = await get_sensor_data_averages(sensorstation_id)
         for sensor, average_value in averages_dict.items():
