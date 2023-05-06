@@ -4,7 +4,7 @@
 
 This project was created as part of the Software Engineering proseminar for the summer semester 2023 at the University of Innsbruck.
 
-The goal was to implement a system for monitoring greenhouses. The three main components of the system are described below; for additional information, please refer to the [project wiki](https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/home)
+The goal was to implement a system for monitoring greenhouses. The three main components of the system are described below; for more detailed information, please refer to the [project wiki](https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/home).
 
 ### Sensor station
 
@@ -20,7 +20,7 @@ This is a web server, based on the (awful) Spring web framework. It serves the f
 
 This component is based on the swa-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, in-memory H2 database (TODO: replace with MySQL; see !112), basic functionality, and most of the Spring Security configuration.
 
-## Running the project
+## Running the back- and front-end
 
 This project uses Java 17 and Node.js 18 (installed automatically as part of the build process).
 
@@ -28,24 +28,26 @@ Run `mvn spring-boot:run` on a command line shell to build and start the project
 
 ### Login
 
-A login page is available at `/login`
+A login page is available at `http://localhost:8080/login`.\
+There are multiple users available by default, their names are found in `/src/main/resources/data.sql`.\
+The default password for all users is 'passwd'. 'admin' is the only user with administrative privileges.
 
-There are multiple users available by default, their names are found in `/src/main/resources/data.sql`. The default password for all users is 'passwd'.
+## Development
 
-'admin' is the only user with administrative privileges.
+### Back-end
 
-## Back-end Development
-
-### Dependencies
+#### Dependencies
 
 - JDK 17 or later
 - Maven
 
-The Java project should work out of the box in VSCode (with the Java and Spring Boot extensions) and IntelliJ Idea. If `yarn` fails to run during the build process, you may need to install Node.js on your machine. Additionally, try `mvn clean` as a troubleshooting step if Spring fails to start up for no apparent reason.
+The Java project should work out of the box in VSCode (with the Java and Spring Boot extensions) and IntelliJ Idea.\
+If `yarn` fails to run during the build process, you may need to install Node.js on your machine.\
+Additionally, try `mvn clean` as a troubleshooting step if Spring fails to start up for no apparent reason.
 
-## Front-end Development
+### Front-end
 
-### Dependencies
+#### Dependencies
 
 - Node.js 18 or later
 - yarn
@@ -58,9 +60,9 @@ For the development server to work, both Node.js and yarn must be installed on y
 
 For additional information, see [frontend/README.md](frontend/README.md)
 
-## Raspberry Pi (Access Point) Development
+### Raspberry Pi (Access Point)
 
-### Dependencies
+#### Dependencies
 
 - Python 3.9
 - pip3
@@ -70,9 +72,9 @@ The Python code found in [raspberry](raspberry/) should run just as well on most
 
 For additional information, see [raspberry/README.md](raspberry/README.md)
 
-## Arduino (Sensor Station) Development
+### Arduino (Sensor Station)
 
-### Dependencies
+#### Dependencies
 
 - VSCode with PlatformIO extension
 
