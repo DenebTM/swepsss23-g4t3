@@ -35,6 +35,7 @@ public class SensorStationRestController implements BaseRestController {
     private UserService userService;
 
     private static final String SS_PATH = "/sensor-stations";
+    private static final String SS_AP_PATH = AccessPointRestController.AP_NAME_PATH + SS_PATH;
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
@@ -46,6 +47,16 @@ public class SensorStationRestController implements BaseRestController {
     @GetMapping(value = SS_PATH)
     public ResponseEntity<Object> getAllSensorStations() {
         return ResponseEntity.ok(ssService.getAllSS());
+    }
+
+    /**
+     * Route to GET all sensor stations for a specified access point
+     * 
+     * @return List of all sensor stations
+     */
+    @GetMapping(value = SS_AP_PATH)
+    public ResponseEntity<Collection<SensorStation>> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
+        return ResponseEntity.ok(ssService.getSSForAccessPoint(apName));
     }
 
     /**
