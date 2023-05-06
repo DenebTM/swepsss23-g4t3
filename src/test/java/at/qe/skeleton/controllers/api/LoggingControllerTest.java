@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Collection;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class LoggingControllerTest {
@@ -21,7 +24,9 @@ public class LoggingControllerTest {
     @Autowired
     private LoggingService loggingService;
 
+    @DirtiesContext
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testGetAllLogs() {
         ResponseEntity logs = loggingController.getAllLogs();
         int numberOfLogs = loggingService.getAllLogs().size();
