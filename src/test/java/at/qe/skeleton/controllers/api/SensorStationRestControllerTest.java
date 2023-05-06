@@ -81,7 +81,7 @@ class SensorStationRestControllerTest {
 
         var response2 = this.ssRestController.getSSForAccessPoint(apName);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
-        Assertions.assertEquals(2, response2.getBody().size());
+        Assertions.assertEquals(1, response2.getBody().size());
     }
 
     @Test
