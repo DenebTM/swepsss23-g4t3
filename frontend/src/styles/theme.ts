@@ -124,7 +124,7 @@ const generateTheme = (mode: PaletteMode) => {
         styleOverrides: {
           root: {
             '&:before': {
-              backgroundColor: tokens.outlineVariant,
+              backgroundColor: 'transparent',
             },
           },
         },
