@@ -63,7 +63,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @GetMapping(value = SS_AP_PATH)
     public ResponseEntity<Object> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
-        // Return a 404 error if the sensor-station is not found
+        // Return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
             return HelperFunctions.notFoundError("Access point", String.valueOf(apName));
