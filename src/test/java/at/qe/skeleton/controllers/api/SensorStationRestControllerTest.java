@@ -85,6 +85,18 @@ class SensorStationRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testGetSSForAccessPoint404() {
+        String apName = "ksdjflsadjfl";
+        AccessPoint ap = new AccessPoint(apName);
+        apRepository.delete(ap);
+
+        var response = ssRestController.getSSForAccessPoint(apName);
+
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+    @Test
     void testGetSSById() {
         ResponseEntity response = this.ssRestController.getSSById(id);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
