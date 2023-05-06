@@ -12,7 +12,6 @@ import java.util.Set;
 public class SensorStation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "SS_ID")
     private Integer id;
 
