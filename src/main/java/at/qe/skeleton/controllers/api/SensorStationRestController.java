@@ -4,7 +4,6 @@ import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.*;
 import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.repositories.PhotoDataRepository;
-import at.qe.skeleton.repositories.SensorStationRepository;
 import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
@@ -41,6 +40,7 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
+    private static final String MEASUREMENTS_PATH = "/measurements";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -206,7 +206,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param json
      * @return List of historic measurements for given time frame or current/recent measurement
      */
-    @GetMapping(value = SS_ID_PATH + "/measurements")
+    @GetMapping(value = SS_ID_PATH + MEASUREMENTS_PATH)
     public ResponseEntity<Object> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
         Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
         Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
@@ -251,13 +251,13 @@ public class SensorStationRestController implements BaseRestController {
      * a route to Get a list of all current measurements
      * @return An object containing the returned measurements indexed by sensor station
      */
-    @GetMapping(value = "/measurements")
+    @GetMapping(value = MEASUREMENTS_PATH)
     public ResponseEntity<Object> getAllCurrentMeasurements(){
         return ResponseEntity.ok(ssService.getAllCurrentMeasurements());
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping(value = SS_ID_PATH + "/measurements")
+    @PostMapping(value = SS_ID_PATH + MEASUREMENTS_PATH)
     public ResponseEntity<Object> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
