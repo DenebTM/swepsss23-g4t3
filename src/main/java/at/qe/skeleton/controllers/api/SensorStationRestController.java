@@ -1,6 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.controllers.HelperFunctions;
+import at.qe.skeleton.controllers.errors.EntityNotFoundException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
@@ -67,7 +67,7 @@ public class SensorStationRestController implements BaseRestController {
         // Return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
-            return HelperFunctions.notFoundError("Access point", String.valueOf(apName));
+            throw new EntityNotFoundException("Access point", apName);
         }
 
         return ResponseEntity.ok(ssService.getSSForAccessPoint(apName));
@@ -84,7 +84,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return HelperFunctions.notFoundError(SS, String.valueOf(id));
+            throw new EntityNotFoundException(SS, id);
         }
 
         return ResponseEntity.ok(ss);
@@ -102,7 +102,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
-            return HelperFunctions.notFoundError(SS, String.valueOf(id));
+            throw new EntityNotFoundException(SS, id);
         }
         if (json.containsKey("status")) {
             try {
@@ -132,7 +132,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
-            return HelperFunctions.notFoundError(SS, String.valueOf(id));
+            throw new EntityNotFoundException(SS, id);
         }
         ssService.deleteSS(ss);
         return ResponseEntity.ok(ss);
@@ -148,7 +148,7 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<Object> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            return HelperFunctions.notFoundError(SS, String.valueOf(id));
+            throw new EntityNotFoundException(SS, id);
         }
         List<String> usernames = ssService.getGardenersBySS(ss);
         return ResponseEntity.ok(usernames);
@@ -166,10 +166,10 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            return HelperFunctions.notFoundError(SS, String.valueOf(id));
+            throw new EntityNotFoundException(SS, id);
         }
         if (user == null) {
-            return HelperFunctions.notFoundError("User", String.valueOf(username));
+            throw new EntityNotFoundException("User", username);
         }
         ss.getGardeners().add(user);
         return ResponseEntity.ok(ssService.saveSS(ss));
@@ -187,10 +187,10 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            return HelperFunctions.notFoundError(SS, String.valueOf(id));
+            throw new EntityNotFoundException(SS, id);
         }
         if (user == null) {
-            return HelperFunctions.notFoundError("User", String.valueOf(username));
+            throw new EntityNotFoundException("User", username);
         }
         ss.getGardeners().remove(user);
         ssService.saveSS(ss);
@@ -217,9 +217,10 @@ public class SensorStationRestController implements BaseRestController {
                 photoDataRepository.delete(maybePhoto.get());
                 return ResponseEntity.ok("Photo deleted");
             }
-            return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
+
+            throw new EntityNotFoundException("Photo", id);
         }
-        return HelperFunctions.notFoundError(SS, String.valueOf(id));
+        throw new EntityNotFoundException(SS, id);
     }
 
     /**
