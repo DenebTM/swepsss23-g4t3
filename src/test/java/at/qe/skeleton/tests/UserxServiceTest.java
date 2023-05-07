@@ -10,10 +10,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import at.qe.skeleton.models.enums.UserRole;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 
 /**
- * Some very basic tests for {@link UserService}.
+ * Some very basic tests for {@link UserxService}.
  *
  * This class is part of the skeleton project provided for students of the
  * course "Software Engineering" offered by the University of Innsbruck.
@@ -23,7 +23,7 @@ import at.qe.skeleton.services.UserService;
 public class UserxServiceTest {
 
     @Autowired
-    UserService userService;
+    UserxService userService;
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})

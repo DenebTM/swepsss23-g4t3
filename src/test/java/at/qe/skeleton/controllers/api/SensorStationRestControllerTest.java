@@ -6,7 +6,7 @@ import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.SensorStationService;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class SensorStationRestControllerTest {
     private AccessPointRepository apRepository;
 
     @Autowired
-    private UserService userService;
+    private UserxService userService;
 
     SensorStation ss;
     Integer id;
