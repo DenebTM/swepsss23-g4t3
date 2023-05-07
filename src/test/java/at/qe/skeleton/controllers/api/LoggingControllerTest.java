@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +29,7 @@ public class LoggingControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testGetAllLogs() {
-        ResponseEntity logs = loggingController.getAllLogs();
+        ResponseEntity logs = loggingController.getAllLogs(new HashMap<>());
         int numberOfLogs = loggingService.getAllLogs().size();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), logs.getStatusCode());
         try {

@@ -3,6 +3,7 @@ package at.qe.skeleton.repositories;
 import at.qe.skeleton.models.LoggingEvent;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,4 +14,10 @@ public interface LoggingEventRepository extends AbstractRepository<LoggingEvent,
 
     @Override
     List<LoggingEvent> findAll();
+
+    List<LoggingEvent> findAllByOrderByTimestmpDesc();
+
+    List<LoggingEvent> findAllByOrderByTimestmpAsc();
+
+    List<LoggingEvent> findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(LocalDateTime from, LocalDateTime to);
 }
