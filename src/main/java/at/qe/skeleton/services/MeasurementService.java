@@ -27,7 +27,7 @@ public class MeasurementService {
 
     public Measurement getCurrentMeasurement(Integer ssId) {
         SensorStation ss = ssRepository.findFirstById(ssId);
-        List<Measurement> measurements = measurementRepository.findFirstBySensorStationOrderByTimestamp(ss);
+        List<Measurement> measurements = measurementRepository.findFirstBySensorStationOrderByTimestampDesc(ss);
         if (!measurements.isEmpty()) {
             return measurements.get(0);
         }
@@ -36,7 +36,7 @@ public class MeasurementService {
 
     public List<Measurement> getAllCurrentMeasurements(){
         List<Measurement> result = new ArrayList<>();
-        List<Measurement> measurements = measurementRepository.findAllByOrderBySensorStationAscTimestampAsc();
+        List<Measurement> measurements = measurementRepository.findAllByOrderBySensorStationAscTimestampDesc();
         ArrayList<Integer> ssids = new ArrayList<>();
         for (Measurement m :
                 measurements) {
