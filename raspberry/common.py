@@ -6,6 +6,8 @@ sensor_station_name = "PH SensorStation"
 
 # global constants taken out of the BLE Communication Spec
 base_uuid = "0000{}-0000-1000-8000-00805f9b34fb"
+device_information_uuid = base_uuid.format("180a")
+
 air_pressure_uuid = base_uuid.format("2a6d")
 temperature_uuid = base_uuid.format("2a6e")
 humidity_uuid = base_uuid.format("2a6f")
@@ -32,9 +34,10 @@ sensor_uuids = {
     "soil_moisture": soil_moisture_uuid
 }
 
+known_sensorstations = {}
 
 # in seconds
-polling_interval = 10
+polling_interval = 30
 
 # Values taken from config.yaml file 
 try:
@@ -43,7 +46,7 @@ try:
         web_server_address = config["web_server_address"]
         web_server_address = "http://" + web_server_address
         access_point_name = config["access_point_name"]
-        access_point_address = web_server_address + access_point_name
+
 except:
     print("Caught Exception. Probably conf.yaml doesnt exist yet. Program will start with dev-config")
     with open("conf.example.yaml", "r") as f:
@@ -51,4 +54,4 @@ except:
         web_server_address = config["web_server_address"]
         web_server_address = "http://" + web_server_address
         access_point_name = config["access_point_name"]
-        access_point_address = web_server_address + access_point_name
+        access_point_address = web_server_address + "/" + access_point_name

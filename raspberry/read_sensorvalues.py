@@ -1,7 +1,6 @@
-import asyncio
-import sys
 from database_operations import save_sensor_values_to_database
 from bleak import BleakClient, BleakError
+import asyncio
 
 from db import db_conn
 
@@ -18,6 +17,6 @@ async def read_sensorvalues(sensorstation):
             soil_moisture = int.from_bytes(await client.read_gatt_char(common.soil_moisture_uuid), "little", signed=False)
             
             await save_sensor_values_to_database(sensorstation.name, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture)
-
+        await asyncio.sleep(30)
     except BleakError:
         pass #TODO 
