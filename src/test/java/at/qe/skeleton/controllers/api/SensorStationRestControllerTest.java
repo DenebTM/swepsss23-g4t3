@@ -1,7 +1,9 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +35,9 @@ class SensorStationRestControllerTest {
     private SensorStationService ssService;
 
     @Autowired
+    private AccessPointRepository apRepository;
+
+    @Autowired
     private UserService userService;
 
     SensorStation ss;
@@ -59,6 +64,36 @@ class SensorStationRestControllerTest {
         ResponseEntity response = this.ssRestController.getAllSensorStations();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         Assertions.assertEquals(number, ((Collection) response.getBody()).size());
+    }
+    
+    @Test
+    void testGetSSForAccessPoint() {
+        String apName = "AP Test";
+        AccessPoint apTest = apRepository.save(new AccessPoint(apName));
+
+        SensorStation ssTest = new SensorStation(apTest, 30L);
+        ssTest.setId(127);
+
+        var response = this.ssRestController.getSSForAccessPoint(apName);
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Assertions.assertEquals(0, ((Collection<?>)response.getBody()).size());
+        ssService.saveSS(ssTest);
+
+        var response2 = this.ssRestController.getSSForAccessPoint(apName);
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
+        Assertions.assertEquals(1, ((Collection<?>)response2.getBody()).size());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testGetSSForAccessPoint404() {
+        String apName = "ksdjflsadjfl";
+        AccessPoint ap = new AccessPoint(apName);
+        apRepository.delete(ap);
+
+        var response = ssRestController.getSSForAccessPoint(apName);
+
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
     }
 
     @Test

@@ -1,10 +1,10 @@
 package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.*;
-import at.qe.skeleton.models.enums.Status;
+import at.qe.skeleton.models.enums.SensorStationStatus;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,7 +12,6 @@ import java.util.Set;
 public class SensorStation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "SS_ID")
     private Integer id;
 
@@ -28,14 +27,15 @@ public class SensorStation {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
-    private Status status;
+    private SensorStationStatus status;
 
     @JsonBackReference
     @OneToMany(mappedBy = "sensorStation",
             fetch = FetchType.EAGER,
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
-    private Set<Measurement> measurements = new HashSet<>();
+    @OrderBy("timestamp asc")
+    private List<Measurement> measurements;
 
     @Column(name = "AGGREGATION_PERIOD", nullable = false)
     private Long aggregationPeriod;
@@ -50,10 +50,12 @@ public class SensorStation {
 
     @OneToOne
     @JoinColumn(name = "UPPER_VALUES_ID")
+    @JsonIgnoreProperties("id")
     private SensorValues upperBound;
 
     @OneToOne
     @JoinColumn(name = "LOWER_VALUES_ID")
+    @JsonIgnoreProperties("id")
     private SensorValues lowerBound;
 
     public SensorStation() {
@@ -72,11 +74,11 @@ public class SensorStation {
         return accessPoint;
     }
 
-    public Status getStatus() {
+    public SensorStationStatus getStatus() {
         return status;
     }
 
-    public Set<Measurement> getMeasurements() {
+    public List<Measurement> getMeasurements() {
         return measurements;
     }
 
@@ -100,11 +102,11 @@ public class SensorStation {
         this.accessPoint = accessPoint;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(SensorStationStatus status) {
         this.status = status;
     }
 
-    public void setMeasurements(Set<Measurement> measurements) {
+    public void setMeasurements(List<Measurement> measurements) {
         this.measurements = measurements;
     }
 
