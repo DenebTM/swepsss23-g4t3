@@ -4,23 +4,29 @@
 
 This project was created as part of the Software Engineering proseminar for the summer semester 2023 at the University of Innsbruck.
 
-The goal was to implement a system for monitoring greenhouses. The three main components of the system are described below; for more detailed information, please refer to the [project wiki](https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/home).
+Our task was to implement a system for remotely monitoring greenhouses. The four main parts of the system are described below - for more detailed information, please refer to the [project wiki](https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/home).
 
 ### Sensor station
 
-A sensor station is the combination of a mini greenhouse and an Arduino Nano, equipped with sensors to monitor the greenhouse's various vitals such as air quality, soil moisture and light level. It possesses a Bluetooth® Low Energy radio receiver/transmitter, which is used to communicate with an...
+A sensor station is the combination of a mini greenhouse and an Arduino Nano equipped with sensors to monitor the greenhouse's various metrics such as air quality, soil moisture and light level. The Arduino is in possession of a Bluetooth® Low Energy radio receiver/transmitter which is used to communicate with an access point.
 
 ### Access point
 
-This is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is to read the sensor values transmitted by multiple sensor stations, average data over a configurable period, and pass the averaged values onto the ReSt backend. Furthermore, it checks if each sensor station's sensor values are within acceptable (configurable) bounds, and commands the corresponding sensor station to emit a warning otherwise.
+The access point is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is to read the sensor values transmitted by multiple sensor stations, average data over a configurable period, and pass the averaged values onto the ReSt backend. Furthermore, it checks whether each sensor station's sensor values are within acceptable (configurable) bounds and instructs the corresponding sensor station to emit a warning otherwise.
 
 ### Backend
 
-This is a web server, based on the (awful) Spring web framework. It serves the frontend web app to the browser and provides a Representational State (ReSt) API for ongoing communication with the aforementioned access points and frontend.
+This is a web server, based on the Spring web framework. It serves the frontend web app to the browser and provides a Representational State (ReSt) API for ongoing communication with the aforementioned access points and frontend.
 
-This component is based on the swa-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, in-memory H2 database (TODO: replace with MySQL; see !112), basic functionality, and most of the Spring Security configuration.
+The backend is based on the swe-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, in-memory H2 database (TODO: replace with MySQL; see !112), basic functionality, and much of the Spring Security configuration.
 
-## Running the back- and front-end
+### Frontend
+
+The frontend is a web-based user interface that allows gardeners to manage their greenhouses, and admins to perform various administrative tasks. Unregistered users can anonymously view photos of greenhouses and add new ones, or sign up for an account should they be so inclined.
+
+See [frontend/README.md](frontend/README.md) for additional information.
+
+## Running the frontend and backend
 
 This project uses Java 17 and Node.js 18 (installed automatically as part of the build process).
 
@@ -30,22 +36,22 @@ Run `mvn spring-boot:run` on a command line shell to build and start the project
 
 A login page is available at `http://localhost:8080/login`.\
 There are multiple users available by default, their names are found in `/src/main/resources/data.sql`.\
-The default password for all users is 'passwd'. 'admin' is the only user with administrative privileges.
+The default password for all users is `passwd`. `admin` and `elvis` are the only users with administrative privileges.
 
 ## Development
 
-### Back-end
+### Backend
 
 #### Dependencies
 
 - JDK 17 or later
 - Maven
 
-The Java project should work out of the box in VSCode (with the Java and Spring Boot extensions) and IntelliJ Idea.\
+The Java project should work out-of-the-box in VSCode (with the Java and Spring Boot extensions) and IntelliJ Idea.\
 If `yarn` fails to run during the build process, you may need to install Node.js on your machine.\
 Additionally, try `mvn clean` as a troubleshooting step if Spring fails to start up for no apparent reason.
 
-### Front-end
+### Frontend
 
 #### Dependencies
 
@@ -54,9 +60,7 @@ Additionally, try `mvn clean` as a troubleshooting step if Spring fails to start
 
 A hot-reload-enabled React.js development server may be started from the [frontend](frontend/) directory using the shell command `yarn start` or `yarn mock`.
 
-The development server is accessible on `http://localhost:3000`. It will not respond to `/api` or `/handle-login`, but should work the same otherwise. Spring is set up to accept CORS requests and cookies from this URL, meaning that there should be no problems with login or authorization.
-
-For the development server to work, both Node.js and yarn must be installed on your machine (the latter may in most cases be installed by `npm install --global yarn`).
+The development server is accessible on `http://localhost:3000`. Spring is set up to accept CORS requests and cookies from this URL, meaning that there should be no problems with login or authorization.
 
 For additional information, see [frontend/README.md](frontend/README.md)
 
@@ -68,7 +72,7 @@ For additional information, see [frontend/README.md](frontend/README.md)
 - pip3
 - ... (see [raspberry/README.md](raspberry/README.md))
 
-The Python code found in [raspberry](raspberry/) should run just as well on most Linux computers equipped with Bluetooth® 4.0 or later, but Bleak may not be compatible with all Bluetooth® adapters.
+The Python code found in [raspberry](raspberry/) should run on most Linux computers equipped with Bluetooth® 4.0 or later, but Bleak may not be compatible with all Bluetooth® adapters.
 
 For additional information, see [raspberry/README.md](raspberry/README.md)
 
@@ -90,7 +94,7 @@ Team members:
 - REDACTED-3 (Backend)
 - REDACTED-4 (Backend)
 
-### swa-skeleton: provided by UIBK
+### swe-skeleton: provided by UIBK
 
 Contributors:
 Christian Sillaber,
