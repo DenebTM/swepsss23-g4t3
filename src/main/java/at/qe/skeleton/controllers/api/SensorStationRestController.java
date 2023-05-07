@@ -1,8 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.errors.BadRequestException;
-import at.qe.skeleton.controllers.errors.EntityNotFoundException;
-import at.qe.skeleton.controllers.errors.UnauthorizedException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
@@ -15,6 +14,7 @@ import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,7 +68,7 @@ public class SensorStationRestController implements BaseRestController {
         // Return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
-            throw new EntityNotFoundException("Access point", apName);
+            throw new NotFoundInDatabaseException("Access point", apName);
         }
 
         return ResponseEntity.ok(ssService.getSSForAccessPoint(apName));
@@ -85,7 +85,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            throw new EntityNotFoundException(SS, id);
+            throw new NotFoundInDatabaseException(SS, id);
         }
 
         return ResponseEntity.ok(ss);
@@ -103,7 +103,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
-            throw new EntityNotFoundException(SS, id);
+            throw new NotFoundInDatabaseException(SS, id);
         }
         if (json.containsKey("status")) {
             try {
@@ -133,7 +133,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
-            throw new EntityNotFoundException(SS, id);
+            throw new NotFoundInDatabaseException(SS, id);
         }
         ssService.deleteSS(ss);
         return ResponseEntity.ok(ss);
@@ -149,7 +149,7 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            throw new EntityNotFoundException(SS, id);
+            throw new NotFoundInDatabaseException(SS, id);
         }
         List<String> usernames = ssService.getGardenersBySS(ss);
         return ResponseEntity.ok(usernames);
@@ -167,10 +167,10 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            throw new EntityNotFoundException(SS, id);
+            throw new NotFoundInDatabaseException(SS, id);
         }
         if (user == null) {
-            throw new EntityNotFoundException("User", username);
+            throw new NotFoundInDatabaseException("User", username);
         }
         ss.getGardeners().add(user);
         return ResponseEntity.ok(ssService.saveSS(ss));
@@ -188,10 +188,10 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            throw new EntityNotFoundException(SS, id);
+            throw new NotFoundInDatabaseException(SS, id);
         }
         if (user == null) {
-            throw new EntityNotFoundException("User", username);
+            throw new NotFoundInDatabaseException("User", username);
         }
         ss.getGardeners().remove(user);
         ssService.saveSS(ss);
@@ -211,7 +211,7 @@ public class SensorStationRestController implements BaseRestController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             if (!gardeners.contains(currentPrincipalName) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN"))) {
-                throw new UnauthorizedException("Gardener is not assigned to Sensor Station.");
+                throw new AccessDeniedException("Gardener is not assigned to Sensor Station.");
             }
             Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
             if (maybePhoto.isPresent()) {
@@ -219,9 +219,9 @@ public class SensorStationRestController implements BaseRestController {
                 return ResponseEntity.ok("Photo deleted");
             }
 
-            throw new EntityNotFoundException("Photo", id);
+            throw new NotFoundInDatabaseException("Photo", id);
         }
-        throw new EntityNotFoundException(SS, id);
+        throw new NotFoundInDatabaseException(SS, id);
     }
 
     /**

@@ -1,7 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.errors.BadRequestException;
-import at.qe.skeleton.controllers.errors.EntityNotFoundException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
@@ -43,7 +43,7 @@ public class AccessPointRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(name);
         // Return a 404 error if the access point is not found
         if (ap == null) {
-            throw new EntityNotFoundException(AP, name);
+            throw new NotFoundInDatabaseException(AP, name);
         }
         return ResponseEntity.ok(ap);
     }
@@ -60,7 +60,7 @@ public class AccessPointRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(name);
         // return a 404 error if the access point to be updated does not exist
         if (ap == null) {
-            throw new EntityNotFoundException(AP, name);
+            throw new NotFoundInDatabaseException(AP, name);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("name")) {
@@ -88,7 +88,7 @@ public class AccessPointRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(name);
         // return a 404 error if the access point to be deleted does not exist
         if (ap == null) {
-            throw new EntityNotFoundException(AP, name);
+            throw new NotFoundInDatabaseException(AP, name);
         }
         apService.deleteAP(ap);
         return ResponseEntity.ok(ap);
