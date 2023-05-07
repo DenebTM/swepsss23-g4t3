@@ -13,6 +13,7 @@ import java.sql.*;
 /**
  * Tests logging with logback in four different cases: writing info, warning and error messages to a file
  * separately and logging to the database.
+ * Maybe have a look at: https://mincong.io/2020/02/02/logback-test-logging-event/
  */
 @SpringBootTest
 @WebAppConfiguration
