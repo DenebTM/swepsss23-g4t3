@@ -2,6 +2,7 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.AccessPoint;
+import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,10 +63,14 @@ public class AccessPointRestController implements BaseRestController {
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("name")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("AP names are final and cannot be updated.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("AP names are final and cannot be changed");
         }
-        if (json.containsKey("active")) {
-            ap.setActive((Boolean)json.get("active"));
+        if (json.containsKey("status")) {
+            try {
+                ap.setStatus(AccessPointStatus.valueOf((String)json.get("status")));
+            } catch (IllegalArgumentException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid status given");
+            }
         }
         return ResponseEntity.ok(apService.saveAP(ap));
     }
