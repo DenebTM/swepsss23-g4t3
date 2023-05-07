@@ -6,12 +6,11 @@ import common
 
 
 #Should return a dictionary of all found sensorstations with key = name, value = ID
-#await scanner.stop() is to end process for sure so it doesnt conflict 
 async def search_for_sensorstations():
     try:
         sensorstations = {}
         async with BleakScanner() as scanner:
-            await scanner.stop()
+            await scanner.stop() # end scanning process for sure to avoid conflicts
             devices = await scanner.discover()
             for d in devices:
                 if common.sensor_station_name in d.name:

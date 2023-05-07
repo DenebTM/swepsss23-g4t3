@@ -35,10 +35,11 @@ async def sensor_station_manager(connection_request, session):
         sensorstations = await get_sensorstation_instructions(session)
         for ss, status in sensorstations.items():
             if status == "OFFLINE":
-                try:
-                    tasks[ss].cancel()
-                except:
-                    print(f"task_not_found", ss)
+                if ss in tasks:
+                    try:
+                        tasks[ss].cancel()
+                    except:
+                        print(f"error canceling task for", ss)
             elif status == "PAIRING":
                 task = asyncio.create_task(sensor_station_task(connection_request, session, ss))
                     
