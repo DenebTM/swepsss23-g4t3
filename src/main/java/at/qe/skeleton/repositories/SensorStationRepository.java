@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 public interface SensorStationRepository extends AbstractRepository<SensorStation, Long>{
 
