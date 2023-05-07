@@ -17,6 +17,7 @@ public class AccessPointRestController implements BaseRestController {
     @Autowired
     private AccessPointService apService;
 
+    private static final String AP = "Access point";
     private static final String AP_PATH = "/access-points";
     private static final String AP_NAME_PATH = AP_PATH + "/{name}";
 
@@ -40,7 +41,7 @@ public class AccessPointRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(name);
         // Return a 404 error if the access point is not found
         if (ap == null) {
-            return HelperFunctions.notFoundError("Access point", name);
+            return HelperFunctions.notFoundError(AP, name);
         }
         return ResponseEntity.ok(ap);
     }
@@ -57,7 +58,7 @@ public class AccessPointRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(name);
         // return a 404 error if the access point to be updated does not exist
         if (ap == null) {
-            return HelperFunctions.notFoundError("Access point", name);
+            return HelperFunctions.notFoundError(AP, name);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("name")) {
@@ -81,7 +82,7 @@ public class AccessPointRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(name);
         // return a 404 error if the access point to be deleted does not exist
         if (ap == null) {
-            return HelperFunctions.notFoundError("Access point", name);
+            return HelperFunctions.notFoundError(AP, name);
         }
         apService.deleteAP(ap);
         return ResponseEntity.ok(ap);
