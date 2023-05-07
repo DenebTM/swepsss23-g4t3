@@ -6,7 +6,7 @@ import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.models.enums.Status;
+import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorStationService;
@@ -106,7 +106,7 @@ public class SensorStationRestController implements BaseRestController {
         }
         if (json.containsKey("status")) {
             try {
-                ss.setStatus(Status.valueOf((String) json.get("status")));
+                ss.setStatus(SensorStationStatus.valueOf((String) json.get("status")));
             } catch (IllegalArgumentException e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status does not exist.");
             }
