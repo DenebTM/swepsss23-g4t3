@@ -22,5 +22,5 @@ public interface MeasurementRepository extends AbstractRepository<Measurement, L
 
     List<Measurement> findFirstBySensorStationOrderByTimestamp(SensorStation sensorStation);
 
-    List<Measurement> findAllByOrderBySensorStationAsc();
+    List<Measurement> findAllByOrderBySensorStationAscTimestampAsc();
 }

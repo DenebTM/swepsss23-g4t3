@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,6 +35,16 @@ public class MeasurementService {
     }
 
     public List<Measurement> getAllCurrentMeasurements(){
-        return measurementRepository.findAllByOrderBySensorStationAsc();
+        List<Measurement> result = new ArrayList<>();
+        List<Measurement> measurements = measurementRepository.findAllByOrderBySensorStationAscTimestampAsc();
+        ArrayList<Integer> ssids = new ArrayList<>();
+        for (Measurement m :
+                measurements) {
+            if (!ssids.contains(m.getSensorStation().getId())) {
+                ssids.add(m.getSensorStation().getId());
+                result.add(m);
+            }
+        }
+        return result;
     }
 }
