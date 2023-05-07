@@ -1,5 +1,4 @@
 import database_operations
-from check_thresholds import check_values_for_thresholds
 from bleak import BleakError
 import asyncio
 import json
