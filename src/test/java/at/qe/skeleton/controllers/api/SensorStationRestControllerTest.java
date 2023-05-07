@@ -12,12 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +59,9 @@ class SensorStationRestControllerTest {
     @Test
     void testGetAllSensorStations() {
         int number = ssService.getAllSS().size();
-        ResponseEntity response = this.ssRestController.getAllSensorStations();
+        var response = this.ssRestController.getAllSensorStations();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(number, ((Collection) response.getBody()).size());
+        Assertions.assertEquals(number, response.getBody().size());
     }
     
     @Test
@@ -76,12 +74,12 @@ class SensorStationRestControllerTest {
 
         var response = this.ssRestController.getSSForAccessPoint(apName);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(0, ((Collection<?>)response.getBody()).size());
+        Assertions.assertEquals(0, response.getBody().size());
         ssService.saveSS(ssTest);
 
         var response2 = this.ssRestController.getSSForAccessPoint(apName);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
-        Assertions.assertEquals(1, ((Collection<?>)response2.getBody()).size());
+        Assertions.assertEquals(1, response2.getBody().size());
     }
 
     @Test
@@ -98,14 +96,14 @@ class SensorStationRestControllerTest {
 
     @Test
     void testGetSSById() {
-        ResponseEntity response = this.ssRestController.getSSById(id);
+        var response = this.ssRestController.getSSById(id);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         Assertions.assertTrue(response.getBody() instanceof SensorStation);
         if (response.getBody() instanceof SensorStation){
-            Assertions.assertEquals(id, ((SensorStation) response.getBody()).getId());
+            Assertions.assertEquals(id, response.getBody().getId());
         }
         // if ss id does not exist in database, 404 not found error
-        ResponseEntity response404 = this.ssRestController.getSSById(9999);
+        var response404 = this.ssRestController.getSSById(9999);
         Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
@@ -119,10 +117,10 @@ class SensorStationRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteSSById() {
         int originalSize = ssService.getAllSS().size();
-        ResponseEntity response404 = this.ssRestController.deleteSSById(99999);
+        var response404 = this.ssRestController.deleteSSById(99999);
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
 
-        ResponseEntity response = this.ssRestController.deleteSSById(id);
+        var response = this.ssRestController.deleteSSById(id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertEquals(originalSize-1, ssService.getAllSS().size());
         response404 = this.ssRestController.getSSById(id);
@@ -132,12 +130,12 @@ class SensorStationRestControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetGardenersBySS() {
-        ResponseEntity response404 = this.ssRestController.getGardenersBySS(99999);
+        var response404 = this.ssRestController.getGardenersBySS(99999);
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
 
-        ResponseEntity response = this.ssRestController.getGardenersBySS(id);
+        var response = this.ssRestController.getGardenersBySS(id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertEquals(ss.getGardeners().contains(susi), ((List) response.getBody()).contains(username));
+        assertEquals(ss.getGardeners().contains(susi), response.getBody().contains(username));
     }
 
     @DirtiesContext
@@ -146,14 +144,14 @@ class SensorStationRestControllerTest {
     void testAssignGardenerToSS() {
         List<String> originalNames = ssService.getGardenersBySS(ss);
         int originalSize = originalNames.size();
-        ResponseEntity response = this.ssRestController.assignGardenerToSS(id,username);
+        var response = this.ssRestController.assignGardenerToSS(id,username);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         if (!originalNames.contains(username)){
-            assertEquals(originalSize+1, ((SensorStation) response.getBody()).getGardeners().size());
+            assertEquals(originalSize+1, response.getBody().getGardeners().size());
         } else {
-            assertEquals(originalSize, ((SensorStation) response.getBody()).getGardeners().size());
+            assertEquals(originalSize, response.getBody().getGardeners().size());
         }
-        ResponseEntity response404 = this.ssRestController.assignGardenerToSS(99999, username);
+        var response404 = this.ssRestController.assignGardenerToSS(99999, username);
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
         response404 = this.ssRestController.assignGardenerToSS(id, "notExistingUsername");
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
@@ -166,12 +164,12 @@ class SensorStationRestControllerTest {
     void testRemoveGardenerFromSS() {
         List<String> originalNames = ssService.getGardenersBySS(ss);
         int originalSize = originalNames.size();
-        ResponseEntity response = this.ssRestController.removeGardenerFromSS(id,username);
+        var response = this.ssRestController.removeGardenerFromSS(id,username);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         if (originalNames.contains(username)){
-            assertEquals(originalSize-1, ((SensorStation) response.getBody()).getGardeners().size());
+            assertEquals(originalSize-1, response.getBody().getGardeners().size());
         }
-        ResponseEntity response404 = this.ssRestController.removeGardenerFromSS(99999, username);
+        var response404 = this.ssRestController.removeGardenerFromSS(99999, username);
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
         response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
