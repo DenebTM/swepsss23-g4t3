@@ -9,5 +9,6 @@ public class HelperFunctions {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(object + " \"" + id + "\" does not exist.");
     }
 
-
+    private HelperFunctions() {
+    }
 }

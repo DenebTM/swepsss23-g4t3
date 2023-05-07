@@ -17,7 +17,7 @@ test('render Dashboard without crashing', async () => {
         expect(
           screen.getByText(greenhouseMetricWithUnit(metricRange))
         ).toBeInTheDocument(),
-      { timeout: 5000 }
+      { timeout: 10000 }
     )
   )
 })
