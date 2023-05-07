@@ -1,11 +1,13 @@
-from flask import Flask,jsonify
-import time 
+from flask import Flask,jsonify, request
+import time
+
+sensorstations = []
 
 app = Flask(__name__)
 status_called = False
 
 #Route that initiates connection
-@app.route('/access-points/', methods=['POST'])
+@app.route('/access-points', methods=['POST'])
 def status():
     global status_called
     status_called = True
@@ -13,11 +15,13 @@ def status():
     return jsonify(response), 200
 
 #Route that polls for connection-update
-@app.route('/access-points/1/', methods=['GET'])
+@app.route('/access-points/'+ 'AP1', methods=['GET'])
 def accesspoint_connection():
-    if status_called: 
-        if int(time.time()) >= time_now + 300:
+    if status_called:
+        if int(time.time()) >= time_now + 10 and int(time.time()) <= time_now + 70:
             response = {'status': 'offline'}
+        elif (int(time.time())) >= time_now + 70:
+            response = {'status': 'online'}
         else:
             response = {'status': 'searching'}
         return jsonify(response), 200
@@ -60,13 +64,22 @@ def thresshold_update():
         return jsonify('Forbidden'), 401
 
 # Route that asks for Instructions for each Sensorstation
-@app.route('/access-points/1/sensor-stations/', methods=['GET'])
+@app.route('/access-points/AP1/sensor-stations', methods=['GET'])
 def ask_for_instructions_ss():
     if status_called:
         response = [
-            {201: 'OFFLINE'},
-            {202: 'ONLINE'},
-            {103: 'PAIRING'}
+            {
+                "id": 101,
+                "status": "AVAILABLE"
+            },
+            {
+                "id": 102,
+                "status": "AVAILABLE"
+            },
+            {
+                "id": 103,
+                "status": "AVAILABLE"
+            }
         ]
 
         return jsonify(response), 200
@@ -88,6 +101,18 @@ def send_sensor_failures():
         return jsonify('OK'), 200
     else:
         return jsonify('Forbidden'), 401
+
+#Route to send back the Sensorstations
+@app.route('/access-points/AP1/sensor-stations', methods=['POST'])
+def send_found_ss():
+    global sensorstations
+    if status_called:
+        json_data = request.get_json()
+        sensorstations.append(json_data)
+        return jsonify('OK'), 200
+    else:
+        return jsonify('Forbidden'), 401
+
     
 
 #Route to send sensor data
