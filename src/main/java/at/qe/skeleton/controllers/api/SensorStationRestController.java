@@ -4,6 +4,8 @@ import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.*;
 import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.repositories.SensorStationRepository;
+import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +33,8 @@ public class SensorStationRestController implements BaseRestController {
     private PhotoDataRepository photoDataRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SensorValuesRepository sensorValuesRepository;
 
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
@@ -270,15 +274,15 @@ public class SensorStationRestController implements BaseRestController {
         } catch (DateTimeException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid timestamp.");
         }
+        json.remove("timestamp");
 
-        // convert sensorValues to a map to make it easier to work with
         var mapper = new ObjectMapper();
-        @SuppressWarnings("unchecked")
-        SensorValues newValues = mapper.convertValue(json, SensorValues.class);
-
-
-
-        newMeasurement.setSensorValues(newValues);
+        try {
+            SensorValues newValues = mapper.convertValue(json, SensorValues.class);
+            newMeasurement.setSensorValues(sensorValuesRepository.save(newValues));
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body("Invalid sensor values.");
+        }
 
         return ResponseEntity.ok(ssService.saveMeasurement(newMeasurement));
     }
