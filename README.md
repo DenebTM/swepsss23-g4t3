@@ -60,7 +60,7 @@ Additionally, try `mvn clean` as a troubleshooting step if Spring fails to start
 
 A hot-reload-enabled React.js development server may be started from the [frontend](frontend/) directory using the shell command `yarn start` or `yarn mock`.
 
-The development server is accessible on `http://localhost:3000`. Spring is set up to accept CORS requests and cookies from this URL, meaning that there should be no problems with login or authorization.
+The development server is accessible at `http://localhost:3000`. Spring is set up to accept CORS requests and cookies from this URL, meaning that there should be no problems with login or authorization.
 
 For additional information, see [frontend/README.md](frontend/README.md)
 
