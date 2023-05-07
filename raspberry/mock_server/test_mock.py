@@ -8,17 +8,14 @@ print(response.json())
 response = requests.get(f'{base_url}/access-points/AP1')
 print(response.json())
 
-response = requests.get(f'{base_url}/access-points/AP1/sensor-stations/1')
+response = requests.get(f'{base_url}/sensor-stations/101')
 print(response.json())
 
 response = requests.get(f'{base_url}/access-points/AP1/sensor-stations')
 print(response.json())
 
-response = requests.put(f'{base_url}/sensor-stations/101')
+response = requests.post(f'{base_url}/sensor-stations/101', json=[{"id": "101", "status": "AVAILABLE"}])
 print(response.json())
 
-response = requests.put(f'{base_url}/access-points/AP1/sensor-stations/101')
-print(response.json())
-
-response = requests.post(f'{base_url}/access-points/AP1/sensor-stations/101')
+response = requests.put(f'{base_url}/sensor-stations/101', json=[{"id": "101", "status": "OFFLINE"}])
 print(response.json())

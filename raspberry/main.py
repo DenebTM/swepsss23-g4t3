@@ -41,12 +41,12 @@ async def sensor_station_manager(connection_request, session):
                 if not ss_id in ss_tasks:
                     task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id))
                     ss_tasks[ss_id] = task
-            if status == 'OFFLINE':
-                try:
-                    ss_tasks[ss_id].cancel()
-                    del ss_tasks[ss_id]
-                except:
-                    print(f'task not found for SS', ss_id)
+            elif status == 'OFFLINE':
+                if ss_id in ss_tasks:
+                    try:
+                        ss_tasks[ss_id].cancel()
+                    except:
+                        print(f"error canceling task for", ss_id)
                     
         print('Finished SS Manager Loop')
         await asyncio.sleep(10)
