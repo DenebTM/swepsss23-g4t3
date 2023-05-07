@@ -38,7 +38,7 @@ public class SensorStation {
     private List<Measurement> measurements;
 
     @Column(name = "AGGREGATION_PERIOD", nullable = false)
-    private Long aggregationPeriod;
+    private Long aggregationPeriod = 30L;
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
     @JsonIdentityReference(alwaysAsId = true)
