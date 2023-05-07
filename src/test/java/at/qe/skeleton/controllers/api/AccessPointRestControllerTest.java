@@ -1,7 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.controllers.errors.EntityNotFoundException;
-import at.qe.skeleton.controllers.errors.UnauthorizedException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
@@ -63,7 +62,7 @@ class AccessPointRestControllerTest {
 
         // if ap id does not exist in database, 404 not found error
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> apRestController.getAPByName("notExistingAPName")
         );
     }
@@ -85,7 +84,7 @@ class AccessPointRestControllerTest {
 
         // if ap id does not exist in database, 404 not found error
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> apRestController.updateAP("notExistingAPName", jsonUpdateAP)
         );
     }
@@ -102,7 +101,7 @@ class AccessPointRestControllerTest {
 
         // if ap id does not exist in database, 404 not found error
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> apRestController.getAPByName(name),
             "AccessPoint is still found in database after being deleted."
         );

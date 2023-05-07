@@ -1,6 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.controllers.errors.EntityNotFoundException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
@@ -91,7 +91,7 @@ class SensorStationRestControllerTest {
         apRepository.delete(ap);
 
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.getSSForAccessPoint(apName)
         );
     }
@@ -107,7 +107,7 @@ class SensorStationRestControllerTest {
 
         // if ss id does not exist in database, 404 not found error
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.getSSById(99999)
         );
     }
@@ -128,7 +128,7 @@ class SensorStationRestControllerTest {
         assertEquals(originalSize-1, ssService.getAllSS().size());
 
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.getSSById(id),
             "Sensor station is still found in database after being deleted."
         );
@@ -142,7 +142,7 @@ class SensorStationRestControllerTest {
         assertEquals(ss.getGardeners().contains(susi), response.getBody().contains(username));
 
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.getGardenersBySS(99999)
         );
     }
@@ -162,12 +162,12 @@ class SensorStationRestControllerTest {
         }
 
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.assignGardenerToSS(99999, username)
         );
 
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.assignGardenerToSS(id, "notExistingUsername")
         );
     }
@@ -185,12 +185,12 @@ class SensorStationRestControllerTest {
         }
         
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.removeGardenerFromSS(99999, username)
         );
 
         assertThrows(
-            EntityNotFoundException.class,
+            NotFoundInDatabaseException.class,
             () -> this.ssRestController.removeGardenerFromSS(id, "notExistingUsername")
         );
     }
