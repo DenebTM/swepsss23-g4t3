@@ -46,6 +46,15 @@ public class AccessPointRestController implements BaseRestController {
         return ResponseEntity.ok(ap);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = AP_PATH)
+    public ResponseEntity<Object> createAP(@RequestBody Map<String, Object> json) {
+        AccessPoint newAP = new AccessPoint();
+
+
+        return ResponseEntity.ok(apService.saveAP(newAP));
+    }
+
     /**
      * a PUT route to update an existing access point
      * @param name
