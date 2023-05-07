@@ -39,6 +39,16 @@ public class SensorStationService {
     }
 
     /**
+     * Loads all sensor stations connected to a specified access point
+     * 
+     * @param apName name of access point
+     * @return sensor stations belonging to access point with given name
+     */
+    public Collection<SensorStation> getSSForAccessPoint(String apName) {
+        return ssRepository.findByApName(apName);
+    }
+
+    /**
      * saves a sensor station into database
      * @param ss the sensor station to save
      * @return the saved sensor station
