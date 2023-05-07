@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -152,7 +153,7 @@ public class UserxServiceTest {
     @Test
     public void testUnauthenticatedLoadUsers() {
         Assertions.assertThrows(
-            AccessDeniedException.class,
+            AuthenticationCredentialsNotFoundException.class,
             () -> userService.getAllUsers(),
             "Call to userService.getAllUsers should not work without proper authorization"
         );
