@@ -1,6 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.models.AccessPoint;
+import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,35 +31,37 @@ class AccessPointRestControllerTest {
     @Autowired
     private AccessPointRestController apRestController;
 
-    AccessPoint ap;
     String name;
-    Map<String, Object> jsonUpdateAP = new HashMap<>();
+    AccessPoint ap;
+    Map<String, Object> jsonUpdateAP;
 
     @BeforeEach
     void setUp() {
         name = "AP 1";
         ap = apService.loadAPByName(name);
-        jsonUpdateAP.put("active", true);
+
+        jsonUpdateAP = new HashMap<>();
+        jsonUpdateAP.put("status", "ONLINE");
     }
 
     @Test
     void testGetAllAccessPoints() {
         int number = apService.getAllAP().size();
-        ResponseEntity response = this.apRestController.getAllAccessPoints();
+        ResponseEntity<?> response = this.apRestController.getAllAccessPoints();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(number, ((Collection) response.getBody()).size());
+        Assertions.assertEquals(number, ((Collection<?>) response.getBody()).size());
     }
 
     @Test
     void testGetAPById() {
-        ResponseEntity response = this.apRestController.getAPByName(name);
+        ResponseEntity<?> response = this.apRestController.getAPByName(name);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertTrue(response.getBody() instanceof AccessPoint);
         if (response.getBody() instanceof AccessPoint){
             assertEquals(name, ((AccessPoint) response.getBody()).getName());
         }
         // if ap id does not exist in database, 404 not found error
-        ResponseEntity response404 = this.apRestController.getAPByName("notExistingAPName");
+        ResponseEntity<?> response404 = this.apRestController.getAPByName("notExistingAPName");
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
@@ -66,15 +69,18 @@ class AccessPointRestControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateAP() {
-        ResponseEntity response = this.apRestController.updateAP(name, jsonUpdateAP);
+        ResponseEntity<?> response = this.apRestController.updateAP(name, jsonUpdateAP);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertTrue(response.getBody() instanceof AccessPoint);
         if (response.getBody() instanceof AccessPoint){
-            assertEquals(name, ((AccessPoint) response.getBody()).getName());
-            assertEquals(jsonUpdateAP.get("active"), ((AccessPoint) response.getBody()).getActive());
+            assertEquals(name, ((AccessPoint)response.getBody()).getName());
+            assertEquals(
+                AccessPointStatus.valueOf((String)jsonUpdateAP.get("status")),
+                ((AccessPoint)response.getBody()).getStatus()
+            );
         }
         // if ap id does not exist in database, 404 not found error
-        ResponseEntity response404 = this.apRestController.updateAP("notExistingAPName", jsonUpdateAP);
+        ResponseEntity<?> response404 = this.apRestController.updateAP("notExistingAPName", jsonUpdateAP);
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
     }
 
@@ -83,10 +89,10 @@ class AccessPointRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteAPById() {
         int originalSize = apService.getAllAP().size();
-        ResponseEntity response404 = this.apRestController.deleteAPById("notExistingAPName");
+        ResponseEntity<?> response404 = this.apRestController.deleteAPById("notExistingAPName");
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
 
-        ResponseEntity response = this.apRestController.deleteAPById(name);
+        ResponseEntity<?> response = this.apRestController.deleteAPById(name);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertEquals(originalSize-1, apService.getAllAP().size());
         response404 = this.apRestController.getAPByName(name);
@@ -97,7 +103,7 @@ class AccessPointRestControllerTest {
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedDeleteAP() {
         try {
-            ResponseEntity response = this.apRestController.deleteAPById(name);
+            ResponseEntity<?> response = this.apRestController.deleteAPById(name);
             Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
         } catch (Exception e) {
             Assertions.assertTrue(e instanceof AccessDeniedException);
