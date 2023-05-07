@@ -1,0 +1,5 @@
+Resistor network: https://forum.fritzing.org/t/8-resistor-network-bussed/14069
+Soil moisture sensor: https://github.com/OgreTransporter/fritzing-parts-extra/blob/master/DFRobot_Capacitive_Soil_Moisture_Sensor_V1.0.fzpz
+BME680: https://github.com/adafruit/Fritzing-Library
+
+Retrieved 2023-03-19

@@ -2,11 +2,13 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.PhotoData;
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.models.enums.Status;
+import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +31,19 @@ public class SensorStationRestController implements BaseRestController {
 
     @Autowired
     private SensorStationService ssService;
+
+    @Autowired
+    private AccessPointService apService;
+
     @Autowired
     private PhotoDataRepository photoDataRepository;
+
     @Autowired
     private UserService userService;
 
+    private static final String SS = "Sensor station";
     private static final String SS_PATH = "/sensor-stations";
+    private static final String SS_AP_PATH = AccessPointRestController.AP_NAME_PATH + SS_PATH;
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
@@ -49,6 +58,22 @@ public class SensorStationRestController implements BaseRestController {
     }
 
     /**
+     * Route to GET all sensor stations for a specified access point
+     * 
+     * @return List of all sensor stations
+     */
+    @GetMapping(value = SS_AP_PATH)
+    public ResponseEntity<Object> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
+        // Return a 404 error if the access point is not found
+        AccessPoint ap = apService.loadAPByName(apName);
+        if (ap == null) {
+            return HelperFunctions.notFoundError("Access point", String.valueOf(apName));
+        }
+
+        return ResponseEntity.ok(ssService.getSSForAccessPoint(apName));
+    }
+
+    /**
      * Route to GET a specific sensor-station by its ID
      * @param id
      * @return sensor station
@@ -59,10 +84,39 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
 
         return ResponseEntity.ok(ss);
+    }
+
+    /**
+     * Route to add a list of sensor stations to the db
+     * 
+     * This is used by the access point to report found sensor stations
+     * while it is in SEARCHING Mode
+     *
+     * @param newSSList list of new sensor stations
+     * @return the new sensor stations as added to the database
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = SS_AP_PATH)
+    public ResponseEntity<Object> addSS(
+        @PathVariable(value = "name") String apName,
+        @RequestBody Collection<SensorStation> newSSList
+    ) {
+        // Return a 404 error if the access point is not found
+        AccessPoint ap = apService.loadAPByName(apName);
+        if (ap == null) {
+            return HelperFunctions.notFoundError("Access point", String.valueOf(apName));
+        }
+
+        List<SensorStation> retSSList = new ArrayList<>();
+        for (SensorStation newSS : newSSList) {
+            newSS.setAccessPoint(ap);
+            retSSList.add(ssService.saveSS(newSS));
+        }
+        return ResponseEntity.ok(retSSList);
     }
 
     /**
@@ -71,17 +125,17 @@ public class SensorStationRestController implements BaseRestController {
      * @param json
      * @return updated sensor station
      */
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         if (json.containsKey("status")) {
             try {
-                ss.setStatus(Status.valueOf((String) json.get("status")));
+                ss.setStatus(SensorStationStatus.valueOf((String) json.get("status")));
             } catch (IllegalArgumentException e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status does not exist.");
             }
@@ -107,7 +161,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         ssService.deleteSS(ss);
         return ResponseEntity.ok(ss);
@@ -123,7 +177,7 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<Object> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         List<String> usernames = ssService.getGardenersBySS(ss);
         return ResponseEntity.ok(usernames);
@@ -141,7 +195,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         if (user == null) {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
@@ -162,7 +216,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         if (user == null) {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
@@ -194,7 +248,7 @@ public class SensorStationRestController implements BaseRestController {
             }
             return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
         }
-        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
+        return HelperFunctions.notFoundError(SS, String.valueOf(id));
     }
 
     /**

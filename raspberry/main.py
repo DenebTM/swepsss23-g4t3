@@ -30,65 +30,63 @@ ss_tasks = {}
 async def sensor_station_manager(connection_request, session):
     global ss_tasks
     while not connection_request.done():
-        sensorstations = await get_sensorstation_instructions(session)
-        for ss_id, status in sensorstations.items():
-            ss_id = int(ss_id)
-            if status == 'ONLINE':
-                if ss_id in common.known_ss and not ss_id in ss_tasks:
-                    task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id))
-                    ss_tasks[ss_id] = task
-            elif status == 'PAIRING':
+        assigned_ss = await get_sensorstation_instructions(session)
+        for ss_id in common.known_ss:
+            if ss_id in assigned_ss:
+                if ss_id in ss_tasks and ss_tasks[ss_id].done():
+                    ss_tasks[ss_id].cancel()
+                    del ss_tasks[ss_id]
                 if not ss_id in ss_tasks:
-                    task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id))
+                    ss_status = assigned_ss[ss_id]
+                    task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id,
+                                                                   first_time=(ss_status == 'PAIRING')))
                     ss_tasks[ss_id] = task
-            elif status == 'OFFLINE':
+            
+            # cancel tasks for sensor stations not assigned to this AP, if present
+            else:
                 if ss_id in ss_tasks:
                     try:
                         ss_tasks[ss_id].cancel()
+                        del ss_tasks[ss_id]
                     except:
                         print(f"error canceling task for", ss_id)
-                    
+
         print('Finished SS Manager Loop')
         await asyncio.sleep(10)
 
-async def sensor_station_task(connection_request, session, sensorstation_id):
+async def sensor_station_task(connection_request, session, sensorstation_id, first_time):
     #TODO: Catch cancelled Error and error handle stuff
+    sensorstation_mac = common.known_ss[sensorstation_id]
     try:
-        if not sensorstation_id in common.known_ss:
-            print('Sensorstation ' + str(sensorstation_id) + ' was never known before')
+        transmission_interval = common.polling_interval
+        async with BleakClient(sensorstation_mac) as client:
+            await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
+            await database_operations.initialize_sensorstation(sensorstation_id)
+            #TODO: Logging
+            while not connection_request.done():
+                await read_sensorvalues(client, sensorstation_id)
+                await check_values_for_thresholds(client, sensorstation_id, transmission_interval, session)
+                await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
+                #TODO: Update sensorstations_thresholds
+                #TODO: Check for thresholds
 
-        sensorstation_mac = common.known_ss[sensorstation_id]
-        try:
-            transmission_interval = common.polling_interval
-            async with BleakClient(sensorstation_mac) as client:
-                await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
-                await database_operations.initialize_sensorstation(sensorstation_id)
-                #TODO: Logging
-                while not connection_request.done():
-                    await read_sensorvalues(client, sensorstation_id)
-                    await check_values_for_thresholds(client, sensorstation_id, transmission_interval, session)
-                    await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
-                    #TODO: Update sensorstations_thresholds
-                    #TODO: Check for thresholds
+    except BleakError as e:
+        print(e)
+        print('couldnt connect to sensorstation') 
 
-        except BleakError as e:
-            await send_sensorstation_connection_status(session, sensorstation_id, 'PAIRING_FAILED')
-            await send_sensorstation_pairing_failed(session, sensorstation_id, 'PAIRING_FAILED')
-            print(e)
-            print('couldnt connect to sensorstation') 
-            #TODO: log and send to backend
-        except Exception as e:
-            print('Other exception in sensorstation task', e.with_traceback())
+        error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
+        await send_sensorstation_connection_status(session, sensorstation_id, error_status)
+        await cancel_ss_task(sensorstation_id)
+        #TODO: log and send to backend
     except Exception as e:
-        print('Pairing failed', e.with_traceback())
-        await send_sensorstation_pairing_failed(session, sensorstation_id, 'PAIRING_FAILED')
-        #TODO: log and send to backend failure
+        print('Other exception in sensorstation task', e.with_traceback())
 
 
-async def send_sensorstation_pairing_failed(session, sensorstation_id, message):
+async def cancel_ss_task(sensorstation_id):
+    global ss_tasks
     #await send_sensorstation_connection_status(session, sensorstation_id, message)
-    common.ss_tasks[sensorstation_id].cancel()
-    del common.ss_tasks[sensorstation_id]
+    ss_tasks[sensorstation_id].cancel()
+    del ss_tasks[sensorstation_id]
         
 
 async def polling_loop(connection_request, session):

@@ -9,7 +9,9 @@ import Box from '@mui/system/Box'
 
 import { handleLogin } from '~/api/endpoints/login'
 import { onEnterKeypress, PAGE_URL } from '~/common'
+import { MessageType } from '~/contexts/SnackbarContext/types'
 import { setJwt } from '~/helpers/jwt'
+import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { LoginResponse } from '~/models/login'
 import { theme } from '~/styles/theme'
 
@@ -19,13 +21,11 @@ import { theme } from '~/styles/theme'
  */
 export const LoginForm: React.FC = () => {
   const navigate = useNavigate()
+  const addSnackbarMessage = useAddSnackbarMessage()
   const usernameRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
 
-  const [loginError, setLoginError] = useState<null | string>(null)
   const [loggingIn, setLoggingIn] = useState(false) // Disable login button during login
-
-  const resetError = (): void => setLoginError(null)
 
   /** Send a login request to the backend and handle redirect or display errors if unsuccessful. */
   const handleApiLogin = (): void => {
@@ -33,7 +33,6 @@ export const LoginForm: React.FC = () => {
       const username = usernameRef.current.value
       const password = passwordRef.current.value
       setLoggingIn(true)
-      resetError()
       handleLogin(username, password)
         .then((res: AxiosResponse<LoginResponse>) => {
           // Save JWT as a cookie
@@ -41,7 +40,11 @@ export const LoginForm: React.FC = () => {
           navigate(PAGE_URL.dashboard.href)
         })
         .catch((err: Error) => {
-          setLoginError(err.message)
+          addSnackbarMessage({
+            header: 'Login error',
+            body: err.message,
+            type: MessageType.ERROR,
+          })
         })
         .finally(() => setLoggingIn(false))
     }
@@ -60,8 +63,6 @@ export const LoginForm: React.FC = () => {
       autoComplete="off"
     >
       <Stack spacing={2} width="100%" maxWidth={400}>
-        {Boolean(loginError) && <div>TODO (ErrorBox): {loginError}</div>}
-
         <TextField
           required
           label="Username"

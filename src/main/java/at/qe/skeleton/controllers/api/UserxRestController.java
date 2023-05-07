@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.configs.WebSecurityConfig;
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.models.Userx;
@@ -19,6 +20,9 @@ public class UserxRestController implements BaseRestController {
     @Autowired
     private UserService userService;
 
+    private static final String PW = "password";
+    private static final String FN = "firstName";
+    private static final String LN = "lastName";
     private static final String USER_PATH = "/users";
     private static final String USERNAME_PATH = USER_PATH + "/{username}";
 
@@ -45,7 +49,7 @@ public class UserxRestController implements BaseRestController {
             return HelperFunctions.notFoundError("User", username);
         }
         // Return a 403 error if a non-admin and not user itself tries to get User
-        if (!userService.authRoleIsAdmin() && !userx.equals(userService.getAuthenticatedUser())) {
+        if (Boolean.FALSE.equals(userService.authRoleIsAdmin()) && !userx.equals(userService.getAuthenticatedUser())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
         }
 
@@ -70,21 +74,20 @@ public class UserxRestController implements BaseRestController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already in use. It must be unique.");
         }
         // return a 400 error if the user gets created with empty password
-        String password = (String)json.get("password");
+        String password = (String)json.get(PW);
         if (userService.isNotValidPassword(password)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is not valid.");
         }
         Userx newUser = new Userx();
         newUser.setUsername(username);
-        //TODO after Password encoder is set
-//      String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
-        newUser.setPassword(password);
+        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
+        newUser.setPassword(bcryptPassword);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
-        if (json.containsKey("firstName")) {
-            newUser.setFirstName((String)json.get("firstName"));
+        if (json.containsKey(FN)) {
+            newUser.setFirstName((String)json.get(FN));
         }
-        if (json.containsKey("lastName")) {
-            newUser.setLastName((String)json.get("lastName"));
+        if (json.containsKey(LN)) {
+            newUser.setLastName((String)json.get(LN));
         }
         newUser = userService.saveUser(newUser);
 
@@ -110,20 +113,19 @@ public class UserxRestController implements BaseRestController {
         }
 
         // updating all fields mentioned in the json body
-        if (json.containsKey("firstName")) {
-            user.setFirstName((String)json.get("firstName"));
+        if (json.containsKey(FN)) {
+            user.setFirstName((String)json.get(FN));
         }
-        if (json.containsKey("lastName")) {
-            user.setLastName((String)json.get("lastName"));
+        if (json.containsKey(LN)) {
+            user.setLastName((String)json.get(LN));
         }
-        if (json.containsKey("password")) {
-            String password = (String)json.get("password");
-            if (userService.isNotValidPassword(password)) {
+        if (json.containsKey(PW)) {
+            String password = (String)json.get(PW);
+            if (Boolean.TRUE.equals(userService.isNotValidPassword(password))) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
             }
-            //TODO after Password encoder is set
-//            String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
-            user.setPassword(password);
+            String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
+            user.setPassword(bcryptPassword);
         }
         if (json.containsKey("userRole")) {
             try {
