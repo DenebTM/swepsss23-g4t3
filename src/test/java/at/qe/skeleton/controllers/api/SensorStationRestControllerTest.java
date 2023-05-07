@@ -2,6 +2,7 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
