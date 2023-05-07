@@ -1,6 +1,8 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.EntityNotFoundException;
+import at.qe.skeleton.controllers.errors.UnauthorizedException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
@@ -12,7 +14,6 @@ import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -98,7 +99,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
-    public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
+    public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
@@ -108,14 +109,14 @@ public class SensorStationRestController implements BaseRestController {
             try {
                 ss.setStatus(SensorStationStatus.valueOf((String) json.get("status")));
             } catch (IllegalArgumentException e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status does not exist.");
+                throw new BadRequestException("Invalid status");
             }
         }
         if (json.containsKey("aggregationPeriod")) {
             try {
                 ss.setAggregationPeriod(Long.valueOf((String)json.get("aggregationPeriod")));
             } catch (IllegalArgumentException e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid number to update aggregation period.");
+                throw new BadRequestException("Invalid aggregation period");
             }
         }
         return ResponseEntity.ok(ssService.saveSS(ss));
@@ -203,14 +204,14 @@ public class SensorStationRestController implements BaseRestController {
      * @return the picture if found
      */
     @DeleteMapping(value = SS_ID_PHOTOS_PATH + "/{photoId}")
-    ResponseEntity<Object> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
+    ResponseEntity<String> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
             List<String> gardeners = ssService.getGardenersBySS(ss);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             if (!gardeners.contains(currentPrincipalName) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Gardener is not assigned to Sensor Station.");
+                throw new UnauthorizedException("Gardener is not assigned to Sensor Station.");
             }
             Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
             if (maybePhoto.isPresent()) {
@@ -230,7 +231,7 @@ public class SensorStationRestController implements BaseRestController {
      * @return List of historic measurements for given time frame or current/recent measurement
      */
     @GetMapping(value = SS_ID_PATH + "/measurements")
-    public ResponseEntity<Object> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
+    public ResponseEntity<List<Measurement>> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
         Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
         Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
 
@@ -245,14 +246,14 @@ public class SensorStationRestController implements BaseRestController {
         }
         // return a 400 error if there is a "to"-date but no "from"-date given in json body
         if (!json.containsKey("from") && json.containsKey("to")){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
+            throw new BadRequestException("Start or end date missing");
         }
         // return 400 error if "from"-date isn't iso formatted
         if (json.containsKey("from")) {
             try {
                 from = Instant.parse((String)json.get("from"));
             } catch (DateTimeException e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
+                throw new BadRequestException("Invalid start date");
             }
         }
         // return 400 error if "to"-date isn't iso formatted
@@ -260,12 +261,12 @@ public class SensorStationRestController implements BaseRestController {
             try {
                 to = Instant.parse((String)json.get("to"));
             } catch (DateTimeException e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid end date");
+                throw new BadRequestException("Invalid end date");
             }
         }
         // return 400 error if "from"-date is after "to"-date
         if (from.isAfter(to)){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date should be later than start date");
+            throw new BadRequestException("End date must not be before start date");
         }
         return ResponseEntity.ok(ssService.getMeasurements(id, from, to));
     }

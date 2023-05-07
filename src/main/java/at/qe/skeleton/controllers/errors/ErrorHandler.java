@@ -14,4 +14,18 @@ public class ErrorHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(ex.getMessage());
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    ResponseEntity<String> unauthorizedHandler(UnauthorizedException ex, WebRequest request) {
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    ResponseEntity<String> badRequestHandler(BadRequestException ex, WebRequest request) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ex.getMessage());
+    }
 }
