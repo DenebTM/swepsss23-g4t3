@@ -1,14 +1,12 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
-import at.qe.skeleton.models.PhotoData;
-import at.qe.skeleton.models.Measurement;
-import at.qe.skeleton.models.SensorStation;
-import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.models.*;
 import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -251,6 +249,38 @@ public class SensorStationRestController implements BaseRestController {
     @GetMapping(value = "/measurements")
     public ResponseEntity<Object> getAllCurrentMeasurements(){
         return ResponseEntity.ok(ssService.getAllCurrentMeasurements());
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = SS_ID_PATH + "/measurements")
+    public ResponseEntity<Object> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss == null) {
+            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+        }
+
+        if (!json.containsKey("timestamp")){
+            return ResponseEntity.badRequest().body("No timestamp");
+        }
+
+        Measurement newMeasurement = new Measurement();
+        newMeasurement.setSensorStation(ss);
+        try {
+            newMeasurement.setTimestamp(Instant.parse((String)json.get("timestamp")));
+        } catch (DateTimeException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid timestamp.");
+        }
+
+        // convert sensorValues to a map to make it easier to work with
+        var mapper = new ObjectMapper();
+        @SuppressWarnings("unchecked")
+        SensorValues newValues = mapper.convertValue(json, SensorValues.class);
+
+
+
+        newMeasurement.setSensorValues(newValues);
+
+        return ResponseEntity.ok(ssService.saveMeasurement(newMeasurement));
     }
 
 }

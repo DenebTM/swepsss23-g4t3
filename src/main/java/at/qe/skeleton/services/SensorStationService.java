@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class SensorStationService {
 
     @Autowired
     SensorStationRepository ssRepository;
+
+    @Autowired
+    MeasurementRepository measurementRepository;
 
     /**
      * Route to GET all sensor stations
@@ -76,5 +80,13 @@ public class SensorStationService {
     public Object getAllCurrentMeasurements(){
         // return an object containing the returned measurements indexed by sensor station
         return null;
+    }
+
+    public Object getMeasurementById(Integer id){
+        return measurementRepository.findFirstById(id);
+    }
+
+    public Measurement saveMeasurement(Measurement m){
+        return measurementRepository.save(m);
     }
 }
