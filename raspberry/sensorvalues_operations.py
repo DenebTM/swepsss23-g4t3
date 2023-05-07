@@ -25,10 +25,9 @@ async def read_sensorvalues(client, sensorstation_id):
 async def send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval):
     await asyncio.sleep(transmission_interval)
     averages_dict = await database_operations.get_sensor_data_averages(sensorstation_id)
-    averages_dict['id'] = sensorstation_id
     averages_dict['timestamp'] = int(time.time())
     averages_json = json.dumps(averages_dict)
-    async with session.post(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations/' + str(sensorstation_id), json=averages_json) as response:
+    async with session.post('/sensor-station/' + str(sensorstation_id) + '/measurements', json=averages_json) as response:
         if response.status == 200:
             print(response.status)
             await database_operations.clear_sensor_data(sensorstation_id)
