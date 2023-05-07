@@ -36,6 +36,7 @@ public class SensorStationRestController implements BaseRestController {
     @Autowired
     private SensorValuesRepository sensorValuesRepository;
 
+    private static final String SS = "Sensor station";
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
@@ -61,7 +62,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // Return a 404 error if the sensor-station is not found
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
 
         return ResponseEntity.ok(ss);
@@ -73,13 +74,13 @@ public class SensorStationRestController implements BaseRestController {
      * @param json
      * @return updated sensor station
      */
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<Object> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         if (json.containsKey("status")) {
             try {
@@ -109,7 +110,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         ssService.deleteSS(ss);
         return ResponseEntity.ok(ss);
@@ -125,7 +126,7 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<Object> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         List<String> usernames = ssService.getGardenersBySS(ss);
         return ResponseEntity.ok(usernames);
@@ -143,7 +144,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         if (user == null) {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
@@ -164,7 +165,7 @@ public class SensorStationRestController implements BaseRestController {
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            return HelperFunctions.notFoundError(SS, String.valueOf(id));
         }
         if (user == null) {
             return HelperFunctions.notFoundError("User", String.valueOf(username));
@@ -196,7 +197,7 @@ public class SensorStationRestController implements BaseRestController {
             }
             return HelperFunctions.notFoundError("Photo", String.valueOf(photoId));
         }
-        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
+        return HelperFunctions.notFoundError(SS, String.valueOf(id));
     }
 
     /**

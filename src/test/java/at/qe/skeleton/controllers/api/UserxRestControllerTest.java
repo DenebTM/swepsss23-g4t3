@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.configs.WebSecurityConfig;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.services.UserService;
@@ -105,7 +106,7 @@ class UserxRestControllerTest {
         Assertions.assertTrue(response.getBody() instanceof Userx);
         if (response.getBody() instanceof Userx){
             Assertions.assertEquals(createUsername, ((Userx) response.getBody()).getUsername());
-            Assertions.assertEquals(createPassword, ((Userx) response.getBody()).getPassword());
+            Assertions.assertTrue(WebSecurityConfig.passwordEncoder().matches(createPassword, ((Userx) response.getBody()).getPassword()));
             // default user role is USER
             Assertions.assertEquals(UserRole.USER, ((Userx) response.getBody()).getUserRole());
         }
