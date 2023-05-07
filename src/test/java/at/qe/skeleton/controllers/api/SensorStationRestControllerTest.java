@@ -1,7 +1,9 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +17,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +37,8 @@ class SensorStationRestControllerTest {
 
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private MeasurementService measurementService;
 
     @Autowired
     private UserService userService;
@@ -140,6 +148,26 @@ class SensorStationRestControllerTest {
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
         response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+    }
+
+    @Test
+    void testGetAllMeasurementsInTimeRange() {
+        Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Integer number = measurementService.getMeasurements(id, from, to).size();
+        jsonUpdateSS.put("from", from);
+        jsonUpdateSS.put("to", to);
+        ResponseEntity measurements = this.ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
+        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
+        assertEquals(number, ((Collection) measurements.getBody()).size());
+    }
+
+    @Test
+    void testGetAllCurrentMeasurements(){
+        Integer number = measurementService.getAllCurrentMeasurements().size();
+        ResponseEntity measurements = this.ssRestController.getAllCurrentMeasurements();
+        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
+        assertEquals(number, ((Collection) measurements.getBody()).size());
     }
 
     // TODO write a test for getAllPhotosBySS()

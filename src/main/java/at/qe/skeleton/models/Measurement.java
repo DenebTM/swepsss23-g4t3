@@ -52,4 +52,12 @@ public class Measurement {
     public void setSensorStation(SensorStation sensorStation) {
         this.sensorStation = sensorStation;
     }
+
+    @Override
+    public String toString() {
+        return "Measurement{" +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }
