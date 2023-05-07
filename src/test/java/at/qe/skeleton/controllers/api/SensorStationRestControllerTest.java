@@ -190,8 +190,8 @@ class SensorStationRestControllerTest {
         Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
         Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
         Integer number = measurementService.getMeasurements(id, from, to).size();
-        jsonUpdateSS.put("from", from);
-        jsonUpdateSS.put("to", to);
+        jsonUpdateSS.put("from", from.toString());
+        jsonUpdateSS.put("to", to.toString());
         ResponseEntity measurements = this.ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
         assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
         assertEquals(number, ((Collection) measurements.getBody()).size());

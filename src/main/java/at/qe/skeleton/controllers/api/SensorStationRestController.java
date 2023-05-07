@@ -252,7 +252,7 @@ public class SensorStationRestController implements BaseRestController {
         // return 400 error if "from"-date isn't iso formatted
         if (json.containsKey("from")) {
             try {
-                from = (Instant) json.get("from");
+                from = Instant.parse((String)json.get("from"));
             } catch (DateTimeException e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid start date");
             }
@@ -260,7 +260,7 @@ public class SensorStationRestController implements BaseRestController {
         // return 400 error if "to"-date isn't iso formatted
         if (json.containsKey("to")) {
             try {
-                to = (Instant) json.get("to");
+                to = Instant.parse((String)json.get("to"));
             } catch (DateTimeException e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid end date");
             }
