@@ -23,9 +23,6 @@ public class AccessPoint {
     @Column(name = "SERVER_ADDRESS")
     private String serverAddress;
 
-    @Column(name = "ACTIVE")
-    private Boolean active;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     private AccessPointStatus status;
@@ -56,8 +53,8 @@ public class AccessPoint {
         return serverAddress;
     }
 
-    public Boolean getActive() {
-        return active;
+    public AccessPointStatus getStatus() {
+        return this.status;
     }
 
     public void setName(String name) {
@@ -72,7 +69,8 @@ public class AccessPoint {
         this.serverAddress = serverAddress;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setStatus(AccessPointStatus status) {
+        this.status = status;
     }
+
 }
