@@ -1,8 +1,10 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.SensorStationService;
@@ -18,6 +20,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +41,8 @@ class SensorStationRestControllerTest {
 
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private MeasurementService measurementService;
 
     @Autowired
     private AccessPointRepository apRepository;
@@ -72,7 +80,7 @@ class SensorStationRestControllerTest {
         String apName = "AP Test";
         return apRepository.save(new AccessPoint(apName));
     }
-    
+
     @Test
     void testGetSSForAccessPoint() {
         AccessPoint apTest = createTestAP();
@@ -134,7 +142,7 @@ class SensorStationRestControllerTest {
         for (SensorStation ss : (Collection<SensorStation>)finalSSResponse.getBody()) {
             assertEquals(ss.getAccessPoint().getName(), apTest.getName());
         }
-        
+
         // check sensor station status matches
         for (SensorStation ss : (Collection<SensorStation>)finalSSResponse.getBody()) {
             assertEquals(SensorStationStatus.AVAILABLE, ss.getStatus());
@@ -232,6 +240,26 @@ class SensorStationRestControllerTest {
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
         response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
         assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+    }
+
+    @Test
+    void testGetAllMeasurementsInTimeRange() {
+        Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Integer number = measurementService.getMeasurements(id, from, to).size();
+        jsonUpdateSS.put("from", from.toString());
+        jsonUpdateSS.put("to", to.toString());
+        ResponseEntity measurements = this.ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
+        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
+        assertEquals(number, ((Collection) measurements.getBody()).size());
+    }
+
+    @Test
+    void testGetAllCurrentMeasurements(){
+        Integer number = measurementService.getAllCurrentMeasurements().size();
+        ResponseEntity measurements = this.ssRestController.getAllCurrentMeasurements();
+        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
+        assertEquals(number, ((Collection) measurements.getBody()).size());
     }
 
     // TODO write a test for getAllPhotosBySS()
