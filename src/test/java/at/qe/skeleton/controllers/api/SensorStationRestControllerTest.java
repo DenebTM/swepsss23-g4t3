@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.EntityNotFoundException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
@@ -89,9 +90,10 @@ class SensorStationRestControllerTest {
         AccessPoint ap = new AccessPoint(apName);
         apRepository.delete(ap);
 
-        var response = ssRestController.getSSForAccessPoint(apName);
-
-        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.getSSForAccessPoint(apName)
+        );
     }
 
     @Test
@@ -102,9 +104,12 @@ class SensorStationRestControllerTest {
         if (response.getBody() instanceof SensorStation){
             Assertions.assertEquals(id, response.getBody().getId());
         }
+
         // if ss id does not exist in database, 404 not found error
-        var response404 = this.ssRestController.getSSById(9999);
-        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.getSSById(99999)
+        );
     }
 
     // TODO write a test for updateSS()
@@ -117,25 +122,29 @@ class SensorStationRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteSSById() {
         int originalSize = ssService.getAllSS().size();
-        var response404 = this.ssRestController.deleteSSById(99999);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
 
         var response = this.ssRestController.deleteSSById(id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertEquals(originalSize-1, ssService.getAllSS().size());
-        response404 = this.ssRestController.getSSById(id);
-        assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "Sensor station is still found in database after being deleted.");
+
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.getSSById(id),
+            "Sensor station is still found in database after being deleted."
+        );
     }
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetGardenersBySS() {
-        var response404 = this.ssRestController.getGardenersBySS(99999);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-
         var response = this.ssRestController.getGardenersBySS(id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertEquals(ss.getGardeners().contains(susi), response.getBody().contains(username));
+
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.getGardenersBySS(99999)
+        );
     }
 
     @DirtiesContext
@@ -151,11 +160,16 @@ class SensorStationRestControllerTest {
         } else {
             assertEquals(originalSize, response.getBody().getGardeners().size());
         }
-        var response404 = this.ssRestController.assignGardenerToSS(99999, username);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-        response404 = this.ssRestController.assignGardenerToSS(id, "notExistingUsername");
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
 
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.assignGardenerToSS(99999, username)
+        );
+
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.assignGardenerToSS(id, "notExistingUsername")
+        );
     }
 
     @DirtiesContext
@@ -169,10 +183,16 @@ class SensorStationRestControllerTest {
         if (originalNames.contains(username)){
             assertEquals(originalSize-1, response.getBody().getGardeners().size());
         }
-        var response404 = this.ssRestController.removeGardenerFromSS(99999, username);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-        response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.removeGardenerFromSS(99999, username)
+        );
+
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> this.ssRestController.removeGardenerFromSS(id, "notExistingUsername")
+        );
     }
 
     // TODO write a test for getAllPhotosBySS()
