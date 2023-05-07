@@ -12,11 +12,11 @@ A sensor station is the combination of a mini greenhouse and an Arduino Nano equ
 
 ### Access point
 
-The access point is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is to read the sensor values transmitted by multiple sensor stations, average data over a configurable period, and pass the averaged values onto the ReSt backend. Furthermore, it checks whether each sensor station's sensor values are within acceptable (configurable) bounds and instructs the corresponding sensor station to emit a warning otherwise.
+The access point is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is to read the sensor values transmitted by multiple sensor stations, average data over a configurable period, and pass the averaged values onto the ReST backend. Furthermore, it checks whether each sensor station's sensor values are within acceptable (configurable) bounds and instructs the corresponding sensor station to emit a warning otherwise.
 
 ### Backend
 
-This is a web server, based on the Spring web framework. It serves the frontend web app to the browser and provides a Representational State (ReSt) API for ongoing communication with the aforementioned access points and frontend.
+This is a web server, based on the Spring web framework. It serves the frontend web app to the browser and provides a Representational State Transfer (ReST) API for ongoing communication with the aforementioned access points and frontend.
 
 The backend is based on the swe-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, in-memory H2 database (TODO: replace with MySQL; see !112), basic functionality, and much of the Spring Security configuration.
 
