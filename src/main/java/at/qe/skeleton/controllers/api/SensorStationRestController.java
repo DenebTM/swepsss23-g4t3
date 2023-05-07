@@ -256,6 +256,12 @@ public class SensorStationRestController implements BaseRestController {
         return ResponseEntity.ok(ssService.getAllCurrentMeasurements());
     }
 
+    /**
+     * a POST route to create a new measurement, for AP to send new measurement data
+     * @param id
+     * @param json
+     * @return the newly created measurement object
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_PATH + MEASUREMENTS_PATH)
     public ResponseEntity<Object> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
