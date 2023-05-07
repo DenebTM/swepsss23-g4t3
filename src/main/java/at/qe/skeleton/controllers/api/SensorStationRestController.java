@@ -2,11 +2,13 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.PhotoData;
+import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +31,19 @@ public class SensorStationRestController implements BaseRestController {
 
     @Autowired
     private SensorStationService ssService;
+
+    @Autowired
+    private AccessPointService apService;
+
     @Autowired
     private PhotoDataRepository photoDataRepository;
+
     @Autowired
     private UserService userService;
 
     private static final String SS = "Sensor station";
     private static final String SS_PATH = "/sensor-stations";
+    private static final String SS_AP_PATH = AccessPointRestController.AP_NAME_PATH + SS_PATH;
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
@@ -47,6 +55,22 @@ public class SensorStationRestController implements BaseRestController {
     @GetMapping(value = SS_PATH)
     public ResponseEntity<Object> getAllSensorStations() {
         return ResponseEntity.ok(ssService.getAllSS());
+    }
+
+    /**
+     * Route to GET all sensor stations for a specified access point
+     * 
+     * @return List of all sensor stations
+     */
+    @GetMapping(value = SS_AP_PATH)
+    public ResponseEntity<Object> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
+        // Return a 404 error if the access point is not found
+        AccessPoint ap = apService.loadAPByName(apName);
+        if (ap == null) {
+            return HelperFunctions.notFoundError("Access point", String.valueOf(apName));
+        }
+
+        return ResponseEntity.ok(ssService.getSSForAccessPoint(apName));
     }
 
     /**
