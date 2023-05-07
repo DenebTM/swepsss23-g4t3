@@ -23,6 +23,7 @@ humidity_failure_uuid = base_uuid.format('ff03')
 illuminance_failure_uuid = base_uuid.format('ff04')
 air_quality_index_failure_uuid = base_uuid.format('ff05')
 soil_moisture_failure_uuid = base_uuid.format('ff06')
+warning_active_uuid = base_uuid.format('ff80')
 
 #global dictionary failure_uuids
 failure_uuids = {
