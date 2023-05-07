@@ -7,6 +7,7 @@ import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class SensorStationRestController implements BaseRestController {
 
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private MeasurementService measurementService;
     @Autowired
     private PhotoDataRepository photoDataRepository;
     @Autowired
@@ -210,7 +213,7 @@ public class SensorStationRestController implements BaseRestController {
 
         // if keys "from" and "to" are missing in json body return the most recent/current measurement
         if (!json.containsKey("from") && !json.containsKey("to")){
-            Measurement currentMeasurement = ssService.getCurrentMeasurement(id);
+            Measurement currentMeasurement = measurementService.getCurrentMeasurement(id);
             if (currentMeasurement == null){
                 return ResponseEntity.ok(new ArrayList<>());
             } else {
@@ -241,7 +244,7 @@ public class SensorStationRestController implements BaseRestController {
         if (from.isAfter(to)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date should be later than start date");
         }
-        return ResponseEntity.ok(ssService.getMeasurements(id, from, to));
+        return ResponseEntity.ok(measurementService.getMeasurements(id, from, to));
     }
 
     /**
@@ -250,7 +253,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @GetMapping(value = "/measurements")
     public ResponseEntity<Object> getAllCurrentMeasurements(){
-        return ResponseEntity.ok(ssService.getAllCurrentMeasurements());
+        return ResponseEntity.ok(measurementService.getAllCurrentMeasurements());
     }
 
 }

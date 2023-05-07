@@ -4,6 +4,7 @@ import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,12 +13,14 @@ public interface MeasurementRepository extends AbstractRepository<Measurement, L
 
     Measurement findFirstById(Integer id);
 
-    List<Measurement> findAllBySensorStationOrderByTimestampAsc(SensorStation sensorStation);
+    List<Measurement> findAllBySensorStation(SensorStation sensorStation);
 
-    List<Measurement> findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(SensorStation sensorStation, LocalDateTime start, LocalDateTime end);
+    List<Measurement> findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(SensorStation sensorStation, Instant start, Instant end);
 
     @Override
     List<Measurement> findAll();
 
     List<Measurement> findFirstBySensorStationOrderByTimestamp(SensorStation sensorStation);
+
+    List<Measurement> findAllByOrderBySensorStationAsc();
 }
