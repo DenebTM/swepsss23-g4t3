@@ -87,6 +87,7 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
       sx={{
         border: `1px solid ${chipOutline}`,
         borderRadius: 1,
+        backgroundColor: deletePending ? theme.surfaceVariant : '',
       }}
     >
       <Tooltip title={props.tooltipTitle} arrow>
@@ -111,7 +112,10 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
           {props.label}
         </Button>
       </Tooltip>
-      <Tooltip arrow title={`Remove ${props.entityName}`}>
+      <Tooltip
+        arrow
+        title={deletePending ? 'Removing...' : `Remove ${props.entityName}`}
+      >
         <IconButton
           aria-label={`Remove ${props.entityName}`}
           disabled={deletePending}

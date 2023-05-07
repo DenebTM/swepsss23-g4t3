@@ -51,12 +51,11 @@ public class UserService {
         return userRepository.findFirstByUsername(username);
     }
 
-    //TODO: insert correct links if possible
     /**
-     * Saves the user. This method will also set {link Userx#createDate} for new
-     * entities or {link Userx#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {link Userx#createDate}
-     * or {link Userx#updateUser} respectively.
+     * Saves the user. This method will also set Userx.createDate for new
+     * entities or Userx.updateDate for updated entities. The user
+     * requesting this operation will also be stored as Userx.createDate
+     * or Userx.updateUser respectively.
      *
      * @param userx the user to save
      * @return the updated user
