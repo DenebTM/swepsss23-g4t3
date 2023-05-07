@@ -21,7 +21,7 @@ public class Measurement {
 
     @OneToOne
     @JoinColumn(name = "VALUES_ID")
-    private SensorValues sensorValues;
+    private SensorValues data;
 
     @JsonIgnore
     @ManyToOne(optional = false)
@@ -29,7 +29,7 @@ public class Measurement {
 
     public Measurement(Instant timestamp, SensorValues sensorValues, SensorStation sensorStation) {
         this.timestamp = timestamp;
-        this.sensorValues = sensorValues;
+        this.data = sensorValues;
         this.sensorStation = sensorStation;
     }
 
@@ -41,8 +41,8 @@ public class Measurement {
         return timestamp;
     }
 
-    public SensorValues getSensorValues() {
-        return sensorValues;
+    public SensorValues getData() {
+        return data;
     }
 
     public SensorStation getSensorStation() {
