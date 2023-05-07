@@ -92,6 +92,35 @@ public class SensorStationRestController implements BaseRestController {
     }
 
     /**
+     * Route to add a list of sensor stations to the db
+     * 
+     * This is used by the access point to report found sensor stations
+     * while it is in SEARCHING Mode
+     *
+     * @param newSSList list of new sensor stations
+     * @return the new sensor stations as added to the database
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = SS_AP_PATH)
+    public ResponseEntity<Collection<SensorStation>> addSS(
+        @PathVariable(value = "name") String apName,
+        @RequestBody Collection<SensorStation> newSSList
+    ) {
+        // Return a 404 error if the access point is not found
+        AccessPoint ap = apService.loadAPByName(apName);
+        if (ap == null) {
+            throw new NotFoundInDatabaseException("Access point", String.valueOf(apName));
+        }
+
+        List<SensorStation> retSSList = new ArrayList<>();
+        for (SensorStation newSS : newSSList) {
+            newSS.setAccessPoint(ap);
+            retSSList.add(ssService.saveSS(newSS));
+        }
+        return ResponseEntity.ok(retSSList);
+    }
+
+    /**
      * a PUT route to update an existing sensor station
      * @param id
      * @param json
