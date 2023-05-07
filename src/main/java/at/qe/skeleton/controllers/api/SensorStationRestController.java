@@ -11,7 +11,7 @@ import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorStationService;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -40,7 +40,7 @@ public class SensorStationRestController implements BaseRestController {
     private PhotoDataRepository photoDataRepository;
 
     @Autowired
-    private UserService userService;
+    private UserxService userService;
 
     private static final String SS = "Sensor station";
     private static final String SS_PATH = "/sensor-stations";
