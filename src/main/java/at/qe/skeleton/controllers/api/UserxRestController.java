@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.configs.WebSecurityConfig;
 import at.qe.skeleton.controllers.HelperFunctions;
 import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.models.Userx;
@@ -74,14 +75,13 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 400 error if the user gets created with empty password
         String password = (String)json.get(PW);
-        if (Boolean.TRUE.equals(userService.isNotValidPassword(password))) {
+        if (userService.isNotValidPassword(password)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is not valid.");
         }
         Userx newUser = new Userx();
         newUser.setUsername(username);
-        //TODO after Password encoder is set
-//      String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
-        newUser.setPassword(password);
+        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
+        newUser.setPassword(bcryptPassword);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
         if (json.containsKey(FN)) {
             newUser.setFirstName((String)json.get(FN));
@@ -124,9 +124,8 @@ public class UserxRestController implements BaseRestController {
             if (Boolean.TRUE.equals(userService.isNotValidPassword(password))) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
             }
-            //TODO after Password encoder is set
-//            String bcryptPassword = passwordEncoder.encode((String)json.get("password"));
-            user.setPassword(password);
+            String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
+            user.setPassword(bcryptPassword);
         }
         if (json.containsKey("userRole")) {
             try {
@@ -168,7 +167,7 @@ public class UserxRestController implements BaseRestController {
     public ResponseEntity<Object> getAssignedSS(@PathVariable(value = "username") String username) {
         Userx gardener = userService.loadUserByUsername(username);
         // Return a 403 error if a normal user tries to get list of assigned sensor stations
-        if (Boolean.TRUE.equals(userService.authRoleIsUser())){
+        if (userService.authRoleIsUser()){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to view sensor stations assigned to a gardener.");
         }
         // Return a 404 error if the user is not found
@@ -176,11 +175,11 @@ public class UserxRestController implements BaseRestController {
             return HelperFunctions.notFoundError("User", username);
         }
         // Return a 403 error if a non admin tries to get list of assigned sensor stations for other users
-        if (Boolean.TRUE.equals(userService.authRoleIsGardener()) && (!userService.getAuthenticatedUser().equals(gardener))) {
+        if (userService.authRoleIsGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to view sensor stations assigned to other gardeners.");
         }
         // Return [] if admin tries to get list of assigned sensor stations for normal users
-        if (Boolean.TRUE.equals(userService.roleIsUser(gardener))) {
+        if (userService.roleIsUser(gardener)) {
             return ResponseEntity.ok(new ArrayList<>());
         }
 
