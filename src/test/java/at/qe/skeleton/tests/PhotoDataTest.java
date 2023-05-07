@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 
 @SpringBootTest
+@WebAppConfiguration
 public class PhotoDataTest {
 
     @Autowired
@@ -27,4 +29,5 @@ public class PhotoDataTest {
         }
         Assertions.assertEquals(testimg, img);
     }
+
 }
