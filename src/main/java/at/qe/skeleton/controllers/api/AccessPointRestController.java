@@ -19,7 +19,7 @@ public class AccessPointRestController implements BaseRestController {
 
     private static final String AP = "Access point";
     private static final String AP_PATH = "/access-points";
-    private static final String AP_NAME_PATH = AP_PATH + "/{name}";
+    public static final String AP_NAME_PATH = AP_PATH + "/{name}";
 
 
     /**
