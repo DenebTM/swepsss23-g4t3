@@ -37,7 +37,7 @@
         <yarn.version>v1.22.19</yarn.version>
 
         <!-- Allow Sonarqube to scan frontend code -->
-        <sonar.sources>src/main,frontend/src,raspberry/**/*.py</sonar.sources>
+        <sonar.sources>src/main,frontend/src,raspberry</sonar.sources>
         <sonar.tests>src/test,frontend/src/tests</sonar.tests>
         <sonar.test.inclusions>src/test/**/*.java,frontend/src/tests/**/*.test.ts*</sonar.test.inclusions>
         <sonar.testExecutionReportPaths>frontend/sonar-report.xml</sonar.testExecutionReportPaths>
