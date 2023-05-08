@@ -1,9 +1,18 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.models.Measurement;
+import at.qe.skeleton.models.SensorStation;
+
+import java.time.Instant;
+import java.util.List;
 
 public interface MeasurementRepository extends AbstractRepository<Measurement, Long> {
 
-    Measurement findFirstById(Integer id);
+    // This immense method name is automatically generated, resembles SQL and works the same way
+    List<Measurement> findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(SensorStation sensorStation, Instant start, Instant end);
+
+    List<Measurement> findFirstBySensorStationOrderByTimestampDesc(SensorStation sensorStation);
+
+    List<Measurement> findAllByOrderBySensorStationAscTimestampDesc();
 
 }

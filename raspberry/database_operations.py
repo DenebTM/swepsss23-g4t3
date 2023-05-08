@@ -113,27 +113,27 @@ async def get_sensorstation_transmissioninterval(sensorstation_id):
 
 async def initialize_sensorstation(sensorstation_id):        
     json_data = {
-            'id': sensorstation_id,
+        'id': sensorstation_id,
 
-            'transmission_interval': common.default_transmission_interval,
-            'accessPoint': common.access_point_name,
-            'lowerBound': {
-                'airPressure': 0,
-                'airQuality': 0,
-                'humidity': 0,
-                'lightIntensity': 0,
-                'soilMoisture': 0,
-                'temperature': 0
-            },
-            'upperBound': {
-                'airPressure': 1000000,  
-                'airQuality': 1000000,
-                'humidity': 1000000,
-                'lightIntensity': 1000000,
-                'soilMoisture': 1000000,
-                'temperature': 1000000
-            }
+        'transmission_interval': common.default_transmission_interval,
+        'accessPoint': common.access_point_name,
+        'lowerBound': {
+            'airPressure': 0,
+            'airQuality': 0,
+            'humidity': 0,
+            'lightIntensity': 0,
+            'soilMoisture': 0,
+            'temperature': 0
+        },
+        'upperBound': {
+            'airPressure': 1000000,  
+            'airQuality': 1000000,
+            'humidity': 1000000,
+            'lightIntensity': 1000000,
+            'soilMoisture': 1000000,
+            'temperature': 1000000
         }
+    }
     await update_sensorstation(json.dumps(json_data))
 
 async def update_sensorstation(json_data):

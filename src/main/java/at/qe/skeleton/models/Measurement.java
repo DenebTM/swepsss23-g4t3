@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class Measurement {
     private Integer id;
 
     @Column(name = "TIMESTAMP")
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 
     @OneToOne
     @JoinColumn(name = "VALUES_ID")
@@ -26,7 +26,7 @@ public class Measurement {
     @ManyToOne(optional = false)
     private SensorStation sensorStation;
 
-    public Measurement(LocalDateTime timestamp, SensorValues sensorValues, SensorStation sensorStation) {
+    public Measurement(Instant timestamp, SensorValues sensorValues, SensorStation sensorStation) {
         this.timestamp = timestamp;
         this.data = sensorValues;
         this.sensorStation = sensorStation;
@@ -36,7 +36,7 @@ public class Measurement {
         return id;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
