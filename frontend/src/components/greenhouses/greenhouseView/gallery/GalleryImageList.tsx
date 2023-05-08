@@ -26,14 +26,21 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
   const breakSm = useMediaQuery(theme.breakpoints.down('sm'))
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
+  /** Determine the number of columns in the image grid based on screen width */
+  const numImageColumns = (): number => {
+    if (breakSm) {
+      return 1
+    } else if (breakMd) {
+      return 2
+    } else {
+      return 3
+    }
+  }
+
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
       {props.photos.length > 0 ? (
-        <ImageList
-          variant="masonry"
-          cols={breakSm ? 1 : breakMd ? 2 : 3}
-          gap={4}
-        >
+        <ImageList variant="masonry" cols={numImageColumns()} gap={4}>
           {props.photos.map((im) => (
             <ImageListItem
               key={im.url}

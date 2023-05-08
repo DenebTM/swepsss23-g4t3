@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { Server } from 'miragejs'
-import { _delete, _get } from '~/api/intercepts'
+import { _get } from '~/api/intercepts'
 import { Measurement } from '~/models/measurement'
 import { SensorStationUuid } from '~/models/sensorStation'
 import { Timestamp } from '~/models/timestamp'

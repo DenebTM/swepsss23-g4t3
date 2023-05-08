@@ -72,7 +72,7 @@ interface StatusDonutChartsProps {
 }
 
 /**
- * Donut chart showing the statuses of access points and sensor stations in the dashboard
+ * Donut charts showing the statuses of access points and sensor stations in the dashboard
  */
 export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
   const stackDonuts = useMediaQuery(theme.breakpoints.down('sm'))
@@ -101,12 +101,22 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
    */
   const sensorStationData: DonutValue[] = props.sensorStations.reduce(
     (counts: DonutValue[], ss: SensorStation) => {
-      const status =
-        ss.status === StationStatus.OFFLINE
-          ? OFFLINE
-          : ss.status === StationStatus.WARNING
-          ? WARN
-          : ONLINE
+      let status: string
+
+      switch (ss.status) {
+        case StationStatus.OFFLINE:
+          status = OFFLINE
+          break
+
+        case StationStatus.WARNING:
+          status = WARN
+          break
+
+        default:
+          status = ONLINE
+          break
+      }
+
       return counts.map((c) =>
         c.displayName === status
           ? {

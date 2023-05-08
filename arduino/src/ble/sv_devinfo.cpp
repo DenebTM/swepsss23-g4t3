@@ -39,6 +39,9 @@ namespace ble {
       shall_update_station_id = false;
 
       update_station_id();
+
+      BLE.stopAdvertise();
+      if (is_advertising) { BLE.advertise(); }
     }
   }
 
