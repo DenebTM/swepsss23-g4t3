@@ -4,6 +4,7 @@ import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.SensorStationService;
@@ -18,6 +19,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +39,8 @@ class SensorStationRestControllerTest {
 
     @Autowired
     private SensorStationService ssService;
+    @Autowired
+    private MeasurementService measurementService;
 
     @Autowired
     private AccessPointRepository apRepository;
@@ -71,7 +78,7 @@ class SensorStationRestControllerTest {
         String apName = "AP Test";
         return apRepository.save(new AccessPoint(apName));
     }
-    
+
     @Test
     @DirtiesContext
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
@@ -139,7 +146,7 @@ class SensorStationRestControllerTest {
         for (SensorStation ss : finalSSResponse.getBody()) {
             assertEquals(ss.getAccessPoint().getName(), apTest.getName());
         }
-        
+
         // check sensor station status matches
         for (SensorStation ss : finalSSResponse.getBody()) {
             assertEquals(SensorStationStatus.AVAILABLE, ss.getStatus());
@@ -247,7 +254,7 @@ class SensorStationRestControllerTest {
         if (originalNames.contains(username)){
             assertEquals(originalSize-1, response.getBody().getGardeners().size());
         }
-        
+
         assertThrows(
             NotFoundInDatabaseException.class,
             () -> this.ssRestController.removeGardenerFromSS(99999, username)
@@ -259,8 +266,30 @@ class SensorStationRestControllerTest {
         );
     }
 
+    @Test
+    void testGetAllMeasurementsInTimeRange() {
+        Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Integer number = measurementService.getMeasurements(id, from, to).size();
+        jsonUpdateSS.put("from", from.toString());
+        jsonUpdateSS.put("to", to.toString());
+
+        var measurements = this.ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
+        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
+        assertEquals(number, measurements.getBody().size());
+    }
+
+    @Test
+    void testGetAllCurrentMeasurements(){
+        Integer number = measurementService.getAllCurrentMeasurements().size();
+
+        var measurements = this.ssRestController.getAllCurrentMeasurements();
+        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
+        assertEquals(number, measurements.getBody().size());
+    }
+
     // TODO write a test for getAllPhotosBySS()
-//    @Test
-//    void testGetAllPhotosBySS() {
-//    }
+    // @Test
+    //     void testGetAllPhotosBySS() {
+    // }
 }
