@@ -25,8 +25,10 @@ public class AccessPoint {
     @Column(name = "SERVER_ADDRESS")
     private String serverAddress;
 
+    //TODO: is this column still 'status' anywhere else?
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "AP_STATUS")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private AccessPointStatus status;
 
     @JsonBackReference
