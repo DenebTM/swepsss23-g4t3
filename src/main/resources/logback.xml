@@ -19,9 +19,9 @@
     <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
         <connectionSource
                 class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            <driverClass>org.h2.Driver</driverClass>
-            <url>jdbc:h2:mem:skel</url>
-            <user>sa</user>
+            <driverClass>com.mysql.cj.jdbc.Driver</driverClass>
+            <url>jdbc:mysql://localhost:3306/swe</url>
+            <user>root</user>
             <password>password</password>
         </connectionSource>
     </appender>
@@ -70,14 +70,14 @@
         <appender-ref ref="warnError" level="warn"/>
     </logger>
     <logger name="dbLog" additivity="false">
-        <appender-ref ref="db" level="warn"/>
+        <appender-ref ref="db" level="info"/>
     </logger>
 
     <root level="info">
         <appender-ref ref="stdout"/>
         <appender-ref ref="info" level="info"/>
         <appender-ref ref="warnError" level="warn"/>
-        <appender-ref ref="db" level="warn"/>
+        <appender-ref ref="db" level="info"/>
     </root>
 
 </configuration>
