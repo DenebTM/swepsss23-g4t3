@@ -1,4 +1,4 @@
-## Dependencies (pip packages)
+## Dependencies (pip)
 
 - asyncio
 - aiohttp
@@ -12,7 +12,7 @@
 
 ## Running the mock server
 
-### Dependencies:
+### Dependencies (pip):
 
 - flask
 
@@ -20,4 +20,4 @@
 
 ## Running unit tests
 
-Command: `python3 -m unittest`
+Command: `python3 -m unittest tests/*.py`

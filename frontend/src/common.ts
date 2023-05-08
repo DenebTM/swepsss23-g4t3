@@ -1,10 +1,23 @@
 import CryptoJS from 'crypto-js'
 
+import YardIcon from '@mui/icons-material/Yard'
+
 import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
 import { theme } from './styles/theme'
+
+/** Enum for the URL parameters controlling the view of a single sensor station.
+ */
+export enum SensorStationView {
+  /** The graphical view of sensor station information. */
+  GRAPHICAL = '',
+  /** The tabuler view of sensor station data */
+  TABLE = 'table',
+  /** The gallery for a given sensor station */
+  GALLERY = 'gallery',
+}
 
 /** The root path for pages relating to greenhouses */
 export const GREENHOUSES_ROOT = 'greenhouses'
@@ -145,12 +158,15 @@ export const PAGE_URL: {
   },
 }
 
+/** Icon used for greenhouses in the sidebar and tables */
+export const GreenhouseIcon = YardIcon
+
 /** Salt used to encrypt and decrypt sensor station UUIDs for photo upload */
 const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
 
 /** Encrypt a sensor station UUID for photo upload */
 const encryptSensorStationUuid = (uuid: SensorStationUuid): string =>
-  CryptoJS.AES.encrypt(String(uuid), SECRET).toString()
+  encodeURIComponent(CryptoJS.AES.encrypt(String(uuid), SECRET).toString())
 
 /** Decrypt a sensor station UUID for photo upload */
 export const decryptSensorStationUuid = (
@@ -165,17 +181,6 @@ export const decryptSensorStationUuid = (
     // If the data can not be parsed as UTF-8 then catch this here
     return undefined
   }
-}
-
-/** Enum for the URL parameters controlling the view of a single sensor station.
- */
-export enum SensorStationView {
-  /** The graphical view of sensor station information. */
-  GRAPHICAL = '',
-  /** The tabuler view of sensor station data */
-  TABLE = 'table',
-  /** The gallery for a given sensor station */
-  GALLERY = 'gallery',
 }
 
 /** The key of JWT authorisation cookie */
@@ -299,3 +304,6 @@ export const greenhouseMetricWithUnit = (
   (metricRange.unit === '' ? '' : ` (${metricRange.unit})`)
 
 export const emDash = '—'
+
+/** FormData key for uploaded sensor station photos */
+export const UPLOADED_PHOTO_KEY = 'multipartImage'

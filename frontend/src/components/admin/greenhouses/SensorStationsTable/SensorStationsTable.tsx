@@ -14,7 +14,9 @@ import {
   StationStatus,
 } from '~/models/sensorStation'
 
+import { AddGardenerDropdown } from './AddGardenerDropdown/AddGardenerDropdown'
 import { GardenerChips } from './GardenerChips'
+import { GenerateQrCode } from './GenerateQrCode/GenerateQrCode'
 
 /** Map values from {@link StationStatus} to {@link StatusVariant} for display in {@link StatusCell} */
 const sensorStationToVariant: { [key in StationStatus]: StatusVariant } = {
@@ -73,7 +75,7 @@ export const SensorStationsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
-    { ...centerCell, field: 'uuid', headerName: 'UUID' },
+    { ...centerCell, flex: 1, field: 'uuid', headerName: 'UUID' },
     {
       ...centerCell,
       field: 'status',
@@ -90,11 +92,13 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       ...centerCell,
+      flex: 1,
       field: 'aggregationPeriod',
       headerName: 'Aggregation Period (s)',
     },
     {
       ...centerCell,
+      flex: 1,
       field: 'accessPoint',
       headerName: 'Access Point ID',
       renderCell: (
@@ -107,16 +111,17 @@ export const SensorStationsTable: React.FC = () => {
       sortable: false,
       filterable: false,
       headerName: 'Gardeners',
-      description: 'Gardeners assigned to the sensor station',
+      description: 'Gardeners assigned to this sensor station',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
-      ) => <GardenerChips {...params} />,
+      ) => <GardenerChips {...params} setRows={handleUpdateSensorStations} />,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 135 * maxGardenersPerGreenhouse,
+      width: 130 * maxGardenersPerGreenhouse,
     },
     {
       ...centerCell,
+      width: 135,
       field: 'action',
       headerName: 'Actions',
       sortable: false,
@@ -124,14 +129,19 @@ export const SensorStationsTable: React.FC = () => {
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => (
-        // TODO qqjf add links and actions here
         <DeleteCell<SensorStation, SensorStationUuid>
           deleteEntity={deleteSensorStation}
           entityId={params.row.uuid}
           entityName="sensor station"
           getEntityId={(r) => r.uuid}
           setRows={handleUpdateSensorStations}
-        />
+        >
+          <AddGardenerDropdown
+            sensorStation={params.row}
+            setSensorStations={handleUpdateSensorStations}
+          />
+          <GenerateQrCode uuid={params.row.uuid} />
+        </DeleteCell>
       ),
     },
   ]
