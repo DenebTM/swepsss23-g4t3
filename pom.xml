@@ -48,6 +48,7 @@
         <sonar.typescript.tsconfigPath>frontend/tsconfig.json</sonar.typescript.tsconfigPath>
         <sonar.javascript.lcov.reportPaths>frontend/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
 
+        <sonar.python.version>3.9</sonar.python.version>
         <sonar.python.coverage.reportPaths>raspberry/coverage.xml</sonar.python.coverage.reportPaths>
     </properties>
 
