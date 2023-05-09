@@ -53,7 +53,6 @@ raspberry-unit-test-job:
   allow_failure: false
   retry: 1
 
-
 sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
@@ -66,6 +65,11 @@ sonarqube-check:
       - .sonar/cache
   script:
     - echo "Running sonar analysis for ${SONAR_PROJECT_KEY}"
+    - apk --update add python3 sqlite
+    - python3 -m ensurepip
+    - pip3 install asyncio aiohttp bleak pyyaml coverage
+    - python -m coverage run raspberry/tests/*.py
+    - python -m coverage xml -o raspberry/coverage.xml
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
   retry: 1
