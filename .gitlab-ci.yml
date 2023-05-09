@@ -17,6 +17,9 @@ backend-unit-test-job:
     - mvn -Dskip.npm -Dskip.yarn -Dskip.installnodenpm -Dskip.installyarn test
   allow_failure: false
   retry: 1
+  only:
+    changes:
+      - src
 
 frontend-unit-test-job:
   extends: .before_script_template
@@ -28,6 +31,9 @@ frontend-unit-test-job:
     - yarn test
   allow_failure: false
   retry: 1
+  only:
+    changes:
+      - frontend
 
 arduino-build-job:
   stage: test
@@ -40,6 +46,9 @@ arduino-build-job:
     - pio run
   allow_failure: false
   retry: 1
+  only:
+    changes:
+      - arduino
 
 raspberry-unit-test-job:
   stage: test
@@ -52,6 +61,9 @@ raspberry-unit-test-job:
     - python -m unittest tests/*.py
   allow_failure: true
   retry: 1
+  only:
+    changes:
+      - raspberry
 
 sonarqube-check:
   extends: .before_script_template
