@@ -49,6 +49,33 @@ public class AccessPointRestController implements BaseRestController {
     }
 
     /**
+     * POST route to create a new access Point, only allowed by ADMIN
+     * @param json body
+     * @return newly created ap
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = AP_PATH)
+    public ResponseEntity<Object> createAP(@RequestBody Map<String, Object> json) {
+        AccessPoint newAP = new AccessPoint();
+        String name = (String)json.get("name");
+        String serverAddress = (String)json.get("serverAddress");
+        if (name == null || name.equals("")) {
+            throw new BadRequestException("No name is given");
+        }
+        if (apService.loadAPByName(name)!=null){
+            throw new BadRequestException("Name for access point is already in use");
+        }
+        if (serverAddress == null || serverAddress.equals("")) {
+            throw new BadRequestException("No server address is given");
+        }
+        newAP.setName(name);
+        newAP.setServerAddress(serverAddress);
+        newAP.setStatus(AccessPointStatus.UNCONFIRMED);
+
+        return ResponseEntity.ok(apService.saveAP(newAP));
+    }
+
+    /**
      * a PUT route to update an existing access point
      * @param name
      * @param json
