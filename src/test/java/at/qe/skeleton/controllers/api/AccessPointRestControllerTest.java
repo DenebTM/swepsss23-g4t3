@@ -45,7 +45,7 @@ class AccessPointRestControllerTest {
     @Test
     void testGetAllAccessPoints() {
         int number = apService.getAllAP().size();
-        var response = this.apRestController.getAllAccessPoints();
+        var response = apRestController.getAllAccessPoints();
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         var accessPoints = response.getBody();
@@ -55,7 +55,7 @@ class AccessPointRestControllerTest {
 
     @Test
     void testGetAPById() {
-        var response = this.apRestController.getAPByName(name);
+        var response = apRestController.getAPByName(name);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         var accessPoint = response.getBody();
@@ -73,7 +73,7 @@ class AccessPointRestControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateAP() {
-        var response = this.apRestController.updateAP(name, jsonUpdateAP);
+        var response = apRestController.updateAP(name, jsonUpdateAP);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         var accessPoint = response.getBody();
@@ -97,7 +97,7 @@ class AccessPointRestControllerTest {
     void testDeleteAPById() {
         int originalSize = apService.getAllAP().size();
 
-        var response = this.apRestController.deleteAPById(name);
+        var response = apRestController.deleteAPById(name);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertEquals(originalSize-1, apService.getAllAP().size());
 

@@ -3,7 +3,6 @@ package at.qe.skeleton.tests;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +10,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @WebAppConfiguration
@@ -27,7 +28,7 @@ public class PhotoDataTest {
         if (photoDataRepository.findByName("example2").isPresent()) {
             testimg = photoDataRepository.findByName("example2").get();
         }
-        Assertions.assertEquals(testimg, img);
+        assertEquals(testimg, img);
     }
 
 }
