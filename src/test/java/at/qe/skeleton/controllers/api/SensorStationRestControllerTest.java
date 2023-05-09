@@ -71,7 +71,10 @@ class SensorStationRestControllerTest {
         int number = ssService.getAllSS().size();
         var response = this.ssRestController.getAllSensorStations();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(number, response.getBody().size());
+
+        var sensorStations = response.getBody();
+        assertNotNull(sensorStations);
+        Assertions.assertEquals(number, sensorStations.size());
     }
 
     AccessPoint createTestAP() {
@@ -88,14 +91,22 @@ class SensorStationRestControllerTest {
         SensorStation ssTest = new SensorStation(apTest, 30L);
         ssTest.setId(127);
 
-        var response = this.ssRestController.getSSForAccessPoint(apTest.getName());
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(0, response.getBody().size());
-        ssService.saveSS(ssTest);
+        // no sensor stations yet
+        var initialResponse = this.ssRestController.getSSForAccessPoint(apTest.getName());
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), initialResponse.getStatusCode());
 
-        var response2 = this.ssRestController.getSSForAccessPoint(apTest.getName());
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
-        Assertions.assertEquals(1, response2.getBody().size());
+        var initialSS = initialResponse.getBody();
+        assertNotNull(initialSS);
+        Assertions.assertEquals(0, initialSS.size());
+
+        // insert a sensor station, check if it is returned
+        ssService.saveSS(ssTest);
+        var finalResponse = this.ssRestController.getSSForAccessPoint(apTest.getName());
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), finalResponse.getStatusCode());
+
+        var finalSS = finalResponse.getBody();
+        assertNotNull(finalSS);
+        Assertions.assertEquals(1, finalSS.size());
     }
 
     @Test
@@ -119,7 +130,11 @@ class SensorStationRestControllerTest {
         AccessPoint apTest = createTestAP();
 
         var initialSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
-        int initialSSCount = initialSSResponse.getBody().size();
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), initialSSResponse.getStatusCode());
+
+        var initialSS = initialSSResponse.getBody();
+        assertNotNull(initialSS);
+        int initialSSCount = initialSS.size();
 
         List<SensorStation> newSS = new ArrayList<>();
         SensorStation ssTest1 = new SensorStation(apTest, 30L);
@@ -137,18 +152,21 @@ class SensorStationRestControllerTest {
 
         // ASSERTIONS
         var finalSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
-        int finalSSCount = finalSSResponse.getBody().size();
+        Assertions.assertEquals(HttpStatusCode.valueOf(200), initialSSResponse.getStatusCode());
+        var finalSS = finalSSResponse.getBody();
+        assertNotNull(finalSS);
+        int finalSSCount = finalSS.size();
 
         // check all sensor stations inserted
         assertEquals(initialSSCount + newSSCount, finalSSCount);
 
         // check sensor stations inserted for correct AP
-        for (SensorStation ss : finalSSResponse.getBody()) {
+        for (SensorStation ss : finalSS) {
             assertEquals(ss.getAccessPoint().getName(), apTest.getName());
         }
 
         // check sensor station status matches
-        for (SensorStation ss : finalSSResponse.getBody()) {
+        for (SensorStation ss : finalSS) {
             assertEquals(SensorStationStatus.AVAILABLE, ss.getStatus());
         }
     }
@@ -171,10 +189,10 @@ class SensorStationRestControllerTest {
     void testGetSSById() {
         var response = this.ssRestController.getSSById(id);
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertTrue(response.getBody() instanceof SensorStation);
-        if (response.getBody() instanceof SensorStation){
-            Assertions.assertEquals(id, response.getBody().getId());
-        }
+
+        var sensorStation = response.getBody();
+        assertNotNull(sensorStation);
+        Assertions.assertEquals(id, sensorStation.getId());
 
         // if ss id does not exist in database, 404 not found error
         assertThrows(
@@ -210,7 +228,10 @@ class SensorStationRestControllerTest {
     void testGetGardenersBySS() {
         var response = this.ssRestController.getGardenersBySS(id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertEquals(ss.getGardeners().contains(susi), response.getBody().contains(username));
+
+        var gardenerNames = response.getBody();
+        assertNotNull(gardenerNames);
+        assertEquals(ss.getGardeners().contains(susi), gardenerNames.contains(username));
 
         assertThrows(
             NotFoundInDatabaseException.class,
@@ -226,10 +247,13 @@ class SensorStationRestControllerTest {
         int originalSize = originalNames.size();
         var response = this.ssRestController.assignGardenerToSS(id,username);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var sensorStation = response.getBody();
+        assertNotNull(sensorStation);
         if (!originalNames.contains(username)){
-            assertEquals(originalSize+1, response.getBody().getGardeners().size());
+            assertEquals(originalSize+1, sensorStation.getGardeners().size());
         } else {
-            assertEquals(originalSize, response.getBody().getGardeners().size());
+            assertEquals(originalSize, sensorStation.getGardeners().size());
         }
 
         assertThrows(
@@ -251,8 +275,11 @@ class SensorStationRestControllerTest {
         int originalSize = originalNames.size();
         var response = this.ssRestController.removeGardenerFromSS(id,username);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var sensorStation = response.getBody();
+        assertNotNull(sensorStation);
         if (originalNames.contains(username)){
-            assertEquals(originalSize-1, response.getBody().getGardeners().size());
+            assertEquals(originalSize-1, sensorStation.getGardeners().size());
         }
 
         assertThrows(
@@ -274,18 +301,24 @@ class SensorStationRestControllerTest {
         jsonUpdateSS.put("from", from.toString());
         jsonUpdateSS.put("to", to.toString());
 
-        var measurements = this.ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
-        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
-        assertEquals(number, measurements.getBody().size());
+        var response = this.ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var measurements = response.getBody();
+        assertNotNull(measurements);
+        assertEquals(number, measurements.size());
     }
 
     @Test
     void testGetAllCurrentMeasurements(){
         Integer number = measurementService.getAllCurrentMeasurements().size();
 
-        var measurements = this.ssRestController.getAllCurrentMeasurements();
-        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
-        assertEquals(number, measurements.getBody().size());
+        var response = this.ssRestController.getAllCurrentMeasurements();
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var measurements = response.getBody();
+        assertNotNull(measurements);
+        assertEquals(number, measurements.size());
     }
 
     // TODO write a test for getAllPhotosBySS()
