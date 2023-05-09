@@ -47,6 +47,11 @@ public class AccessPointRestController implements BaseRestController {
         return ResponseEntity.ok(ap);
     }
 
+    /**
+     * POST route to create a new access Point, only allowed by ADMIN
+     * @param json body
+     * @return newly created ap
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = AP_PATH)
     public ResponseEntity<Object> createAP(@RequestBody Map<String, Object> json) {
@@ -59,8 +64,8 @@ public class AccessPointRestController implements BaseRestController {
         if (serverAddress == null || serverAddress.equals("")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Server address cannot be blank.");
         }
-        newAP.setName("name");
-        newAP.setServerAddress("serverAddress");
+        newAP.setName(name);
+        newAP.setServerAddress(serverAddress);
         newAP.setStatus(AccessPointStatus.UNCONFIRMED);
 
         return ResponseEntity.ok(apService.saveAP(newAP));
