@@ -48,7 +48,7 @@ async def clear_warning_on_backend(sensorstation_id, session, data):
         #TODO: Log communication
 
 async def get_thresholds_update_db(sensorstation_id, session):
-    async with session.get(common.web_server_address + 'sensor-stations' + str(sensorstation_id)) as response:
+    async with session.get(common.web_server_address + '/sensor-stations/' + str(sensorstation_id)) as response:
         json_data = await response.json()
         if json_data.loads():
             await update_sensorstation(json_data)
