@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -51,5 +50,13 @@ public class Measurement {
 
     public void setSensorStation(SensorStation sensorStation) {
         this.sensorStation = sensorStation;
+    }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setData(SensorValues data) {
+        this.data = data;
     }
 }
