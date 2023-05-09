@@ -51,7 +51,17 @@ public class AccessPointRestController implements BaseRestController {
     @PostMapping(value = AP_PATH)
     public ResponseEntity<Object> createAP(@RequestBody Map<String, Object> json) {
         AccessPoint newAP = new AccessPoint();
-
+        String name = (String)json.get("name");
+        String serverAddress = (String)json.get("serverAddress");
+        if (name == null || name.equals("")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name cannot be blank.");
+        }
+        if (serverAddress == null || serverAddress.equals("")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Server address cannot be blank.");
+        }
+        newAP.setName("name");
+        newAP.setServerAddress("serverAddress");
+        newAP.setStatus(AccessPointStatus.UNCONFIRMED);
 
         return ResponseEntity.ok(apService.saveAP(newAP));
     }
