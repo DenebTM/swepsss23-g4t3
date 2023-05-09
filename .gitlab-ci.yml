@@ -77,11 +77,16 @@ sonarqube-check:
       - .sonar/cache
   script:
     - echo "Running sonar analysis for ${SONAR_PROJECT_KEY}"
+
     - apk --update add python3 sqlite
     - python3 -m ensurepip
     - pip3 install asyncio aiohttp bleak pyyaml coverage
-    - python -m coverage run --source=raspberry raspberry/tests/*.py || true
+    - cd raspberry
+    - python -m coverage run --source=. -m unittest discover tests || true
+    - mv .coverage ..
+    - cd ..
     - python -m coverage xml -o raspberry/coverage.xml --omit="raspberry/tests/*"
+
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
   retry: 1
