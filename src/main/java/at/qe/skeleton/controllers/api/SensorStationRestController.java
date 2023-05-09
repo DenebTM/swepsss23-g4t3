@@ -15,7 +15,6 @@ import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserxService;
-import at.qe.skeleton.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -331,11 +330,11 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<Object> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            return HelperFunctions.notFoundError("Sensor station", String.valueOf(id));
+            throw new NotFoundInDatabaseException(SS, id);
         }
 
         if (!json.containsKey("timestamp")){
-            return ResponseEntity.badRequest().body("No timestamp");
+            throw new BadRequestException("No timestamp");
         }
 
         Measurement newMeasurement = new Measurement();
@@ -343,7 +342,7 @@ public class SensorStationRestController implements BaseRestController {
         try {
             newMeasurement.setTimestamp(Instant.parse((String)json.get("timestamp")));
         } catch (DateTimeException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter a valid timestamp.");
+            throw new BadRequestException("Invalid timestamp");
         }
         json.remove("timestamp");
 
@@ -352,7 +351,7 @@ public class SensorStationRestController implements BaseRestController {
             SensorValues newValues = mapper.convertValue(json, SensorValues.class);
             newMeasurement.setData(sensorValuesRepository.save(newValues));
         } catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body("Invalid sensor values.");
+            throw new BadRequestException("Invalid sensor values");
         }
 
         return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
