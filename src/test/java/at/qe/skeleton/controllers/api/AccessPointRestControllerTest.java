@@ -4,7 +4,6 @@ import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,18 +46,21 @@ class AccessPointRestControllerTest {
     void testGetAllAccessPoints() {
         int number = apService.getAllAP().size();
         var response = this.apRestController.getAllAccessPoints();
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(number, response.getBody().size());
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var accessPoints = response.getBody();
+        assertNotNull(accessPoints);
+        assertEquals(number, accessPoints.size());
     }
 
     @Test
     void testGetAPById() {
         var response = this.apRestController.getAPByName(name);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertTrue(response.getBody() instanceof AccessPoint);
-        if (response.getBody() instanceof AccessPoint){
-            assertEquals(name, ((AccessPoint) response.getBody()).getName());
-        }
+
+        var accessPoint = response.getBody();
+        assertNotNull(accessPoint);
+        assertEquals(name, accessPoint.getName());
 
         // if ap id does not exist in database, 404 not found error
         assertThrows(
@@ -73,14 +75,14 @@ class AccessPointRestControllerTest {
     void testUpdateAP() {
         var response = this.apRestController.updateAP(name, jsonUpdateAP);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertTrue(response.getBody() instanceof AccessPoint);
-        if (response.getBody() instanceof AccessPoint){
-            assertEquals(name, ((AccessPoint)response.getBody()).getName());
-            assertEquals(
-                AccessPointStatus.valueOf((String)jsonUpdateAP.get("status")),
-                response.getBody().getStatus()
-            );
-        }
+
+        var accessPoint = response.getBody();
+        assertNotNull(accessPoint);
+        assertEquals(name, accessPoint.getName());
+        assertEquals(
+            AccessPointStatus.valueOf((String)jsonUpdateAP.get("status")),
+            accessPoint.getStatus()
+        );
 
         // if ap id does not exist in database, 404 not found error
         assertThrows(
