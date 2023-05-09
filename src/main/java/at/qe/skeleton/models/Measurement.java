@@ -51,4 +51,12 @@ public class Measurement {
     public void setSensorStation(SensorStation sensorStation) {
         this.sensorStation = sensorStation;
     }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setData(SensorValues data) {
+        this.data = data;
+    }
 }
