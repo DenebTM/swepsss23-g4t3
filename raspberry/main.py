@@ -63,7 +63,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
             await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
             await database_operations.initialize_sensorstation(sensorstation_id)
             #TODO: Logging
-            read_task = asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request)) #TODO: implement endless loop with connection_request.done() throw it out of endless loop
+            read_task = asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done():
                 await asyncio.sleep(transmission_interval)
                 await check_values_for_thresholds(client, sensorstation_id, session)
