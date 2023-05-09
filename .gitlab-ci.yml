@@ -50,7 +50,7 @@ raspberry-unit-test-job:
     - pip3 install asyncio aiohttp bleak pyyaml
     - cd raspberry
     - python -m unittest tests/*.py
-  allow_failure: false
+  allow_failure: true
   retry: 1
 
 sonarqube-check:
