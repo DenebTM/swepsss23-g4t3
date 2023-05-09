@@ -10,6 +10,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * This class defines custom exception handlers for the ReST controllers
+ * 
+ * This allows us to throw exceptions when a request cannot be fulfilled,
+ * and centrally manage what is returned in that case.
+ * 
+ * Spring's built-in `AccessDeniedException` is used for 401 errors, custom
+ * exception types are defined for everything else.
+ */
 @ControllerAdvice
 public class ErrorHandler {
     @ExceptionHandler(NotFoundInDatabaseException.class)
@@ -26,7 +35,10 @@ public class ErrorHandler {
             .body(ex.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler({
+        AccessDeniedException.class,
+        AuthenticationCredentialsNotFoundException.class
+    })
     ResponseEntity<String> unauthorizedHandler(AccessDeniedException ex, WebRequest request) {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
@@ -36,8 +48,7 @@ public class ErrorHandler {
     @ExceptionHandler({
         ForbiddenException.class,
         BadCredentialsException.class,
-        DisabledException.class,
-        AuthenticationCredentialsNotFoundException.class
+        DisabledException.class
     })
     ResponseEntity<String> forbiddenHandler(RuntimeException ex, WebRequest request) {
         return ResponseEntity
