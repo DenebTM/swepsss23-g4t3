@@ -8,11 +8,14 @@ import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.SensorStationStatus;
+import at.qe.skeleton.models.*;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.AccessPointService;
+import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserxService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,12 +48,16 @@ public class SensorStationRestController implements BaseRestController {
     @Autowired
     private UserxService userService;
 
+    @Autowired
+    private SensorValuesRepository sensorValuesRepository;
+
     private static final String SS = "Sensor station";
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_AP_PATH = AccessPointRestController.AP_NAME_PATH + SS_PATH;
     private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
+    private static final String MEASUREMENTS_PATH = "/measurements";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -96,7 +103,7 @@ public class SensorStationRestController implements BaseRestController {
 
     /**
      * Route to add a list of sensor stations to the db
-     * 
+     *
      * This is used by the access point to report found sensor stations
      * while it is in SEARCHING Mode
      *
@@ -262,7 +269,7 @@ public class SensorStationRestController implements BaseRestController {
      * @param json
      * @return List of historic measurements for given time frame or current/recent measurement
      */
-    @GetMapping(value = SS_ID_PATH + "/measurements")
+    @GetMapping(value = SS_ID_PATH + MEASUREMENTS_PATH)
     public ResponseEntity<List<Measurement>> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
         Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
         Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
@@ -307,9 +314,47 @@ public class SensorStationRestController implements BaseRestController {
      * a route to Get a list of all current measurements
      * @return An object containing the returned measurements indexed by sensor station
      */
-    @GetMapping(value = "/measurements")
+    @GetMapping(value = MEASUREMENTS_PATH)
     public ResponseEntity<List<Measurement>> getAllCurrentMeasurements(){
         return ResponseEntity.ok(measurementService.getAllCurrentMeasurements());
+    }
+
+    /**
+     * a POST route to create a new measurement, for AP to send new measurement data
+     * @param id
+     * @param json
+     * @return the newly created measurement object
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = SS_ID_PATH + MEASUREMENTS_PATH)
+    public ResponseEntity<Object> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss == null) {
+            throw new NotFoundInDatabaseException(SS, id);
+        }
+
+        if (!json.containsKey("timestamp")){
+            throw new BadRequestException("No timestamp");
+        }
+
+        Measurement newMeasurement = new Measurement();
+        newMeasurement.setSensorStation(ss);
+        try {
+            newMeasurement.setTimestamp(Instant.parse((String)json.get("timestamp")));
+        } catch (DateTimeException e){
+            throw new BadRequestException("Invalid timestamp");
+        }
+        json.remove("timestamp");
+
+        var mapper = new ObjectMapper();
+        try {
+            SensorValues newValues = mapper.convertValue(json, SensorValues.class);
+            newMeasurement.setData(sensorValuesRepository.save(newValues));
+        } catch (IllegalArgumentException e){
+            throw new BadRequestException("Invalid sensor values");
+        }
+
+        return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
     }
 
 }
