@@ -8,7 +8,6 @@ import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.models.*;
-import at.qe.skeleton.models.enums.Status;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.repositories.SensorValuesRepository;
