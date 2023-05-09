@@ -42,7 +42,7 @@
         <sonar.test.inclusions>src/test/**/*.java,frontend/src/tests/**/*.test.ts*</sonar.test.inclusions>
         <sonar.testExecutionReportPaths>frontend/sonar-report.xml</sonar.testExecutionReportPaths>
 
-        <sonar.exclusions>frontend/src/tests,raspberry/tests</sonar.exclusions>
+        <sonar.exclusions>frontend/src/tests</sonar.exclusions>
         <sonar.coverage.exclusions>src/test,frontend/src/tests,raspberry/tests,raspberry/mock_server</sonar.coverage.exclusions>
 
         <sonar.typescript.tsconfigPath>frontend/tsconfig.json</sonar.typescript.tsconfigPath>
