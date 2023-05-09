@@ -60,10 +60,13 @@ public class AccessPointRestController implements BaseRestController {
         String name = (String)json.get("name");
         String serverAddress = (String)json.get("serverAddress");
         if (name == null || name.equals("")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name cannot be blank.");
+            throw new BadRequestException("No name is given");
+        }
+        if (apService.loadAPByName(name)!=null){
+            throw new BadRequestException("Name for access point is already in use");
         }
         if (serverAddress == null || serverAddress.equals("")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Server address cannot be blank.");
+            throw new BadRequestException("No server address is given");
         }
         newAP.setName(name);
         newAP.setServerAddress(serverAddress);
