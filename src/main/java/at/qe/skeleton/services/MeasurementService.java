@@ -47,4 +47,12 @@ public class MeasurementService {
         }
         return result;
     }
+
+    public Object getMeasurementById(Integer id){
+        return measurementRepository.findFirstById(id);
+    }
+
+    public Measurement saveMeasurement(Measurement m){
+        return measurementRepository.save(m);
+    }
 }

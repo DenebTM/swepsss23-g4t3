@@ -20,6 +20,8 @@ public interface MeasurementRepository extends AbstractRepository<Measurement, L
     @Override
     List<Measurement> findAll();
 
+    Measurement findFirstById(Integer id);
+
     List<Measurement> findFirstBySensorStationOrderByTimestampDesc(SensorStation sensorStation);
 
     List<Measurement> findAllByOrderBySensorStationAscTimestampDesc();
