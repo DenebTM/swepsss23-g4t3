@@ -16,4 +16,5 @@ yarn-error.log*
 
 # python coverage library
 .coverage
+raspberry/.coverage
 raspberry/coverage.xml
