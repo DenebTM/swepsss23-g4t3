@@ -347,12 +347,12 @@ public class SensorStationRestController implements BaseRestController {
         var mapper = new ObjectMapper();
         try {
             SensorValues newValues = mapper.convertValue(json, SensorValues.class);
-            newMeasurement.setSensorValues(sensorValuesRepository.save(newValues));
+            newMeasurement.setData(sensorValuesRepository.save(newValues));
         } catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body("Invalid sensor values.");
         }
 
-        return ResponseEntity.ok(ssService.saveMeasurement(newMeasurement));
+        return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
     }
 
 }
