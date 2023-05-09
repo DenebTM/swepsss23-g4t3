@@ -55,7 +55,7 @@ async def sensor_station_manager(connection_request, session):
         await asyncio.sleep(10)
 
 async def sensor_station_task(connection_request, session, sensorstation_id, first_time):
-    #TODO: Catch cancelled Error and error handle stuff
+    #TODO: Catch cancelled Error and error handle stuff eg the task for read sensorvalues
     sensorstation_mac = common.known_ss[sensorstation_id]
     try:
         transmission_interval = common.polling_interval
@@ -63,13 +63,13 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
             await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
             await database_operations.initialize_sensorstation(sensorstation_id)
             #TODO: Logging
+            read_task = asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request)) #TODO: implement endless loop with connection_request.done() throw it out of endless loop
             while not connection_request.done():
-                await read_sensorvalues(client, sensorstation_id)
-                await check_values_for_thresholds(client, sensorstation_id, transmission_interval, session)
-                await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
-                await get_thresholds_update_db(sensorstation_id, session, transmission_interval)
-                #TODO: Update sensorstations_thresholds
-                #TODO: Check for thresholds
+                await asyncio.sleep(transmission_interval)
+                await check_values_for_thresholds(client, sensorstation_id, session)
+                await send_sensorvalues_to_backend(sensorstation_id, session)
+                await get_thresholds_update_db(sensorstation_id, session)
+
 
     except BleakError as e:
         print(e)

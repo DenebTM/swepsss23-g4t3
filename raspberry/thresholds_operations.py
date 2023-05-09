@@ -2,8 +2,7 @@ import common
 from database_operations import get_sensor_data_thresholds, get_sensor_data_averages, update_sensorstation
 import asyncio
 
-async def check_values_for_thresholds(sensorstation_client, sensorstation_id, transmission_interval,session):
-    await asyncio.sleep(transmission_interval)
+async def check_values_for_thresholds(sensorstation_client, sensorstation_id, session):
     try:
         thresholds_dict = await get_sensor_data_thresholds(sensorstation_id)
         averages_dict = await get_sensor_data_averages(sensorstation_id)
@@ -48,13 +47,12 @@ async def clear_warning_on_backend(sensorstation_id, session, data):
             print(response.status)
         #TODO: Log communication
 
-async def get_thresholds_update_db(sensorstation_id, session, transmission_interval):
+async def get_thresholds_update_db(sensorstation_id, session):
     async with session.get(common.web_server_address + 'sensor-stations' + str(sensorstation_id)) as response:
         json_data = await response.json()
         if json_data.loads():
             await update_sensorstation(json_data)
         else:
             pass
-        asyncio.sleep(transmission_interval)
         #TODO: implement try catch. also implement disconnection from sensorstation if not allowed
         #TODO: skip it if webserver is offline as we wont get a functioning response        
