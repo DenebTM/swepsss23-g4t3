@@ -6,7 +6,7 @@ import common
 import database_operations
 from sensorvalues_operations import read_sensorvalues, send_sensorvalues_to_backend
 from sensorstation_operations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
-from check_thresholds import check_values_for_thresholds
+from thresholds_operations import check_values_for_thresholds, get_thresholds_update_db
 
 async def get_ap_status(session):
     async with session.get(common.web_server_address + '/access-points/' + common.access_point_name) as response:
@@ -67,6 +67,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 await read_sensorvalues(client, sensorstation_id)
                 await check_values_for_thresholds(client, sensorstation_id, transmission_interval, session)
                 await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
+                await get_thresholds_update_db(sensorstation_id, session, transmission_interval)
                 #TODO: Update sensorstations_thresholds
                 #TODO: Check for thresholds
 
