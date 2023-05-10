@@ -9,10 +9,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class LoggingService {
@@ -21,13 +18,18 @@ public class LoggingService {
     LoggingEventRepository loggingEventRepository;
 
     /**
-     * Gets all available logs from the repository
+     * Returns all available logs from the repository, ordered by timestamp (latest events are shown first)
      * @return list of logs
      */
     public List<LoggingEvent> getAllLogs() {
         return loggingEventRepository.findAllByOrderByTimestmpAsc();
     }
 
+    /**
+     * Returns all available logs starting from the beginning and ending at parameter 'to'
+     * @param to end date
+     * @return list of logs in time period beginning - 'to'
+     */
     public List<LoggingEvent> getAllLogsTo(LocalDateTime to) {
         ArrayList<LoggingEvent> result = new ArrayList<>();
         List<LoggingEvent> logs = loggingEventRepository.findAllByOrderByTimestmpAsc();
@@ -41,6 +43,11 @@ public class LoggingService {
         return result;
     }
 
+    /**
+     * Returns all available logs starting at parameter 'from' and ending with the latest event
+     * @param from begin date
+     * @return list of logs in time period 'from' - ending
+     */
     public List<LoggingEvent> getAllLogsFrom(LocalDateTime from) {
         ArrayList<LoggingEvent> result = new ArrayList<>();
         List<LoggingEvent> logs = loggingEventRepository.findAllByOrderByTimestmpDesc();
@@ -51,20 +58,27 @@ public class LoggingService {
             }
             result.add(l);
         }
+        Collections.reverse(result);
         return result;
     }
 
+    /**
+     * Returns all available logs starting at parameter 'from' and ending at parameter 'to'
+     * @param from begin date
+     * @param to end date
+     * @return list of logs in time period 'from' - 'to'
+     */
     public List<LoggingEvent> getAllLogsInTimeInterval(LocalDateTime from, LocalDateTime to) {
         ZonedDateTime zoneFrom = ZonedDateTime.of(from, ZoneId.systemDefault());
         ZonedDateTime zoneTo = ZonedDateTime.of(to, ZoneId.systemDefault());
         return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(zoneFrom.toInstant().toEpochMilli(), zoneTo.toInstant().toEpochMilli());
     }
 
-    public List<LoggingEvent> getLogsByTimestamp(LocalDateTime timestamp) {
-        ZonedDateTime zdt = ZonedDateTime.of(timestamp, ZoneId.systemDefault());
-        return loggingEventRepository.findAllByTimestmp(zdt.toInstant().toEpochMilli());
-    }
-
+    /**
+     * Returns all logs at a specific level
+     * @param level logging level
+     * @return all logs that have the set level
+     */
     public List<LoggingEvent> getLogsByLevel(String level) {
         return loggingEventRepository.findAllByLevelStringOrderByTimestmpDesc(level);
     }
