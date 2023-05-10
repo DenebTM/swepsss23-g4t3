@@ -65,6 +65,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
             # TODO: Logging, cancel read_task if this task dies
             read_task = asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done():
+                transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
                 await check_values_for_thresholds(client, sensorstation_id, session)
                 await send_sensorvalues_to_backend(sensorstation_id, session)

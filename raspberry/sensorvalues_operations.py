@@ -10,7 +10,7 @@ import common
 READ_SENSOR_INTERVAL = 5
 
 async def read_sensorvalues(client, sensorstation_id, connection_request):
-    while not connection_request.done():
+    while not connection_request.done() and client.is_connected:
         try:
             temperature = int.from_bytes(await client.read_gatt_char(common.temperature_uuid), 'little', signed=False)
             humidity = int.from_bytes(await client.read_gatt_char(common.humidity_uuid), 'little', signed=False)
