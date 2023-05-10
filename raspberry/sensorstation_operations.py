@@ -11,7 +11,7 @@ async def search_for_sensorstations():
         sensorstations = []
         async with BleakScanner() as scanner:
             await scanner.stop() # end scanning process for sure to avoid conflicts
-            devices = await scanner.discover(timeout=10.0)
+            devices = await scanner.discover()
             for d in devices:
                 if common.sensor_station_name in d.name:
                     ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed= False)
