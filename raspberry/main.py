@@ -9,12 +9,12 @@ from sensorstation_operations import search_for_sensorstations, send_sensorstati
 from thresholds_operations import check_values_for_thresholds, get_thresholds_update_db
 
 async def get_ap_status(session):
-    async with session.get(common.web_server_address + '/access-points/' + common.access_point_name) as response:
+    async with session.get('/access-points/' + common.access_point_name) as response:
         data = await response.json()
         return data['status']
     
 async def get_sensorstation_instructions(session):
-    async with session.get(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations') as response:
+    async with session.get('/access-points/' + common.access_point_name + '/sensor-stations') as response:
         json_data = await response.json()
 
         paired_stations = {}
