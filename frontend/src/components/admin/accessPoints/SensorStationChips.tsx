@@ -33,7 +33,7 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
         return []
       } else {
         return oldRows.map((row) =>
-          props.row.apId === row.apId
+          props.row.apName === row.apName
             ? {
                 ...props.row,
                 sensorStations: props.row.sensorStations.filter(
@@ -60,7 +60,7 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
         ))
       ) : (
         <Tooltip
-          title={`No greenhouses are connected to ${props.row.name}`}
+          title={`No greenhouses are connected to ${props.row.apName}`}
           arrow
         >
           <>{emDash}</>

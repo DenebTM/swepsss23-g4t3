@@ -4,12 +4,8 @@ import { AccessPoint } from '~/models/accessPoint'
 
 /** Factory to generate a fake {@link AccessPoint} */
 export const accessPointFactory = Factory.extend<AccessPoint>({
-  apId(i: number) {
-    // Rename `id` to `apId` to avoid clash with mirage built-in id key
-    return i
-  },
-  name(i: number) {
-    return `Access Point ${i + 1}`
+  apName(i: number) {
+    return `access-point-${i}`
   },
   active() {
     // Return that an access point is offline with a 1/3 probability
