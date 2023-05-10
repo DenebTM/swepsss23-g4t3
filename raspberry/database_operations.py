@@ -134,14 +134,11 @@ async def initialize_sensorstation(sensorstation_id):
             'temperature': 1000000
         }
     }
-    await update_sensorstation(json.dumps(json_data))
+    await update_sensorstation(json_data)
 
-async def update_sensorstation(json_data):
-    sensorstation = json.loads(json_data)
-
+async def update_sensorstation(sensorstation):
     with db_conn:
         try:
-
             sensorstation_id = sensorstation['id']
             transmission_interval = sensorstation['transmission_interval']
 

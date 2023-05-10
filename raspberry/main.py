@@ -62,7 +62,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
         async with BleakClient(sensorstation_mac) as client:
             await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
             await database_operations.initialize_sensorstation(sensorstation_id)
-            #TODO: Logging
+            # TODO: Logging, cancel read_task if this task dies
             read_task = asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done():
                 await asyncio.sleep(transmission_interval)
@@ -104,10 +104,10 @@ async def polling_loop(connection_request, session):
 
 async def main():
     while True:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(base_url=common.web_server_address) as session:
             connection_request = asyncio.Future()
             print('This should only be Printed at the start and when AP is offline')
-            async with session.post(common.web_server_address + '/access-points') as response:
+            async with session.post('/access-points') as response:
                 data = await response.json()
                 print(data)
                 if response.status == 200:
