@@ -24,10 +24,16 @@ public class LoggingController implements BaseRestController{
     @Autowired
     LoggingService loggingService;
 
-    //TODO: add filter for levels
+    /**
+     * GET route to filter logs according to a time interval, the logging level or not at all.
+     * A JSON is requested that can contain the parameters "from", "to", and "level".
+     * If all of these parameters are set to null, all logs are returned ordered by their timestamp.
+     * @param json
+     * @return
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/logs")
-    public ResponseEntity<Object> getAllLogs(@RequestBody Map<String, Object> json) {
+    public ResponseEntity<Object> getLogs(@RequestBody Map<String, Object> json) {
         List<String> validLevels = List.of("INFO", "WARN", "ERROR");
         if (json.get("level") instanceof String level) {
             if (validLevels.contains(level)) {
@@ -39,18 +45,23 @@ public class LoggingController implements BaseRestController{
         LocalDateTime to;
         if (json.get("from") == null) {
             if (json.get("to") == null) {
+                //neither 'level', 'from' or 'to' are set, logs are returned unfiltered
                 return ResponseEntity.ok(loggingService.getAllLogs());
             }
             if (!(json.get("to") instanceof LocalDateTime)) {
+                //'to' exist but has incorrect format
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter valid date format LocalDateTime");
             }
+            //'from' is null but 'to' is set, logs are returned from the earliest timestamp to the one set in 'to'
             to = (LocalDateTime) json.get("to");
             return ResponseEntity.ok(loggingService.getAllLogsTo(to));
         }
         if (json.get("to") == null) {
             if (!(json.get("from") instanceof LocalDateTime)){
+                //'from' exist but has incorrect format
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter valid date format LocalDateTime");
             }
+            //'to' is null but 'from' is set, logs are returned from the timestamp set in 'from' to the latest timestamp
             from = (LocalDateTime) json.get("from");
             return ResponseEntity.ok(loggingService.getAllLogsFrom(from));
         }
@@ -59,12 +70,7 @@ public class LoggingController implements BaseRestController{
         if (from.isAfter(to)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date should be later than start date");
         }
+        //both 'from' and 'to' are set sensibly
         return ResponseEntity.ok(loggingService.getAllLogsInTimeInterval(from, to));
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/logs/{timestamp}")
-    public ResponseEntity<Object> getLogsByDate(@PathVariable(value = "timestamp") LocalDateTime timestamp, @RequestBody Map<String, Object> json) {
-        return ResponseEntity.ok(loggingService.getLogsByTimestamp(timestamp));
     }
 }
