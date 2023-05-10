@@ -27,15 +27,20 @@ public class LoggingController implements BaseRestController{
     @Autowired
     LoggingService loggingService;
 
+    //TODO: add filter for levels
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/logs")
     public ResponseEntity<Object> getAllLogs(@RequestBody Map<String, Object> json) {
+        if (json.get("from") == null && json.get("to") == null) {
+            return ResponseEntity.ok(loggingService.getAllLogs());
+        }
         if (!(json.get("from") instanceof LocalDateTime from) || !(json.get("to") instanceof LocalDateTime to)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Enter valid date format LocalDateTime");
         }
-        // if keys "from" and "to" are missing in json body return all logs
+        //TODO: does this even happen?
+        // if keys "from" and "to" are missing in json body and not intentionally set to null
         if (!json.containsKey("from") && !json.containsKey("to")){
-            return ResponseEntity.ok(loggingService.getAllLogs());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Parameters 'from' and 'to' are missing");
         }
         // only ending is set
         if (!json.containsKey("from") && json.containsKey("to")){

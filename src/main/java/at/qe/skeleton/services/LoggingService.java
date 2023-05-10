@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class LoggingService {
@@ -22,7 +25,7 @@ public class LoggingService {
      * @return list of logs
      */
     public List<LoggingEvent> getAllLogs() {
-        return loggingEventRepository.findAll();
+        return loggingEventRepository.findAllByOrderByTimestmpAsc();
     }
 
     public List<LoggingEvent> getAllLogsTo(LocalDateTime to) {
@@ -30,7 +33,7 @@ public class LoggingService {
         List<LoggingEvent> logs = loggingEventRepository.findAllByOrderByTimestmpAsc();
         for (LoggingEvent l :
                 logs) {
-            if (l.getTimestmp().isAfter(to)) {
+            if (LocalDateTime.ofInstant(Instant.ofEpochSecond(l.getTimestmp()), TimeZone.getDefault().toZoneId()).isAfter(to)) {
                 break;
             }
             result.add(l);
@@ -43,7 +46,7 @@ public class LoggingService {
         List<LoggingEvent> logs = loggingEventRepository.findAllByOrderByTimestmpDesc();
         for (LoggingEvent l :
                 logs) {
-            if (l.getTimestmp().isBefore(from)) {
+            if (LocalDateTime.ofInstant(Instant.ofEpochSecond(l.getTimestmp()), TimeZone.getDefault().toZoneId()).isBefore(from)) {
                 break;
             }
             result.add(l);
@@ -52,10 +55,13 @@ public class LoggingService {
     }
 
     public List<LoggingEvent> getAllLogsInTimeInterval(LocalDateTime from, LocalDateTime to) {
-        return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(from, to);
+        ZonedDateTime zoneFrom = ZonedDateTime.of(from, ZoneId.systemDefault());
+        ZonedDateTime zoneTo = ZonedDateTime.of(to, ZoneId.systemDefault());
+        return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(zoneFrom.toInstant().toEpochMilli(), zoneTo.toInstant().toEpochMilli());
     }
 
     public List<LoggingEvent> loadLogsByTimestamp(LocalDateTime timestamp) {
-        return loggingEventRepository.findAllByTimestmp(timestamp);
+        ZonedDateTime zdt = ZonedDateTime.of(timestamp, ZoneId.systemDefault());
+        return loggingEventRepository.findAllByTimestmp(zdt.toInstant().toEpochMilli());
     }
 }

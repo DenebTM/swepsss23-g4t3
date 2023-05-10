@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface LoggingEventRepository extends AbstractRepository<LoggingEvent, String> {
 
-    List<LoggingEvent> findAllByTimestmp(LocalDateTime timestmp);
+    List<LoggingEvent> findAllByTimestmp(Long timestmp);
 
     @Override
     List<LoggingEvent> findAll();
@@ -19,5 +19,5 @@ public interface LoggingEventRepository extends AbstractRepository<LoggingEvent,
 
     List<LoggingEvent> findAllByOrderByTimestmpAsc();
 
-    List<LoggingEvent> findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(LocalDateTime from, LocalDateTime to);
+    List<LoggingEvent> findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(Long from, Long to);
 }
