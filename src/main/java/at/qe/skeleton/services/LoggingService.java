@@ -60,8 +60,12 @@ public class LoggingService {
         return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(zoneFrom.toInstant().toEpochMilli(), zoneTo.toInstant().toEpochMilli());
     }
 
-    public List<LoggingEvent> loadLogsByTimestamp(LocalDateTime timestamp) {
+    public List<LoggingEvent> getLogsByTimestamp(LocalDateTime timestamp) {
         ZonedDateTime zdt = ZonedDateTime.of(timestamp, ZoneId.systemDefault());
         return loggingEventRepository.findAllByTimestmp(zdt.toInstant().toEpochMilli());
+    }
+
+    public List<LoggingEvent> getLogsByLevel(String level) {
+        return loggingEventRepository.findAllByLevelStringOrderByTimestmpDesc(level);
     }
 }
