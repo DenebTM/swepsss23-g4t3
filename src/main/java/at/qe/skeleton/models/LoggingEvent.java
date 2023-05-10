@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +20,7 @@ public class LoggingEvent {
 
     @Column(name = "timestmp", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
-    private LocalDateTime timestmp;
+    private Long timestmp;
 
     @Column(name = "formatted_message", nullable = false)
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
@@ -42,7 +43,7 @@ public class LoggingEvent {
     @JsonIgnore
     @Column(name = "reference_flag")
     @JdbcTypeCode(SqlTypes.SMALLINT)
-    private String referenceFlag;
+    private Integer referenceFlag;
 
     @JsonIgnore
     @Column(name = "arg0")
@@ -88,6 +89,4 @@ public class LoggingEvent {
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long eventId;
-
-
 }
