@@ -83,4 +83,26 @@ public class LoggingTest {
         List<LoggingEvent> newLogs = loggingService.getAllLogs();
         Assertions.assertTrue(newLogs.size() > oldLogs.size());
     }
+
+    @Test
+    void testGetLogsByLevel() {
+        logger.info("info log");
+        List<LoggingEvent> infoLogs = loggingService.getLogsByLevel("INFO");
+        for (LoggingEvent l :
+                infoLogs) {
+            Assertions.assertEquals("INFO", l.getLevelString());
+        }
+        logger.warn("warn log");
+        List<LoggingEvent> warnLogs = loggingService.getLogsByLevel("WARN");
+        for (LoggingEvent l :
+                warnLogs) {
+            Assertions.assertEquals("WARN", l.getLevelString());
+        }
+        logger.error("error log");
+        List<LoggingEvent> errorLogs = loggingService.getLogsByLevel("ERROR");
+        for (LoggingEvent l :
+                errorLogs) {
+            Assertions.assertEquals("ERROR", l.getLevelString());
+        }
+    }
 }
