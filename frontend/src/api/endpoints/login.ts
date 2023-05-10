@@ -25,7 +25,7 @@ const token_exp = Math.round(Date.now() / 1000 + 60 * 60)
 const mock_jwt = (userRole: AuthUserRole): Promise<string> =>
   new CompactSign(
     new TextEncoder().encode(
-      JSON.stringify({ authorities: userRole, exp: token_exp })
+      JSON.stringify({ authorities: [userRole], exp: token_exp })
     )
   )
     .setProtectedHeader({ alg: 'HS256' })
