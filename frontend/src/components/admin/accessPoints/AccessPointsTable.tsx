@@ -35,7 +35,7 @@ export const AccessPointsTable: React.FC = () => {
   const handleUpdateAp: RowUpdateFunction<AccessPoint> = (
     newAp: AccessPoint,
     oldAp: AccessPoint
-  ) => updateAccessPoint(oldAp.apId, newAp)
+  ) => updateAccessPoint(oldAp.apName, newAp)
 
   /**
    * Calculate the largest number of sensor stations assigned to a single access point as dynamic
@@ -52,7 +52,7 @@ export const AccessPointsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<AccessPoint, any, AccessPoint>[] = [
-    { field: 'name', headerName: 'Name', flex: 1, editable: true },
+    { field: 'apName', headerName: 'Name', flex: 1, editable: true },
     {
       ...centerCell,
       field: 'status',
@@ -108,12 +108,12 @@ export const AccessPointsTable: React.FC = () => {
       ) => (
         <DeleteCell<AccessPoint, AccessPointId>
           deleteEntity={deleteAccessPoint}
-          entityId={params.row.apId}
+          entityId={params.row.apName}
           entityName="access point"
-          getEntityId={(r) => r.apId}
+          getEntityId={(r) => r.apName}
           setRows={setAccessPoints}
         >
-          <AddSensorStation accessPointId={params.row.apId} />
+          <AddSensorStation accessPointId={params.row.apName} />
         </DeleteCell>
       ),
     },
@@ -122,7 +122,7 @@ export const AccessPointsTable: React.FC = () => {
   return (
     <DataGrid<AccessPoint, any, AccessPoint>
       columns={columns}
-      getRowId={(row: AccessPoint) => row.apId}
+      getRowId={(row: AccessPoint) => row.apName}
       processRowUpdate={handleUpdateAp}
       rows={accessPoints}
       setRows={setAccessPoints}
