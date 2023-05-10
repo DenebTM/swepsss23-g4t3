@@ -91,7 +91,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
             }
         }
         
-        await update_sensorstation(json.dumps(json_data))
+        await update_sensorstation(json_data)
 
         # check if the data is inserted correctly
         db_conn.execute.assert_called_once_with(
