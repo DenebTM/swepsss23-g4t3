@@ -33,7 +33,7 @@ public class SensorStationService {
      * @return the sensor station with the given id
      */
     public SensorStation loadSSById(Integer id) {
-        return ssRepository.findFirstById(id);
+        return ssRepository.findFirstBySsID(id);
     }
 
     /**
