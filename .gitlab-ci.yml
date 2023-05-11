@@ -59,7 +59,7 @@ raspberry-unit-test-job:
     - pip3 install asyncio aiohttp bleak pyyaml
     - cd raspberry
     - python -m unittest tests/*.py
-  allow_failure: true
+  allow_failure: false
   retry: 1
   only:
     changes:
