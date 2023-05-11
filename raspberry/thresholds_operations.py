@@ -37,19 +37,23 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
 async def send_warning_to_backend(sensorstation_id, session):
     data = {'id': sensorstation_id, 'status': 'WARNING'}
     async with session.put('/sensor-stations/' + str(sensorstation_id), json=data) as response:
-        print(response.status)
+        if response.status == 200:
+            pass
     #TODO: Log communication
 
 async def clear_warning_on_backend(sensorstation_id, session, data):
     if int.from_bytes(data, 'little', signed=False) == 0:
         data = {'id': sensorstation_id, 'status': 'OK'}
         async with session.put('/sensor-stations/' + str(sensorstation_id), json=data) as response:
-            print(response.status)
-        #TODO: Log communication
+            if response.status == 200:
+                pass
+                print(response.status)
+                #TODO: Log communication
 
 async def get_thresholds_update_db(sensorstation_id, session):
     async with session.get('/sensor-stations/' + str(sensorstation_id)) as response:
-        json_data = await response.json()
-        await update_sensorstation(json_data)
+        if response.status == 200:
+            json_data = await response.json()
+            await update_sensorstation(json_data)
         #TODO: implement try catch. also implement disconnection from sensorstation if not allowed
         #TODO: skip it if webserver is offline as we wont get a functioning response        
