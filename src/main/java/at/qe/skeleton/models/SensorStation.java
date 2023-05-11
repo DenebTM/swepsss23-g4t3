@@ -13,7 +13,7 @@ public class SensorStation {
 
     @Id
     @Column(name = "SS_ID")
-    private Integer id;
+    private Integer ssID;
 
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -66,8 +66,8 @@ public class SensorStation {
         this.aggregationPeriod = aggregationPeriod;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getSsID() {
+        return ssID;
     }
 
     public AccessPoint getAccessPoint() {
@@ -94,8 +94,8 @@ public class SensorStation {
         return lowerBound;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setSsID(Integer ssID) {
+        this.ssID = ssID;
     }
 
     public void setAccessPoint(AccessPoint accessPoint) {
