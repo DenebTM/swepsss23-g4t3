@@ -37,11 +37,9 @@ async def search_for_sensorstations():
 
 async def send_sensorstations_to_backend(session, sensorstations):
     ss_avail = list(map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations))
-
     async with session.post('/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail) as response:
-        data = await response.json()
-        print(data)
-
+        if response.status == 200:
+            pass
 
 async def send_sensorstation_connection_status(session, sensorstation, status):
     ss_status = {
@@ -49,5 +47,5 @@ async def send_sensorstation_connection_status(session, sensorstation, status):
         'status': status
     }
     async with session.put('/sensor-stations/' + str(sensorstation), json=ss_status) as response:
-        response = await response.json()
-        print(response)
+        if response.status == 200:
+            pass

@@ -1,5 +1,6 @@
 import asyncio
 import aiohttp
+import time
 from bleak import BleakClient, BleakError
 
 import common
@@ -10,18 +11,20 @@ from thresholds_operations import check_values_for_thresholds, get_thresholds_up
 
 async def get_ap_status(session):
     async with session.get('/access-points/' + common.access_point_name) as response:
-        data = await response.json()
-        return data['status']
+        if response.status == 200:
+            data = await response.json()
+            return data['status']
+        
     
 async def get_sensorstation_instructions(session):
     async with session.get('/access-points/' + common.access_point_name + '/sensor-stations') as response:
-        json_data = await response.json()
-
-        paired_stations = {}
-        for station in json_data:
-            ss_id = station['id']
-            ss_status = station['status']
-            paired_stations[ss_id] = ss_status
+        if response.status == 200:
+            json_data = await response.json()
+            paired_stations = {}
+            for station in json_data:
+                ss_id = station['id']
+                ss_status = station['status']
+                paired_stations[ss_id] = ss_status
 
         return paired_stations
 
@@ -55,15 +58,13 @@ async def sensor_station_manager(connection_request, session):
         await asyncio.sleep(10)
 
 async def sensor_station_task(connection_request, session, sensorstation_id, first_time):
-    #TODO: Catch cancelled Error and error handle stuff eg the task for read sensorvalues
     sensorstation_mac = common.known_ss[sensorstation_id]
     try:
         transmission_interval = common.polling_interval
         async with BleakClient(sensorstation_mac) as client:
             await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
             await database_operations.initialize_sensorstation(sensorstation_id)
-            # TODO: Logging, cancel read_task if this task dies
-            read_task = asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
+            asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done():
                 transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
@@ -125,4 +126,19 @@ async def main():
                     print('webserver seems to be offline')
                     await asyncio.sleep(30)
 
-asyncio.run(main())
+
+if __name__ == '__main__':
+    max_retries = 5
+    retry_counter = 0
+    while retry_counter < max_retries:
+        try:
+            asyncio.run(main())
+            break
+        except aiohttp.ClientConnectionError as e:
+            retry_counter += 1
+            print('Server is not reachable. Maybe common.web_server_address is not working or the Webserver is offline')
+            time.sleep(5)
+            #TODO:Log this
+    if retry_counter == max_retries:
+        print('Max retries are reached. Exit program')
+        #TODO:Log this
