@@ -20,7 +20,7 @@ async def save_sensor_values_to_database(sensorstation_id, temperature, humidity
 async def get_sensor_data_averages(sensorstation_id):
     try:
         cursor = db_conn.cursor()
-        averages_query = cursor.execute(
+        cursor.execute(
             f'''SELECT AVG(temperature) AS temp_avg, AVG(humidity) AS humidity_avg,
             AVG(air_pressure) AS air_pressure_avg, AVG(illuminance) AS illuminance_avg,
             AVG(air_quality_index) AS air_quality_index_avg, AVG(soil_moisture) AS soil_moisture_avg
@@ -28,7 +28,7 @@ async def get_sensor_data_averages(sensorstation_id):
             WHERE id = ?''',
             (sensorstation_id,)
         )
-        results = averages_query.fetchone()
+        results = cursor.fetchone()
 
         averages_dict = {
             'temperature': results[0],
@@ -104,8 +104,9 @@ async def get_sensor_data_thresholds(sensorstation_id):
 
 async def get_sensorstation_transmissioninterval(sensorstation_id):
     try:
-        result = db_conn.execute('SELECT transmissioninterval FROM sensorstations WHERE id = ?', (sensorstation_id,))
-        transmission_interval = result.fetchone()[0]
+        cursor = db_conn.cursor()
+        cursor.execute('SELECT transmissioninterval FROM sensorstations WHERE id = ?', (sensorstation_id,))
+        transmission_interval = cursor.fetchone()[0]
         return transmission_interval
     except Exception as e:
             db_conn.rollback()
