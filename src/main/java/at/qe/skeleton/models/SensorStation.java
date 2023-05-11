@@ -129,4 +129,8 @@ public class SensorStation {
     public void setGardeners(Set<Userx> gardeners) {
         this.gardeners = gardeners;
     }
+
+    public Measurement getCurrentMeasurement() {
+        return measurements.get(measurements.size()-1);
+    }
 }
