@@ -29,3 +29,5 @@ db_conn.execute('''CREATE TABLE IF NOT EXISTS sensordata
               air_quality_index REAL,
               soil_moisture REAL,
               timestamp INTEGER)''')
+
+# this comment is meaningless
