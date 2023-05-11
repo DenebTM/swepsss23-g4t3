@@ -19,7 +19,7 @@ backend-unit-test-job:
   retry: 1
   only:
     changes:
-      - src
+      - src/**/*
 
 frontend-unit-test-job:
   extends: .before_script_template
@@ -33,7 +33,7 @@ frontend-unit-test-job:
   retry: 1
   only:
     changes:
-      - frontend
+      - frontend/**/*
 
 arduino-build-job:
   stage: test
@@ -48,7 +48,7 @@ arduino-build-job:
   retry: 1
   only:
     changes:
-      - arduino
+      - arduino/**/*
 
 raspberry-unit-test-job:
   stage: test
@@ -63,7 +63,7 @@ raspberry-unit-test-job:
   retry: 1
   only:
     changes:
-      - raspberry
+      - raspberry/**/*
 
 sonarqube-check:
   extends: .before_script_template
