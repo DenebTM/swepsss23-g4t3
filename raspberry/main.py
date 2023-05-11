@@ -128,17 +128,11 @@ async def main():
 
 
 if __name__ == '__main__':
-    max_retries = 5
-    retry_counter = 0
-    while retry_counter < max_retries:
+    while True:
         try:
             asyncio.run(main())
             break
         except aiohttp.ClientConnectionError as e:
-            retry_counter += 1
-            print('Server is not reachable. Maybe common.web_server_address is not working or the Webserver is offline')
+            print(f'Could not reach PlantHealth server. Retrying in {5} seconds')
             time.sleep(5)
             #TODO:Log this
-    if retry_counter == max_retries:
-        print('Max retries are reached. Exit program')
-        #TODO:Log this
