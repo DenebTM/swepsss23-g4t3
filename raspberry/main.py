@@ -128,11 +128,17 @@ async def main():
 
 
 if __name__ == '__main__':
+    retry_time = 5
     while True:
         try:
             asyncio.run(main())
             break
         except aiohttp.ClientConnectionError as e:
-            print(f'Could not reach PlantHealth server. Retrying in {5} seconds')
-            time.sleep(5)
+            print(f'Could not reach PlantHealth server. Retrying in {retry_time} seconds')
+            time.sleep(retry_time)
+            retry_time = retry_time+5 if retry_time < 60 else 60
+            #TODO:Log this
+        
+        except Exception as e:
+            print(f'Unexpected error occured: {e}')
             #TODO:Log this
