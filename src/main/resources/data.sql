@@ -24,3 +24,12 @@ INSERT INTO GARDENER_SS (USERNAME, SS_ID) VALUES ('susi', '1');
 INSERT INTO GARDENER_SS (USERNAME, SS_ID) VALUES ('hans', '1');
 INSERT INTO GARDENER_SS (USERNAME, SS_ID) VALUES ('peter', '1');
 INSERT INTO GARDENER_SS (USERNAME, SS_ID) VALUES ('franz', '2');
+
+#Timestamp is May 1st, zero hour
+INSERT INTO logging_event (timestmp, formatted_message, logger_name, level_string, event_id, caller_method, caller_class, caller_filename, caller_line) values ('1682892000000', 'first log', 'first logger', 'INFO', '1L', null, null, null, null);
+#Timestamp is May 2nd, zero hour
+INSERT INTO logging_event (timestmp, formatted_message, logger_name, level_string, event_id, caller_method, caller_class, caller_filename, caller_line) values ('1682978400000L', 'second log', 'second logger', 'WARN', '2L', null, null, null, null);
+#Timestamp is May 3rd, zero hour
+INSERT INTO logging_event (timestmp, formatted_message, logger_name, level_string, event_id, caller_method, caller_class, caller_filename, caller_line) values ('1683064800000L', 'third log', 'third logger', 'ERROR', '3L', null, null, null, null);
+#Timestamp is May 4th, zero hour
+INSERT INTO logging_event (timestmp, formatted_message, logger_name, level_string, event_id, caller_method, caller_class, caller_filename, caller_line) values ('1683151200000L', 'fourth log', 'fourth logger', 'INFO', '4L', null, null, null, null);

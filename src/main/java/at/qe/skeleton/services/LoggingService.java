@@ -5,10 +5,9 @@ import at.qe.skeleton.repositories.LoggingEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Service
@@ -27,51 +26,68 @@ public class LoggingService {
 
     /**
      * Returns all available logs starting from the beginning and ending at parameter 'to'
-     * @param to end date
+     * @param endDate end date
      * @return list of logs in time period beginning - 'to'
      */
-    public List<LoggingEvent> getAllLogsTo(LocalDateTime to) {
-        ArrayList<LoggingEvent> result = new ArrayList<>();
-        List<LoggingEvent> logs = loggingEventRepository.findAllByOrderByTimestmpAsc();
-        for (LoggingEvent l :
-                logs) {
-            if (LocalDateTime.ofInstant(Instant.ofEpochSecond(l.getTimestmp()), TimeZone.getDefault().toZoneId()).isAfter(to)) {
-                break;
+    public List<LoggingEvent> getAllLogsTo(Object endDate) {
+        LocalDate to;
+        if (endDate instanceof String end) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            to = LocalDate.parse(end, formatter);
+            ZonedDateTime zoneTo = ZonedDateTime.of(to.atTime(10, 0, 0), ZoneId.systemDefault());
+            return loggingEventRepository.findAllByTimestmpLessThanEqualOrderByTimestmpAsc(zoneTo.toInstant().toEpochMilli());
+            /*
+            ArrayList<LoggingEvent> result = new ArrayList<>();
+            List<LoggingEvent> logs = loggingEventRepository.findAllByOrderByTimestmpDesc();
+            for (LoggingEvent l :
+                    logs) {
+                if (LocalDate.ofInstant(Instant.ofEpochSecond(l.getTimestmp()), TimeZone.getDefault().toZoneId()).isAfter(to)) {
+                    break;
+                }
+                result.add(l);
             }
-            result.add(l);
+            return result;*/
+        } else {
+            throw new IllegalArgumentException();
         }
-        return result;
     }
 
     /**
      * Returns all available logs starting at parameter 'from' and ending with the latest event
-     * @param from begin date
+     * @param beginDate begin date
      * @return list of logs in time period 'from' - ending
      */
-    public List<LoggingEvent> getAllLogsFrom(LocalDateTime from) {
-        ArrayList<LoggingEvent> result = new ArrayList<>();
-        List<LoggingEvent> logs = loggingEventRepository.findAllByOrderByTimestmpDesc();
-        for (LoggingEvent l :
-                logs) {
-            if (LocalDateTime.ofInstant(Instant.ofEpochSecond(l.getTimestmp()), TimeZone.getDefault().toZoneId()).isBefore(from)) {
-                break;
-            }
-            result.add(l);
+    public List<LoggingEvent> getAllLogsFrom(Object beginDate) {
+        LocalDate from;
+        if (beginDate instanceof String beginning) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            from = LocalDate.parse(beginning, formatter);
+            ZonedDateTime zoneFrom = ZonedDateTime.of(from.atTime(10, 0, 0), ZoneId.systemDefault());
+            return loggingEventRepository.findAllByTimestmpGreaterThanEqualOrderByTimestmpAsc(zoneFrom.toInstant().toEpochMilli());
+        } else {
+            throw new IllegalArgumentException();
         }
-        Collections.reverse(result);
-        return result;
     }
 
     /**
      * Returns all available logs starting at parameter 'from' and ending at parameter 'to'
-     * @param from begin date
-     * @param to end date
+     * @param beginDate begin date
+     * @param endDate end date
      * @return list of logs in time period 'from' - 'to'
      */
-    public List<LoggingEvent> getAllLogsInTimeInterval(LocalDateTime from, LocalDateTime to) {
-        ZonedDateTime zoneFrom = ZonedDateTime.of(from, ZoneId.systemDefault());
-        ZonedDateTime zoneTo = ZonedDateTime.of(to, ZoneId.systemDefault());
-        return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(zoneFrom.toInstant().toEpochMilli(), zoneTo.toInstant().toEpochMilli());
+    public List<LoggingEvent> getAllLogsInTimeInterval(Object beginDate, Object endDate) {
+        LocalDate from;
+        LocalDate to;
+        if (beginDate instanceof String beginning && endDate instanceof String end) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            from = LocalDate.parse(beginning, formatter);
+            to = LocalDate.parse(end, formatter);
+            ZonedDateTime zoneFrom = ZonedDateTime.of(from.atTime(0, 0, 0), ZoneId.systemDefault());
+            ZonedDateTime zoneTo = ZonedDateTime.of(to.atTime(0, 0, 0), ZoneId.systemDefault());
+            return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(zoneFrom.toInstant().toEpochMilli(), zoneTo.toInstant().toEpochMilli());
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -80,6 +96,26 @@ public class LoggingService {
      * @return all logs that have the set level
      */
     public List<LoggingEvent> getLogsByLevel(String level) {
-        return loggingEventRepository.findAllByLevelStringOrderByTimestmpDesc(level);
+        return loggingEventRepository.findAllByLevelStringOrderByTimestmpAsc(level);
+    }
+
+    public List<LoggingEvent> filterLogsByLevel(List<LoggingEvent> logs, Object level) {
+        List<String> validLevels = List.of("INFO", "WARN", "ERROR");
+        List<LoggingEvent> result = new ArrayList<>();
+        if (level instanceof String lev) {
+            if (validLevels.contains(lev)) {
+                for (LoggingEvent l :
+                        logs) {
+                    if (l.getLevelString().equals(lev)) {
+                        result.add(l);
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException();
+            }
+        } else {
+            throw new IllegalArgumentException();
+        }
+        return result;
     }
 }
