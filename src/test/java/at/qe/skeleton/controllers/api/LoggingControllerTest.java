@@ -52,15 +52,15 @@ public class LoggingControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetLogsFrom(){
         Map<String, Object> json = new HashMap<>();
-        json.put("from", "2023-05-03");
-        Object from = "2023-05-03";
+        json.put("from", "2023-05-10");
+        Object from = "2023-05-10";
         ResponseEntity logs = loggingController.getLogs(json);
         int numberOfLogs = loggingService.getAllLogsFrom(from).size();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), logs.getStatusCode());
         try {
             Assertions.assertEquals(numberOfLogs, ((Collection) logs.getBody()).size());
             Assertions.assertTrue(((Collection) logs.getBody()).size() > 0);
-            Assertions.assertNotEquals(loggingService.getAllLogs().size(), ((Collection) logs.getBody()).size());
+            Assertions.assertTrue(loggingService.getAllLogs().size() > ((Collection) logs.getBody()).size());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -70,14 +70,15 @@ public class LoggingControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetLogsTo() {
         Map<String, Object> json = new HashMap<>();
-        json.put("to", "2023-05-03");
-        Object to = "2023-05-03";
+        json.put("to", "2023-05-09");
+        Object to = "2023-05-09";
         ResponseEntity logs = loggingController.getLogs(json);
         int numberOfLogs = loggingService.getAllLogsTo(to).size();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), logs.getStatusCode());
         try {
             Assertions.assertEquals(numberOfLogs, ((Collection) logs.getBody()).size());
             Assertions.assertTrue(((Collection) logs.getBody()).size() > 0);
+            Assertions.assertTrue(loggingService.getAllLogs().size() > ((Collection) logs.getBody()).size());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -87,10 +88,10 @@ public class LoggingControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetLogsInTimeInterval() {
         Map<String, Object> json = new HashMap<>();
-        json.put("from", "2023-01-01");
-        json.put("to", "2023-05-01");
-        Object from = "2023-01-01";
-        Object to = "2023-05-01";
+        json.put("from", "2023-05-09");
+        json.put("to", "2023-05-11");
+        Object from = "2023-05-09";
+        Object to = "2023-05-11";
         ResponseEntity logs = loggingController.getLogs(json);
         System.out.println();
         int numberOfLogs = loggingService.getAllLogsInTimeInterval(from, to).size();
@@ -98,6 +99,7 @@ public class LoggingControllerTest {
         try {
             Assertions.assertEquals(numberOfLogs, ((Collection) logs.getBody()).size());
             Assertions.assertTrue(((Collection) logs.getBody()).size() > 0);
+            Assertions.assertTrue(loggingService.getAllLogs().size() > ((Collection) logs.getBody()).size());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
