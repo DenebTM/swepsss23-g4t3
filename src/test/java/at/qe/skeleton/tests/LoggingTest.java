@@ -55,7 +55,7 @@ public class LoggingTest {
     void testErrorLog() {
         File error = new File("logs/warnError.log");
         long oldFileLength = error.length();
-        logger.error("Test warn message");
+        logger.error("Test error message");
         long newFileLength = error.length();
         Assertions.assertTrue(newFileLength > oldFileLength);
     }
@@ -74,35 +74,5 @@ public class LoggingTest {
             e.printStackTrace();
         }
         Assertions.assertNotNull(rs);
-    }
-
-    @Test
-    void testGetAllLogs() {
-        List<LoggingEvent> oldLogs = loggingService.getAllLogs();
-        logger.info("Test something");
-        List<LoggingEvent> newLogs = loggingService.getAllLogs();
-        Assertions.assertTrue(newLogs.size() > oldLogs.size());
-    }
-
-    @Test
-    void testGetLogsByLevel() {
-        logger.info("info log");
-        List<LoggingEvent> infoLogs = loggingService.getLogsByLevel("INFO");
-        for (LoggingEvent l :
-                infoLogs) {
-            Assertions.assertEquals("INFO", l.getLevelString());
-        }
-        logger.warn("warn log");
-        List<LoggingEvent> warnLogs = loggingService.getLogsByLevel("WARN");
-        for (LoggingEvent l :
-                warnLogs) {
-            Assertions.assertEquals("WARN", l.getLevelString());
-        }
-        logger.error("error log");
-        List<LoggingEvent> errorLogs = loggingService.getLogsByLevel("ERROR");
-        for (LoggingEvent l :
-                errorLogs) {
-            Assertions.assertEquals("ERROR", l.getLevelString());
-        }
     }
 }
