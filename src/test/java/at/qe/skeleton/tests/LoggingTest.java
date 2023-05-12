@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -26,6 +27,13 @@ import java.util.Map;
 @SpringBootTest
 @WebAppConfiguration
 public class LoggingTest {
+
+    @Value("${spring.datasource.url}")
+    String dataSourceUrl;
+    @Value("${spring.datasource.username}")
+    String dataSourceUsername;
+    @Value("${spring.datasource.password}")
+    String dataSourcePassword;
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingTest.class);
     private Map<String, Object> json = new HashMap<>();
@@ -65,11 +73,14 @@ public class LoggingTest {
         logger.info("Test info message");
         ResultSet rs = null;
         try {
-            String url = "jdbc:mysql://localhost:3306/swe";
-            Connection con = DriverManager.getConnection(url, "root", "password");
+            Connection con = DriverManager.getConnection(
+                dataSourceUrl,
+                dataSourceUsername,
+                dataSourcePassword
+            );
 
             Statement stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT * from LOGGING_EVENT");
+            rs = stmt.executeQuery("SELECT * from logging_event");
         } catch (SQLException e) {
             e.printStackTrace();
         }
