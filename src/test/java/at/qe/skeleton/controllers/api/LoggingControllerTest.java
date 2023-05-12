@@ -1,6 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.models.LoggingEvent;
+import at.qe.skeleton.repositories.LoggingEventRepository;
 import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.tests.LoggingTest;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,13 +26,16 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@WebAppConfiguration
 public class LoggingControllerTest {
 
     @Autowired
     private LoggingController loggingController;
     @Autowired
     private LoggingService loggingService;
+    @Autowired
+    private LoggingEventRepository loggingEventRepository;
 
     @DirtiesContext
     @Test
@@ -54,6 +59,7 @@ public class LoggingControllerTest {
         Map<String, Object> json = new HashMap<>();
         json.put("from", "2023-05-10");
         Object from = "2023-05-10";
+
         ResponseEntity logs = loggingController.getLogs(json);
         int numberOfLogs = loggingService.getAllLogsFrom(from).size();
         Assertions.assertEquals(HttpStatusCode.valueOf(200), logs.getStatusCode());
