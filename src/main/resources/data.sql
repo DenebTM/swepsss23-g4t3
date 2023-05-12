@@ -12,16 +12,16 @@ INSERT INTO sensor_values (VALUES_ID, AIR_PRESSURE, AIR_QUALITY, HUMIDITY, LIGHT
 INSERT INTO sensor_values (VALUES_ID, AIR_PRESSURE, AIR_QUALITY, HUMIDITY, LIGHT_INTENSITY, SOIL_MOISTURE, TEMPERATURE) VALUES ('2', '0', '0', '0', '0', '0', '0');
 INSERT INTO sensor_values (VALUES_ID, AIR_PRESSURE, AIR_QUALITY, HUMIDITY, LIGHT_INTENSITY, SOIL_MOISTURE, TEMPERATURE) VALUES ('3', '30', '30', '30', '30', '30', '30');
 
-INSERT INTO sensor_station (SS_ID, STATUS, AGGREGATION_PERIOD, AP_NAME, UPPER_VALUES_ID, LOWER_VALUES_ID) VALUES ('1', 'OK', '30', 'AP 1', '1', '2')
-INSERT INTO sensor_station (SS_ID, STATUS, AGGREGATION_PERIOD, AP_NAME, UPPER_VALUES_ID, LOWER_VALUES_ID) VALUES ('2', 'OK', '60', 'AP 1', '3', '2')
+INSERT INTO sensor_station (SS_ID, STATUS, AGGREGATION_PERIOD, AP_NAME, UPPER_VALUES_ID, LOWER_VALUES_ID) VALUES ('1', 'OK', '30', 'AP 1', '1', '2');
+INSERT INTO sensor_station (SS_ID, STATUS, AGGREGATION_PERIOD, AP_NAME, UPPER_VALUES_ID, LOWER_VALUES_ID) VALUES ('2', 'OK', '60', 'AP 1', '3', '2');
 
-INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('1', '2023-04-01T00:00:00Z', '1', '1')
-INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('2', '2023-04-15T00:00:00Z', '1', '1')
-INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('3', '2023-04-23T00:00:00Z', '2', '2')
-INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('4', '2023-05-02T00:00:00Z', '3', '2')
+INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('1', '2023-04-01 00:00:00', '1', '1');
+INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('2', '2023-04-15 00:00:00', '1', '1');
+INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('3', '2023-04-23 00:00:00', '2', '2');
+INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES ('4', '2023-05-02 00:00:00', '3', '2');
 
 #Timestamp is May 1st, 0:00
-INSERT INTO logging_event (timestmp, formatted_message, logger_name, level_string, event_id, caller_method, caller_class, caller_filename, caller_line) values ('1682892000000', 'first log', 'first logger', 'INFO', '1L', null, null, null, null);
+INSERT INTO logging_event (timestmp, formatted_message, logger_name, level_string, event_id, caller_method, caller_class, caller_filename, caller_line) values ('1682892000000L', 'first log', 'first logger', 'INFO', '1L', null, null, null, null);
 #Timestamp is May 2nd, 0:00
 INSERT INTO logging_event (timestmp, formatted_message, logger_name, level_string, event_id, caller_method, caller_class, caller_filename, caller_line) values ('1682978400000L', 'second log', 'second logger', 'WARN', '2L', null, null, null, null);
 #Timestamp is May 3rd, 0:00
