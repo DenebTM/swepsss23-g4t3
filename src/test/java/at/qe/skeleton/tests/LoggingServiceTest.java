@@ -22,13 +22,13 @@ import java.util.List;
 public class LoggingServiceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingControllerTest.class);
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Autowired
     LoggingService loggingService;
     
     @Test
     void getLogsFrom() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fromDate = LocalDate.parse("2023-05-02", formatter);
         ZonedDateTime zoneFrom = ZonedDateTime.of(fromDate.atTime(0, 0, 0), ZoneId.systemDefault());
 
@@ -37,6 +37,35 @@ public class LoggingServiceTest {
         for (LoggingEvent l :
                 logs) {
             Assertions.assertTrue(zoneFrom.toInstant().toEpochMilli() <= l.getTimestmp());
+        }
+    }
+
+    @Test
+    void testGetLogsTo() {
+        LocalDate toDate = LocalDate.parse("2023-05-12", formatter);
+        ZonedDateTime zoneTo = ZonedDateTime.of(toDate.atTime(23, 59, 59), ZoneId.systemDefault());
+
+        List<LoggingEvent> logs = loggingService.getAllLogsTo("2023-05-12");
+        Assertions.assertTrue(logs.size() > 0);
+        for (LoggingEvent l :
+                logs) {
+            Assertions.assertTrue(zoneTo.toInstant().toEpochMilli() >= l.getTimestmp());
+        }
+    }
+
+    @Test
+    void testGetLogsInTimeInterval() {
+        LocalDate fromDate = LocalDate.parse("2023-05-10", formatter);
+        LocalDate toDate = LocalDate.parse("2023-05-12", formatter);
+        ZonedDateTime zoneFrom = ZonedDateTime.of(fromDate.atTime(0, 0, 0), ZoneId.systemDefault());
+        ZonedDateTime zoneTo = ZonedDateTime.of(toDate.atTime(23, 59, 59), ZoneId.systemDefault());
+
+        List<LoggingEvent> logs = loggingService.getAllLogsInTimeInterval("2023-05-10", "2023-05-12");
+        Assertions.assertTrue(logs.size() > 0);
+        for (LoggingEvent l :
+                logs) {
+            Assertions.assertTrue(zoneFrom.toInstant().toEpochMilli() <= l.getTimestmp());
+            Assertions.assertTrue(zoneTo.toInstant().toEpochMilli() >= l.getTimestmp());
         }
     }
 
