@@ -11,6 +11,7 @@ variables:
   MYSQL_DATABASE: swe
   MYSQL_USER: swe
   MYSQL_PASSWORD: password
+  MYSQL_RANDOM_ROOT_PASSWORD: true
 
 # Add dependencies for Java and React
 .before_script_template:
