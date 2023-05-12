@@ -13,9 +13,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneOffset;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @WebAppConfiguration
 class MeasurementRestControllerTest {
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+    private static Instant parseInstant(String charseq) {
+        LocalDate date = LocalDate.parse(charseq, formatter);
+        ZonedDateTime zoneDate = ZonedDateTime.of(date.atTime(0, 0, 0), ZoneId.systemDefault());
+
+        return zoneDate.toInstant();
+    }
 
     @Autowired
     private MeasurementRestController mmRestController;
@@ -57,18 +66,17 @@ class MeasurementRestControllerTest {
 
     @Test
     void testGetAllMeasurementsInTimeRange() {
-        Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
-        Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
-        Integer number = measurementService.getMeasurements(id, from, to).size();
-        jsonUpdateSS.put("from", from.toString());
-        jsonUpdateSS.put("to", to.toString());
+        Instant from = parseInstant("2023-03-01T20:10:40Z");
+        Instant to = parseInstant("2023-05-20T10:40:00Z");
 
-        var response = mmRestController.getMeasurementsBySS(id, jsonUpdateSS);
+        int measurementCount = measurementService.getMeasurements(id, from, to).size();
+
+        var response = mmRestController.getMeasurementsBySS(id, from, to);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         var measurements = response.getBody();
         assertNotNull(measurements);
-        assertEquals(number, measurements.size());
+        assertEquals(measurementCount, measurements.size());
     }
 
     @Test

@@ -10,6 +10,7 @@ import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.SensorStationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,43 +40,29 @@ public class MeasurementRestController implements BaseRestController {
      * @return List of historic measurements for given time frame or current/recent measurement
      */
     @GetMapping(value = SensorStationRestController.SS_ID_PATH + MEASUREMENTS_PATH)
-    public ResponseEntity<List<Measurement>> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
-        Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
-        Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
-
+    public ResponseEntity<List<Measurement>> getMeasurementsBySS(
+        @PathVariable(value = "uuid")
+            Integer id,
+        @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            Instant from,
+        @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            Instant to
+    ) {
         // if keys "from" and "to" are missing in json body return the most recent/current measurement
-        if (!json.containsKey("from") && !json.containsKey("to")){
+        if (from == null && to == null) {
             Measurement currentMeasurement = measurementService.getCurrentMeasurement(id);
-            if (currentMeasurement == null){
-                return ResponseEntity.ok(new ArrayList<>());
-            } else {
-                return ResponseEntity.ok(new ArrayList<>(Arrays.asList(currentMeasurement)));
-            }
+            return ResponseEntity.ok(Arrays.asList(currentMeasurement));
         }
+
         // return a 400 error if there is a "to"-date but no "from"-date given in json body
-        if (!json.containsKey("from") && json.containsKey("to")){
-            throw new BadRequestException("Start or end date missing");
-        }
-        // return 400 error if "from"-date isn't iso formatted
-        if (json.containsKey("from")) {
-            try {
-                from = Instant.parse((String)json.get("from"));
-            } catch (DateTimeException e){
-                throw new BadRequestException("Invalid start date");
-            }
-        }
-        // return 400 error if "to"-date isn't iso formatted
-        if (json.containsKey("to")) {
-            try {
-                to = Instant.parse((String)json.get("to"));
-            } catch (DateTimeException e){
-                throw new BadRequestException("Invalid end date");
-            }
+        if (from == null || to == null){
+            throw new BadRequestException("Both start and end date must be specified");
         }
         // return 400 error if "from"-date is after "to"-date
         if (from.isAfter(to)){
             throw new BadRequestException("End date must not be before start date");
         }
+
         return ResponseEntity.ok(measurementService.getMeasurements(id, from, to));
     }
 
@@ -96,7 +83,7 @@ public class MeasurementRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SensorStationRestController.SS_ID_PATH + MEASUREMENTS_PATH)
-    public ResponseEntity<Object> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
+    public ResponseEntity<Measurement> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
