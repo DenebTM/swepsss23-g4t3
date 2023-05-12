@@ -1,7 +1,5 @@
 package at.qe.skeleton.tests;
 
-import at.qe.skeleton.controllers.api.LoggingController;
-import at.qe.skeleton.models.LoggingEvent;
 import at.qe.skeleton.services.LoggingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,10 +12,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Tests logging with logback in four different cases: writing info, warning and error messages to a file
@@ -36,7 +30,6 @@ public class LoggingTest {
     String dataSourcePassword;
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingTest.class);
-    private Map<String, Object> json = new HashMap<>();
 
     @Autowired
     LoggingService loggingService;
