@@ -1,11 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.models.SensorStation;
-import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.services.MeasurementService;
-import at.qe.skeleton.services.SensorStationService;
-import at.qe.skeleton.services.UserxService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,14 +12,14 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @WebAppConfiguration
 class MeasurementRestControllerTest {
+
+    Integer testSsId = 1;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
     private static Instant parseInstant(String charseq) {
@@ -38,40 +33,16 @@ class MeasurementRestControllerTest {
     private MeasurementRestController mmRestController;
 
     @Autowired
-    private SensorStationService ssService;
-
-    @Autowired
     private MeasurementService measurementService;
-
-    @Autowired
-    private UserxService userService;
-
-    SensorStation ss;
-    Integer id;
-    Map<String, Object> jsonUpdateSS = new HashMap<>();
-
-    Userx susi;
-    String username;
-
-    @BeforeEach
-    void setUp() {
-        id = 1;
-        ss = ssService.loadSSById(id);
-        username = "susi";
-        susi = userService.loadUserByUsername(username);
-
-        jsonUpdateSS.put("status", "OFFLINE");
-        jsonUpdateSS.put("aggregationPeriod", 50);
-    }
 
     @Test
     void testGetAllMeasurementsInTimeRange() {
         Instant from = parseInstant("2023-03-01T20:10:40Z");
         Instant to = parseInstant("2023-05-20T10:40:00Z");
 
-        int measurementCount = measurementService.getMeasurements(id, from, to).size();
+        int measurementCount = measurementService.getMeasurements(testSsId, from, to).size();
 
-        var response = mmRestController.getMeasurementsBySS(id, from, to);
+        var response = mmRestController.getMeasurementsBySS(testSsId, from, to);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         var measurements = response.getBody();
