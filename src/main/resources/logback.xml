@@ -19,10 +19,10 @@
     <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
         <connectionSource
                 class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            <driverClass>com.mysql.cj.jdbc.Driver</driverClass>
-            <url>jdbc:mysql://localhost:3306/swe</url>
-            <user>root</user>
-            <password>password</password>
+            <driverClass>${spring.datasource.driver-class-name}</driverClass>
+            <url>${spring.datasource.url}</url>
+            <user>${spring.datasource.username}</user>
+            <password>${spring.datasource.password}</password>
         </connectionSource>
     </appender>
 
