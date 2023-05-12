@@ -29,10 +29,11 @@ public class LoggingServiceTest {
     
     @Test
     void getLogsFrom() {
-        LocalDate fromDate = LocalDate.parse("2023-05-02", formatter);
+        LocalDate fromDate = LocalDate.parse("2023-05-10", formatter);
         ZonedDateTime zoneFrom = ZonedDateTime.of(fromDate.atTime(0, 0, 0), ZoneId.systemDefault());
 
-        List<LoggingEvent> logs = loggingService.getAllLogsFrom("2023-05-02");
+        List<LoggingEvent> logs = loggingService.getAllLogsFrom("2023-05-10");
+        Assertions.assertTrue(logs.size() < loggingService.getAllLogs().size());
         Assertions.assertTrue(logs.size() > 0);
         for (LoggingEvent l :
                 logs) {
