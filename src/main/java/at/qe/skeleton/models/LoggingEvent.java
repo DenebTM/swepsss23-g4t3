@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "logging_event")
 public class LoggingEvent {
+    static List<String> validLevels = List.of("INFO", "WARN", "ERROR");
 
     @Column(name = "timestmp", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
