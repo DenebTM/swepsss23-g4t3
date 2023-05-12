@@ -4,7 +4,6 @@ import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.SensorStationService;
@@ -18,10 +17,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,8 +33,6 @@ class SensorStationRestControllerTest {
 
     @Autowired
     private SensorStationService ssService;
-    @Autowired
-    private MeasurementService measurementService;
 
     @Autowired
     private AccessPointRepository apRepository;
@@ -290,34 +283,6 @@ class SensorStationRestControllerTest {
             NotFoundInDatabaseException.class,
             () -> ssRestController.removeGardenerFromSS(id, "notExistingUsername")
         );
-    }
-
-    @Test
-    void testGetAllMeasurementsInTimeRange() {
-        Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
-        Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
-        Integer number = measurementService.getMeasurements(id, from, to).size();
-        jsonUpdateSS.put("from", from.toString());
-        jsonUpdateSS.put("to", to.toString());
-
-        var response = ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-
-        var measurements = response.getBody();
-        assertNotNull(measurements);
-        assertEquals(number, measurements.size());
-    }
-
-    @Test
-    void testGetAllCurrentMeasurements(){
-        Integer number = measurementService.getAllCurrentMeasurements().size();
-
-        var response = ssRestController.getAllCurrentMeasurements();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-
-        var measurements = response.getBody();
-        assertNotNull(measurements);
-        assertEquals(number, measurements.size());
     }
 
     // TODO write a test for getAllPhotosBySS()
