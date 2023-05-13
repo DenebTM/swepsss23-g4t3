@@ -1,14 +1,7 @@
 USE swe;
 
 BEGIN;
-DROP TABLE IF EXISTS logging_event_property;
-DROP TABLE IF EXISTS logging_event_exception;
-DROP TABLE IF EXISTS logging_event;
-COMMIT;
-
-
-BEGIN;
-CREATE TABLE logging_event
+CREATE TABLE IF NOT EXISTS logging_event
 (
     timestmp         BIGINT NOT NULL,
     formatted_message  TEXT NOT NULL,
@@ -29,7 +22,7 @@ CREATE TABLE logging_event
 COMMIT;
 
 BEGIN;
-CREATE TABLE logging_event_property
+CREATE TABLE IF NOT EXISTS logging_event_property
 (
     event_id	      BIGINT NOT NULL,
     mapped_key        VARCHAR(254) NOT NULL,
@@ -40,7 +33,7 @@ CREATE TABLE logging_event_property
 COMMIT;
 
 BEGIN;
-CREATE TABLE logging_event_exception
+CREATE TABLE IF NOT EXISTS logging_event_exception
 (
     event_id         BIGINT NOT NULL,
     i                SMALLINT NOT NULL,

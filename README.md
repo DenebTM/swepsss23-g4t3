@@ -28,9 +28,38 @@ See [frontend/README.md](frontend/README.md) for additional information.
 
 ## Running the frontend and backend
 
-This project uses Java 17 and Node.js 18 (installed automatically as part of the build process).
+This project uses Java 17 and Node.js 18 (installed automatically as part of the build process). A MySQL database is used for persistent data storage, which must be set up before starting the application.
 
-Run `mvn spring-boot:run` on a command line shell to build and start the project. The React frontend will be compiled statically and available at `http://localhost:8080`.
+### Step 1: Install the database
+
+1. Set up either MySQL or MariaDB on your system. You may use Docker (recommended) or do this manually.
+
+_(a) Docker (recommended)_ \
+Run the following command to start a container with persistent storage for the database:
+
+```
+docker run -v planthealth_db:/var/lib/mysql -p 3306:3306 \
+  -e MYSQL_RANDOM_ROOT_PASSWORD="true" \
+  -e MYSQL_DATABASE=swe \
+  -e MYSQL_USER=swe \
+  -e MYSQL_PASSWORD=password \
+  mariadb:latest
+```
+
+_(b) manual setup_\
+Install either MySQL or MariaDB, start a MySQL CLI session as `root` user, then run the following SQL:
+
+```
+CREATE USER 'swe'@'localhost' identified by 'password';
+CREATE DATABASE 'swe';
+GRANT ALL PRIVILEGES ON 'swe' TO 'swe'@'localhost';
+```
+
+All of the necessary tables will be automatically created in step 2.
+
+### Step 2: Build and run the web server
+
+2. Run `mvn spring-boot:run` on a command line shell to build and start the project. The React frontend will be compiled statically and available at `http://localhost:8080`.
 
 ### Login
 
