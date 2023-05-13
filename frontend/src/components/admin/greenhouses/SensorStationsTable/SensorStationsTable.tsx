@@ -99,7 +99,7 @@ export const SensorStationsTable: React.FC = () => {
     {
       ...centerCell,
       flex: 1,
-      field: 'apName',
+      field: 'name',
       headerName: 'Access Point ID',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
