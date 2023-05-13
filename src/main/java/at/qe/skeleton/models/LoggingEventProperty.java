@@ -11,9 +11,9 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "logging_event_property")
 public class LoggingEventProperty {
 
-
     @Id
     @Column(name = "event_id", nullable = false)
+    @JoinColumn(table = "logging_event", name = "event_id")
     @JdbcTypeCode(SqlTypes.BIGINT)
     private String eventID;
 
@@ -25,4 +25,5 @@ public class LoggingEventProperty {
     @Column(name = "mapped_value")
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     private String mappedValue;
+
 }
