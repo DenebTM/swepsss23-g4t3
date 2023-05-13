@@ -15,7 +15,6 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
     except Exception as e:
         print(e)
         #TODO log error code
-
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
     errorCode = 1
@@ -32,7 +31,6 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
     except:
         print('couldnt write to gatt')
         #TODO log error code
-
 
 async def send_warning_to_backend(sensorstation_id, session):
     data = {'id': sensorstation_id, 'status': 'WARNING'}
