@@ -72,25 +72,21 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 await send_sensorvalues_to_backend(sensorstation_id, session)
                 await get_thresholds_update_db(sensorstation_id, session)
 
-
     except BleakError as e:
         print(e)
         print('couldnt connect to sensorstation') 
-
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
         await send_sensorstation_connection_status(session, sensorstation_id, error_status)
         await cancel_ss_task(sensorstation_id)
         #TODO: log and send to backend
     except Exception as e:
+        #TODO: log and send to backend
         print('Other exception in sensorstation task', e.with_traceback())
-
 
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
-    #await send_sensorstation_connection_status(session, sensorstation_id, message)
     ss_tasks[sensorstation_id].cancel()
     del ss_tasks[sensorstation_id]
-        
 
 async def polling_loop(connection_request, session):
     while not connection_request.done():
@@ -113,7 +109,6 @@ async def main():
             print('This should only be Printed at the start and when AP is offline')
             async with session.post('/access-points') as response:
                 data = await response.json()
-                print(data)
                 if response.status == 200:
                     ap_status = await get_ap_status(session)
                     if ap_status in ['ONLINE', 'SEARCHING']:

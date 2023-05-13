@@ -15,7 +15,6 @@ async def save_sensor_values_to_database(sensorstation_id, temperature, humidity
         print(e)
         #TODO: log the failure and send to backend etc
 
-
 #returns a mean of the values of the sensorstation
 async def get_sensor_data_averages(sensorstation_id):
     try:
@@ -45,8 +44,6 @@ async def get_sensor_data_averages(sensorstation_id):
         print('Database access error:', e)
         # TODO: Implement logging
 
-
-
 async def clear_sensor_data(sensorstation_id):
     try:
         db_conn.execute(
@@ -58,9 +55,6 @@ async def clear_sensor_data(sensorstation_id):
     except:
         pass
         #TODO: Logging implementation 
-
-     
-     
 
 async def get_sensor_data_thresholds(sensorstation_id):
     try:
@@ -98,9 +92,6 @@ async def get_sensor_data_thresholds(sensorstation_id):
         print('Database access error:', e)
         # TODO: Implement logging
         return {}
-
-    #except:
-    #    print('database cant be accessed') #TODO: implement log
 
 async def get_sensorstation_transmissioninterval(sensorstation_id):
     try:

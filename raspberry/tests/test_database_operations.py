@@ -20,7 +20,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
                         (123, 10, 20, 30, 40, 50, 60, int(time.time())))
         db_conn.commit.assert_called_once()
 
-
     # Test get_sensor_data_averages function
     @patch('database_operations.db_conn')
     async def test_get_sensor_data_averages(self, db_conn):
@@ -44,8 +43,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         # Check the results against the expected results
         self.assertEqual(result, expected_results)
 
-
-
     @patch('database_operations.db_conn')
     async def test_get_sensorstation_transmissioninterval(self, db_conn):
         cursor = MagicMock()
@@ -56,7 +53,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         transmission_interval = await get_sensorstation_transmissioninterval(1)
         # Check that the function returned the expected value
         self.assertEqual(transmission_interval, 300)
-
 
     # Test get_sensor_data_thresholds function
     @patch('database_operations.db_conn')
@@ -82,7 +78,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
             'air_quality_index_min': 0,
             'soil_moisture_min': 0
         }
-
 
         # Call the function with the mocked parameters
         result = await get_sensor_data_thresholds(1)
@@ -119,8 +114,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
                 'soilMoisture': 20,
                 'temperature': 20
             }
-        }
-        
+        }       
         await update_sensorstation(json_data)
 
         # check if the data is inserted correctly
