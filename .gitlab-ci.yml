@@ -4,6 +4,15 @@ stages:
   - test
   - sonarCheck
 
+# MySQL database (required for backend unit tests)
+services:
+  - mysql
+variables:
+  MYSQL_DATABASE: swe
+  MYSQL_USER: swe
+  MYSQL_PASSWORD: password
+  MYSQL_RANDOM_ROOT_PASSWORD: 'true'
+
 # Add dependencies for Java and React
 .before_script_template:
   before_script:
@@ -14,6 +23,8 @@ backend-unit-test-job:
   stage: test
   script:
     - echo "Running Spring Boot unit tests..."
+    # when your build system is so useless it can't even override a variable
+    - sed -i 's/localhost:3306/mysql:3306/' src/test/resources/application.properties
     - mvn -Dskip.npm -Dskip.yarn -Dskip.installnodenpm -Dskip.installyarn test
   allow_failure: false
   retry: 1

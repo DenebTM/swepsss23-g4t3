@@ -1,24 +1,26 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.configs.WebSecurityConfig;
-import at.qe.skeleton.controllers.HelperFunctions;
+import at.qe.skeleton.controllers.errors.BadRequestException;
+import at.qe.skeleton.controllers.errors.ForbiddenException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.enums.UserRole;
+import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 @RestController
 public class UserxRestController implements BaseRestController {
 
     @Autowired
-    private UserService userService;
+    private UserxService userService;
 
     private static final String PW = "password";
     private static final String FN = "firstName";
@@ -31,9 +33,11 @@ public class UserxRestController implements BaseRestController {
      * @return List of all users
      */
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = USER_PATH)
-    public ResponseEntity<Object> getUsers() { return ResponseEntity.ok(userService.getAllUsers()); }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Collection<Userx>> getUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
     /**
      * Route to GET a specific user by its username
@@ -41,16 +45,13 @@ public class UserxRestController implements BaseRestController {
      * @return userx
      */
     @GetMapping(value = USERNAME_PATH)
-    public ResponseEntity<Object> getUserByUsername(@PathVariable(value = "username") String username) {
+    @PreAuthorize("hasAuthority('ADMIN') or principal eq #username")
+    public ResponseEntity<Userx> getUserByUsername(@PathVariable(value = "username") String username) {
         Userx userx = userService.loadUserByUsername(username);
 
         // Return a 404 error if the User is not found
         if (userx == null) {
-            return HelperFunctions.notFoundError("User", username);
-        }
-        // Return a 403 error if a non-admin and not user itself tries to get User
-        if (Boolean.FALSE.equals(userService.authRoleIsAdmin()) && !userx.equals(userService.getAuthenticatedUser())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this user.");
+            throw new NotFoundInDatabaseException("User", username);
         }
 
         return ResponseEntity.ok(userx);
@@ -61,23 +62,24 @@ public class UserxRestController implements BaseRestController {
      * @param json body (username + password is required)
      * @return newly created user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = USER_PATH)
-    public ResponseEntity<Object> createUser(@RequestBody Map<String, Object> json) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Userx> createUser(@RequestBody Map<String, Object> json) {
         // return a 400 error if the user gets created with empty username
         String username = (String)json.get("username");
         if (username == null || username.equals("")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username cannot be blank.");
+            throw new BadRequestException("Username cannot be blank.");
         }
         // return a 400 error if the user gets created with an username already in use
         if (userService.loadUserByUsername(username)!=null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already in use. It must be unique.");
+            throw new BadRequestException("Username is already in use. It must be unique.");
         }
         // return a 400 error if the user gets created with empty password
         String password = (String)json.get(PW);
         if (userService.isNotValidPassword(password)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is not valid.");
+            throw new BadRequestException("Password is not valid.");
         }
+
         Userx newUser = new Userx();
         newUser.setUsername(username);
         String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
@@ -99,17 +101,17 @@ public class UserxRestController implements BaseRestController {
      * @param username + json
      * @return updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping (value = USERNAME_PATH)
-    public ResponseEntity<Object> updateUser(@PathVariable(value = "username") String username, @RequestBody Map<String, Object> json) {
+    @PutMapping(value = USERNAME_PATH)
+    @PreAuthorize("hasAuthority('ADMIN') or principal eq #username")
+    public ResponseEntity<Userx> updateUser(@PathVariable(value = "username") String username, @RequestBody Map<String, Object> json) {
         Userx user = userService.loadUserByUsername(username);
         // return a 404 error if the user to be updated does not exist
         if (user == null) {
-            return HelperFunctions.notFoundError("User", username);
+            throw new NotFoundInDatabaseException("User", username);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
         if (json.containsKey("username")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usernames are final and cannot be updated.");
+            throw new BadRequestException("Usernames are final and cannot be updated.");
         }
 
         // updating all fields mentioned in the json body
@@ -121,17 +123,17 @@ public class UserxRestController implements BaseRestController {
         }
         if (json.containsKey(PW)) {
             String password = (String)json.get(PW);
-            if (Boolean.TRUE.equals(userService.isNotValidPassword(password))) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank.");
+            if (userService.isNotValidPassword(password)) {
+                throw new BadRequestException("Password is not valid.");
             }
             String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
             user.setPassword(bcryptPassword);
         }
         if (json.containsKey("userRole")) {
             try {
-                user.setUserRole(UserRole.valueOf((String) json.get("userRole")));
+                user.setUserRole(UserRole.valueOf((String)json.get("userRole")));
             } catch (IllegalArgumentException e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User role does not exist");
+                throw new BadRequestException("User role does not exist.");
             }
         }
         return ResponseEntity.ok(userService.saveUser(user));
@@ -142,17 +144,17 @@ public class UserxRestController implements BaseRestController {
      * @param username
      * @return the deleted user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = USERNAME_PATH)
-    public ResponseEntity<Object> deleteUserByUsername(@PathVariable(value = "username") String username) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Userx> deleteUserByUsername(@PathVariable(value = "username") String username) {
         Userx user = userService.loadUserByUsername(username);
         // return a 404 error if the user to be deleted does not exist
         if (user == null) {
-            return HelperFunctions.notFoundError("User", username);
+            throw new NotFoundInDatabaseException("User", username);
         }
         // return a 403 error if the authenticated user tries to delete themselves
         if (userService.getAuthenticatedUser().getUsername().equals(username)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Self-deletion is not permitted.");
+            throw new ForbiddenException("Self-deletion is not permitted.");
         }
         userService.deleteUser(user);
         return ResponseEntity.ok(user);
@@ -164,25 +166,14 @@ public class UserxRestController implements BaseRestController {
      * @return List of assigned sensor stations
      */
     @GetMapping(value = USERNAME_PATH +"/sensor-stations")
-    public ResponseEntity<Object> getAssignedSS(@PathVariable(value = "username") String username) {
+    @PreAuthorize("hasAuthority('ADMIN') or (hasAuthority('GARDENER') and principal eq #username)")
+    public ResponseEntity<Collection<SensorStation>> getAssignedSS(@PathVariable(value = "username") String username) {
         Userx gardener = userService.loadUserByUsername(username);
-        // Return a 403 error if a normal user tries to get list of assigned sensor stations
-        if (userService.authRoleIsUser()){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to view sensor stations assigned to a gardener.");
-        }
         // Return a 404 error if the user is not found
         if (gardener == null) {
-            return HelperFunctions.notFoundError("User", username);
+            throw new NotFoundInDatabaseException("User", username);
         }
-        // Return a 403 error if a non admin tries to get list of assigned sensor stations for other users
-        if (userService.authRoleIsGardener() && (!userService.getAuthenticatedUser().equals(gardener))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to view sensor stations assigned to other gardeners.");
-        }
-        // Return [] if admin tries to get list of assigned sensor stations for normal users
-        if (userService.roleIsUser(gardener)) {
-            return ResponseEntity.ok(new ArrayList<>());
-        }
-
+        // Will return [] when trying to get assigned SS for normal users
         return ResponseEntity.ok(userService.getAssignedSS(gardener));
     }
 }

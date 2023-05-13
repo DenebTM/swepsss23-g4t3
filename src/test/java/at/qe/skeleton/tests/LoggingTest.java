@@ -1,22 +1,17 @@
 package at.qe.skeleton.tests;
 
-import at.qe.skeleton.controllers.api.LoggingController;
-import at.qe.skeleton.models.LoggingEvent;
 import at.qe.skeleton.services.LoggingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Tests logging with logback in four different cases: writing info, warning and error messages to a file
@@ -27,8 +22,14 @@ import java.util.Map;
 @WebAppConfiguration
 public class LoggingTest {
 
+    @Value("${spring.datasource.url}")
+    String dataSourceUrl;
+    @Value("${spring.datasource.username}")
+    String dataSourceUsername;
+    @Value("${spring.datasource.password}")
+    String dataSourcePassword;
+
     private static final Logger logger = LoggerFactory.getLogger(LoggingTest.class);
-    private Map<String, Object> json = new HashMap<>();
 
     @Autowired
     LoggingService loggingService;
@@ -65,11 +66,14 @@ public class LoggingTest {
         logger.info("Test info message");
         ResultSet rs = null;
         try {
-            String url = "jdbc:mysql://localhost:3306/swe";
-            Connection con = DriverManager.getConnection(url, "root", "password");
+            Connection con = DriverManager.getConnection(
+                dataSourceUrl,
+                dataSourceUsername,
+                dataSourcePassword
+            );
 
             Statement stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT * from LOGGING_EVENT");
+            rs = stmt.executeQuery("SELECT * from logging_event");
         } catch (SQLException e) {
             e.printStackTrace();
         }
