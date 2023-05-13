@@ -1,15 +1,14 @@
 import { faker } from '@faker-js/faker'
 import { Factory } from 'miragejs'
-import { AccessPoint } from '~/models/accessPoint'
+import { AccessPoint, ApStatus } from '~/models/accessPoint'
 
 /** Factory to generate a fake {@link AccessPoint} */
 export const accessPointFactory = Factory.extend<AccessPoint>({
   name(i: number) {
     return `access-point-${i}`
   },
-  active() {
-    // Return that an access point is offline with a 1/3 probability
-    return faker.datatype.number({ min: 0, max: 2 }) !== 0
+  status() {
+    return faker.helpers.arrayElement(Object.values(ApStatus))
   },
   serverAddress() {
     return faker.internet.ipv4()
