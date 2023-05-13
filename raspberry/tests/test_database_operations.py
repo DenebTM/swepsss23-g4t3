@@ -16,7 +16,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
 
     @patch('database_operations.db_conn')
     async def test_save_sensor_values_to_database(self, db_conn):
-
         # Call the function with test input
         await save_sensor_values_to_database(SENSORSTATION_ID, MOCK_VALUES_TUPLE[0], MOCK_VALUES_TUPLE[1], MOCK_VALUES_TUPLE[2], MOCK_VALUES_TUPLE[3], MOCK_VALUES_TUPLE[4], MOCK_VALUES_TUPLE[5])
 
@@ -118,8 +117,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
                 'soilMoisture': MOCK_THRESHOLDS_TUPLE[1],
                 'temperature': MOCK_THRESHOLDS_TUPLE[0]
             }
-        }
-        
+        } 
         await update_sensorstation(json_data)
 
         # check if the data is inserted correctly
