@@ -3,6 +3,9 @@ package at.qe.skeleton.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import at.qe.skeleton.models.enums.AccessPointStatus;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -27,7 +30,8 @@ public class AccessPoint {
     @Column(name = "STATUS")
     private AccessPointStatus status;
 
-    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ssID")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "accessPoint",
             fetch = FetchType.EAGER,
             cascade = CascadeType.REMOVE,
@@ -73,4 +77,7 @@ public class AccessPoint {
         this.status = status;
     }
 
+    public Set<SensorStation> getSensorStations() {
+        return sensorStations;
+    }
 }
