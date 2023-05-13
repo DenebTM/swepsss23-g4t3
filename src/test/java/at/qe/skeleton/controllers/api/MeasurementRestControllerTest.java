@@ -68,7 +68,7 @@ class MeasurementRestControllerTest {
 
     @Test
     @WithMockUser(username = "admin", authorities = { "ADMIN" })
-    void sendMeasurement() {
+    void testSendMeasurement() {
         Map<String, Object> json = new HashMap<>();
         Instant mmTimestamp = Instant.now();
         json.put("timestamp", mmTimestamp.toString());
