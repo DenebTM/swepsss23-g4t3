@@ -47,11 +47,16 @@ const randomJitter = (sensorValues: SensorValues, percentage = 0.2) =>
 export const sensorStationFactory = Factory.extend<
   Omit<
     SensorStation,
-    'apName' | 'gardeners' | 'lowerBound' | 'measurements' | 'upperBound'
+    | 'apName'
+    | 'gardeners'
+    | 'lowerBound'
+    | 'currentMeasurement'
+    | 'upperBound'
+    | 'measurements'
   > &
     AfterCreate<SensorStation>
 >({
-  uuid(i: number) {
+  ssID(i: number) {
     return i
   },
   aggregationPeriod() {
@@ -81,7 +86,7 @@ export const sensorStationFactory = Factory.extend<
 
     // Create access point
     const ap: ModelInstance<AccessPoint> = server.create('accessPoint')
-    ap.update('sensorStations', [sensorStation.attrs.uuid])
+    ap.update('sensorStations', [sensorStation.attrs.ssID])
 
     // Create measurements
     const measurements = server.createList(
@@ -112,6 +117,8 @@ export const sensorStationFactory = Factory.extend<
 
     // Update sensorStation object
     sensorStation.update({
+      currentMeasurement:
+        measurements.length > 0 ? measurements[0].attrs : null,
       gardeners: gardenerIds,
       lowerBound: lowerBound.attrs,
       measurements: measurements.map((m) => m.attrs),

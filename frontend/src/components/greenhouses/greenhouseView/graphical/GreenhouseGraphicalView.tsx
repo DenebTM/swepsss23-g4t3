@@ -17,7 +17,7 @@ import { GreenhouseMetricDonuts } from './GreenhouseDonuts/GreenhouseMetricDonut
 import { GreenhouseGraph } from './GreenhouseGraph/GreenhouseGraph'
 
 interface GreenhouseGraphicalViewProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -35,7 +35,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
   useEffect(() => {
     const measurementPromise = cancelable(
       getSensorStationMeasurements(
-        props.uuid,
+        props.ssID,
         dayjs().subtract(1, 'week').toISOString(),
         dayjs().toISOString()
       )
@@ -76,7 +76,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
             <DashboardCard>
               <GreenhouseMetricDonuts
                 measurement={measurements.length > 0 ? measurements[0] : null}
-                uuid={props.uuid}
+                ssID={props.ssID}
               />
             </DashboardCard>
           </Grid>
@@ -84,7 +84,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
             <DashboardCard>
               <GreenhouseAirMetrics
                 measurement={measurements.length > 0 ? measurements[0] : null}
-                uuid={props.uuid}
+                ssID={props.ssID}
               />
             </DashboardCard>
           </Grid>
@@ -93,9 +93,9 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
               <GreenhouseGraph
                 measurements={measurements}
                 sensorStation={sensorStations?.find(
-                  (s) => s.uuid === props.uuid
+                  (s) => s.ssID === props.ssID
                 )}
-                uuid={props.uuid}
+                ssID={props.ssID}
               />
             </DashboardCard>
           </Grid>

@@ -8,7 +8,7 @@ import { API_URI, notFound, success } from '../consts'
 
 /**
  * Assign a gardener (by username) to a sensor station
- * GET /api/sensor-stations/{uuid}/gardeners/{username}
+ * GET /api/sensor-stations/{ssID}/gardeners/{username}
  */
 export const assignGardener = async (
   sensorStationUuid: SensorStationUuid,
@@ -19,7 +19,7 @@ export const assignGardener = async (
   )
 
 /**
- * DEL /api/sensor-stations/{uuid}/gardeners/{username}
+ * DEL /api/sensor-stations/{ssID}/gardeners/{username}
  * Remove a gardener from a sensor station
  */
 export const removeGardener = async (
@@ -31,7 +31,7 @@ export const removeGardener = async (
   )
 
 /** Path to update sensor station gardeners for mocked routes */
-export const GARDENER_PATH = `${API_URI.sensorStations}/:uuid${API_URI.gardeners}/:username`
+export const GARDENER_PATH = `${API_URI.sensorStations}/:ssID${API_URI.gardeners}/:username`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationGardenerReqs: EndpointReg = (
@@ -39,7 +39,7 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
 ) => {
   /** Mock {@link assignGardener} */
   server.post(GARDENER_PATH, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
+    const ssID: SensorStationUuid = Number(request.params.ssID)
     const username: Username = request.params.username
 
     // Check that user exists
@@ -57,7 +57,7 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
       )
     }
 
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
 
     if (sensorStation) {
       const oldGardeners: Username[] = sensorStation.attrs.gardeners
@@ -66,15 +66,15 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
       })
       return success(sensorStation.attrs)
     } else {
-      return notFound(`sensor station ${uuid}`)
+      return notFound(`sensor station ${ssID}`)
     }
   })
 
   /** Mock {@link removeGardener} */
   server.delete(GARDENER_PATH, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
+    const ssID: SensorStationUuid = Number(request.params.ssID)
     const username: Username = request.params.username
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
 
     // Deliberately does not check if user was in the gardeners
     if (sensorStation) {
@@ -84,7 +84,7 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
       })
       return success(sensorStation.attrs)
     } else {
-      return notFound(`sensor station ${uuid}`)
+      return notFound(`sensor station ${ssID}`)
     }
   })
 }

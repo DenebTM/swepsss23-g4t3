@@ -8,7 +8,7 @@ import { SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 interface UploadHeaderProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -44,7 +44,7 @@ export const UploadHeader: React.FC<UploadHeaderProps> = (props) => {
         align="center"
         marginBottom={3}
       >
-        Upload your photo of greenhouse {props.uuid} below
+        Upload your photo of greenhouse {props.ssID} below
       </Typography>
     </>
   )

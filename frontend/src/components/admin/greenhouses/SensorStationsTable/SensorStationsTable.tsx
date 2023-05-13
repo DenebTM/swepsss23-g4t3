@@ -75,7 +75,7 @@ export const SensorStationsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
-    { ...centerCell, flex: 1, field: 'uuid', headerName: 'UUID' },
+    { ...centerCell, flex: 1, field: 'ssID', headerName: 'UUID' },
     {
       ...centerCell,
       field: 'status',
@@ -131,16 +131,16 @@ export const SensorStationsTable: React.FC = () => {
       ) => (
         <DeleteCell<SensorStation, SensorStationUuid>
           deleteEntity={deleteSensorStation}
-          entityId={params.row.uuid}
+          entityId={params.row.ssID}
           entityName="sensor station"
-          getEntityId={(r) => r.uuid}
+          getEntityId={(r) => r.ssID}
           setRows={handleUpdateSensorStations}
         >
           <AddGardenerDropdown
             sensorStation={params.row}
             setSensorStations={handleUpdateSensorStations}
           />
-          <GenerateQrCode uuid={params.row.uuid} />
+          <GenerateQrCode ssID={params.row.ssID} />
         </DeleteCell>
       ),
     },
@@ -149,7 +149,7 @@ export const SensorStationsTable: React.FC = () => {
   return (
     <DataGrid<SensorStation, any, SensorStation>
       columns={columns}
-      getRowId={(row: SensorStation) => row.uuid}
+      getRowId={(row: SensorStation) => row.ssID}
       rows={sensorStations}
     />
   )

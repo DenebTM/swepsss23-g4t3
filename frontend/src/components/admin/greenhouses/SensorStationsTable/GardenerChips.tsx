@@ -25,7 +25,7 @@ export const GardenerChips: React.FC<GardenerChipsProps> = (props) => {
         return []
       } else {
         return oldRows.map((row) =>
-          props.row.uuid === row.uuid
+          props.row.ssID === row.ssID
             ? {
                 ...props.row,
                 gardeners: props.row.gardeners.filter(
@@ -45,7 +45,7 @@ export const GardenerChips: React.FC<GardenerChipsProps> = (props) => {
             <RemovableChip
               key={`${username}-${idx}`}
               entityName="gardener"
-              handleDelete={() => removeGardener(props.row.uuid, username)}
+              handleDelete={() => removeGardener(props.row.ssID, username)}
               afterDelete={() => afterDelete(username)}
               label={username}
             />
