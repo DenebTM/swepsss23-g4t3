@@ -80,7 +80,7 @@ class MeasurementRestControllerTest {
         json.put("soilMoisture", 50);
 
         var response = mmRestController.sendMeasurement(testSsId, json);
-        assertEquals(200, response.getStatusCode());
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         var measurement = response.getBody();
         assertNotNull(measurement);
