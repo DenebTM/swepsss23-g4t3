@@ -95,7 +95,9 @@ async def cancel_ss_task(sensorstation_id):
 async def polling_loop(connection_request, session):
     while not connection_request.done():
         print('Inside AP Loop')
-        status = await get_ap_status(session)
+        new_status = await get_ap_status(session)
+        if new_status is not None:
+            status = new_status
         print('this is inside the ap loop and the status is ' + status)
         if status == 'OFFLINE':
             connection_request.set_result('Done')
