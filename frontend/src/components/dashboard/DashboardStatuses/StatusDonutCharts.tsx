@@ -121,7 +121,7 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
         c.displayName === status
           ? {
               ...c,
-              entities: [`Greenhouse ${ss.uuid}`, ...c.entities],
+              entities: [`Greenhouse ${ss.ssID}`, ...c.entities],
               value: c.value + 1,
             }
           : c

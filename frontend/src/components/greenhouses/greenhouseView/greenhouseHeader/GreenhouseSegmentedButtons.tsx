@@ -22,7 +22,7 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
 }))
 
 interface GreenhouseSegmentedButtonsProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
   view: SensorStationView
 }
 
@@ -59,7 +59,7 @@ export const GreenhouseSegmentedButtons: React.FC<
 
   /** Handle navigate to targetView on button click */
   const handleNavigate = (targetView: SensorStationView): void => {
-    navigate(PAGE_URL.greenhouseView.href(props.uuid, targetView))
+    navigate(PAGE_URL.greenhouseView.href(props.ssID, targetView))
   }
 
   const getBtnBorderRadius = (index: number, numberOfButtons: number) => {
