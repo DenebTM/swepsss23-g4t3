@@ -33,7 +33,11 @@ ss_tasks = {}
 async def sensor_station_manager(connection_request, session):
     global ss_tasks
     while not connection_request.done():
-        assigned_ss = await get_sensorstation_instructions(session)
+        new_assigned_ss = await get_sensorstation_instructions(session)
+        #This so the program wont crash if the Webserver is down and just keeps the last sensorstation instructions if down
+        if new_assigned_ss is not None:
+            assigned_ss = new_assigned_ss
+
         for ss_id in common.known_ss:
             if ss_id in assigned_ss:
                 if ss_id in ss_tasks and ss_tasks[ss_id].done():
