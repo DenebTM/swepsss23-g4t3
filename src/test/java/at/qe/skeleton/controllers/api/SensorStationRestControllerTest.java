@@ -90,6 +90,8 @@ class SensorStationRestControllerTest {
         SensorStation ssTest = new SensorStation(apTest, 30L);
         ssTest.setId(127);
 
+        ssService.deleteSS(ssTest);
+
         // no sensor stations yet
         var initialResponse = ssRestController.getSSForAccessPoint(apTest.getName());
         assertEquals(HttpStatusCode.valueOf(200), initialResponse.getStatusCode());
