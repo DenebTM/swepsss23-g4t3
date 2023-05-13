@@ -15,10 +15,7 @@ public class SensorStation {
     @Column(name = "SS_ID")
     private Integer ssID;
 
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "name"
-    )
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("apName")
     @ManyToOne(optional = false)
