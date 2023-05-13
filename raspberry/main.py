@@ -39,8 +39,8 @@ async def sensor_station_manager(connection_request, session):
 
         for ss_id in common.known_ss:
             if ss_id in assigned_ss:
+
                 if ss_id in ss_tasks and ss_tasks[ss_id].done():
-                    ss_tasks[ss_id].cancel()
                     del ss_tasks[ss_id]
                 if not ss_id in ss_tasks:
                     ss_status = assigned_ss[ss_id]
