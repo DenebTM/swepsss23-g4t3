@@ -94,7 +94,7 @@ export const GreenhouseAccordionContents: React.FC<
       })
       .catch((err: Error) => {
         addSnackbarMessage({
-          header: 'Could not load save updated value',
+          header: 'Could not save updated value',
           body: err.message,
           type: MessageType.ERROR,
         })
