@@ -47,7 +47,7 @@ const randomJitter = (sensorValues: SensorValues, percentage = 0.2) =>
 export const sensorStationFactory = Factory.extend<
   Omit<
     SensorStation,
-    | 'name'
+    | 'apName'
     | 'gardeners'
     | 'lowerBound'
     | 'currentMeasurement'
@@ -126,7 +126,7 @@ export const sensorStationFactory = Factory.extend<
       lowerBound: lowerBound.attrs,
       measurements: measurements.map((m) => m.attrs),
       upperBound: upperBound.attrs,
-      name: ap.attrs.name,
+      apName: ap.attrs.name,
     })
   },
 })

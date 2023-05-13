@@ -8,7 +8,7 @@ export type SensorStationUuid = number
 /** Information about a single sensor station */
 export interface SensorStation {
   ssID: SensorStationUuid
-  name: AccessPointId
+  apName: AccessPointId
   aggregationPeriod: number // Transmission interval in seconds
   gardeners: Username[]
   lowerBound: SensorValues
