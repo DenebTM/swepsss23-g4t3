@@ -41,7 +41,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
             'air_quality_index': MOCK_VALUES_TUPLE[4],
             'soil_moisture': MOCK_VALUES_TUPLE[5]
         }
-
         # Call the function with the mocked parameters
         result = await get_sensor_data_averages(SENSORSTATION_ID)
 
