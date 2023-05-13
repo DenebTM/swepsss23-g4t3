@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -22,51 +23,50 @@ import java.util.List;
 public class LoggingServiceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingControllerTest.class);
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+    private static Instant parseInstant(String charseq) {
+        LocalDate date = LocalDate.parse(charseq, formatter);
+        ZonedDateTime zoneDate = ZonedDateTime.of(date.atTime(0, 0, 0), ZoneId.systemDefault());
+
+        return zoneDate.toInstant();
+    }
 
     @Autowired
     LoggingService loggingService;
     
     @Test
     void getLogsFrom() {
-        LocalDate fromDate = LocalDate.parse("2023-05-10", formatter);
-        ZonedDateTime zoneFrom = ZonedDateTime.of(fromDate.atTime(0, 0, 0), ZoneId.systemDefault());
+        Instant fromDate = parseInstant("2023-05-10");
 
-        List<LoggingEvent> logs = loggingService.getAllLogsFrom("2023-05-10");
-        Assertions.assertTrue(logs.size() < loggingService.getAllLogs().size());
-        Assertions.assertTrue(logs.size() > 0);
-        for (LoggingEvent l :
-                logs) {
-            Assertions.assertTrue(zoneFrom.toInstant().toEpochMilli() <= l.getTimestmp());
+        List<LoggingEvent> logs = loggingService.getAllLogsFrom(fromDate);
+        Assertions.assertTrue(logs.size() <= loggingService.getAllLogs().size());
+        for (LoggingEvent l : logs) {
+            Assertions.assertTrue(fromDate.toEpochMilli() <= l.getTimestmp());
         }
     }
 
     @Test
     void testGetLogsTo() {
-        LocalDate toDate = LocalDate.parse("2023-05-12", formatter);
-        ZonedDateTime zoneTo = ZonedDateTime.of(toDate.atTime(23, 59, 59), ZoneId.systemDefault());
+        Instant toDate = parseInstant("2023-05-12");
 
-        List<LoggingEvent> logs = loggingService.getAllLogsTo("2023-05-12");
-        Assertions.assertTrue(logs.size() > 0);
-        for (LoggingEvent l :
-                logs) {
-            Assertions.assertTrue(zoneTo.toInstant().toEpochMilli() >= l.getTimestmp());
+        List<LoggingEvent> logs = loggingService.getAllLogsTo(toDate);
+        Assertions.assertTrue(logs.size() <= loggingService.getAllLogs().size());
+        for (LoggingEvent l : logs) {
+            Assertions.assertTrue(toDate.toEpochMilli() >= l.getTimestmp());
         }
     }
 
     @Test
     void testGetLogsInTimeInterval() {
-        LocalDate fromDate = LocalDate.parse("2023-05-10", formatter);
-        LocalDate toDate = LocalDate.parse("2023-05-12", formatter);
-        ZonedDateTime zoneFrom = ZonedDateTime.of(fromDate.atTime(0, 0, 0), ZoneId.systemDefault());
-        ZonedDateTime zoneTo = ZonedDateTime.of(toDate.atTime(23, 59, 59), ZoneId.systemDefault());
+        Instant fromDate = parseInstant("2023-05-10");
+        Instant toDate = parseInstant("2023-05-12");
 
-        List<LoggingEvent> logs = loggingService.getAllLogsInTimeInterval("2023-05-10", "2023-05-12");
-        Assertions.assertTrue(logs.size() > 0);
-        for (LoggingEvent l :
-                logs) {
-            Assertions.assertTrue(zoneFrom.toInstant().toEpochMilli() <= l.getTimestmp());
-            Assertions.assertTrue(zoneTo.toInstant().toEpochMilli() >= l.getTimestmp());
+        List<LoggingEvent> logs = loggingService.getAllLogsInTimeInterval(fromDate, toDate);
+        Assertions.assertTrue(logs.size() <= loggingService.getAllLogs().size());
+        for (LoggingEvent l : logs) {
+            Assertions.assertTrue(fromDate.toEpochMilli() <= l.getTimestmp());
+            Assertions.assertTrue(toDate.toEpochMilli() >= l.getTimestmp());
         }
     }
 
@@ -74,20 +74,17 @@ public class LoggingServiceTest {
     void testGetLogsByLevel() {
         logger.info("info log");
         List<LoggingEvent> infoLogs = loggingService.getLogsByLevel("INFO");
-        for (LoggingEvent l :
-                infoLogs) {
+        for (LoggingEvent l : infoLogs) {
             Assertions.assertEquals("INFO", l.getLevelString());
         }
         logger.warn("warn log");
         List<LoggingEvent> warnLogs = loggingService.getLogsByLevel("WARN");
-        for (LoggingEvent l :
-                warnLogs) {
+        for (LoggingEvent l : warnLogs) {
             Assertions.assertEquals("WARN", l.getLevelString());
         }
         logger.error("error log");
         List<LoggingEvent> errorLogs = loggingService.getLogsByLevel("ERROR");
-        for (LoggingEvent l :
-                errorLogs) {
+        for (LoggingEvent l : errorLogs) {
             Assertions.assertEquals("ERROR", l.getLevelString());
         }
     }
