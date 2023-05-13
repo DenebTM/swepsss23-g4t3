@@ -86,7 +86,7 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
         c.displayName === status
           ? {
               ...c,
-              entities: [ap.apName, ...c.entities],
+              entities: [ap.name, ...c.entities],
               value: c.value + 1,
             }
           : c

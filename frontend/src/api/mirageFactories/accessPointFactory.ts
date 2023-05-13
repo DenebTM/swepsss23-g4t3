@@ -4,7 +4,7 @@ import { AccessPoint } from '~/models/accessPoint'
 
 /** Factory to generate a fake {@link AccessPoint} */
 export const accessPointFactory = Factory.extend<AccessPoint>({
-  apName(i: number) {
+  name(i: number) {
     return `access-point-${i}`
   },
   active() {
