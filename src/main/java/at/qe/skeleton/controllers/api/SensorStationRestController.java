@@ -155,6 +155,7 @@ public class SensorStationRestController implements BaseRestController {
         if (json.containsKey("aggregationPeriod")) {
             try {
                 ss.setAggregationPeriod(Long.valueOf((Integer)json.get("aggregationPeriod")));
+                if (ss.getAggregationPeriod()<0){ throw new BadRequestException("Invalid aggregation period");}
             } catch (IllegalArgumentException e){
                 throw new BadRequestException("Invalid aggregation period");
             }
