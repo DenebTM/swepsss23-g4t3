@@ -55,7 +55,7 @@ public class MeasurementRestController implements BaseRestController {
         }
 
         // return a 400 error if there is a "to"-date but no "from"-date given in json body
-        if (from == null || to == null){
+        if (from == null || to == null) {
             throw new BadRequestException("Both start and end date must be specified");
         }
         // return 400 error if "from"-date is after "to"-date
@@ -89,7 +89,7 @@ public class MeasurementRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
         }
 
-        if (!json.containsKey("timestamp")){
+        if (!json.containsKey("timestamp")) {
             throw new BadRequestException("No timestamp");
         }
 
