@@ -63,7 +63,7 @@ export const GreenhouseAccordionContents: React.FC<
     upper: number
   ): Promise<void> =>
     handleSaveRow(
-      updateSensorStation(props.sensorStation.uuid, {
+      updateSensorStation(props.sensorStation.ssID, {
         lowerBound: {
           ...props.sensorStation.lowerBound,
           [valueKey]: lower,
@@ -87,14 +87,14 @@ export const GreenhouseAccordionContents: React.FC<
             return []
           } else {
             return oldValue.map((s) =>
-              s.uuid === props.sensorStation.uuid ? updatedSs : s
+              s.ssID === props.sensorStation.ssID ? updatedSs : s
             )
           }
         })
       })
       .catch((err: Error) => {
         addSnackbarMessage({
-          header: 'Could not load save updated value',
+          header: 'Could not save updated value',
           body: err.message,
           type: MessageType.ERROR,
         })
@@ -151,7 +151,7 @@ export const GreenhouseAccordionContents: React.FC<
             editing={editing === AGGREGATION_PERIOD}
             saveRow={(newValue: number) =>
               handleSaveRow(
-                updateSensorStation(props.sensorStation.uuid, {
+                updateSensorStation(props.sensorStation.ssID, {
                   aggregationPeriod: Math.max(minAggregationPeriod, newValue),
                 })
               )

@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import { AccessPoint } from '~/models/accessPoint'
+import { AccessPoint, ApStatus } from '~/models/accessPoint'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
@@ -22,6 +22,9 @@ const ONLINE = 'Online'
 
 /** Text display value if an entity is offline */
 const OFFLINE = 'Offline'
+
+/** Text display value if an entity is in the process of being ipdated */
+const UPDATING = 'Updating'
 
 /** Text display value if an entity is in a warning state */
 const WARN = 'Warning'
@@ -53,15 +56,26 @@ const initialOfflineEntity = {
   ...initialEntityData,
 }
 
+/** Initial values for an updating entity */
+const initialUpdatingEntity = {
+  displayName: UPDATING,
+  fill: theme.tertiary,
+  legendFill: theme.tertiaryContainer,
+  legendText: theme.onTertiaryContainer,
+  ...initialEntityData,
+}
+
 /** Empty state for access point donut chart */
 const initialAccessPointData: DonutValue[] = [
   initialOnlineEntity,
+  initialUpdatingEntity,
   initialOfflineEntity,
 ]
 
 /** Empty state for sensor station donut chart */
 const initialSensorStationData: DonutValue[] = [
   initialOnlineEntity,
+  initialUpdatingEntity,
   initialWarnEntity,
   initialOfflineEntity,
 ]
@@ -81,12 +95,31 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
   /** Generate access point chart data to display */
   const accessPointData: DonutValue[] = props.accessPoints.reduce(
     (counts: DonutValue[], ap: AccessPoint) => {
-      const status = ap.active ? ONLINE : OFFLINE
+      let status: string
+
+      switch (ap.status) {
+        case ApStatus.OFFLINE:
+          status = OFFLINE
+          break
+
+        case ApStatus.UNCONFIRMED:
+          status = WARN
+          break
+
+        case ApStatus.SEARCHING:
+          status = UPDATING
+          break
+
+        default:
+          status = ONLINE
+          break
+      }
+
       return counts.map((c) =>
         c.displayName === status
           ? {
               ...c,
-              entities: [ap.apName, ...c.entities],
+              entities: [ap.name, ...c.entities],
               value: c.value + 1,
             }
           : c
@@ -105,11 +138,16 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
 
       switch (ss.status) {
         case StationStatus.OFFLINE:
+        case StationStatus.PAIRING_FAILED:
           status = OFFLINE
           break
 
         case StationStatus.WARNING:
           status = WARN
+          break
+
+        case StationStatus.PAIRING:
+          status = UPDATING
           break
 
         default:
@@ -121,7 +159,7 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
         c.displayName === status
           ? {
               ...c,
-              entities: [`Greenhouse ${ss.uuid}`, ...c.entities],
+              entities: [`Greenhouse ${ss.ssID}`, ...c.entities],
               value: c.value + 1,
             }
           : c
@@ -144,7 +182,7 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
         {initialSensorStationData.map((v) => (
           <Grid
             xs={12}
-            sm={4}
+            sm={3}
             key={v.displayName}
             sx={{
               display: 'flex',

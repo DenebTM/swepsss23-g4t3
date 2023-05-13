@@ -22,7 +22,7 @@ const donutIconProps: Partial<SvgIconTypeMap['props']> = {
 
 interface GreenhouseDonutsProps {
   measurement: Measurement | null
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -38,7 +38,7 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   /** Set the sensor station object in state when sensorStations are updated */
   useEffect(() => {
     const foundSs = sensorStations
-      ? sensorStations.find((s) => s.uuid === props.uuid)
+      ? sensorStations.find((s) => s.ssID === props.ssID)
       : null
     setSensorStation(foundSs ?? null)
   }, [sensorStations])
