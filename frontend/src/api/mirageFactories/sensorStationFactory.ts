@@ -81,7 +81,10 @@ export const sensorStationFactory = Factory.extend<
     for (let i = 0; i <= nGardeners; i++) {
       const userId = faker.name.middleName().toLowerCase()
       gardenerIds.push(userId)
-      server.create('user', { username: userId, role: AuthUserRole.GARDENER })
+      server.create('user', {
+        username: userId,
+        userRole: AuthUserRole.GARDENER,
+      })
     }
 
     // Create access point

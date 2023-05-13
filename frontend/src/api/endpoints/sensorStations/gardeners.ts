@@ -48,7 +48,7 @@ export const mockedSensorStationGardenerReqs: EndpointReg = (
     if (!user) {
       return notFound(`user ${username}`)
     } else if (
-      ![AuthUserRole.GARDENER, AuthUserRole.ADMIN].includes(user.attrs.role)
+      ![AuthUserRole.GARDENER, AuthUserRole.ADMIN].includes(user.attrs.userRole)
     ) {
       return new Response(
         400,
