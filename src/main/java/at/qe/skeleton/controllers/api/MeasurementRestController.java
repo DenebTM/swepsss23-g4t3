@@ -83,7 +83,7 @@ public class MeasurementRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SensorStationRestController.SS_ID_PATH + MEASUREMENTS_PATH)
-    public ResponseEntity<Measurement> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
+    public ResponseEntity<Measurement> sendMeasurement(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);

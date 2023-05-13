@@ -1,10 +1,12 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.services.MeasurementService;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.Instant;
@@ -12,6 +14,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,7 +55,7 @@ class MeasurementRestControllerTest {
     }
 
     @Test
-    void testGetAllCurrentMeasurements(){
+    void testGetAllCurrentMeasurements() {
         Integer number = measurementService.getAllCurrentMeasurements().size();
 
         var response = mmRestController.getAllCurrentMeasurements();
@@ -60,6 +64,27 @@ class MeasurementRestControllerTest {
         var measurements = response.getBody();
         assertNotNull(measurements);
         assertEquals(number, measurements.size());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = { "ADMIN" })
+    void sendMeasurement() {
+        Map<String, Object> json = new HashMap<>();
+        Instant mmTimestamp = Instant.now();
+        json.put("timestamp", mmTimestamp.toString());
+        json.put("temperature", 2456);
+        json.put("humidity", 30);
+        json.put("airPressure", 90000);
+        json.put("lightIntensity", 100);
+        json.put("airQuality", 45);
+        json.put("soilMoisture", 50);
+
+        var response = mmRestController.sendMeasurement(testSsId, json);
+        assertEquals(200, response.getStatusCode());
+
+        var measurement = response.getBody();
+        assertNotNull(measurement);
+        assertEquals(mmTimestamp, measurement.getTimestamp());
     }
 
 }
