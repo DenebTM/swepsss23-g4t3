@@ -1,5 +1,6 @@
 package at.qe.skeleton.models;
 
+import at.qe.skeleton.configs.UserConverter;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -16,6 +18,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "logging_event")
@@ -101,13 +104,11 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long eventId;
 
-    @Override
-    public String toString() {
-        return "LoggingEvent{" +
-                "timestmp=" + timestmp +
-                ", formattedMessage='" + formattedMessage + '\'' +
-                ", loggerName='" + loggerName + '\'' +
-                ", levelString='" + levelString + '\'' +
-                '}';
+    @Column(name = "caller_user")
+    @JdbcTypeCode((SqlTypes.VARCHAR))
+    private String callerUser;
+
+    public void setCallerUser(String callerUser) {
+        this.callerUser = callerUser;
     }
 }
