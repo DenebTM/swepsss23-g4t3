@@ -13,6 +13,7 @@ public class LoggingEventException {
 
     @Id
     @Column(name = "event_id", nullable = false)
+    @JoinColumn(table = "logging_event", name = "event_id")
     @JdbcTypeCode(SqlTypes.BIGINT)
     private String eventID;
 

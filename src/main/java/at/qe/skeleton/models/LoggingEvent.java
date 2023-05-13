@@ -76,26 +76,27 @@ public class LoggingEvent {
     private String arg3;
 
     @JsonIgnore
-    @Column(name = "caller_filename")
+    @Column(name = "caller_filename", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerFilename;
 
-    @Column(name = "caller_class")
+    @Column(name = "caller_class", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerClass;
 
     @JsonIgnore
-    @Column(name = "caller_method")
+    @Column(name = "caller_method", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerMethod;
 
     @JsonIgnore
-    @Column(name = "caller_line")
+    @Column(name = "caller_line", nullable = false)
     @JdbcTypeCode(SqlTypes.CHAR)
     private String callerLine;
 
     @JsonIgnore
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long eventId;

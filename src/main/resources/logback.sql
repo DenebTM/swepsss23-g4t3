@@ -1,6 +1,5 @@
 USE swe;
 
-BEGIN;
 CREATE TABLE IF NOT EXISTS logging_event
 (
     timestmp         BIGINT NOT NULL,
@@ -19,9 +18,7 @@ CREATE TABLE IF NOT EXISTS logging_event
     caller_line       CHAR(4) NOT NULL,
     event_id          BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
 );
-COMMIT;
 
-BEGIN;
 CREATE TABLE IF NOT EXISTS logging_event_property
 (
     event_id	      BIGINT NOT NULL,
@@ -30,9 +27,7 @@ CREATE TABLE IF NOT EXISTS logging_event_property
     PRIMARY KEY(event_id, mapped_key),
     FOREIGN KEY (event_id) REFERENCES logging_event(event_id)
 );
-COMMIT;
 
-BEGIN;
 CREATE TABLE IF NOT EXISTS logging_event_exception
 (
     event_id         BIGINT NOT NULL,
@@ -41,4 +36,3 @@ CREATE TABLE IF NOT EXISTS logging_event_exception
     PRIMARY KEY(event_id, i),
     FOREIGN KEY (event_id) REFERENCES logging_event(event_id)
 );
-COMMIT;
