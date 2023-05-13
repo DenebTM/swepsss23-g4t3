@@ -13,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,7 +34,7 @@ public class JwtManager {
     private String jwtSecret;
 
     @Autowired
-    private UserService userService;
+    private UserxService userService;
 
     /**
      * Generate a new JWT for the given user

@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,13 +36,13 @@ public class VisitorController {
      * @throws IOException
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws IOException {
+    ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws IOException {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setName(multipartImage.getName());
         try {
             dbPhoto.setContent(multipartImage.getBytes());
         } catch (IOException e) {
-            return HelperFunctions.notFoundError("Getting Bytes from Photo failed", String.valueOf(dbPhoto.getId()));
+            throw new NotFoundInDatabaseException("Could not get bytes for photo", dbPhoto.getId());
         }
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
@@ -48,7 +50,7 @@ public class VisitorController {
             photoDataRepository.save(dbPhoto);
             return ResponseEntity.ok(dbPhoto);
         }
-        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
+        throw new NotFoundInDatabaseException("Sensor Station", id);
     }
 
     /**
@@ -57,12 +59,12 @@ public class VisitorController {
      * @return list of photos
      */
     @GetMapping(value = SS_PHOTOS_PATH)
-    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
+    public ResponseEntity<Collection<PhotoData>> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
             List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
             return ResponseEntity.ok(photos);
         }
-        return HelperFunctions.notFoundError("Sensor Station", String.valueOf(id));
+        throw new NotFoundInDatabaseException("Sensor Station", id);
     }
 }
