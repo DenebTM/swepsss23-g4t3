@@ -17,15 +17,14 @@ async def get_ap_status(session):
         
     
 async def get_sensorstation_instructions(session):
+    paired_stations = {}
     async with session.get('/access-points/' + common.access_point_name + '/sensor-stations') as response:
         if response.status == 200:
             json_data = await response.json()
-            paired_stations = {}
             for station in json_data:
                 ss_id = station['id']
                 ss_status = station['status']
                 paired_stations[ss_id] = ss_status
-
         return paired_stations
 
 # Currently active sensor station tasks
