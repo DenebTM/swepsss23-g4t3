@@ -48,7 +48,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @Column(name = "USER_ROLE")
     private UserRole userRole;
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ssID")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(mappedBy = "gardeners", fetch = FetchType.EAGER)
     private Set<SensorStation> assignedSS;
