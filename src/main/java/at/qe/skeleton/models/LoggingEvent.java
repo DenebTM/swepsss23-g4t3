@@ -1,6 +1,9 @@
 package at.qe.skeleton.models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +12,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,10 +20,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "logging_event")
 public class LoggingEvent {
+    static List<String> validLevels = List.of("INFO", "WARN", "ERROR");
 
     @Column(name = "timestmp", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
+    @JsonProperty(value = "timestamp")
     private Long timestmp;
+
+    @JsonGetter(value = "timestamp")
+    public String getISOTimestamp() {
+        return Instant.ofEpochMilli(timestmp).toString();
+    }
 
     @Column(name = "formatted_message", nullable = false)
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
