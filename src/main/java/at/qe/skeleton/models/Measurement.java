@@ -1,6 +1,8 @@
 package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +14,7 @@ import java.time.Instant;
 public class Measurement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "TIMESTAMP")
@@ -20,6 +22,7 @@ public class Measurement {
 
     @OneToOne
     @JoinColumn(name = "VALUES_ID")
+    @JsonIgnoreProperties({ "id" })
     private SensorValues data;
 
     @JsonIgnore

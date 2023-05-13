@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class SensorValues {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "VALUES_ID")
     private Integer id;
 
