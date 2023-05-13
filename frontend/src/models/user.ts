@@ -11,7 +11,7 @@ export interface User {
   firstName: string
   lastName: string
   username: Username
-  role: AuthUserRole
+  userRole: AuthUserRole
 }
 
 /**
