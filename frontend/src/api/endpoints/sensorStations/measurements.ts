@@ -9,22 +9,21 @@ import { AppSchema, EndpointReg } from '../../mirageTypes'
 import { API_URI, notFound, success } from '../consts'
 
 /**
- * GET /api/sensor-stations/{uuid}/measurements
+ * GET /api/sensor-stations/{ssID}/measurements
  * @returns The current
  */
 export const getSensorStationMeasurements = async (
   sensorStationUuid: SensorStationUuid,
   from?: Timestamp,
   to?: Timestamp
-): Promise<Measurement[]> => {
-  return _get(
+): Promise<Measurement[]> =>
+  _get(
     `${API_URI.sensorStations}/${sensorStationUuid}${API_URI.measurements}`,
     { params: { from: from, to: to } }
   )
-}
 
 /** Path to get sensor station measurements for mocked routes */
-export const MEASUREMENT_PATH = `${API_URI.sensorStations}/:uuid${API_URI.measurements}`
+export const MEASUREMENT_PATH = `${API_URI.sensorStations}/:ssID${API_URI.measurements}`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationMeasurementReqs: EndpointReg = (
@@ -35,8 +34,8 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
    * Currently does not implement filters as the timestamps in measurements are random.
    */
   server.get(MEASUREMENT_PATH, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const ssID: SensorStationUuid = Number(request.params.ssID)
+    const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
     const body: { from?: Timestamp; to?: Timestamp } = request.queryParams
 
     if (sensorStation) {
@@ -57,7 +56,7 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
         )
       }
     } else {
-      return notFound(`sensor station ${uuid}`)
+      return notFound(`sensor station ${ssID}`)
     }
   })
 }

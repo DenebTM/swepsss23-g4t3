@@ -15,7 +15,7 @@ import { GreenhouseAccordion } from './GreenhouseAccordion/GreenhouseAccordion'
 export const MyGreenhouses: React.FC = () => {
   const sensorStations = useSensorStations() // qqjf TODO reload periodically?
 
-  // Store the currently expanded uuid in the state if an accordion is expanded, otherwise `null`
+  // Store the currently expanded ssID in the state if an accordion is expanded, otherwise `null`
   const [expanded, setExpanded] = useState<SensorStationUuid | null>(null)
 
   return (
@@ -26,8 +26,8 @@ export const MyGreenhouses: React.FC = () => {
       {sensorStations &&
         sensorStations.map((s) => (
           <GreenhouseAccordion
-            key={s.uuid}
-            expanded={expanded === s.uuid}
+            key={s.ssID}
+            expanded={expanded === s.ssID}
             sensorStation={s}
             setExpanded={setExpanded}
           />

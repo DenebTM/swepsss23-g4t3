@@ -31,7 +31,7 @@ export const PhotoUploadBox: React.FC<PhotoUploadBoxProps> = (props) => {
           multiple={false}
           accept="image/*"
           destination={{
-            url: `${API_DEV_URL}/api/sensor-stations/${props.sensorStation.uuid}/photos`, // TODO qqjf remove /api
+            url: `${API_DEV_URL}/api/sensor-stations/${props.sensorStation.ssID}/photos`, // TODO qqjf remove /api
           }}
           method="POST"
           sendWithFormData

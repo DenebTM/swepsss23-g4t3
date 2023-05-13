@@ -23,7 +23,7 @@ const qrSize = 256
 const dialogTitleId = 'qr-dialog-title'
 
 interface GenerateQrCodeProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -35,7 +35,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
     const [qrDialogOpen, setQrDialogOpen] = useState(false)
 
     const uploadUrl = `${window.location.origin}${PAGE_URL.photoUpload.href(
-      props.uuid
+      props.ssID
     )}`
 
     /** Open the QR generation dialog when the icon is clicked */
@@ -67,7 +67,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
             handleClose={handleClose}
             subtitle="Display this QR code on greenhouses so that users can upload photos"
             titleId={dialogTitleId}
-            title={`Greenhouse ${props.uuid}`}
+            title={`Greenhouse ${props.ssID}`}
           />
 
           <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>
