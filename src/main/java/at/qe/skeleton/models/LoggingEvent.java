@@ -8,13 +8,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "logging_event")
 public class LoggingEvent {
 
@@ -89,14 +86,4 @@ public class LoggingEvent {
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long eventId;
-
-    @Override
-    public String toString() {
-        return "LoggingEvent{" +
-                "timestmp=" + timestmp +
-                ", formattedMessage='" + formattedMessage + '\'' +
-                ", loggerName='" + loggerName + '\'' +
-                ", levelString='" + levelString + '\'' +
-                '}';
-    }
 }
