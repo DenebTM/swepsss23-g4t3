@@ -21,8 +21,11 @@ import { GenerateQrCode } from './GenerateQrCode/GenerateQrCode'
 /** Map values from {@link StationStatus} to {@link StatusVariant} for display in {@link StatusCell} */
 const sensorStationToVariant: { [key in StationStatus]: StatusVariant } = {
   [StationStatus.OK]: StatusVariant.OK,
+  [StationStatus.AVAILABLE]: StatusVariant.OK,
   [StationStatus.WARNING]: StatusVariant.WARNING,
+  [StationStatus.PAIRING]: StatusVariant.INFO,
   [StationStatus.OFFLINE]: StatusVariant.ERROR,
+  [StationStatus.PAIRING_FAILED]: StatusVariant.ERROR,
 }
 
 /** Type of a `DataGrid` row */

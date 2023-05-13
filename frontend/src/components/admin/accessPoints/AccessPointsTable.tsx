@@ -15,10 +15,18 @@ import {
   getAccessPoints,
   updateAccessPoint,
 } from '~/api/endpoints/accessPoints'
-import { AccessPoint, AccessPointId } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 
 import { AddSensorStation } from './AddSensorStation/AddSensorStation'
 import { SensorStationChips } from './SensorStationChips'
+
+/** Map values from {@link ApStatus} to {@link StatusVariant} for display in {@link StatusCell} */
+const apStatusToVariant: { [key in ApStatus]: StatusVariant } = {
+  [ApStatus.ONLINE]: StatusVariant.OK,
+  [ApStatus.SEARCHING]: StatusVariant.INFO,
+  [ApStatus.UNCONFIRMED]: StatusVariant.WARNING,
+  [ApStatus.OFFLINE]: StatusVariant.ERROR,
+}
 
 const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
   headerAlign: 'center',
@@ -62,8 +70,8 @@ export const AccessPointsTable: React.FC = () => {
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
       ) => (
         <StatusCell
-          status={params.row.active ? 'online' : 'offline'}
-          variant={params.row.active ? StatusVariant.OK : StatusVariant.ERROR}
+          status={params.row.status.toLowerCase()}
+          variant={apStatusToVariant[params.row.status]}
         />
       ),
     },

@@ -23,4 +23,7 @@ export enum StationStatus {
   OK = 'OK',
   WARNING = 'WARNING',
   OFFLINE = 'OFFLINE',
+  AVAILABLE = 'AVAILABLE',
+  PAIRING = 'PAIRING',
+  PAIRING_FAILED = 'PAIRING_FAILED',
 }
