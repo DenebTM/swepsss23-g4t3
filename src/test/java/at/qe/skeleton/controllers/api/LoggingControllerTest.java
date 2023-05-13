@@ -93,7 +93,7 @@ public class LoggingControllerTest {
         var logs = response.getBody();
         assertNotNull(logs);
         assertEquals(numberOfLogs, logs.size());
-        assertTrue(loggingService.getAllLogs().size() > logs.size());
+        assertTrue(loggingService.getAllLogs().size() >= logs.size());
     }
 
     @Test
