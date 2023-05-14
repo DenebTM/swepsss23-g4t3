@@ -34,11 +34,15 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
     <Box width={props.donutHeight * 2} height={props.donutHeight}>
       <ResponsiveContainer width="100%" height="100%">
         <RadialChart
+          data={[
+            {
+              metricRange: props.metricRange,
+              minThreshold: props.minThreshold,
+              maxThreshold: props.maxThreshold,
+              value: props.value,
+            },
+          ]}
           height={props.donutHeight}
-          metricRange={props.metricRange}
-          minThreshold={props.minThreshold}
-          maxThreshold={props.maxThreshold}
-          value={props.value}
           width={props.donutHeight * 2}
         />
       </ResponsiveContainer>
