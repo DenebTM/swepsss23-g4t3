@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
-import { GREENHOUSE_METRICS } from '~/common'
+import { AIR_METRICS, GreenhouseMetricRange } from '~/common'
 import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
@@ -30,7 +30,14 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
   const { sensorStation, measurement } = { ...props }
 
-  const outOfRange = false // qqjf TODO check for values out of bounds
+  const outOfRange =
+    sensorStation !== null &&
+    measurement !== null &&
+    AIR_METRICS.some(
+      (mr: GreenhouseMetricRange) =>
+        measurement.data[mr.valueKey] < sensorStation.lowerBound[mr.valueKey] ||
+        measurement.data[mr.valueKey] > sensorStation.upperBound[mr.valueKey]
+    )
 
   if (sensorStation === null) {
     return <div>qqjf TODO loading state</div>
@@ -41,7 +48,7 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
       <Box minWidth={props.donutHeight} height={props.donutHeight}>
         <ResponsiveContainer width="100%" height="100%">
           <RadialChart
-            data={GREENHOUSE_METRICS.slice(3, 6).map((metricRange) => ({
+            data={AIR_METRICS.map((metricRange) => ({
               metricRange: metricRange,
               maxThreshold: sensorStation.upperBound[metricRange.valueKey],
               minThreshold: sensorStation.lowerBound[metricRange.valueKey],
