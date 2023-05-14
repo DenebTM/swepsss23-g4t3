@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- Stop output INFO at start -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
     <property name="LOG_ROOT" value="logs" />
     <property resource="application.properties" />
     <!--Taken from
@@ -9,13 +12,16 @@
     <!-- Console appender -->
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{5} - %msg%n</pattern>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) - U:%user - %logger{5} - %msg%n</pattern>
+            </layout>
         </encoder>
     </appender>
 
     <!-- Database appender -->
     <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
+        <dbNameResolver class="at.qe.skeleton.configs.UserDBNameResolver"/>
         <connectionSource
                 class="ch.qos.logback.core.db.DriverManagerConnectionSource">
             <driverClass>${spring.datasource.driver-class-name}</driverClass>
@@ -37,8 +43,10 @@
             <!-- total size of all archive files, if total size > 100GB, it will delete old archived file -->
             <totalSizeCap>100GB</totalSizeCap>
         </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - U:%user - %logger{5} - %msg%n</pattern>
+            </layout>
         </encoder>
     </appender>
 
@@ -57,10 +65,19 @@
             <!-- total size of all archive files, if total size > 100GB, it will delete old archived file -->
             <totalSizeCap>100GB</totalSizeCap>
         </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - U:%user - %logger{5} - %msg%n</pattern>
+            </layout>
         </encoder>
     </appender>
+
+    <configuration>
+        <appender name="map" class="at.qe.skeleton.configs.DBAppender"/>
+        <root level="info">
+            <appender-ref ref="map"/>
+        </root>
+    </configuration>
 
     <logger name="infoLogger">
         <appender-ref ref="info" level="info"/>

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
@@ -14,7 +15,8 @@ import java.time.Instant;
 public class Measurement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO , generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     private Integer id;
 
     @Column(name = "TIMESTAMP")
