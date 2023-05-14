@@ -4,7 +4,11 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
 import { DeleteCell } from '@component-lib/Table/DeleteCell'
-import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
+import {
+  StatusCell,
+  statusCellMinWidth,
+  StatusVariant,
+} from '@component-lib/Table/StatusCell'
 import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { useSensorStations } from '~/hooks/appContext'
@@ -83,7 +87,7 @@ export const SensorStationsTable: React.FC = () => {
       ...centerCell,
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      width: statusCellMinWidth,
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => (
