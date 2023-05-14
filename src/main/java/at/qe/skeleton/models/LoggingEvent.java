@@ -1,6 +1,7 @@
 package at.qe.skeleton.models;
 
 import at.qe.skeleton.configs.UserConverter;
+import at.qe.skeleton.models.enums.LogLevel;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,7 +24,6 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "logging_event")
 public class LoggingEvent {
-    static List<String> validLevels = List.of("INFO", "WARN", "ERROR");
 
     @Column(name = "timestmp", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)

@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.models.LoggingEvent;
+import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.repositories.LoggingEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,5 +77,20 @@ public class LoggingService {
         if (level == null) {
             return logs;
         }
-        return logs.stream().filter(l -> level.equals(l.getLevelString())).toList(); }
+        if (isValidLevel(level)) {
+            return logs.stream().filter(l -> level.equals(l.getLevelString())).toList();
+        }
+        return new ArrayList<>();
+    }
+
+    public static boolean isValidLevel(String test) {
+
+        for (LogLevel l : LogLevel.values()) {
+            if (l.name().equals(test)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
