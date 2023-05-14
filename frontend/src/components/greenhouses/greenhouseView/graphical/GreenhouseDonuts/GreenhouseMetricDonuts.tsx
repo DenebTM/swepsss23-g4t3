@@ -34,7 +34,7 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
   /** Donut height in px. The width will be approximately twice this value. */
-  const donutHeight = breakMd ? 250 : 200
+  const donutHeight = breakMd ? 250 : 175
 
   if (sensorStation === null) {
     return <div>TODO qqjf loading state</div>

@@ -31,7 +31,7 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
     props.value < props.minThreshold || props.value > props.maxThreshold
 
   return (
-    <Box width={props.donutHeight * 2} height={props.donutHeight}>
+    <Box width={props.donutHeight} height={props.donutHeight}>
       <ResponsiveContainer width="100%" height="100%">
         <RadialChart
           data={[
@@ -43,7 +43,7 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
             },
           ]}
           height={props.donutHeight}
-          width={props.donutHeight * 2}
+          width={props.donutHeight}
         />
       </ResponsiveContainer>
 
