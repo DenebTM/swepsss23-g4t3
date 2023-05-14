@@ -8,7 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
-import { GREENHOUSE_METRICS, GreenhouseMetricRange } from '~/common'
+import { GreenhouseMetricRange, NON_AIR_METRICS } from '~/common'
 import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
@@ -66,21 +66,21 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
           <Grid container spacing={1} padding={2}>
             <Grid {...gridBreakpoints}>
               <GreenhouseDonut
-                {...donutProps(GREENHOUSE_METRICS[0])}
+                {...donutProps(NON_AIR_METRICS[0])}
                 icon={<ThermostatIcon {...donutIconProps} />}
                 value={measurement.data.temperature}
               />
             </Grid>
             <Grid {...gridBreakpoints}>
               <GreenhouseDonut
-                {...donutProps(GREENHOUSE_METRICS[1])}
+                {...donutProps(NON_AIR_METRICS[1])}
                 icon={<WaterDropOutlinedIcon {...donutIconProps} />}
                 value={measurement.data.soilMoisture}
               />
             </Grid>
             <Grid {...gridBreakpoints}>
               <GreenhouseDonut
-                {...donutProps(GREENHOUSE_METRICS[2])}
+                {...donutProps(NON_AIR_METRICS[2])}
                 icon={<LightModeOutlinedIcon {...donutIconProps} />}
                 value={measurement.data.lightIntensity}
               />
