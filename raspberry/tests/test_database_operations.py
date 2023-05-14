@@ -60,7 +60,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
     # Test get_sensor_data_thresholds function
     @patch('database_operations.db_conn')
     async def test_get_sensor_data_thresholds(self, db_conn):
-
         # Mock the database connection and cursor and the query
         cursor = MagicMock()
         db_conn.cursor.return_value = cursor
@@ -90,7 +89,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
 
     @patch('database_operations.db_conn')
     async def test_update_sensorstation(self, db_conn):
-
         #set up json which is received 
         json_data = {
             'id': SENSORSTATION_ID,
