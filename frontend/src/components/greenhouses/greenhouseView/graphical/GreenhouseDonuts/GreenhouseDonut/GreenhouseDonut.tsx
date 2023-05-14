@@ -31,7 +31,7 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
     props.value < props.minThreshold || props.value > props.maxThreshold
 
   return (
-    <Box width={props.donutHeight} height={props.donutHeight}>
+    <Box minWidth={props.donutHeight} height={props.donutHeight}>
       <ResponsiveContainer width="100%" height="100%">
         <RadialChart
           data={[
@@ -48,7 +48,21 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
       </ResponsiveContainer>
 
       <DonutLabel
-        bottom={Math.round(props.donutHeight * 0.6)}
+        bottom={Math.round(props.donutHeight * 0.25)}
+        outOfRange={outOfRange}
+      >
+        {outOfRange ? <ReportProblemIcon fontSize="small" /> : props.icon}
+        <Typography
+          color="inherit"
+          variant={breakMd ? 'bodySmall' : 'bodyMedium'}
+          sx={{ marginLeft: '3px' }}
+        >
+          {props.metricRange.displayName}
+        </Typography>
+      </DonutLabel>
+
+      <DonutLabel
+        bottom={Math.round(props.donutHeight * 0.7)}
         outOfRange={outOfRange}
       >
         <Typography
@@ -62,19 +76,6 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
           variant={breakMd ? 'bodySmall' : 'bodyMedium'}
         >
           {props.metricRange.unit}
-        </Typography>
-      </DonutLabel>
-      <DonutLabel
-        bottom={Math.max(Math.round(props.donutHeight * 0.46), 70)}
-        outOfRange={outOfRange}
-      >
-        {outOfRange ? <ReportProblemIcon fontSize="small" /> : props.icon}
-        <Typography
-          color="inherit"
-          variant={breakMd ? 'bodySmall' : 'bodyMedium'}
-          sx={{ marginLeft: '3px' }}
-        >
-          {props.metricRange.displayName}
         </Typography>
       </DonutLabel>
     </Box>
