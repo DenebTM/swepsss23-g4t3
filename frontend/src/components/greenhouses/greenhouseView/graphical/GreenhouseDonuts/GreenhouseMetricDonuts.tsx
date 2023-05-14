@@ -20,6 +20,7 @@ const donutIconProps: Partial<SvgIconTypeMap['props']> = {
 }
 
 interface GreenhouseDonutsProps {
+  donutHeight: number
   measurement: Measurement | null
   sensorStation: SensorStation | null
 }
@@ -33,14 +34,11 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   const { sensorStation, measurement } = { ...props }
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
-  /** Donut height in px. The width will be approximately twice this value. */
-  const donutHeight = breakMd ? 250 : 175
-
   if (sensorStation === null) {
     return <div>TODO qqjf loading state</div>
   } else {
     const donutProps = (metricRange: GreenhouseMetricRange) => ({
-      donutHeight: donutHeight,
+      donutHeight: props.donutHeight,
       metricRange: metricRange,
       sensorStation: sensorStation,
       maxThreshold: sensorStation.upperBound[metricRange.valueKey],
