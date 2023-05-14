@@ -53,10 +53,7 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
           />
         </ResponsiveContainer>
 
-        <DonutLabel
-          bottom={Math.max(Math.round(donutHeight * 0.26), 70)}
-          outOfRange={outOfRange}
-        >
+        <DonutLabel bottom={70} outOfRange={outOfRange}>
           {outOfRange ? (
             <ReportProblemIcon fontSize="small" />
           ) : (
