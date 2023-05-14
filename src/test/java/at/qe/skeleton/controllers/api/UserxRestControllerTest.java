@@ -6,6 +6,7 @@ import at.qe.skeleton.controllers.errors.ForbiddenException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.UserRole;
+import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ import java.util.*;
 @WebAppConfiguration
 class UserxRestControllerTest {
 
+    @Autowired
+    private UserxRepository userRepository;
     @Autowired
     private UserxService userService;
     @Autowired
@@ -101,6 +104,9 @@ class UserxRestControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testCreateUser() {
+        // remove the user first to avoid a naming conflict
+        userRepository.removeByUsername((String)jsonCreateUser.get("username"));
+        
         var response = userxRestController.createUser(jsonCreateUser);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
@@ -138,6 +144,9 @@ class UserxRestControllerTest {
             BadRequestException.class,
             () -> userxRestController.createUser(jsonCreateUser)
         );
+
+        // remove the created user again
+        userRepository.delete(user);
     }
 
     @Test
