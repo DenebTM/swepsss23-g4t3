@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- Stop output INFO at start -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
     <property name="LOG_ROOT" value="logs" />
     <property resource="application.properties" />
     <!--Taken from
