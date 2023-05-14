@@ -92,7 +92,6 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
 
     @patch('database_operations.db_conn')
     async def test_update_sensorstation(self, db_conn):
-
         #set up json which is received 
         json_data = {
             'id': 123,
