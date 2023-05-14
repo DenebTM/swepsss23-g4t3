@@ -1,5 +1,6 @@
 package at.qe.skeleton.models;
 
+import at.qe.skeleton.configs.UserConverter;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
