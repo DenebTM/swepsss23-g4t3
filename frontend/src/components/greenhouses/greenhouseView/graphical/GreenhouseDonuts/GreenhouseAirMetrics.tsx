@@ -16,6 +16,7 @@ import { DonutLabel } from './GreenhouseDonut/DonutLabel'
 import { RadialChart } from './GreenhouseDonut/RadialChart'
 
 interface GreenhouseAirMetricsProps {
+  donutHeight: number
   measurement: Measurement | null
   sensorStation: SensorStation | null
 }
@@ -27,7 +28,6 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
   props
 ) => {
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
-  const donutHeight = breakMd ? 150 : 200
   const { sensorStation, measurement } = { ...props }
 
   const outOfRange = false // qqjf TODO check for values out of bounds
@@ -38,7 +38,7 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
     return <div>qqjf TODO no measurement state</div>
   } else {
     return (
-      <Box minWidth={donutHeight} height={donutHeight}>
+      <Box minWidth={props.donutHeight} height={props.donutHeight}>
         <ResponsiveContainer width="100%" height="100%">
           <RadialChart
             data={GREENHOUSE_METRICS.slice(3, 6).map((metricRange) => ({
@@ -48,12 +48,12 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
               value: measurement.data[metricRange.valueKey],
             }))}
             innerRadius="65%"
-            height={donutHeight}
-            width={donutHeight}
+            height={props.donutHeight}
+            width={props.donutHeight}
           />
         </ResponsiveContainer>
 
-        <DonutLabel bottom={70} outOfRange={outOfRange}>
+        <DonutLabel bottom={60} outOfRange={outOfRange}>
           {outOfRange ? (
             <ReportProblemIcon fontSize="small" />
           ) : (
