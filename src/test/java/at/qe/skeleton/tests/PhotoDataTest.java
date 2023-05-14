@@ -22,22 +22,13 @@ public class PhotoDataTest {
 
     @Test
     public void uploadImage() throws IOException {
-        String testImgName = "example2";
-
-        PhotoData img = new PhotoData(testImgName, null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
-        
-        // remove the image first to avoid a conflict
-        photoDataRepository.removeByName(testImgName);
-
+        PhotoData img = new PhotoData("example2", null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
         photoDataRepository.save(img);
         PhotoData testimg = new PhotoData(2, "", null, new byte[0]);
         if (photoDataRepository.findByName("example2").isPresent()) {
             testimg = photoDataRepository.findByName("example2").get();
         }
         assertEquals(testimg, img);
-
-        // remove the new image after the test
-        photoDataRepository.removeByName(testImgName);
     }
 
 }

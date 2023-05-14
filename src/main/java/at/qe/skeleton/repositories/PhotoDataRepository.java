@@ -6,8 +6,6 @@ import at.qe.skeleton.models.SensorStation;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.transaction.annotation.Transactional;
-
 public interface PhotoDataRepository extends AbstractRepository<PhotoData, Integer> {
 
     Optional<PhotoData> findByName(String name);
@@ -17,8 +15,5 @@ public interface PhotoDataRepository extends AbstractRepository<PhotoData, Integ
     List<PhotoData> findAllBySensorStation(SensorStation sensorStation);
 
     Optional<PhotoData> findByIdAndSensorStation(Integer id, SensorStation sensorStation);
-
-    @Transactional
-    List<PhotoData> removeByName(String name);
 
 }
