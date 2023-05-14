@@ -32,10 +32,7 @@ export const PhotoUpload: React.FC = () => {
   }, [search])
 
   return (
-    <PageWrapper
-      hideSidebar
-      permittedRoles={PAGE_URL.photoUpload.permittedRoles}
-    >
+    <PageWrapper permittedRoles={PAGE_URL.photoUpload.permittedRoles}>
       {sensorStationUuid === INVALID_UUID ? (
         <Error message="Unable to parse greenhouse UUID" />
       ) : typeof sensorStationUuid === 'undefined' ? (
