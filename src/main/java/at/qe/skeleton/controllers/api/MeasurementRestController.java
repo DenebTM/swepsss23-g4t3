@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DateTimeException;
 import java.time.Instant;
-import java.util.*;
 import java.util.List;
 import java.util.Map;
 
@@ -48,16 +47,16 @@ public class MeasurementRestController implements BaseRestController {
         @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             Instant to
     ) {
-        // if keys "from" and "to" are missing in json body return the most recent/current measurement
-        if (from == null && to == null) {
-            Measurement currentMeasurement = measurementService.getCurrentMeasurement(id);
-            return ResponseEntity.ok(Arrays.asList(currentMeasurement));
+        // return measurements up to now by default
+        if (to == null) {
+            to = Instant.now();
         }
 
-        // return a 400 error if there is a "to"-date but no "from"-date given in json body
-        if (from == null || to == null) {
-            throw new BadRequestException("Both start and end date must be specified");
+        // return one week of measurements by default
+        if (from == null) {
+            from = to.minusSeconds(60 * 60 * 24 * 7);
         }
+
         // return 400 error if "from"-date is after "to"-date
         if (from.isAfter(to)){
             throw new BadRequestException("End date must not be before start date");
