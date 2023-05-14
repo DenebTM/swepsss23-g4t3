@@ -1,6 +1,5 @@
 package at.qe.skeleton.models;
 
-import at.qe.skeleton.configs.UserConverter;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +13,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Getter
@@ -96,16 +94,16 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.CHAR)
     private String callerLine;
 
+    @Column(name = "caller_user")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private String callerUser;
+
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long eventId;
-
-    @Column(name = "caller_user")
-    @JdbcTypeCode((SqlTypes.VARCHAR))
-    private String callerUser;
 
     public void setCallerUser(String callerUser) {
         this.callerUser = callerUser;
