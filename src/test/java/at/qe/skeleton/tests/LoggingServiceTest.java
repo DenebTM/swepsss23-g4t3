@@ -36,7 +36,7 @@ public class LoggingServiceTest {
     LoggingService loggingService;
     
     @Test
-    void getLogsFrom() {
+    void testGetLogsFrom() {
         Instant fromDate = parseInstant("2023-05-10");
 
         List<LoggingEvent> logs = loggingService.getAllLogsFrom(fromDate);

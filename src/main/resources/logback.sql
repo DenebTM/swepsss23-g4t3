@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS logging_event
     caller_class      VARCHAR(254) NOT NULL,
     caller_method     VARCHAR(254) NOT NULL,
     caller_line       CHAR(4) NOT NULL,
+    caller_user       VARCHAR(254) NOT NULL,
     event_id          BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
 );
 
