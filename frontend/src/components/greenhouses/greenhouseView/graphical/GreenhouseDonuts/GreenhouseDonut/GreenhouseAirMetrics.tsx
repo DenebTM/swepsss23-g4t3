@@ -12,8 +12,8 @@ import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
-import { DonutLabel } from './GreenhouseDonut/DonutLabel'
-import { RadialChart } from './GreenhouseDonut/RadialChart'
+import { DonutLabel } from './DonutLabel'
+import { RadialChart } from './RadialChart'
 
 interface GreenhouseAirMetricsProps {
   donutHeight: number
@@ -53,7 +53,10 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
           />
         </ResponsiveContainer>
 
-        <DonutLabel bottom={60} outOfRange={outOfRange}>
+        <DonutLabel
+          outOfRange={outOfRange}
+          bottom={Math.round(props.donutHeight * 0.25)}
+        >
           {outOfRange ? (
             <ReportProblemIcon fontSize="small" />
           ) : (

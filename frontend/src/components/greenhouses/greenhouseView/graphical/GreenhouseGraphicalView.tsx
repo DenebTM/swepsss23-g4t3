@@ -2,7 +2,6 @@ import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
 import Grid from '@mui/material/Unstable_Grid2'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { DashboardCard } from '@component-lib/DashboardCard'
 import dayjs from 'dayjs'
@@ -12,9 +11,7 @@ import { useSensorStations } from '~/hooks/appContext'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Measurement } from '~/models/measurement'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
-import { GreenhouseAirMetrics } from './GreenhouseDonuts/GreenhouseAirMetrics'
 import { GreenhouseMetricDonuts } from './GreenhouseDonuts/GreenhouseMetricDonuts'
 import { GreenhouseGraph } from './GreenhouseGraph/GreenhouseGraph'
 
@@ -30,10 +27,6 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
 ) => {
   const sensorStations = useSensorStations()
   const addSnackbarMessage = useAddSnackbarMessage()
-  const breakMd = useMediaQuery(theme.breakpoints.down('md'))
-
-  /** Donut height in px. qqjf TODO make this responsive  */
-  const donutHeight = breakMd ? 250 : 175
 
   const [sensorStation, setSensorStation] = useState<SensorStation | null>(null)
   const [measurements, setMeasurements] = useState<Measurement[]>()
@@ -88,24 +81,15 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
     <Grid container spacing={2} padding={2}>
       {measurements && ( // qqjf TODO add a loading state to each card
         <>
-          <Grid xs={12} md={8}>
+          <Grid xs={12}>
             <DashboardCard>
               <GreenhouseMetricDonuts
-                donutHeight={donutHeight}
                 measurement={measurements.length > 0 ? measurements[0] : null}
                 sensorStation={sensorStation}
               />
             </DashboardCard>
           </Grid>
-          <Grid xs={12} md={4}>
-            <DashboardCard>
-              <GreenhouseAirMetrics
-                donutHeight={donutHeight}
-                measurement={measurements.length > 0 ? measurements[0] : null}
-                sensorStation={sensorStation}
-              />
-            </DashboardCard>
-          </Grid>
+
           <Grid xs={12}>
             <DashboardCard>
               <GreenhouseGraph
