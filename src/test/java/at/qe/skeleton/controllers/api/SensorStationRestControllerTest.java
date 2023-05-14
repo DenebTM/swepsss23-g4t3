@@ -89,7 +89,7 @@ class SensorStationRestControllerTest {
 
         var initialSS = initialResponse.getBody();
         assertNotNull(initialSS);
-        assertEquals(0, initialSS.size());
+        int initialSSCount = initialSS.size();
 
         // insert a sensor station, check if it is returned
         ssService.saveSS(ssTest);
@@ -98,7 +98,7 @@ class SensorStationRestControllerTest {
 
         var finalSS = finalResponse.getBody();
         assertNotNull(finalSS);
-        assertEquals(1, finalSS.size());
+        assertEquals(initialSSCount + 1, finalSS.size());
     }
 
     @Test

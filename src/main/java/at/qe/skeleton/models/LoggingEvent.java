@@ -1,26 +1,36 @@
 package at.qe.skeleton.models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.List;
+import java.time.Instant;
 
 @Entity
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "logging_event")
 public class LoggingEvent {
-    static List<String> validLevels = List.of("INFO", "WARN", "ERROR");
 
     @Column(name = "timestmp", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
+    @JsonProperty(value = "timestamp")
     private Long timestmp;
+
+    @JsonGetter(value = "timestamp")
+    public String getISOTimestamp() {
+        return Instant.ofEpochMilli(timestmp).toString();
+    }
 
     @Column(name = "formatted_message", nullable = false)
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
@@ -66,37 +76,36 @@ public class LoggingEvent {
     private String arg3;
 
     @JsonIgnore
-    @Column(name = "caller_filename")
+    @Column(name = "caller_filename", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerFilename;
 
-    @Column(name = "caller_class")
+    @Column(name = "caller_class", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerClass;
 
     @JsonIgnore
-    @Column(name = "caller_method")
+    @Column(name = "caller_method", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerMethod;
 
     @JsonIgnore
-    @Column(name = "caller_line")
+    @Column(name = "caller_line", nullable = false)
     @JdbcTypeCode(SqlTypes.CHAR)
     private String callerLine;
 
+    @Column(name = "caller_user")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private String callerUser;
+
     @JsonIgnore
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long eventId;
 
-    @Override
-    public String toString() {
-        return "LoggingEvent{" +
-                "timestmp=" + timestmp +
-                ", formattedMessage='" + formattedMessage + '\'' +
-                ", loggerName='" + loggerName + '\'' +
-                ", levelString='" + levelString + '\'' +
-                '}';
+    public void setCallerUser(String callerUser) {
+        this.callerUser = callerUser;
     }
 }
