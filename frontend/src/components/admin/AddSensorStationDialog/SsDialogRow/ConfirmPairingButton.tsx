@@ -34,7 +34,7 @@ export const ConfirmPairingButton: React.FC<ConfirmPairingButtonProps> = (
           loadSensorStations()
           props.closeDialog()
           addSnackbarMessage({
-            header: 'Pairing request send!',
+            header: 'Pairing request sent!',
             body: `Navigate to the Greenhouses page to view the updated status of ${props.sensorStationId}`,
             type: MessageType.CONFIRM,
           })
