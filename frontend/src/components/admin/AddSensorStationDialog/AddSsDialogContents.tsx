@@ -17,6 +17,7 @@ import { SsDialogRow } from './SsDialogRow/SsDialogRow'
 interface AddSsDialogContentsProps {
   accessPointId?: AccessPointId
   closeDialog: () => void
+  updateApInState?: (updatedAp: AccessPoint) => void
 }
 
 /**
@@ -37,16 +38,33 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
   useEffect(() => {
     if (typeof accessPoint !== 'undefined') {
       // Set access point to SEARCHING when it is selected
-      updateAccessPoint(accessPoint.name, { status: ApStatus.SEARCHING })
+      updateAccessPointStatus(ApStatus.SEARCHING, accessPoint)
     }
 
     return () => {
       // When component is unmounted or `accessPoint` is changed, reset access point to not be SEARCHING
-      if (typeof accessPoint !== 'undefined') {
-        updateAccessPoint(accessPoint.name, { status: ApStatus.ONLINE })
-      }
+      updateAccessPointStatus(ApStatus.ONLINE, accessPoint)
     }
   }, [accessPoint])
+
+  const updateAccessPointStatus = (
+    newStatus: ApStatus,
+    currentAccessPoint?: AccessPoint
+  ) => {
+    if (typeof currentAccessPoint !== 'undefined') {
+      updateAccessPoint(currentAccessPoint.name, { status: newStatus })
+        .then((updatedAp) => {
+          props.updateApInState?.(updatedAp)
+        })
+        .catch((err: Error) => {
+          addSnackbarMessage({
+            header: 'Unable to update access point status',
+            body: err.message,
+            type: MessageType.ERROR,
+          })
+        })
+    }
+  }
 
   /** Manage reloading sensor stations and access points periodically */
   useEffect(() => {
