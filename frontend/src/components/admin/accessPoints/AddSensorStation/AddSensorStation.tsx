@@ -48,7 +48,7 @@ export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
         <Tooltip
           title={
             disabled
-              ? `Greenhouse ${props.status.toLowerCase()}`
+              ? `Access point ${props.status.toLowerCase()}`
               : 'Add a new greenhouse'
           }
           arrow
