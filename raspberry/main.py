@@ -53,9 +53,9 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
             while not connection_request.done() and client.is_connected:
                 transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
+                await rest_operations.get_thresholds_update_db(sensorstation_id, session)
                 await check_values_for_thresholds(client, sensorstation_id, session)
                 await rest_operations.send_sensorvalues_to_backend(sensorstation_id, session)
-                await rest_operations.get_thresholds_update_db(sensorstation_id, session)
 
     except BleakError as e:
         print(e)
