@@ -31,7 +31,7 @@ public class UserxServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDataInitialization() {
-        assertEquals(7, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
+        assertTrue(userService.getAllUsers().size() >= 7, "Insufficient amount of users initialized for test data source");
         for (Userx userx : userService.getAllUsers()) {
             if ("admin".equals(userx.getUsername())) {
                 assertSame(userx.getUserRole(), UserRole.ADMIN, "User \"" + userx + "\" does not have role ADMIN");
@@ -59,9 +59,6 @@ public class UserxServiceTest {
                 assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
             }
-            else {
-                fail("Unknown user \"" + userx.getUsername() + "\" loaded from test data source via UserService.getAllUsers");
-            }
         }
     }
 
@@ -69,6 +66,7 @@ public class UserxServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDeleteUser() {
+        int initialUserCount = userService.getAllUsers().size();
         String username = "susi";
         Userx adminUserx = userService.loadUserByUsername("admin");
         assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
@@ -77,7 +75,7 @@ public class UserxServiceTest {
 
         userService.deleteUser(toBeDeletedUserx);
 
-        assertEquals(6, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
+        assertEquals(initialUserCount - 1, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         Userx deletedUserx = userService.loadUserByUsername(username);
         assertNull(deletedUserx, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUser");
 

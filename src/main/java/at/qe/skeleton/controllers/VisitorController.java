@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Rest controller to enable access to uploading a photo or viewing all photos of a specific
+ * sensor station for visitors (not logged in users).
+ */
 @RestController
 public class VisitorController {
 

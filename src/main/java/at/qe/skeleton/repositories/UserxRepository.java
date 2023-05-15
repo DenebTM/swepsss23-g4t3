@@ -15,7 +15,6 @@ import org.springframework.data.repository.query.Param;
  */
 public interface UserxRepository extends AbstractRepository<Userx, String> {
 
-
     Userx findFirstByUsername(String username);
 
     List<Userx> findByUsernameContaining(String username);

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * Taken from https://medium.com/shoutloudz/spring-boot-upload-and-download-images-using-jpa-b1c9ef174dc0
@@ -24,7 +26,8 @@ public class PhotoData {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "NAME")
+    // TODO: (in service or controller) allow saving a photo with a randomized name
+    @Column(name = "NAME", unique = true)
     private String name;
 
     @JsonIgnore
@@ -33,7 +36,7 @@ public class PhotoData {
     private SensorStation sensorStation;
 
     @JsonIgnore
-    @Lob
+    @JdbcTypeCode(SqlTypes.LONG32VARBINARY)
     @Column(name = "CONTENT", length = 1000)
     private byte[] content;
 
