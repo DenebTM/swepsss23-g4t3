@@ -9,14 +9,14 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { AccessPoint, AccessPointId } from '~/models/accessPoint'
+import { AccessPoint } from '~/models/accessPoint'
 import { ApStatus } from '~/models/accessPoint'
 
 const apLabelId = 'select-access-point'
 
 interface AccessPointSelectProps {
-  accessPoint: AccessPointId | undefined
-  setAccessPoint: Dispatch<SetStateAction<AccessPointId | undefined>>
+  accessPoint: AccessPoint | undefined
+  setAccessPoint: Dispatch<SetStateAction<AccessPoint | undefined>>
 }
 
 /**
@@ -58,15 +58,16 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
   }, [snackbarMessage])
 
   const handleChange = (event: SelectChangeEvent) => {
-    const selectedApId = event.target.value as string
-    props.setAccessPoint(selectedApId)
+    const selectedApName = event.target.value as string
+    const selectedAp = accessPoints?.find((ap) => ap.name === selectedApName)
+    props.setAccessPoint(selectedAp)
   }
 
   return typeof accessPoints !== 'undefined' ? (
     <FormControl fullWidth>
       <InputLabel id={apLabelId}>Access Point</InputLabel>
       <Select
-        value={props.accessPoint ?? ''}
+        value={props.accessPoint?.name ?? ''}
         onChange={handleChange}
         label="Access Point"
         labelId={apLabelId}
