@@ -8,17 +8,29 @@ import {
 
 import { DataGrid, RowUpdateFunction } from '@component-lib/Table/DataGrid'
 import { DeleteCell } from '@component-lib/Table/DeleteCell'
-import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
+import {
+  StatusCell,
+  statusCellMinWidth,
+  StatusVariant,
+} from '@component-lib/Table/StatusCell'
 import dayjs from 'dayjs'
 import {
   deleteAccessPoint,
   getAccessPoints,
   updateAccessPoint,
 } from '~/api/endpoints/accessPoints'
-import { AccessPoint, AccessPointId } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 
 import { AddSensorStation } from './AddSensorStation/AddSensorStation'
 import { SensorStationChips } from './SensorStationChips'
+
+/** Map values from {@link ApStatus} to {@link StatusVariant} for display in {@link StatusCell} */
+const apStatusToVariant: { [key in ApStatus]: StatusVariant } = {
+  [ApStatus.ONLINE]: StatusVariant.OK,
+  [ApStatus.SEARCHING]: StatusVariant.INFO,
+  [ApStatus.UNCONFIRMED]: StatusVariant.WARNING,
+  [ApStatus.OFFLINE]: StatusVariant.ERROR,
+}
 
 const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
   headerAlign: 'center',
@@ -35,7 +47,7 @@ export const AccessPointsTable: React.FC = () => {
   const handleUpdateAp: RowUpdateFunction<AccessPoint> = (
     newAp: AccessPoint,
     oldAp: AccessPoint
-  ) => updateAccessPoint(oldAp.apId, newAp)
+  ) => updateAccessPoint(oldAp.name, newAp)
 
   /**
    * Calculate the largest number of sensor stations assigned to a single access point as dynamic
@@ -57,13 +69,13 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      width: statusCellMinWidth,
       renderCell: (
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
       ) => (
         <StatusCell
-          status={params.row.active ? 'online' : 'offline'}
-          variant={params.row.active ? StatusVariant.OK : StatusVariant.ERROR}
+          status={params.row.status.toLowerCase()}
+          variant={apStatusToVariant[params.row.status]}
         />
       ),
     },
@@ -108,12 +120,12 @@ export const AccessPointsTable: React.FC = () => {
       ) => (
         <DeleteCell<AccessPoint, AccessPointId>
           deleteEntity={deleteAccessPoint}
-          entityId={params.row.apId}
+          entityId={params.row.name}
           entityName="access point"
-          getEntityId={(r) => r.apId}
+          getEntityId={(r) => r.name}
           setRows={setAccessPoints}
         >
-          <AddSensorStation accessPointId={params.row.apId} />
+          <AddSensorStation accessPointId={params.row.name} />
         </DeleteCell>
       ),
     },
@@ -122,7 +134,7 @@ export const AccessPointsTable: React.FC = () => {
   return (
     <DataGrid<AccessPoint, any, AccessPoint>
       columns={columns}
-      getRowId={(row: AccessPoint) => row.apId}
+      getRowId={(row: AccessPoint) => row.name}
       processRowUpdate={handleUpdateAp}
       rows={accessPoints}
       setRows={setAccessPoints}

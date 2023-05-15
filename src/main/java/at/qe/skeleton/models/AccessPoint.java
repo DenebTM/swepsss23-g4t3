@@ -1,8 +1,9 @@
 package at.qe.skeleton.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import at.qe.skeleton.models.enums.AccessPointStatus;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -30,7 +31,8 @@ public class AccessPoint {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private AccessPointStatus status;
 
-    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ssID")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "accessPoint",
             fetch = FetchType.EAGER,
             cascade = CascadeType.REMOVE,
@@ -76,4 +78,7 @@ public class AccessPoint {
         this.status = status;
     }
 
+    public Set<SensorStation> getSensorStations() {
+        return sensorStations;
+    }
 }

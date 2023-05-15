@@ -88,7 +88,7 @@ class SensorStationRestControllerTest {
         AccessPoint apTest = createTestAP();
 
         SensorStation ssTest = new SensorStation(apTest, 30L);
-        ssTest.setId(127);
+        ssTest.setSsID(127);
 
         // no sensor stations yet
         var initialResponse = ssRestController.getSSForAccessPoint(apTest.getName());
@@ -137,11 +137,11 @@ class SensorStationRestControllerTest {
 
         List<SensorStation> newSS = new ArrayList<>();
         SensorStation ssTest1 = new SensorStation(apTest, 30L);
-        ssTest1.setId(127);
+        ssTest1.setSsID(127);
         ssTest1.setStatus(SensorStationStatus.AVAILABLE);
         newSS.add(ssTest1);
         SensorStation ssTest2 = new SensorStation(apTest, 30L);
-        ssTest2.setId(128);
+        ssTest2.setSsID(128);
         ssTest2.setStatus(SensorStationStatus.AVAILABLE);
         newSS.add(ssTest2);
         int newSSCount = newSS.size();
@@ -191,7 +191,7 @@ class SensorStationRestControllerTest {
 
         var sensorStation = response.getBody();
         assertNotNull(sensorStation);
-        assertEquals(id, sensorStation.getId());
+        assertEquals(id, sensorStation.getSsID());
 
         // if ss id does not exist in database, 404 not found error
         assertThrows(

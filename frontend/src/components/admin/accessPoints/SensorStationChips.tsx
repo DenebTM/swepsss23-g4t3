@@ -23,7 +23,7 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
 ) => {
   const loadSensorStations = useLoadSensorStations()
 
-  const afterDelete = (uuid: SensorStationUuid): void => {
+  const afterDelete = (ssID: SensorStationUuid): void => {
     // Reload sensor stations and set in AppContext
     loadSensorStations()
 
@@ -33,11 +33,11 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
         return []
       } else {
         return oldRows.map((row) =>
-          props.row.apId === row.apId
+          props.row.name === row.name
             ? {
                 ...props.row,
                 sensorStations: props.row.sensorStations.filter(
-                  (ss: SensorStationUuid) => ss !== uuid
+                  (ss: SensorStationUuid) => ss !== ssID
                 ),
               }
             : row
@@ -49,13 +49,13 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
   return (
     <Stack spacing={1} padding={2} direction="row">
       {props.row.sensorStations.length > 0 ? (
-        props.row.sensorStations.map((uuid: SensorStationUuid) => (
+        props.row.sensorStations.map((ssID: SensorStationUuid) => (
           <RemovableChip
-            key={uuid}
+            key={ssID}
             entityName="greenhouse"
-            handleDelete={() => deleteSensorStation(uuid)}
-            afterDelete={() => afterDelete(uuid)}
-            label={String(uuid)}
+            handleDelete={() => deleteSensorStation(ssID)}
+            afterDelete={() => afterDelete(ssID)}
+            label={String(ssID)}
           />
         ))
       ) : (
