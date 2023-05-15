@@ -41,7 +41,7 @@ export const PhotoUpload: React.FC = () => {
       ) : typeof sensorStationUuid === 'undefined' ? (
         'TODO qqjf: loading'
       ) : (
-        <UploadPageContents uuid={sensorStationUuid} />
+        <UploadPageContents ssID={sensorStationUuid} />
       )}
     </PageWrapper>
   )

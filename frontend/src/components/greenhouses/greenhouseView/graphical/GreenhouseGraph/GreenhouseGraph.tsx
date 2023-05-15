@@ -32,7 +32,7 @@ import {
 interface GreenhouseGraphProps {
   measurements: Measurement[]
   sensorStation: SensorStation | undefined
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**

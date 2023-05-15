@@ -9,7 +9,7 @@ import { SensorStationUuid } from '~/models/sensorStation'
 import { GreenhouseSegmentedButtons } from './GreenhouseSegmentedButtons'
 
 interface GreenhouseViewHeaderProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
   view: SensorStationView
 }
 
@@ -30,10 +30,10 @@ export const GreenhouseViewHeader: React.FC<GreenhouseViewHeaderProps> = (
               disabled: !isUserLoggedIn(),
             },
           ]}
-          currentPageName={PAGE_URL.greenhouseView.pageTitle(props.uuid)}
+          currentPageName={PAGE_URL.greenhouseView.pageTitle(props.ssID)}
         />
       }
-      right={<GreenhouseSegmentedButtons uuid={props.uuid} view={props.view} />}
+      right={<GreenhouseSegmentedButtons ssID={props.ssID} view={props.view} />}
     />
   )
 }

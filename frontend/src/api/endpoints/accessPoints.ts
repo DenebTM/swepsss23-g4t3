@@ -52,34 +52,34 @@ export const mockedAccessPointReqs: EndpointReg = (server: Server) => {
 
   /** Mock {@link getAccessPoint} */
   server.get(singleApRoute, (schema: AppSchema, request) => {
-    const apId: AccessPointId = Number(request.params.id)
-    const accessPoint = schema.findBy('accessPoint', { apId: apId })
+    const name: AccessPointId = request.params.id
+    const accessPoint = schema.findBy('accessPoint', { name: name })
 
-    return accessPoint ? accessPoint.attrs : notFound(`access point ${apId}`)
+    return accessPoint ? accessPoint.attrs : notFound(`access point ${name}`)
   })
 
   /** Mock {@link deleteAccessPoint} */
   server.delete(singleApRoute, (schema: AppSchema, request) => {
-    const apId: AccessPointId = Number(request.params.id)
-    const accessPoint = schema.findBy('accessPoint', { apId: apId })
+    const name: AccessPointId = request.params.id
+    const accessPoint = schema.findBy('accessPoint', { name: name })
     if (accessPoint) {
       accessPoint.destroy()
       return success()
     } else {
-      return notFound(`access point ${apId}`)
+      return notFound(`access point ${name}`)
     }
   })
 
   /** Mock {@link updateAccessPoint} */
   server.put(singleApRoute, (schema: AppSchema, request) => {
-    const apId: AccessPointId = Number(request.params.id)
-    const accessPoint = schema.findBy('accessPoint', { apId: apId })
+    const name: AccessPointId = request.params.id
+    const accessPoint = schema.findBy('accessPoint', { name: name })
     if (accessPoint) {
       const body: Partial<AccessPoint> = JSON.parse(request.requestBody)
       accessPoint.update(body)
       return success(accessPoint.attrs)
     } else {
-      return notFound(`access point ${apId}`)
+      return notFound(`access point ${name}`)
     }
   })
 }

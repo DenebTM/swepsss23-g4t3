@@ -13,7 +13,7 @@ import { PhotoUploadBox } from './PhotoUploadBox/PhotoUploadBox'
 import { UploadHeader } from './UploadHeader'
 
 interface UploadPageContentsProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -30,7 +30,7 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
 
   /** Load sensor station from the API on component mount */
   useEffect(() => {
-    const ssPromise = cancelable(getSensorStation(props.uuid))
+    const ssPromise = cancelable(getSensorStation(props.ssID))
     ssPromise
       .then((data) => {
         setSensorStation(data)
@@ -64,7 +64,7 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
         padding: theme.spacing(4, 2),
       }}
     >
-      <UploadHeader uuid={props.uuid} />
+      <UploadHeader ssID={props.ssID} />
 
       {typeof sensorStation !== 'undefined' && (
         <PhotoUploadBox sensorStation={sensorStation} />
