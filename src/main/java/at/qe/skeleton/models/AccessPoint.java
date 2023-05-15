@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -23,8 +25,10 @@ public class AccessPoint {
     @Column(name = "SERVER_ADDRESS")
     private String serverAddress;
 
+    //TODO: is this column still 'status' anywhere else?
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "AP_STATUS")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private AccessPointStatus status;
 
     @JsonBackReference
