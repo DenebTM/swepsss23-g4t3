@@ -33,19 +33,3 @@ async def search_for_sensorstations():
         # write error to audit log
         print(f'Error: {e}')
         return sensorstations
-
-
-async def send_sensorstations_to_backend(session, sensorstations):
-    ss_avail = list(map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations))
-    async with session.post('/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail) as response:
-        if response.status == 200:
-            pass
-
-async def send_sensorstation_connection_status(session, sensorstation, status):
-    ss_status = {
-        'accessPoint': common.access_point_name,
-        'status': status
-    }
-    async with session.put('/sensor-stations/' + str(sensorstation), json=ss_status) as response:
-        if response.status == 200:
-            pass

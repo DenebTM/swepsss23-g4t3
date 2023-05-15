@@ -5,34 +5,17 @@ from bleak import BleakClient, BleakError
 
 import common
 import database_operations
+from thresholds_operations import check_values_for_thresholds
 from sensorvalues_operations import read_sensorvalues, send_sensorvalues_to_backend
-from sensorstation_operations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
-from thresholds_operations import check_values_for_thresholds, get_thresholds_update_db
-
-async def get_ap_status(session):
-    async with session.get('/access-points/' + common.access_point_name) as response:
-        if response.status == 200:
-            data = await response.json()
-            return data['status']
-        
-    
-async def get_sensorstation_instructions(session):
-    paired_stations = {}
-    async with session.get('/access-points/' + common.access_point_name + '/sensor-stations') as response:
-        if response.status == 200:
-            json_data = await response.json()
-            for station in json_data:
-                ss_id = station['id']
-                ss_status = station['status']
-                paired_stations[ss_id] = ss_status
-        return paired_stations
+from sensorstation_operations import search_for_sensorstations
+import rest_operations
 
 # Currently active sensor station tasks
 ss_tasks = {}
 async def sensor_station_manager(connection_request, session):
     global ss_tasks
     while not connection_request.done():
-        new_assigned_ss = await get_sensorstation_instructions(session)
+        new_assigned_ss = await rest_operations.get_sensorstation_instructions(session)
         #This so the program wont crash if the Webserver is down and just keeps the last sensorstation instructions if down
         if new_assigned_ss is not None:
             assigned_ss = new_assigned_ss
@@ -64,7 +47,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     try:
         transmission_interval = common.polling_interval
         async with BleakClient(sensorstation_mac) as client:
-            await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
+            await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
             await database_operations.initialize_sensorstation(sensorstation_id)
             asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done() and client.is_connected:
@@ -72,13 +55,13 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 await asyncio.sleep(transmission_interval)
                 await check_values_for_thresholds(client, sensorstation_id, session)
                 await send_sensorvalues_to_backend(sensorstation_id, session)
-                await get_thresholds_update_db(sensorstation_id, session)
+                await rest_operations.get_thresholds_update_db(sensorstation_id, session)
 
     except BleakError as e:
         print(e)
         print('couldnt connect to sensorstation') 
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
-        await send_sensorstation_connection_status(session, sensorstation_id, error_status)
+        await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
         await cancel_ss_task(sensorstation_id)
         #TODO: log and send to backend
     except Exception as e:
@@ -93,7 +76,7 @@ async def cancel_ss_task(sensorstation_id):
 async def polling_loop(connection_request, session):
     while not connection_request.done():
         print('Inside AP Loop')
-        new_status = await get_ap_status(session)
+        new_status = await rest_operations.get_ap_status(session)
         if new_status is not None:
             status = new_status
         print('this is inside the ap loop and the status is ' + status)
@@ -101,7 +84,7 @@ async def polling_loop(connection_request, session):
             connection_request.set_result('Done')
         elif status == 'SEARCHING':
             sensorstations = await search_for_sensorstations()
-            await send_sensorstations_to_backend(session, sensorstations)
+            await rest_operations.send_sensorstations_to_backend(session, sensorstations)
         await asyncio.sleep(10)
 
 async def main():
@@ -109,21 +92,20 @@ async def main():
         async with aiohttp.ClientSession(base_url=common.web_server_address) as session:
             connection_request = asyncio.Future()
             print('This should only be Printed at the start and when AP is offline')
-            async with session.post('/access-points') as response:
-                data = await response.json()
-                if response.status == 200:
-                    ap_status = await get_ap_status(session)
-                    if ap_status in ['ONLINE', 'SEARCHING']:
-                        polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
-                        sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
-                        await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-                    else:
-                        print('Access point is offline')
-                        connection_request = asyncio.Future()
-                        await asyncio.sleep(30)
+            response = await rest_operations.initialize_accesspoint(session)
+            if response.status == 200:
+                ap_status = await rest_operations.get_ap_status(session)
+                if ap_status in ['ONLINE', 'SEARCHING']:
+                    polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
+                    sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
+                    await asyncio.gather(polling_loop_task, sensor_station_manager_task)
                 else:
-                    print('webserver seems to be offline')
+                    print('Access point is offline')
+                    connection_request = asyncio.Future()
                     await asyncio.sleep(30)
+            else:
+                print('webserver seems to be offline')
+                await asyncio.sleep(30)
 
 
 if __name__ == '__main__':
