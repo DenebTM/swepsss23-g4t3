@@ -39,17 +39,29 @@ In order for the web server to start, you must be running either a MySQL or Mari
 Run the following command to start a container with persistent storage for the database:
 
 ```
-docker run \
-  -v planthealth_db:/var/lib/mysql \          # create a persistent volume for the database
-  -p 3306:3306 \                              # expose the MySQL service port
+docker run                                  \
+  --name planthealth_dbsrv                  \
+  --rm                                      \ # remove the container (not the volume) after exit
+  -v planthealth_db:/var/lib/mysql          \ # create a persistent volume for the database
+  -p 3306:3306                              \ # expose the MySQL service port
 
-  -e MYSQL_RANDOM_ROOT_PASSWORD="true" \      # (unused, but required)
-  -e MYSQL_DATABASE=swe \                     # database credentials
-  -e MYSQL_USER=swe \
-  -e MYSQL_PASSWORD=password \
+  -e MYSQL_RANDOM_ROOT_PASSWORD="true"      \ # (unused, but required)
+  -e MYSQL_DATABASE=swe                     \ # database credentials
+  -e MYSQL_USER=swe                         \
+  -e MYSQL_PASSWORD=password                \
 
-  mariadb:latest                              # also valid: mysql/latest
+  mariadb:latest                              # also valid: mysql:latest
 ```
+
+The database server can be stopped either externally or by pressing Ctrl+\ (backslash).
+
+To delete an existing database and start fresh, first stop the container, then run:
+
+```
+docker volume rm planthealth_db
+```
+
+After this, restart the container.
 
 **Note:** This method requires Docker to be installed and running locally.
 
@@ -58,13 +70,21 @@ docker run \
 
 **(b) Manual setup**
 
-Install and start either MySQL or MariaDB, open a MySQL CLI session as the `root` user, then run the following SQL:
+Install and start either MySQL or MariaDB, open a MySQL CLI session as the `root` user, then run the following SQL statements to initialize the database and user:
 
 ```
 CREATE USER 'swe'@'localhost' identified by 'password';
 CREATE DATABASE 'swe';
 GRANT ALL PRIVILEGES ON 'swe' TO 'swe'@'localhost';
 ```
+
+To delete an existing database and start fresh, run the following SQL statement:
+
+```
+DROP DATABASE 'swe';
+```
+
+Afterwards, re-run the initialization statements above.
 
 All of the necessary tables will be created automatically in step 2.
 
