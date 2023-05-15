@@ -1,12 +1,12 @@
 package at.qe.skeleton.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -27,7 +27,8 @@ public class AccessPoint {
     private String serverAddress;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "AP_STATUS")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private AccessPointStatus status;
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ssID")

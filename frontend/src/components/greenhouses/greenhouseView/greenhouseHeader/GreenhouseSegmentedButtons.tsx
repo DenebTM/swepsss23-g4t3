@@ -2,11 +2,11 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import { styled } from '@mui/material/styles'
 
+import GalleryIcon from '@component-lib/icons/GalleryIcon'
 import { PAGE_URL, SensorStationView } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -46,7 +46,7 @@ export const GreenhouseSegmentedButtons: React.FC<
     {
       name: 'Gallery',
       key: SensorStationView.GALLERY,
-      icon: <ImageOutlinedIcon />,
+      icon: <GalleryIcon />,
       loggedInOnly: false,
     },
     {

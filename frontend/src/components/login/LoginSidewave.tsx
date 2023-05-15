@@ -3,7 +3,7 @@ import React from 'react'
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/system/Box'
 
-import { PlantIcon } from '@component-lib/PlantIcon'
+import { PlantIcon } from '@component-lib/icons/PlantIcon'
 import { theme } from '~/styles/theme'
 
 /** PLan icon height in units of theme.spacing */
