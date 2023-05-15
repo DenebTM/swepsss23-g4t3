@@ -39,7 +39,6 @@ async def sensor_station_manager(connection_request, session):
 
         for ss_id in common.known_ss:
             if ss_id in assigned_ss:
-
                 if ss_id in ss_tasks and ss_tasks[ss_id].done():
                     del ss_tasks[ss_id]
                 if not ss_id in ss_tasks:
@@ -68,7 +67,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
             await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
             await database_operations.initialize_sensorstation(sensorstation_id)
             asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
-            while not connection_request.done():
+            while not connection_request.done() and client.is_connected:
                 transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
                 await check_values_for_thresholds(client, sensorstation_id, session)
