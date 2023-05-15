@@ -4,6 +4,7 @@ import aiohttp
 import json
 import database_operations
 import functools
+import time
 
 # This function makes it so that each rest call retries 5 times before raising an ClientConnectionError
 def retry_connection_error(retries=5, interval=3):
