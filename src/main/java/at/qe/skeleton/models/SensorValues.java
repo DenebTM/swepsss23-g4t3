@@ -1,5 +1,7 @@
 package at.qe.skeleton.models;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,7 +9,8 @@ import jakarta.persistence.*;
 public class SensorValues {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO , generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column(name = "VALUES_ID")
     private Integer id;
 
