@@ -28,6 +28,7 @@ export const GreenhouseViewHeader: React.FC<GreenhouseViewHeaderProps> = (
               name: 'Dashboard',
               href: PAGE_URL.dashboard.href,
               disabled: !isUserLoggedIn(),
+              tooltip: isUserLoggedIn() ? '' : 'Log in to view this page',
             },
           ]}
           currentPageName={PAGE_URL.greenhouseView.pageTitle(props.ssID)}

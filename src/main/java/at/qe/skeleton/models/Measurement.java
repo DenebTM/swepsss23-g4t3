@@ -6,13 +6,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 @NoArgsConstructor
 @Table(name = "MEASUREMENT")
 public class Measurement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO , generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     private Integer id;
 
     @Column(name = "TIMESTAMP")
