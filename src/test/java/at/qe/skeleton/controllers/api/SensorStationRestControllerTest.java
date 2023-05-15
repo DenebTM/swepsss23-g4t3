@@ -90,8 +90,6 @@ class SensorStationRestControllerTest {
         SensorStation ssTest = new SensorStation(apTest, 30L);
         ssTest.setId(127);
 
-        ssService.deleteSS(ssTest);
-
         // no sensor stations yet
         var initialResponse = ssRestController.getSSForAccessPoint(apTest.getName());
         assertEquals(HttpStatusCode.valueOf(200), initialResponse.getStatusCode());
@@ -133,6 +131,10 @@ class SensorStationRestControllerTest {
         var initialSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
         assertEquals(HttpStatusCode.valueOf(200), initialSSResponse.getStatusCode());
 
+        var initialSS = initialSSResponse.getBody();
+        assertNotNull(initialSS);
+        int initialSSCount = initialSS.size();
+
         List<SensorStation> newSS = new ArrayList<>();
         SensorStation ssTest1 = new SensorStation(apTest, 30L);
         ssTest1.setId(127);
@@ -143,15 +145,6 @@ class SensorStationRestControllerTest {
         ssTest2.setStatus(SensorStationStatus.AVAILABLE);
         newSS.add(ssTest2);
         int newSSCount = newSS.size();
-
-        // make sure SS don't exist in the database before trying to add them
-        for (var ss : newSS)  {
-            ssService.deleteSS(ss);
-        }
-
-        var initialSS = initialSSResponse.getBody();
-        assertNotNull(initialSS);
-        int initialSSCount = initialSS.size();
 
         // TEST
         ssRestController.addSS(apTest.getName(), newSS);
