@@ -91,7 +91,7 @@ async def main():
     while True:
         retry_time = 5
         try:
-            async with aiohttp.ClientSession(base_url=common.web_server_address) as session:
+            async with aiohttp.ClientSession(base_url=common.web_server_address, raise_for_status=True) as session:
                 connection_request = asyncio.Future()
                 print('This should only be Printed at the start and when AP is offline')
                 response = await rest_operations.initialize_accesspoint(session)

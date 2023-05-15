@@ -1,6 +1,5 @@
 from flask import Flask,jsonify, request
 import time
-import json
 
 app = Flask(__name__)
 status_called = False
