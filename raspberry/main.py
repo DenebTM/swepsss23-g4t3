@@ -6,15 +6,15 @@ import common
 import database_operations
 from sensorvalues_operations import read_sensorvalues, send_sensorvalues_to_backend
 from sensorstation_operations import search_for_sensorstations, send_sensorstations_to_backend, send_sensorstation_connection_status
-from check_thresholds import check_values_for_thresholds
+from thresholds_operations import check_values_for_thresholds, get_thresholds_update_db
 
 async def get_ap_status(session):
-    async with session.get(common.web_server_address + '/access-points/' + common.access_point_name) as response:
+    async with session.get('/access-points/' + common.access_point_name) as response:
         data = await response.json()
         return data['status']
     
 async def get_sensorstation_instructions(session):
-    async with session.get(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations') as response:
+    async with session.get('/access-points/' + common.access_point_name + '/sensor-stations') as response:
         json_data = await response.json()
 
         paired_stations = {}
@@ -55,20 +55,21 @@ async def sensor_station_manager(connection_request, session):
         await asyncio.sleep(10)
 
 async def sensor_station_task(connection_request, session, sensorstation_id, first_time):
-    #TODO: Catch cancelled Error and error handle stuff
+    #TODO: Catch cancelled Error and error handle stuff eg the task for read sensorvalues
     sensorstation_mac = common.known_ss[sensorstation_id]
     try:
         transmission_interval = common.polling_interval
         async with BleakClient(sensorstation_mac) as client:
             await send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
             await database_operations.initialize_sensorstation(sensorstation_id)
-            #TODO: Logging
+            # TODO: Logging, cancel read_task if this task dies
+            read_task = asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done():
-                await read_sensorvalues(client, sensorstation_id)
-                await check_values_for_thresholds(client, sensorstation_id, transmission_interval, session)
-                await send_sensorvalues_to_backend(sensorstation_id, session, transmission_interval)
-                #TODO: Update sensorstations_thresholds
-                #TODO: Check for thresholds
+                transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
+                await asyncio.sleep(transmission_interval)
+                await check_values_for_thresholds(client, sensorstation_id, session)
+                await send_sensorvalues_to_backend(sensorstation_id, session)
+                await get_thresholds_update_db(sensorstation_id, session)
 
     except BleakError as e:
         print(e)
@@ -81,14 +82,12 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     except Exception as e:
         print('Other exception in sensorstation task', e.with_traceback())
 
-
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
     #await send_sensorstation_connection_status(session, sensorstation_id, message)
     ss_tasks[sensorstation_id].cancel()
     del ss_tasks[sensorstation_id]
         
-
 async def polling_loop(connection_request, session):
     while not connection_request.done():
         print('Inside AP Loop')
@@ -96,17 +95,17 @@ async def polling_loop(connection_request, session):
         print('this is inside the ap loop and the status is ' + status)
         if status == 'OFFLINE':
             connection_request.set_result('Done')
-        elif status in ['ONLINE', 'SEARCHING']:
+        elif status == 'SEARCHING':
             sensorstations = await search_for_sensorstations()
             await send_sensorstations_to_backend(session, sensorstations)
         await asyncio.sleep(10)
 
 async def main():
     while True:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(base_url=common.web_server_address) as session:
             connection_request = asyncio.Future()
             print('This should only be Printed at the start and when AP is offline')
-            async with session.post(common.web_server_address + '/access-points') as response:
+            async with session.post('/access-points') as response:
                 data = await response.json()
                 print(data)
                 if response.status == 200:

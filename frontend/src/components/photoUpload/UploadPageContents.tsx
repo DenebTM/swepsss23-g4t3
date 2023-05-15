@@ -9,8 +9,8 @@ import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
-import { PhotoUploadBox } from './PhotoUploadBox/PhotoUploadBox'
 import { UploadHeader } from './UploadHeader'
+import { UploadPageBody } from './UploadPageBody/UploadPageBody'
 
 interface UploadPageContentsProps {
   ssID: SensorStationUuid
@@ -67,7 +67,7 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
       <UploadHeader ssID={props.ssID} />
 
       {typeof sensorStation !== 'undefined' && (
-        <PhotoUploadBox sensorStation={sensorStation} />
+        <UploadPageBody sensorStation={sensorStation} />
       )}
     </Box>
   )
