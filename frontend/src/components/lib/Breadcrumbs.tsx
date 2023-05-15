@@ -8,12 +8,16 @@ import Typography from '@mui/material/Typography'
 
 import { theme } from '~/styles/theme'
 
+import { Tooltip } from './Tooltip'
+
 export interface BreadcrumbLink {
   disabled?: boolean
   /** The URL to navigate to on click */
   href: string
   /** The name to display for the breadcrumb link. Should be unique within the list of links in order to use it as a key. */
   name: string
+  /** Tooltip to display on link hover */
+  tooltip?: string
 }
 
 interface BreadcrumbsProps {
@@ -36,19 +40,21 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = (props) => {
       color={theme.outline}
     >
       {props.links.map((link: BreadcrumbLink) => (
-        <Link
-          underline={link.disabled ? 'none' : 'hover'}
-          key={link.name}
-          color="inherit"
-          onClick={() => {
-            if (!link.disabled) {
-              navigate(link.href)
-            }
-          }}
-          sx={{ cursor: link.disabled ? 'default' : 'pointer' }}
-        >
-          {link.name}
-        </Link>
+        <Tooltip title={link.tooltip} arrow>
+          <Link
+            underline={link.disabled ? 'none' : 'hover'}
+            key={link.name}
+            color="inherit"
+            onClick={() => {
+              if (!link.disabled) {
+                navigate(link.href)
+              }
+            }}
+            sx={{ cursor: link.disabled ? 'default' : 'pointer' }}
+          >
+            {link.name}
+          </Link>
+        </Tooltip>
       ))}
       <Typography color={theme.onSurfaceVariant}>
         {props.currentPageName}
