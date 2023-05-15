@@ -89,14 +89,13 @@ export const AccessPointsTable: React.FC = () => {
       field: 'sensorStations',
       headerName: 'Greenhouses',
       description: 'Greenhouses which transmit data to this access point',
-      flex: 1,
       renderCell: (
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
       ) => <SensorStationChips {...params} setRows={setAccessPoints} />,
       ...centerCell,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 105 * getMaxGreenhousesPerAp(),
+      width: 190 * getMaxGreenhousesPerAp(),
     },
     {
       ...centerCell,
@@ -125,7 +124,11 @@ export const AccessPointsTable: React.FC = () => {
           getEntityId={(r) => r.name}
           setRows={setAccessPoints}
         >
-          <AddSensorStation accessPointId={params.row.name} />
+          <AddSensorStation
+            accessPointId={params.row.name}
+            setAccessPoints={setAccessPoints}
+            status={params.row.status}
+          />
         </DeleteCell>
       ),
     },
