@@ -6,7 +6,7 @@ from bleak import BleakClient, BleakError
 import common
 import database_operations
 from thresholds_operations import check_values_for_thresholds
-from sensorvalues_operations import read_sensorvalues, send_sensorvalues_to_backend
+from sensorvalues_operations import read_sensorvalues
 from sensorstation_operations import search_for_sensorstations
 import rest_operations
 
@@ -54,7 +54,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
                 await check_values_for_thresholds(client, sensorstation_id, session)
-                await send_sensorvalues_to_backend(sensorstation_id, session)
+                await rest_operations.send_sensorvalues_to_backend(sensorstation_id, session)
                 await rest_operations.get_thresholds_update_db(sensorstation_id, session)
 
     except BleakError as e:
