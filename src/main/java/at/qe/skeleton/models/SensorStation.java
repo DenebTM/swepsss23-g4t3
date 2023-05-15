@@ -23,7 +23,7 @@ public class SensorStation {
     private AccessPoint accessPoint;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "SS_STATUS")
     private SensorStationStatus status;
 
     @JsonBackReference
