@@ -4,6 +4,9 @@ import { GridValidRowModel } from '@mui/x-data-grid'
 
 import { theme } from '~/styles/theme'
 
+/** Minimum width in px (for setting column width in tables) */
+export const statusCellMinWidth = 127
+
 /** Possible variants for {@link StatusCell}. Used to set the colour of the status dot. */
 export enum StatusVariant {
   OK = 'OK',

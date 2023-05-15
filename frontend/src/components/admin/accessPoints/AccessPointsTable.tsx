@@ -8,7 +8,11 @@ import {
 
 import { DataGrid, RowUpdateFunction } from '@component-lib/Table/DataGrid'
 import { DeleteCell } from '@component-lib/Table/DeleteCell'
-import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
+import {
+  StatusCell,
+  statusCellMinWidth,
+  StatusVariant,
+} from '@component-lib/Table/StatusCell'
 import dayjs from 'dayjs'
 import {
   deleteAccessPoint,
@@ -65,7 +69,7 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      width: statusCellMinWidth,
       renderCell: (
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
       ) => (
