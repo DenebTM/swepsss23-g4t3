@@ -125,7 +125,10 @@ export const AccessPointsTable: React.FC = () => {
           getEntityId={(r) => r.name}
           setRows={setAccessPoints}
         >
-          <AddSensorStation accessPointId={params.row.name} />
+          <AddSensorStation
+            accessPointId={params.row.name}
+            status={params.row.status}
+          />
         </DeleteCell>
       ),
     },

@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { GreenhouseIcon } from '~/common'
-import { AccessPointId } from '~/models/accessPoint'
+import { AccessPointId, ApStatus } from '~/models/accessPoint'
 import { theme } from '~/styles/theme'
 
 import { AddSensorStationDialog } from '../../AddSensorStationDialog/AddSensorStationDialog'
@@ -15,6 +15,7 @@ const plusBadgeSize = '14px'
 
 interface AddSensorStationProps {
   accessPointId: AccessPointId
+  status: ApStatus
 }
 
 /**
@@ -37,19 +38,36 @@ export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
       // qqjf TODO trigger reload
     }
 
+    /** Whether to disable adding a new sensor station to this access point */
+    const disabled = [ApStatus.OFFLINE, ApStatus.UNCONFIRMED].includes(
+      props.status
+    )
+
     return (
       <>
-        <Tooltip title="Add a new greenhouse" arrow>
-          <IconButton onClick={handleIconClick} sx={{ color: theme.outline }}>
+        <Tooltip
+          title={
+            disabled
+              ? `Greenhouse ${props.status.toLowerCase()}`
+              : 'Add a new greenhouse'
+          }
+          arrow
+        >
+          <IconButton
+            onClick={handleIconClick}
+            sx={{ color: theme.outline }}
+            disabled={disabled}
+          >
             <Badge
               badgeContent="+"
-              color="primary"
               overlap="circular"
               sx={{
                 '& .MuiBadge-badge': {
                   minWidth: plusBadgeSize,
                   width: plusBadgeSize,
                   height: plusBadgeSize,
+                  backgroundColor: disabled ? theme.outline : theme.primary,
+                  color: disabled ? theme.surface : theme.onPrimary,
                 },
               }}
             >
