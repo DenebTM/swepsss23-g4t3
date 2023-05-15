@@ -22,7 +22,7 @@ public class MeasurementService {
     public List<Measurement> getMeasurements(Integer ssId, Instant from, Instant to){
         SensorStation ss = ssRepository.findFirstById(ssId);
         return measurementRepository.
-                findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(ss, from, to);
+            findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(ss, from, to);
     }
 
     public Measurement getCurrentMeasurement(Integer ssId) {
@@ -38,8 +38,7 @@ public class MeasurementService {
         List<Measurement> result = new ArrayList<>();
         List<Measurement> measurements = measurementRepository.findAllByOrderBySensorStationAscTimestampDesc();
         ArrayList<Integer> ssids = new ArrayList<>();
-        for (Measurement m :
-                measurements) {
+        for (Measurement m : measurements) {
             if (!ssids.contains(m.getSensorStation().getId())) {
                 ssids.add(m.getSensorStation().getId());
                 result.add(m);

@@ -54,4 +54,5 @@ public interface AbstractRepository<T, ID extends Serializable> extends Reposito
      * @return The saved entity.
      */
     <S extends T> S save(S entity);
+
 }
