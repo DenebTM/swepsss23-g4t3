@@ -1,7 +1,5 @@
 from bleak import BleakScanner
 from bleak.exc import BleakError
-import yaml
-import json
 import common
 
 
