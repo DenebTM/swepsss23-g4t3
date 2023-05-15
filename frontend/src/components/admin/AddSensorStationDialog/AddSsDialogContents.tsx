@@ -25,7 +25,7 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
     <DialogContent sx={{ textAlign: 'center' }}>
       <SsDialogRow
         row={1}
-        description="Select which access point the greenhouse should connect to. If your access point does not appear here then you might need to connect a new access point."
+        description="Select which access point the greenhouse should connect to. If your access point does not appear here then check that it is connected and reachable."
         title="Select Access Point"
       >
         <AccessPointSelect
