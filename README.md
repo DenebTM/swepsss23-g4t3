@@ -45,6 +45,7 @@ docker run -v planthealth_db:/var/lib/mysql -p 3306:3306 \
   -e MYSQL_PASSWORD=password \
   mariadb:latest
 ```
+Note: if you get an error like "docker: error during connect: This error may indicate that the docker daemon is not running" on Windows, you may need to install and start [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 _(b) manual setup_\
 Install either MySQL or MariaDB, start a MySQL CLI session as `root` user, then run the following SQL:
