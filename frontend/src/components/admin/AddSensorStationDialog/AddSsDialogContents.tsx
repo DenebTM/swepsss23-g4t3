@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import DialogContent from '@mui/material/DialogContent'
 
-import { AccessPointId } from '~/models/accessPoint'
+import { getAccessPoint, updateAccessPoint } from '~/api/endpoints/accessPoints'
+import { MessageType } from '~/contexts/SnackbarContext/types'
+import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
+import { SensorStationUuid } from '~/models/sensorStation'
 
 import { AccessPointSelect } from './SsDialogRow/AccessPointSelect'
+import { SensorStationSelect } from './SsDialogRow/SensorStationSelect'
 import { SsDialogRow } from './SsDialogRow/SsDialogRow'
 
 interface AddSsDialogContentsProps {
@@ -17,9 +22,44 @@ interface AddSsDialogContentsProps {
 export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
   props
 ): JSX.Element => {
-  const [accessPoint, setAccessPoint] = useState<AccessPointId | undefined>(
-    props.accessPointId
-  )
+  const addSnackbarMessage = useAddSnackbarMessage()
+  const [accessPoint, setAccessPoint] = useState<AccessPoint | undefined>()
+  const [sensorStationId, setSensorStationId] = useState<
+    SensorStationUuid | undefined
+  >()
+
+  /** Manage accessPoint SEARCHING status */
+  useEffect(() => {
+    if (typeof accessPoint !== 'undefined') {
+      // Set access point to SEARCHING when it is selected
+      updateAccessPoint(accessPoint.name, { status: ApStatus.SEARCHING })
+    }
+
+    return () => {
+      // When component is unmounted or `accessPoint` is changed, reset access point to not be SEARCHING
+      if (typeof accessPoint !== 'undefined') {
+        updateAccessPoint(accessPoint.name, { status: ApStatus.ONLINE })
+      }
+    }
+  }, [accessPoint])
+
+  /** Reload access point periodically */
+  useEffect(() => {
+    const apLoadInterval = setInterval(() => {
+      if (typeof accessPoint !== 'undefined') {
+        getAccessPoint(accessPoint.name)
+          .then((ap) => setAccessPoint(ap))
+          .catch((err: Error) => {
+            addSnackbarMessage({
+              header: 'Unable to reload access point',
+              body: err.message,
+              type: MessageType.ERROR,
+            })
+          })
+      }
+    }, 2000)
+    return clearInterval(apLoadInterval)
+  }, [])
 
   return (
     <DialogContent sx={{ textAlign: 'center' }}>
@@ -39,7 +79,11 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
         description='Press the button on the sensor station to turn on Bluetooth then click "Start Scan". The sensor station will be automatically detected.'
         title="Activate Sensor Station"
       >
-        scan button
+        <SensorStationSelect
+          accessPoint={accessPoint}
+          sensorStationId={sensorStationId}
+          setSensorStationId={setSensorStationId}
+        />
       </SsDialogRow>
       <SsDialogRow
         row={3}
