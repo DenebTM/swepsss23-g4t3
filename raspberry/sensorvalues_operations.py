@@ -1,8 +1,6 @@
 import database_operations
 from bleak import BleakError
 import asyncio
-import json
-import time
 import common
 
 READ_SENSOR_INTERVAL = 5
