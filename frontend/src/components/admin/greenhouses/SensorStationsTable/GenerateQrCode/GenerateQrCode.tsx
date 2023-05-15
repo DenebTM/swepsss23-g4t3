@@ -5,6 +5,7 @@ import QrCode2Icon from '@mui/icons-material/QrCode2'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
+import Link from '@mui/material/Link'
 
 import { DialogHeader } from '@component-lib/DialogHeader'
 import { Tooltip } from '@component-lib/Tooltip'
@@ -70,13 +71,30 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
             title={`Greenhouse ${props.ssID}`}
           />
 
-          <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>
+          <DialogContent
+            sx={{
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            id={qrCodeId}
+          >
             <QRCode
               size={qrSize}
               style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
               value={uploadUrl}
               viewBox={`0 0 ${qrSize} ${qrSize}`}
             />
+            <Link
+              sx={{ marginTop: 1 }}
+              underline="hover"
+              variant="labelSmall"
+              href={uploadUrl}
+              color="onSurfaceVariant"
+            >
+              {uploadUrl}
+            </Link>
           </DialogContent>
           <QrDialogActions qrCodeId={qrCodeId} />
         </Dialog>

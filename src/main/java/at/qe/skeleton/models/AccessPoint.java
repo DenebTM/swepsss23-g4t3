@@ -1,7 +1,5 @@
 package at.qe.skeleton.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
