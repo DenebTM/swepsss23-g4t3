@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { GreenhouseIcon } from '~/common'
-import { AccessPointId, ApStatus } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 import { theme } from '~/styles/theme'
 
 import { AddSensorStationDialog } from '../../AddSensorStationDialog/AddSensorStationDialog'
@@ -15,6 +15,7 @@ const plusBadgeSize = '14px'
 
 interface AddSensorStationProps {
   accessPointId: AccessPointId
+  setAccessPoints: Dispatch<SetStateAction<AccessPoint[] | undefined>>
   status: ApStatus
 }
 
@@ -35,8 +36,19 @@ export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
     /** Handle closing the dialog to add a sensor station */
     const handleClose = () => {
       setAddSsDialogOpen(false)
-      // qqjf TODO trigger reload
     }
+
+    /** Update value of access point in parent state */
+    const handleUpdateApInState = (updatedAp: AccessPoint) =>
+      props.setAccessPoints((oldAps: AccessPoint[] | undefined) => {
+        if (typeof oldAps === 'undefined') {
+          return [updatedAp]
+        } else {
+          return oldAps.filter((ap: AccessPoint) =>
+            ap.name === updatedAp.name ? updatedAp : ap
+          )
+        }
+      })
 
     /** Whether to disable adding a new sensor station to this access point */
     const disabled = [ApStatus.OFFLINE, ApStatus.UNCONFIRMED].includes(
@@ -79,6 +91,7 @@ export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
           accessPointId={props.accessPointId}
           open={addSsDialogOpen}
           onClose={handleClose}
+          updateApInState={handleUpdateApInState}
         />
       </>
     )

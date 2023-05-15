@@ -3,7 +3,7 @@ import React from 'react'
 import Dialog from '@mui/material/Dialog'
 
 import { DialogHeader } from '@component-lib/DialogHeader'
-import { AccessPointId } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 import { theme } from '~/styles/theme'
 
 import { AddSsDialogContents } from './AddSsDialogContents'
@@ -14,6 +14,7 @@ interface AddSensorStationDialogProps {
   accessPointId?: AccessPointId
   onClose: () => void
   open: boolean
+  updateApInState?: (updatedAp: AccessPoint) => void
 }
 
 /**
@@ -25,7 +26,7 @@ export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
   return (
     <Dialog
       open={props.open}
-      onClose={props.onClose}
+      onClose={() => props.onClose()}
       aria-labelledby={dialogTitleId}
       PaperProps={{
         sx: {
@@ -44,6 +45,7 @@ export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
       <AddSsDialogContents
         accessPointId={props.accessPointId}
         closeDialog={props.onClose}
+        updateApInState={props.updateApInState}
       />
     </Dialog>
   )
