@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repository for managing {@link Userx} entities.
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * course "Software Engineering" offered by the University of Innsbruck.
  */
 public interface UserxRepository extends AbstractRepository<Userx, String> {
+
 
     Userx findFirstByUsername(String username);
 
@@ -25,8 +25,5 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
     @Query("SELECT u FROM Userx u WHERE u.userRole = :role")
     List<Userx> findByRole(@Param("role") UserRole role);
-
-    @Transactional
-    List<Userx> removeByUsername(String username);
 
 }
