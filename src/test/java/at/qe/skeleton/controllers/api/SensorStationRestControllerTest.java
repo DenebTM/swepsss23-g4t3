@@ -319,9 +319,4 @@ class SensorStationRestControllerTest {
         assertNotNull(measurements);
         assertEquals(number, measurements.size());
     }
-
-    // TODO write a test for getAllPhotosBySS()
-    // @Test
-    //     void testGetAllPhotosBySS() {
-    // }
 }

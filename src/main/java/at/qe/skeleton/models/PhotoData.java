@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
+
 /**
  * Taken from https://medium.com/shoutloudz/spring-boot-upload-and-download-images-using-jpa-b1c9ef174dc0
  */
@@ -73,5 +75,15 @@ public class PhotoData {
         this.name = name;
         this.sensorStation = sensorStation;
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "PhotoData{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sensorStation=" + sensorStation +
+                ", content=" + Arrays.toString(content) +
+                '}';
     }
 }
