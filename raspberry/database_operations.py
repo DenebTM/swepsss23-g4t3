@@ -52,8 +52,8 @@ async def clear_sensor_data(sensorstation_id):
             (sensorstation_id,)
         )
         db_conn.commit()
-    except:
-        pass
+    except Exception as e:
+        print(f'couldnt delete sensordata. Error: {e}')
         #TODO: Logging implementation 
 
 async def get_sensor_data_thresholds(sensorstation_id):
@@ -127,6 +127,20 @@ async def initialize_sensorstation(sensorstation_id):
         }
     }
     await update_sensorstation(json_data)
+
+async def delete_sensorstation(sensorstation_id):
+    try:
+        db_conn.execute(
+            '''DELETE FROM sensorstations
+            WHERE id = ?''',
+            (sensorstation_id,)
+        )
+        db_conn.commit()
+    except Exception as e:
+        #TODO: log this
+        db_conn.rollback()
+        print(f'couldnt delete sensorstation. Error:{e}')
+
 
 async def update_sensorstation(sensorstation):
     with db_conn:

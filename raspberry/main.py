@@ -58,15 +58,19 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 await rest_operations.send_sensorvalues_to_backend(sensorstation_id, session)
 
     except BleakError as e:
-        print(e)
         print('couldnt connect to sensorstation') 
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
         await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
         await cancel_ss_task(sensorstation_id)
         #TODO: log and send to backend
+    except asyncio.CancelledError as e:
+        database_operations.clear_sensor_data(sensorstation_id)
+        database_operations.delete_sensorstation(sensorstation_id)
+        print(f'task {sensorstation_id} canceled and clean_uped')
+        #TODO: log this 
     except Exception as e:
         #TODO: log and send to backend
-        print('Other exception in sensorstation task', e.with_traceback())
+        print('Unexpected error occured in sensor_station_task', e.with_traceback())
 
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
