@@ -4,16 +4,19 @@ import DialogContent from '@mui/material/DialogContent'
 
 import { getAccessPoint, updateAccessPoint } from '~/api/endpoints/accessPoints'
 import { MessageType } from '~/contexts/SnackbarContext/types'
+import { useLoadSensorStations } from '~/hooks/appContext'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { AccessPointSelect } from './SsDialogRow/AccessPointSelect'
+import { ConfirmPairingButton } from './SsDialogRow/ConfirmPairingButton'
 import { SensorStationSelect } from './SsDialogRow/SensorStationSelect'
 import { SsDialogRow } from './SsDialogRow/SsDialogRow'
 
 interface AddSsDialogContentsProps {
   accessPointId?: AccessPointId
+  closeDialog: () => void
 }
 
 /**
@@ -23,6 +26,8 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
   props
 ): JSX.Element => {
   const addSnackbarMessage = useAddSnackbarMessage()
+  const loadSensorStations = useLoadSensorStations()
+
   const [accessPoint, setAccessPoint] = useState<AccessPoint | undefined>()
   const [sensorStationId, setSensorStationId] = useState<
     SensorStationUuid | undefined
@@ -43,10 +48,13 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
     }
   }, [accessPoint])
 
-  /** Reload access point periodically */
+  /** Manage reloading sensor stations and access points periodically */
   useEffect(() => {
+    // Reload access point periodically
     const apLoadInterval = setInterval(() => {
       if (typeof accessPoint !== 'undefined') {
+        loadSensorStations()
+
         getAccessPoint(accessPoint.name)
           .then((ap) => setAccessPoint(ap))
           .catch((err: Error) => {
@@ -87,10 +95,13 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
       </SsDialogRow>
       <SsDialogRow
         row={3}
-        description="When you’re happy, click confirm to add the sensor station."
+        description="When you're happy, click confirm to add the sensor station."
         title="Confirm"
       >
-        confirm
+        <ConfirmPairingButton
+          closeDialog={props.closeDialog}
+          sensorStationId={sensorStationId}
+        />
       </SsDialogRow>
     </DialogContent>
   )

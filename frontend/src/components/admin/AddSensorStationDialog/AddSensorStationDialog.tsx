@@ -41,7 +41,10 @@ export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
         titleId={dialogTitleId}
         title="Add Greenhouse"
       />
-      <AddSsDialogContents accessPointId={props.accessPointId} />
+      <AddSsDialogContents
+        accessPointId={props.accessPointId}
+        closeDialog={props.onClose}
+      />
     </Dialog>
   )
 }

@@ -67,7 +67,7 @@ export const sensorStationFactory = Factory.extend<
     })
   },
   status() {
-    return faker.helpers.arrayElement(Object.values(StationStatus))
+    return StationStatus.PAIRING //faker.helpers.arrayElement(Object.values(StationStatus))
   },
 
   // Create the following attributes via factory methods after intial creation
