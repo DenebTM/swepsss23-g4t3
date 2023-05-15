@@ -89,37 +89,33 @@ async def polling_loop(connection_request, session):
 
 async def main():
     while True:
-        async with aiohttp.ClientSession(base_url=common.web_server_address) as session:
-            connection_request = asyncio.Future()
-            print('This should only be Printed at the start and when AP is offline')
-            response = await rest_operations.initialize_accesspoint(session)
-            if response.status == 200:
-                ap_status = await rest_operations.get_ap_status(session)
-                if ap_status in ['ONLINE', 'SEARCHING']:
-                    polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
-                    sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
-                    await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-                else:
-                    print('Access point is offline')
-                    connection_request = asyncio.Future()
-                    await asyncio.sleep(30)
-            else:
-                print('webserver seems to be offline')
-                await asyncio.sleep(30)
-
-
-if __name__ == '__main__':
-    retry_time = 5
-    while True:
+        retry_time = 5
         try:
-            asyncio.run(main())
-            break
+            async with aiohttp.ClientSession(base_url=common.web_server_address) as session:
+                connection_request = asyncio.Future()
+                print('This should only be Printed at the start and when AP is offline')
+                response = await rest_operations.initialize_accesspoint(session)
+                if response.status == 200:
+                    ap_status = await rest_operations.get_ap_status(session)
+                    if ap_status in ['ONLINE', 'SEARCHING']:
+                        polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
+                        sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
+                        await asyncio.gather(polling_loop_task, sensor_station_manager_task)
+                    else:
+                        print('Access point is offline')
+                        connection_request = asyncio.Future()
+                        await asyncio.sleep(30)
         except aiohttp.ClientConnectionError as e:
+            connection_request.set_result('Done')
             print(f'Could not reach PlantHealth server. Retrying in {retry_time} seconds')
             time.sleep(retry_time)
             retry_time = retry_time+5 if retry_time < 60 else 60
             #TODO:Log this
-        
         except Exception as e:
             print(f'Unexpected error occured: {e}')
             #TODO:Log this
+
+if __name__ == '__main__':
+    asyncio.run(main())
+
+

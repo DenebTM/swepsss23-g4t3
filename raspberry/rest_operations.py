@@ -6,6 +6,9 @@ import database_operations
 import functools
 import time
 
+STATUS_CODE_OK = 200
+STATUS_CODE_UNATHORIZED = 401
+
 # This function makes it so that each rest call retries 5 times before raising an ClientConnectionError
 def retry_connection_error(retries=5, interval=3):
     def decorator(func):
@@ -25,20 +28,29 @@ def retry_connection_error(retries=5, interval=3):
 @retry_connection_error(retries = 3, interval = 5)
 async def get_ap_status(session):
     async with session.get('/access-points/' + common.access_point_name) as response:
-        if response.status == 200:
-            data = await response.json()
-            return data['status']
+        #TODO: Log this
+        if response.status == STATUS_CODE_OK:
+            try:
+                data = await response.json()
+                return data['status']
+            except json.decoder.JSONDecodeError as e:
+                #TODO: Log this
+                return None
 
 @retry_connection_error(retries = 3, interval = 5)
 async def get_sensorstation_instructions(session):
     paired_stations = {}
     async with session.get('/access-points/' + common.access_point_name + '/sensor-stations') as response:
-        if response.status == 200:
-            json_data = await response.json()
-            for station in json_data:
-                ss_id = station['id']
-                ss_status = station['status']
-                paired_stations[ss_id] = ss_status
+        if response.status == STATUS_CODE_OK:
+            try:
+                json_data = await response.json()
+                for station in json_data:
+                    ss_id = station['id']
+                    ss_status = station['status']
+                    paired_stations[ss_id] = ss_status
+            except json.decoder.JSONDecodeError as e:
+                #TODO: log this
+                return paired_stations
         return paired_stations
 
 @retry_connection_error(retries = 3, interval = 5)
