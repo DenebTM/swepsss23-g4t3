@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Stop output INFO at start -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <property name="LOG_ROOT" value="logs" />
+    <property resource="application.properties" />
+    <!--Taken from
+     - https://stackoverflow.com/questions/46853433/spring-boot-logging-into-mysql-database/46874881#46874881
+     - https://howtodoinjava.com/logback/rollingfileappender/-->
+
+    <!-- Console appender -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) - U:%user - %logger{5} - %msg%n</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <!-- Database appender -->
+    <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
+        <dbNameResolver class="at.qe.skeleton.configs.UserDBNameResolver"/>
+        <connectionSource
+                class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>${spring.datasource.driver-class-name}</driverClass>
+            <url>${spring.datasource.url}</url>
+            <user>${spring.datasource.username}</user>
+            <password>${spring.datasource.password}</password>
+        </connectionSource>
+    </appender>
+
+    <!-- Info-file appender-->
+    <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROOT}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ROOT}/info-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file's size will be max 10MB -->
+            <maxFileSize>2GB</maxFileSize>
+            <!-- 30 days to keep -->
+            <maxHistory>30</maxHistory>
+            <!-- total size of all archive files, if total size > 100GB, it will delete old archived file -->
+            <totalSizeCap>100GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - U:%user - %logger{5} - %msg%n</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <!-- Warnings and errors file appender-->
+    <appender name="warnError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <file>${LOG_ROOT}/warnError.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ROOT}/warnError-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file's size will be max 10MB -->
+            <maxFileSize>2GB</maxFileSize>
+            <!-- 30 days to keep -->
+            <maxHistory>30</maxHistory>
+            <!-- total size of all archive files, if total size > 100GB, it will delete old archived file -->
+            <totalSizeCap>100GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - U:%user - %logger{5} - %msg%n</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <configuration>
+        <appender name="map" class="at.qe.skeleton.configs.DBAppender"/>
+        <root level="info">
+            <appender-ref ref="map"/>
+        </root>
+    </configuration>
+
+    <logger name="infoLogger">
+        <appender-ref ref="info" level="info"/>
+    </logger>
+    <logger name="warnErrorLog" additivity="false">
+        <appender-ref ref="warnError" level="warn"/>
+    </logger>
+    <logger name="dbLog" additivity="false">
+        <appender-ref ref="db" level="info"/>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="info" level="info"/>
+        <appender-ref ref="warnError" level="warn"/>
+        <appender-ref ref="db" level="info"/>
+    </root>
+
+</configuration>
