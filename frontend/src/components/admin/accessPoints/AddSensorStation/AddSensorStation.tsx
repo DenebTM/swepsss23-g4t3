@@ -44,7 +44,7 @@ export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
         if (typeof oldAps === 'undefined') {
           return [updatedAp]
         } else {
-          return oldAps.filter((ap: AccessPoint) =>
+          return oldAps.map((ap: AccessPoint) =>
             ap.name === updatedAp.name ? updatedAp : ap
           )
         }
