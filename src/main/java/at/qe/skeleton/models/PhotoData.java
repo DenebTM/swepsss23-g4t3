@@ -26,7 +26,8 @@ public class PhotoData {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "NAME")
+    // TODO: (in service or controller) allow saving a photo with a randomized name
+    @Column(name = "NAME", unique = true)
     private String name;
 
     @JsonIgnore
