@@ -5,7 +5,9 @@ import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,11 +38,13 @@ public class VisitorController {
      * @throws IOException
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws IOException {
+    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws IOException {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setName(multipartImage.getName());
         try {
             dbPhoto.setContent(multipartImage.getBytes());
+        } catch (FileSizeLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
         } catch (IOException e) {
             throw new NotFoundInDatabaseException("Could not get bytes for photo", dbPhoto.getId());
         }
