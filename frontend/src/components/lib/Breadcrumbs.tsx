@@ -40,7 +40,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = (props) => {
       color={theme.outline}
     >
       {props.links.map((link: BreadcrumbLink) => (
-        <Tooltip title={link.tooltip} arrow>
+        <Tooltip title={link.tooltip} arrow key={link.href}>
           <Link
             underline={link.disabled ? 'none' : 'hover'}
             key={link.name}
