@@ -3,12 +3,12 @@ import React from 'react'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import ThermostatIcon from '@mui/icons-material/Thermostat'
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined'
-import CircularProgress from '@mui/material/CircularProgress'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
+import { Spinner } from '@component-lib/Spinner'
 import { GreenhouseMetricRange, NON_AIR_METRICS } from '~/common'
 import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
@@ -47,7 +47,7 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   const donutHeight = breakSm ? 250 : breakMd ? 175 : 200
 
   if (sensorStation === null) {
-    return <CircularProgress color="primary" />
+    return <Spinner />
   } else {
     const donutProps = (metricRange: GreenhouseMetricRange) => ({
       donutHeight: donutHeight,
