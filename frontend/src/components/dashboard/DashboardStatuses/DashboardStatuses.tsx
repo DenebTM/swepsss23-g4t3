@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react'
 
 import { DashboardCard } from '@component-lib/DashboardCard'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
-import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useSensorStations } from '~/hooks/appContext'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { AccessPoint } from '~/models/accessPoint'
 
 import { StatusDonutCharts } from './StatusDonutCharts'
@@ -14,11 +13,11 @@ import { StatusDonutCharts } from './StatusDonutCharts'
  * Component showing the statuses of access points and sensor stations in the dashboard
  */
 export const DashboardStatuses: React.FC = (props) => {
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
   const sensorStations = useSensorStations()
 
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
-  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
+  const [snackbarError, setSnackbarError] = useState<Error | null>(null)
 
   /** Load acccess points from the API on component mount */
   useEffect(() => {
@@ -27,24 +26,18 @@ export const DashboardStatuses: React.FC = (props) => {
       .then((data) => {
         setAccessPoints(data)
       })
-      .catch((err: Error) =>
-        setSnackbarMessage({
-          header: 'Could not load access points',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
-      )
+      .catch((err: Error) => setSnackbarError(err))
 
     // Cancel the promise callbacks on component unmount
     return apPromise.cancel
-  }, [setSnackbarMessage])
+  }, [setSnackbarError])
 
-  /** Create a new snackbar if {@link snackbarMessage} has been updated */
+  /** Create a new snackbar if {@link snackbarError} has been updated */
   useEffect(() => {
-    if (snackbarMessage !== null) {
-      addSnackbarMessage(snackbarMessage)
+    if (snackbarError !== null) {
+      addErrorSnackbar(snackbarError, 'Could not load access points')
     }
-  }, [snackbarMessage])
+  }, [snackbarError])
 
   return (
     <DashboardCard loading={sensorStations === null}>

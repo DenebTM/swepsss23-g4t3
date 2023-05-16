@@ -5,8 +5,7 @@ import IconButton from '@mui/material/IconButton'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { updateAccessPoint } from '~/api/endpoints/accessPoints'
-import { MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { AccessPoint, ApStatus } from '~/models/accessPoint'
 import { theme } from '~/styles/theme'
 
@@ -21,7 +20,7 @@ interface ConfirmAccessPointProps {
  */
 export const ConfirmAccessPoint: React.FC<ConfirmAccessPointProps> = React.memo(
   (props): JSX.Element => {
-    const addSnackbarMessage = useAddSnackbarMessage()
+    const addErrorSnackbar = useAddErrorSnackbar()
     const [updating, setUpdating] = useState(false)
 
     /** Open the dialog to add a sensor station when the icon is clicked */
@@ -43,11 +42,7 @@ export const ConfirmAccessPoint: React.FC<ConfirmAccessPointProps> = React.memo(
           })
         })
         .catch((err: Error) => {
-          addSnackbarMessage({
-            header: 'Unable to update access point',
-            body: err.message,
-            type: MessageType.ERROR,
-          })
+          addErrorSnackbar(err, 'Unable to update access point')
         })
         .finally(() => {
           setUpdating(false)

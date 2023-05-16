@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import { Spinner } from '@component-lib/Spinner'
 import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/sensorStations'
-import { Message, MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { Photo } from '~/models/photo'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -18,9 +17,10 @@ interface GreenhouseGalleryProps {
  * Gallery page showing photos for a single sensor station
  */
 export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
+
   const [photos, setPhotos] = useState<Photo[]>()
-  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
+  const [snackbarError, setSnackbarError] = useState<Error | null>(null)
 
   /** Load images from the API on component mount */
   useEffect(() => {
@@ -29,24 +29,18 @@ export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
       .then((data) => {
         setPhotos(data)
       })
-      .catch((err: Error) =>
-        setSnackbarMessage({
-          header: 'Could not load photos',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
-      )
+      .catch((err: Error) => setSnackbarError(err))
 
     // Cancel the promise callbacks on component unmount
     return photoPromise.cancel
   }, [])
 
-  /** Create a new snackbar if {@link snackbarMessage} has been updated */
+  /** Create a new snackbar if {@link snackbarError} has been updated */
   useEffect(() => {
-    if (snackbarMessage !== null) {
-      addSnackbarMessage(snackbarMessage)
+    if (snackbarError !== null) {
+      addErrorSnackbar(snackbarError, 'Could not load photos')
     }
-  }, [snackbarMessage])
+  }, [snackbarError])
 
   return (
     <>
