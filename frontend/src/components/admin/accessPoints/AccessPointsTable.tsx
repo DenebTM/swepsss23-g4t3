@@ -69,7 +69,7 @@ export const AccessPointsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<AccessPoint, any, AccessPoint>[] = [
-    { field: 'name', headerName: 'Name', flex: 1, editable: true },
+    { field: 'name', headerName: 'Name', width: 140, editable: true },
     {
       ...centerCell,
       field: 'status',
@@ -88,7 +88,7 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       field: 'serverAddress',
       headerName: 'Server Address',
-      flex: 1,
+      width: 130,
     },
     {
       field: 'sensorStations',
@@ -108,7 +108,7 @@ export const AccessPointsTable: React.FC = () => {
       headerName: 'Last Update',
       description: 'When the access point was last updated',
       type: 'dateTime',
-      width: 180,
+      width: 175,
       valueGetter: (params: GridValueGetterParams<AccessPoint, string>) =>
         dayjs(params.value).toDate(),
     },
@@ -116,7 +116,7 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       field: 'action',
       headerName: 'Actions',
-      flex: 1,
+      width: 120,
       sortable: false,
       filterable: false,
       renderCell: (

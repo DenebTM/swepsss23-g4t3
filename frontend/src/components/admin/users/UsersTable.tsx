@@ -28,20 +28,23 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
     oldUser: User
   ) => updateUser(oldUser.username, newUser)
 
+  /** Width of name fields in px */
+  const nameFieldWidth = 110
+
   /** Columns for the user management table */
   const columns: GridColDef<User, any, User>[] = [
-    { field: 'username', headerName: 'Username', flex: 1 },
+    { field: 'username', headerName: 'Username', width: nameFieldWidth },
     {
       field: 'firstName',
       headerName: 'First name',
       editable: true,
-      flex: 1,
+      width: nameFieldWidth,
     },
     {
       field: 'lastName',
       headerName: 'Last name',
       editable: true,
-      flex: 1,
+      width: nameFieldWidth,
     },
     {
       field: 'userRole',
@@ -55,18 +58,18 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       headerAlign: 'center',
       align: 'center',
       editable: true,
-      flex: 1,
+      width: 100,
     },
     {
       field: 'created',
       headerName: 'Created',
       description: 'When the user was created',
       type: 'dateTime',
-      flex: 1,
       headerAlign: 'center',
       align: 'center',
       valueGetter: (params: GridValueGetterParams<User, string>) =>
         dayjs(params.value).toDate(),
+      width: 170,
     },
     {
       field: 'action',
@@ -85,6 +88,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
           setRows={props.setUsers}
         />
       ),
+      width: 75,
     },
   ]
 

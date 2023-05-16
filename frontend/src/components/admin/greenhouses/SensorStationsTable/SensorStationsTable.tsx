@@ -83,7 +83,7 @@ export const SensorStationsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
-    { ...centerCell, flex: 1, field: 'ssID', headerName: 'UUID' },
+    { ...centerCell, width: 60, field: 'ssID', headerName: 'UUID' },
     {
       ...centerCell,
       field: 'status',
@@ -100,15 +100,15 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       ...centerCell,
-      flex: 1,
+      width: 175,
       field: 'aggregationPeriod',
       headerName: 'Aggregation Period (s)',
     },
     {
       ...centerCell,
-      flex: 1,
+      width: 135,
       field: 'apName',
-      headerName: 'Access Point ID',
+      headerName: 'Access Point',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => params.value,
