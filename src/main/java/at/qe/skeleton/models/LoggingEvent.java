@@ -102,7 +102,7 @@ public class LoggingEvent {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO , generator = "seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "seq", strategy = "increment")
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
