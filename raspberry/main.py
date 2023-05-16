@@ -109,6 +109,9 @@ async def main():
                         print('Access point is offline')
                         connection_request = asyncio.Future()
                         await asyncio.sleep(30)
+                else:
+                    raise aiohttp.ClientResponseError
+                
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
             print(f'Could not reach PlantHealth server. Retrying in {retry_time} seconds')
@@ -116,7 +119,7 @@ async def main():
             retry_time = retry_time+5 if retry_time < 60 else 60
             #TODO:Log this
         except aiohttp.ClientResponseError as e:
-            print(f'Could not communicate with PlantHealth server. Error: {e}. Retry in {retry_time} seconds.')
+            print(f'Unauthorized to talk to PlantHealth server. Retry in {retry_time} seconds.')
             time.sleep(retry_time)
             retry_time = retry_time+5 if retry_time < 60 else 60
             #TODO:Log this
