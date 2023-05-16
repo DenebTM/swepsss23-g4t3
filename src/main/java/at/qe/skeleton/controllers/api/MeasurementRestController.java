@@ -87,18 +87,19 @@ public class MeasurementRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
         }
 
-        if (!json.containsKey("timestamp")) {
-            throw new BadRequestException("No timestamp");
+        Instant timestamp = Instant.now();
+        if (json.containsKey("timestamp")) {
+            try {
+                timestamp = Instant.parse((String)json.get("timestamp"));
+            } catch (DateTimeException e){
+                throw new BadRequestException("Invalid timestamp");
+            }
+            json.remove("timestamp");
         }
 
         Measurement newMeasurement = new Measurement();
         newMeasurement.setSensorStation(ss);
-        try {
-            newMeasurement.setTimestamp(Instant.parse((String)json.get("timestamp")));
-        } catch (DateTimeException e){
-            throw new BadRequestException("Invalid timestamp");
-        }
-        json.remove("timestamp");
+        newMeasurement.setTimestamp(timestamp);
 
         var mapper = new ObjectMapper();
         try {
