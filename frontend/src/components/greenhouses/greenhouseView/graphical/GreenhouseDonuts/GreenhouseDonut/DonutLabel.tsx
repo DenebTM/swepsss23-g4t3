@@ -5,8 +5,10 @@ import Box from '@mui/system/Box'
 import { theme } from '~/styles/theme'
 
 interface DonutLabelProps {
+  /** Distance from top of the parent container in px */
+  top?: number
   /** Distance from bottom of the parent container in px */
-  bottom: number
+  bottom?: number
   children: React.ReactNode
 
   outOfRange: boolean
@@ -24,6 +26,7 @@ export const DonutLabel: React.FC<DonutLabelProps> = (props) => {
         margin: '0 auto',
         justifyContent: 'center',
         display: 'flex',
+        top: props.top,
         bottom: props.bottom,
         color: props.outOfRange ? theme.error : theme.onSurfaceVariant,
       }}

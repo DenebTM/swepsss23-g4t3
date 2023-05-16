@@ -19,7 +19,7 @@ export const mirageSetup = (
   environment = '',
   logging = true
 ): Server<AppRegistry> | undefined => {
-  if (process.env.NODE_ENV !== 'mock-api' && environment !== MOCK_API) {
+  if (!import.meta.env.DEV && environment !== MOCK_API) {
     return
   }
 

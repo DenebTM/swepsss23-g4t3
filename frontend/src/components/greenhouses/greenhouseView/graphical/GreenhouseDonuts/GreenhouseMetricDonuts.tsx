@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import ThermostatIcon from '@mui/icons-material/Thermostat'
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined'
-import Stack from '@mui/material/Stack'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
+import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import Box from '@mui/system/Box'
 
-import { GREENHOUSE_METRICS, GreenhouseMetricRange } from '~/common'
-import { useSensorStations } from '~/hooks/appContext'
+import { GreenhouseMetricRange, NON_AIR_METRICS } from '~/common'
 import { Measurement } from '~/models/measurement'
-import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
+import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
+import { GreenhouseAirMetrics } from './GreenhouseDonut/GreenhouseAirMetrics'
 import { GreenhouseDonut } from './GreenhouseDonut/GreenhouseDonut'
 
 const donutIconProps: Partial<SvgIconTypeMap['props']> = {
@@ -20,9 +21,15 @@ const donutIconProps: Partial<SvgIconTypeMap['props']> = {
   color: 'inherit',
 }
 
+const gridBreakpoints = {
+  xs: 12,
+  sm: 6,
+  md: 3,
+}
+
 interface GreenhouseDonutsProps {
   measurement: Measurement | null
-  ssID: SensorStationUuid
+  sensorStation: SensorStation | null
 }
 
 /**
@@ -31,24 +38,14 @@ interface GreenhouseDonutsProps {
 export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   props
 ) => {
-  const sensorStations = useSensorStations()
+  const { sensorStation, measurement } = { ...props }
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
-  const [sensorStation, setSensorStation] = useState<SensorStation | null>()
+  const breakSm = useMediaQuery(theme.breakpoints.down('sm'))
 
-  /** Set the sensor station object in state when sensorStations are updated */
-  useEffect(() => {
-    const foundSs = sensorStations
-      ? sensorStations.find((s) => s.ssID === props.ssID)
-      : null
-    setSensorStation(foundSs ?? null)
-  }, [sensorStations])
+  /** Donut height in px. qqjf TODO make this responsive  */
+  const donutHeight = breakSm ? 250 : breakMd ? 175 : 200
 
-  /** Donut height in px. The width will be approximately twice this value. */
-  const donutHeight = breakMd ? 250 : 200
-
-  if (sensorStations === null || typeof sensorStation === 'undefined') {
-    return <div>TODO qqjf loading state</div>
-  } else if (sensorStation === null) {
+  if (sensorStation === null) {
     return <div>TODO qqjf loading state</div>
   } else {
     const donutProps = (metricRange: GreenhouseMetricRange) => ({
@@ -60,37 +57,46 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
     })
 
     return (
-      <Stack
-        spacing={1}
-        padding={2}
-        direction={breakMd ? 'column' : 'row'}
+      <Box
         sx={{
-          alignItems: 'center',
-          placeContent: 'center',
+          width: '100%',
         }}
       >
-        {props.measurement !== null ? (
-          <>
-            <GreenhouseDonut
-              {...donutProps(GREENHOUSE_METRICS[0])}
-              icon={<ThermostatIcon {...donutIconProps} />}
-              value={props.measurement.data.temperature}
-            />
-            <GreenhouseDonut
-              {...donutProps(GREENHOUSE_METRICS[1])}
-              icon={<WaterDropOutlinedIcon {...donutIconProps} />}
-              value={props.measurement.data.soilMoisture}
-            />
-            <GreenhouseDonut
-              {...donutProps(GREENHOUSE_METRICS[2])}
-              icon={<LightModeOutlinedIcon {...donutIconProps} />}
-              value={props.measurement.data.lightIntensity}
-            />
-          </>
+        {measurement !== null ? (
+          <Grid container spacing={1} padding={2}>
+            <Grid {...gridBreakpoints}>
+              <GreenhouseDonut
+                {...donutProps(NON_AIR_METRICS[0])}
+                icon={<ThermostatIcon {...donutIconProps} />}
+                value={measurement.data.temperature}
+              />
+            </Grid>
+            <Grid {...gridBreakpoints}>
+              <GreenhouseDonut
+                {...donutProps(NON_AIR_METRICS[1])}
+                icon={<WaterDropOutlinedIcon {...donutIconProps} />}
+                value={measurement.data.soilMoisture}
+              />
+            </Grid>
+            <Grid {...gridBreakpoints}>
+              <GreenhouseDonut
+                {...donutProps(NON_AIR_METRICS[2])}
+                icon={<LightModeOutlinedIcon {...donutIconProps} />}
+                value={measurement.data.lightIntensity}
+              />
+            </Grid>
+            <Grid {...gridBreakpoints}>
+              <GreenhouseAirMetrics
+                donutHeight={donutHeight}
+                measurement={props.measurement}
+                sensorStation={props.sensorStation}
+              />
+            </Grid>
+          </Grid>
         ) : (
           <div>TODO qqjf no measurements case</div>
         )}
-      </Stack>
+      </Box>
     )
   }
 }
