@@ -11,13 +11,19 @@ import { normalisePercentage } from '../../GreenhouseGraph/helpers'
 /** Use "Range" as the data key so that this is displayed as the row title in the recharts legend */
 const DATA_KEY = 'Range'
 
-interface RadialChartProps {
-  /** Chart height in px */
-  height: number
+interface ChartData {
   metricRange: GreenhouseMetricRange
   minThreshold: number
   maxThreshold: number
   value: number
+}
+
+interface RadialChartProps {
+  data: ChartData[]
+  /** Chart height in px */
+  height: number
+  /** Inner radius of the pie chart in percent */
+  innerRadius?: string
   /** Chart width in px */
   width: number
 }
@@ -26,11 +32,11 @@ interface RadialChartProps {
  * Radial chart component showing a single greenhouse metric
  */
 export const RadialChart: React.FC<RadialChartProps> = (props) => {
-  const caculatePercentage = (): number => {
+  const caculatePercentage = (d: ChartData): number => {
     const normalisedVal = normalisePercentage(
-      props.value,
-      props.metricRange.min,
-      props.metricRange.max
+      d.value,
+      d.metricRange.min,
+      d.metricRange.max
     )
 
     // Round to 2 deciomal places
@@ -44,43 +50,46 @@ export const RadialChart: React.FC<RadialChartProps> = (props) => {
     <RadialBarChart
       width={props.width}
       height={props.height}
-      innerRadius="88%"
+      innerRadius={props.innerRadius ?? '86%'}
       outerRadius="100%"
-      data={[
-        {
-          name: props.metricRange.displayName,
-          [DATA_KEY]: caculatePercentage(),
-          fill: props.metricRange.colour,
-        },
-      ]}
+      data={props.data.map((d: ChartData) => ({
+        name: d.metricRange.displayName,
+        [DATA_KEY]: caculatePercentage(d),
+        fill: d.metricRange.colour,
+      }))}
       startAngle={180 + 25}
       endAngle={0 - 25}
+      barCategoryGap={2}
     >
-      <PolarAngleAxis
-        type="number"
-        domain={[0, 100]}
-        angleAxisId={props.metricRange.valueKey}
-        tick={false}
-      />
+      <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
       <RadialBar
         background={{
-          fill: alpha(props.metricRange.colour, 0.15),
+          fill: alpha(theme.outlineVariant, 0.25),
         }}
         dataKey={DATA_KEY}
-        angleAxisId={props.metricRange.valueKey}
       />
+
       <Tooltip
         wrapperStyle={{ zIndex: theme.zIndex.tooltip }}
-        labelFormatter={(index: number) =>
-          `${props.metricRange.displayName} : ${roundMetric(props.value)}${
-            props.metricRange.unit
+        labelFormatter={(idx: number) => {
+          const data = props.data[idx]
+          return `${data.metricRange.displayName} : ${roundMetric(data.value)}${
+            data.metricRange.unit
           }`
-        }
-        formatter={(value: number | string, name, payload, index) => {
-          const min = roundMetric(props.minThreshold)
-          const max = roundMetric(props.maxThreshold)
+        }}
+        formatter={(value: number | string, name, item, index): string => {
+          const displayName = item.payload?.['name']
+          const dataObj = props.data.find(
+            (d: ChartData) => d.metricRange.displayName === displayName
+          )
+          if (typeof dataObj !== 'undefined') {
+            const min = roundMetric(dataObj.minThreshold)
+            const max = roundMetric(dataObj.maxThreshold)
 
-          return `${min} ${emDash} ${max}${props.metricRange.unit}`
+            return `${min} ${emDash} ${max}${dataObj.metricRange.unit}`
+          } else {
+            return ''
+          }
         }}
       />
     </RadialBarChart>

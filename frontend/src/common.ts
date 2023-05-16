@@ -239,7 +239,7 @@ export interface GreenhouseMetricRange {
   valueKey: keyof SensorValues
 }
 
-export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
+export const NON_AIR_METRICS: GreenhouseMetricRange[] = [
   {
     colour: theme.purple,
     displayName: 'Temperature',
@@ -267,6 +267,9 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     max: 1000,
     step: 20,
   },
+]
+
+export const AIR_METRICS: GreenhouseMetricRange[] = [
   {
     colour: theme.warn,
     displayName: 'Air Pressure',
@@ -295,6 +298,11 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     max: 500,
     step: 25,
   },
+]
+
+export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
+  ...NON_AIR_METRICS,
+  ...AIR_METRICS,
 ]
 
 export const greenhouseMetricWithUnit = (

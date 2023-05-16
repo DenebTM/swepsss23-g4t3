@@ -10,9 +10,8 @@ import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useSensorStations } from '~/hooks/appContext'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Measurement } from '~/models/measurement'
-import { SensorStationUuid } from '~/models/sensorStation'
+import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
-import { GreenhouseAirMetrics } from './GreenhouseDonuts/GreenhouseAirMetrics'
 import { GreenhouseMetricDonuts } from './GreenhouseDonuts/GreenhouseMetricDonuts'
 import { GreenhouseGraph } from './GreenhouseGraph/GreenhouseGraph'
 
@@ -28,6 +27,8 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
 ) => {
   const sensorStations = useSensorStations()
   const addSnackbarMessage = useAddSnackbarMessage()
+
+  const [sensorStation, setSensorStation] = useState<SensorStation | null>(null)
   const [measurements, setMeasurements] = useState<Measurement[]>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
@@ -68,34 +69,32 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
         setMeasurements([]) // Remove loading state
       })
 
+  /** Set the sensor station object in state when sensorStations are updated */
+  useEffect(() => {
+    const foundSs = sensorStations
+      ? sensorStations.find((s) => s.ssID === props.ssID)
+      : null
+    setSensorStation(foundSs ?? null)
+  }, [sensorStations])
+
   return (
     <Grid container spacing={2} padding={2}>
       {measurements && ( // qqjf TODO add a loading state to each card
         <>
-          <Grid xs={12} md={8}>
+          <Grid xs={12}>
             <DashboardCard>
               <GreenhouseMetricDonuts
                 measurement={measurements.length > 0 ? measurements[0] : null}
-                ssID={props.ssID}
+                sensorStation={sensorStation}
               />
             </DashboardCard>
           </Grid>
-          <Grid xs={12} md={4}>
-            <DashboardCard>
-              <GreenhouseAirMetrics
-                measurement={measurements.length > 0 ? measurements[0] : null}
-                ssID={props.ssID}
-              />
-            </DashboardCard>
-          </Grid>
+
           <Grid xs={12}>
             <DashboardCard>
               <GreenhouseGraph
                 measurements={measurements}
-                sensorStation={sensorStations?.find(
-                  (s) => s.ssID === props.ssID
-                )}
-                ssID={props.ssID}
+                sensorStation={sensorStation}
               />
             </DashboardCard>
           </Grid>
