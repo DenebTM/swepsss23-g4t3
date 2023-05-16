@@ -9,7 +9,7 @@ import java.util.List;
 public interface MeasurementRepository extends AbstractRepository<Measurement, Long> {
 
     // This immense method name is automatically generated, resembles SQL and works the same way
-    List<Measurement> findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(SensorStation sensorStation, Instant start, Instant end);
+    List<Measurement> findAllBySensorStationAndTimestampGreaterThanEqualAndTimestampLessThanEqualOrderByTimestampAsc(SensorStation sensorStation, Instant start, Instant end);
 
     @Override
     List<Measurement> findAll();

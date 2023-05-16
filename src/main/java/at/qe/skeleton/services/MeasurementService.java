@@ -30,7 +30,7 @@ public class MeasurementService {
     public List<Measurement> getMeasurements(Integer ssId, Instant from, Instant to) {
         SensorStation ss = ssRepository.findFirstBySsID(ssId);
         return measurementRepository.
-            findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(ss, from, to);
+            findAllBySensorStationAndTimestampGreaterThanEqualAndTimestampLessThanEqualOrderByTimestampAsc(ss, from, to);
     }
 
     public Measurement getCurrentMeasurement(Integer ssId) {
