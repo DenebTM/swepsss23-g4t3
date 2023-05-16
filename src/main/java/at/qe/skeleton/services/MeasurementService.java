@@ -4,11 +4,13 @@ import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorStationRepository;
+import at.qe.skeleton.repositories.SensorValuesRepository;
+
+import org.jboss.weld.exceptions.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +21,12 @@ public class MeasurementService {
 
     @Autowired
     MeasurementRepository measurementRepository;
+
     @Autowired
     SensorStationRepository ssRepository;
+
+    @Autowired
+    SensorValuesRepository sensorValuesRepository;
 
     public List<Measurement> getMeasurements(Integer ssId, Instant from, Instant to) {
         SensorStation ss = ssRepository.findFirstBySsID(ssId);
@@ -53,6 +59,12 @@ public class MeasurementService {
     }
 
     public Measurement saveMeasurement(Measurement m) {
+        if (m.getData() == null) {
+            throw new IllegalArgumentException("Sensor values must be provided");
+        }
+
+        m.setData(sensorValuesRepository.save(m.getData()));
+
         return measurementRepository.save(m);
     }
 }
