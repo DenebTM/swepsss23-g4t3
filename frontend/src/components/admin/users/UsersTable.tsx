@@ -8,6 +8,7 @@ import {
 
 import { DataGrid, RowUpdateFunction } from '@component-lib/Table/DataGrid'
 import { DeleteCell } from '@component-lib/Table/DeleteCell'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import { deleteUser, getUsers, updateUser } from '~/api/endpoints/user'
 import { AuthUserRole, User, Username } from '~/models/user'
@@ -88,13 +89,15 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
   ]
 
   return (
-    <DataGrid<User, any, User>
-      columns={columns}
-      getRowId={(row: User) => row.username}
-      processRowUpdate={handleUpdateUser}
-      rows={props.users}
-      setRows={props.setUsers}
-      fetchRows={getUsers}
-    />
+    <TablePaper>
+      <DataGrid<User, any, User>
+        columns={columns}
+        getRowId={(row: User) => row.username}
+        processRowUpdate={handleUpdateUser}
+        rows={props.users}
+        setRows={props.setUsers}
+        fetchRows={getUsers}
+      />
+    </TablePaper>
   )
 }
