@@ -165,8 +165,8 @@ export const GreenhouseIcon = YardIcon
 const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
 
 /** Encrypt a sensor station UUID for photo upload */
-const encryptSensorStationUuid = (uuid: SensorStationUuid): string =>
-  encodeURIComponent(CryptoJS.AES.encrypt(String(uuid), SECRET).toString())
+const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
+  encodeURIComponent(CryptoJS.AES.encrypt(String(ssID), SECRET).toString())
 
 /** Decrypt a sensor station UUID for photo upload */
 export const decryptSensorStationUuid = (

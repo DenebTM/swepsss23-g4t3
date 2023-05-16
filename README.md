@@ -32,22 +32,45 @@ This project uses Java 17 and Node.js 18 (installed automatically as part of the
 
 ### Step 1: Install the database
 
-1. Set up either MySQL or MariaDB on your system. You may use Docker (recommended) or do this manually.
+In order for the web server to start, you must be running either a MySQL or MariaDB on your system. For this you may either use Docker for this or set up the database manually.
 
-_(a) Docker (recommended)_ \
+**(a) Docker** (recommended)
+
 Run the following command to start a container with persistent storage for the database:
 
 ```
-docker run -v planthealth_db:/var/lib/mysql -p 3306:3306 \
-  -e MYSQL_RANDOM_ROOT_PASSWORD="true" \
-  -e MYSQL_DATABASE=swe \
-  -e MYSQL_USER=swe \
-  -e MYSQL_PASSWORD=password \
-  mariadb:latest
+docker run                                  \
+  --name planthealth_dbsrv                  \
+  --rm                                      \ # remove the container (not the volume) after exit
+  -v planthealth_db:/var/lib/mysql          \ # create a persistent volume for the database
+  -p 3306:3306                              \ # expose the MySQL service port
+
+  -e MYSQL_RANDOM_ROOT_PASSWORD="true"      \ # (unused, but required)
+  -e MYSQL_DATABASE=swe                     \ # database credentials
+  -e MYSQL_USER=swe                         \
+  -e MYSQL_PASSWORD=password                \
+
+  mariadb:latest                              # also valid: mysql:latest
 ```
 
-_(b) manual setup_\
-Install either MySQL or MariaDB, start a MySQL CLI session as `root` user, then run the following SQL:
+The database server can be stopped either externally or by pressing Ctrl+\ (backslash).
+
+To delete an existing database and start fresh, first stop the container, then run:
+
+```
+docker volume rm planthealth_db
+```
+
+After this, restart the container.
+
+**Note:** This method requires Docker to be installed and running locally.
+
+- Windows/macOS: Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- Linux: Install Docker using your distribution's package manager (e.g. `sudo apt install docker` on Ubuntu) and start it (usually by `sudo systemctl start docker.service`).
+
+**(b) Manual setup**
+
+Install and start either MySQL or MariaDB, open a MySQL CLI session as the `root` user, then run the following SQL statements to initialize the database and user:
 
 ```
 CREATE USER 'swe'@'localhost' identified by 'password';
@@ -55,11 +78,19 @@ CREATE DATABASE 'swe';
 GRANT ALL PRIVILEGES ON 'swe' TO 'swe'@'localhost';
 ```
 
-All of the necessary tables will be automatically created in step 2.
+To delete an existing database and start fresh, run the following SQL statement:
+
+```
+DROP DATABASE 'swe';
+```
+
+Afterwards, re-run the initialization statements above.
+
+All of the necessary tables will be created automatically in step 2.
 
 ### Step 2: Build and run the web server
 
-2. Run `mvn spring-boot:run` on a command line shell to build and start the project. The React frontend will be compiled statically and available at `http://localhost:8080`.
+Run `mvn spring-boot:run` on a command line shell to build and start the project. The React frontend will be compiled by `yarn` as part of the build process and made available at `http://localhost:8080`.
 
 ### Login
 

@@ -1,5 +1,7 @@
 package at.qe.skeleton.models;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 

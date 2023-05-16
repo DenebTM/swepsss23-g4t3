@@ -43,7 +43,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       flex: 1,
     },
     {
-      field: 'role',
+      field: 'userRole',
       headerName: 'Role',
       type: 'singleSelect',
       valueOptions: [

@@ -37,7 +37,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
    */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
     {
-      field: 'uuid',
+      field: 'ssID',
       headerName: 'Greenhouse',
       valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
         `Greenhouse ${params.value}`,
@@ -48,8 +48,10 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
       headerName: greenhouseMetricWithUnit(metricRange),
       description: metricRange.description,
       valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
-        params.row.measurements.length > 0
-          ? roundMetric(params.row.measurements[0].data[metricRange.valueKey])
+        params.row.currentMeasurement
+          ? roundMetric(
+              params.row.currentMeasurement.data[metricRange.valueKey]
+            )
           : emDash,
       ...metricColumnParams,
     })),
@@ -61,8 +63,8 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
       headerAlign: 'center',
       align: 'center',
       valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
-        params.row.measurements.length > 0
-          ? dayjs(params.row.measurements[0].timestamp).toDate()
+        params.row.currentMeasurement
+          ? dayjs(params.row.currentMeasurement.timestamp).toDate()
           : dayjs().toDate(), // Show the current time if no measurements have been logged yet
       width: 175,
     },
@@ -72,7 +74,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
     <Paper>
       <DataGrid<SensorStation, any, SensorStation>
         columns={columns}
-        getRowId={(row: SensorStation) => row.uuid}
+        getRowId={(row: SensorStation) => row.ssID}
         rows={props.sensorStations}
       />
     </Paper>

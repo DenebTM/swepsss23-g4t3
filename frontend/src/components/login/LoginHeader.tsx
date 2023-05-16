@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 import { ResponsiveStyleValue } from '@mui/system/styleFunctionSx'
 
-import { PlantIcon } from '@component-lib/PlantIcon'
+import { PlantIcon } from '@component-lib/icons/PlantIcon'
 import { theme } from '~/styles/theme'
 
 interface LoginHeaderProps {
