@@ -37,7 +37,7 @@ public class MeasurementRestController implements BaseRestController {
      */
     @GetMapping(value = SensorStationRestController.SS_ID_PATH + MEASUREMENTS_PATH)
     public ResponseEntity<List<Measurement>> getMeasurementsBySS(
-        @PathVariable(value = "uuid")
+        @PathVariable(value = "id")
             Integer id,
         @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             Instant from,
@@ -48,6 +48,8 @@ public class MeasurementRestController implements BaseRestController {
         if (to == null) {
             to = Instant.now();
         }
+
+        measurementService.getCurrentMeasurement(id);
 
         // return one week of measurements by default
         if (from == null) {
@@ -79,7 +81,7 @@ public class MeasurementRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SensorStationRestController.SS_ID_PATH + MEASUREMENTS_PATH)
-    public ResponseEntity<Measurement> sendMeasurement(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
+    public ResponseEntity<Measurement> sendMeasurement(@PathVariable(value = "id") Integer id, @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
