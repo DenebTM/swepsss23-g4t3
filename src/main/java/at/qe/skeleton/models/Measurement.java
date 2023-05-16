@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-import org.hibernate.annotations.GenericGenerator;
-
 @Entity
 @NoArgsConstructor
 @Table(name = "MEASUREMENT")
