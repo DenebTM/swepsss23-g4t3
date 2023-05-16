@@ -90,15 +90,16 @@ async def polling_loop(connection_request, session):
             await rest_operations.send_sensorstations_to_backend(session, sensorstations)
         await asyncio.sleep(10)
 
+#Füg header mit authorization hinzu
 async def main():
     while True:
         retry_time = 5
         try:
-            async with aiohttp.ClientSession(base_url=common.web_server_address, raise_for_status=True) as session:
+            async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
                 connection_request = asyncio.Future()
                 print('This should only be Printed at the start and when AP is offline')
-                response = await rest_operations.initialize_accesspoint(session)
-                if response.status == 200:
+                ap_initialized = await rest_operations.initialize_accesspoint(session)
+                if ap_initialized:
                     ap_status = await rest_operations.get_ap_status(session)
                     if ap_status in ['ONLINE', 'SEARCHING']:
                         polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
