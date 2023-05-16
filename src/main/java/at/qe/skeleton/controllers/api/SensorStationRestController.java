@@ -39,7 +39,7 @@ public class SensorStationRestController implements BaseRestController {
     public static final String SS = "Sensor station";
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_AP_PATH = AccessPointRestController.AP_NAME_PATH + SS_PATH;
-    public static final String SS_ID_PATH = SS_PATH + "/{uuid}";
+    public static final String SS_ID_PATH = SS_PATH + "/{id}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
 
@@ -74,7 +74,7 @@ public class SensorStationRestController implements BaseRestController {
      * @return sensor station
      */
     @GetMapping(value = SS_ID_PATH)
-    public ResponseEntity<SensorStation> getSSById(@PathVariable(value = "uuid") Integer id) {
+    public ResponseEntity<SensorStation> getSSById(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
         // Return a 404 error if the sensor-station is not found
@@ -122,7 +122,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
-    public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
+    public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
@@ -154,7 +154,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_PATH)
-    public ResponseEntity<SensorStation> deleteSSById(@PathVariable(value = "uuid") Integer id) {
+    public ResponseEntity<SensorStation> deleteSSById(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
@@ -171,7 +171,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = SS_ID_GARDENER_PATH)
-    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
+    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "id") Integer id){
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
@@ -188,7 +188,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
@@ -209,7 +209,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
@@ -229,7 +229,7 @@ public class SensorStationRestController implements BaseRestController {
      * @return the picture if found
      */
     @DeleteMapping(value = SS_ID_PHOTOS_PATH + "/{photoId}")
-    ResponseEntity<String> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
+    ResponseEntity<String> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
             List<String> gardeners = ssService.getGardenersBySS(ss);
