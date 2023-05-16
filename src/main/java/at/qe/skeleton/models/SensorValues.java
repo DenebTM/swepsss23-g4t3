@@ -10,7 +10,7 @@ public class SensorValues {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO , generator = "seq")
     @GenericGenerator(name = "seq", strategy = "increment")
-    @Column(name = "VALUES_ID", nullable = false)
+    @Column(name = "VALUES_ID")
     private Integer id;
 
     @Column(name = "HUMIDITY")
