@@ -1,9 +1,9 @@
 import React from 'react'
 
-import Paper from '@mui/material/Paper'
 import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import {
   emDash,
@@ -69,12 +69,12 @@ export const DashboardTable: React.FC = (props) => {
   ]
 
   return (
-    <Paper>
+    <TablePaper>
       <DataGrid<SensorStation, any, SensorStation>
         columns={columns}
         getRowId={(row: SensorStation) => row.ssID}
         rows={sensorStations ?? undefined}
       />
-    </Paper>
+    </TablePaper>
   )
 }

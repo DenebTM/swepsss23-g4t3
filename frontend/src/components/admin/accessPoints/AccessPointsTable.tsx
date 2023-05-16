@@ -15,6 +15,7 @@ import {
   statusCellMinWidth,
   StatusVariant,
 } from '@component-lib/Table/StatusCell'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import {
   deleteAccessPoint,
@@ -146,22 +147,24 @@ export const AccessPointsTable: React.FC = () => {
   ]
 
   return (
-    <DataGrid<AccessPoint, any, AccessPoint>
-      columns={columns}
-      getRowId={(row: AccessPoint) => row.name}
-      processRowUpdate={handleUpdateAp}
-      rows={accessPoints}
-      setRows={setAccessPoints}
-      fetchRows={getAccessPoints}
-      getRowClassName={(params) => params.row.status}
-      sx={{
-        [`& .${gridClasses.row}.${ApStatus.UNCONFIRMED}`]: {
-          background: alpha(theme.warnContainer, 0.15),
-        },
-        [`& .${gridClasses.row}.${ApStatus.OFFLINE}`]: {
-          background: alpha(theme.errorContainer, 0.15),
-        },
-      }}
-    />
+    <TablePaper>
+      <DataGrid<AccessPoint, any, AccessPoint>
+        columns={columns}
+        getRowId={(row: AccessPoint) => row.name}
+        processRowUpdate={handleUpdateAp}
+        rows={accessPoints}
+        setRows={setAccessPoints}
+        fetchRows={getAccessPoints}
+        getRowClassName={(params) => params.row.status}
+        sx={{
+          [`& .${gridClasses.row}.${ApStatus.UNCONFIRMED}`]: {
+            background: alpha(theme.warnContainer, 0.15),
+          },
+          [`& .${gridClasses.row}.${ApStatus.OFFLINE}`]: {
+            background: alpha(theme.errorContainer, 0.15),
+          },
+        }}
+      />
+    </TablePaper>
   )
 }

@@ -9,6 +9,7 @@ import {
   statusCellMinWidth,
   StatusVariant,
 } from '@component-lib/Table/StatusCell'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { useSensorStations } from '~/hooks/appContext'
@@ -154,10 +155,12 @@ export const SensorStationsTable: React.FC = () => {
   ]
 
   return (
-    <DataGrid<SensorStation, any, SensorStation>
-      columns={columns}
-      getRowId={(row: SensorStation) => row.ssID}
-      rows={sensorStations}
-    />
+    <TablePaper>
+      <DataGrid<SensorStation, any, SensorStation>
+        columns={columns}
+        getRowId={(row: SensorStation) => row.ssID}
+        rows={sensorStations}
+      />
+    </TablePaper>
   )
 }
