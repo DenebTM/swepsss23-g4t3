@@ -1,6 +1,7 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
+import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/system/Box'
 
 import { getSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
@@ -66,8 +67,10 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
     >
       <UploadHeader ssID={props.ssID} />
 
-      {typeof sensorStation !== 'undefined' && (
+      {typeof sensorStation !== 'undefined' ? (
         <UploadPageBody sensorStation={sensorStation} />
+      ) : (
+        <CircularProgress color="primary" sx={{ marginTop: 4 }} />
       )}
     </Box>
   )

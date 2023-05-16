@@ -1,6 +1,7 @@
 import { cancelable } from 'cancelable-promise'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
+import CircularProgress from '@mui/material/CircularProgress'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -86,6 +87,6 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
       </Select>
     </FormControl>
   ) : (
-    <div>qqjf todo loading</div>
+    <CircularProgress color="primary" />
   )
 }
