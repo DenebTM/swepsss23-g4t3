@@ -7,7 +7,6 @@ import functools
 import time
 
 STATUS_CODE_OK = 200
-STATUS_CODE_UNATHORIZED = 401
 
 # This function makes it so that each rest call retries 5 times before raising an ClientConnectionError
 def retry_connection_error(retries=5, interval=3):
