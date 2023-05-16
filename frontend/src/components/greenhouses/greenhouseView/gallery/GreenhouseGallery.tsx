@@ -1,7 +1,7 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
-import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/sensorStations'
+import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/photos'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Photo } from '~/models/photo'
