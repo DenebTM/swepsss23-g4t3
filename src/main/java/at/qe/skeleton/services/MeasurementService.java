@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MeasurementService {
@@ -19,7 +22,7 @@ public class MeasurementService {
     @Autowired
     SensorStationRepository ssRepository;
 
-    public List<Measurement> getMeasurements(Integer ssId, Instant from, Instant to){
+    public List<Measurement> getMeasurements(Integer ssId, Instant from, Instant to) {
         SensorStation ss = ssRepository.findFirstBySsID(ssId);
         return measurementRepository.
             findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(ss, from, to);
@@ -34,24 +37,22 @@ public class MeasurementService {
         return null;
     }
 
-    public List<Measurement> getAllCurrentMeasurements(){
-        List<Measurement> result = new ArrayList<>();
-        List<Measurement> measurements = measurementRepository.findAllByOrderBySensorStationAscTimestampDesc();
-        ArrayList<Integer> ssids = new ArrayList<>();
-        for (Measurement m : measurements) {
-            if (!ssids.contains(m.getSensorStation().getSsID())) {
-                ssids.add(m.getSensorStation().getSsID());
-                result.add(m);
-            }
+    public Map<Integer, Measurement> getAllCurrentMeasurements() {
+        Collection<SensorStation> sensorStations = ssRepository.findAll();
+        Map<Integer, Measurement> result = new HashMap<>(sensorStations.size());
+
+        for (SensorStation ss : sensorStations) {
+            result.put(ss.getSsID(), getCurrentMeasurement(ss.getSsID()));
         }
+
         return result;
     }
 
-    public Object getMeasurementById(Integer id){
+    public Object getMeasurementById(Integer id) {
         return measurementRepository.findFirstById(id);
     }
 
-    public Measurement saveMeasurement(Measurement m){
+    public Measurement saveMeasurement(Measurement m) {
         return measurementRepository.save(m);
     }
 }

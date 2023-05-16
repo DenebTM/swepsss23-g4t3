@@ -70,7 +70,7 @@ public class MeasurementRestController implements BaseRestController {
      * @return An object containing the returned measurements indexed by sensor station
      */
     @GetMapping(value = MEASUREMENTS_PATH)
-    public ResponseEntity<List<Measurement>> getAllCurrentMeasurements(){
+    public ResponseEntity<Map<Integer, Measurement>> getAllCurrentMeasurements(){
         return ResponseEntity.ok(measurementService.getAllCurrentMeasurements());
     }
 
