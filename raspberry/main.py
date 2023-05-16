@@ -63,8 +63,8 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
         await cancel_ss_task(sensorstation_id)
         #TODO: log and send to backend
     except asyncio.CancelledError as e:
-        database_operations.clear_sensor_data(sensorstation_id)
-        database_operations.delete_sensorstation(sensorstation_id)
+        await database_operations.clear_sensor_data(sensorstation_id)
+        await database_operations.delete_sensorstation(sensorstation_id)
         print(f'task {sensorstation_id} canceled and clean_uped')
         #TODO: log this 
     except Exception as e:
