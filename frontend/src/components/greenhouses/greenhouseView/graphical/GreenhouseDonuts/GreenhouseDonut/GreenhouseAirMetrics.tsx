@@ -3,6 +3,7 @@ import { ResponsiveContainer } from 'recharts'
 
 import AirIcon from '@mui/icons-material/Air'
 import ReportProblemIcon from '@mui/icons-material/ReportProblem'
+import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
@@ -40,7 +41,7 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
     )
 
   if (sensorStation === null) {
-    return <div>qqjf TODO loading state</div>
+    return <CircularProgress color="primary" />
   } else if (measurement === null) {
     return <div>qqjf TODO no measurement state</div>
   } else {
