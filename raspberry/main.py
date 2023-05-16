@@ -114,6 +114,9 @@ async def main():
             time.sleep(retry_time)
             retry_time = retry_time+5 if retry_time < 60 else 60
             #TODO:Log this
+        except aiohttp.ClientResponseError as e:
+            print(f'Could not communicate with PlantHealth server. Error: {e}')
+            #TODO:Log this
         except Exception as e:
             print(f'Unexpected error occured: {e}')
             #TODO:Log this
