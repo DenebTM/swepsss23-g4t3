@@ -2,7 +2,6 @@ import asyncio
 import aiohttp
 import time
 from bleak import BleakClient, BleakError
-
 import common
 import database_operations
 from thresholds_operations import check_values_for_thresholds
@@ -121,5 +120,3 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-
-
