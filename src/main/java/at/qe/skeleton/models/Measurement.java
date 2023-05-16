@@ -5,13 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Entity
-@NoArgsConstructor
 @Table(name = "MEASUREMENT")
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Measurement {
 
     @Id

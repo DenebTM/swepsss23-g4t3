@@ -28,7 +28,7 @@ public class SensorStation {
 
     @JsonBackReference
     @OneToMany(mappedBy = "sensorStation",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
     @OrderBy("timestamp asc")
@@ -39,7 +39,7 @@ public class SensorStation {
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
     @JsonIdentityReference(alwaysAsId = true)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GARDENER_SS",
             joinColumns = @JoinColumn(name = "SS_ID"),
             inverseJoinColumns = @JoinColumn(name = "USERNAME"))
