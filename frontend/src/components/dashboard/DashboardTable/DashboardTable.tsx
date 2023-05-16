@@ -12,17 +12,15 @@ import {
   greenhouseMetricWithUnit,
   roundMetric,
 } from '~/common'
+import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
-
-interface DashboardTableProps {
-  /** The fetched sensor stations */
-  sensorStations: SensorStation[]
-}
 
 /**
  * Table showing the most recent sensor station data in the dashboard
  */
-export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
+export const DashboardTable: React.FC = (props) => {
+  const sensorStations = useSensorStations()
+
   /** Styles applied to all table columns containing metric */
   const metricColumnParams: Partial<
     GridColDef<SensorStation, any, SensorStation>
@@ -75,7 +73,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
       <DataGrid<SensorStation, any, SensorStation>
         columns={columns}
         getRowId={(row: SensorStation) => row.ssID}
-        rows={props.sensorStations}
+        rows={sensorStations ?? undefined}
       />
     </Paper>
   )

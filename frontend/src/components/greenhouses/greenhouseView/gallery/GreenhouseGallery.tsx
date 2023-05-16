@@ -1,6 +1,8 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
+import CircularProgress from '@mui/material/CircularProgress'
+
 import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/sensorStations'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -49,11 +51,16 @@ export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
 
   return (
     <>
-      {photos && (
+      {photos ? (
         <GalleryImageList
           photos={photos}
           setPhotos={setPhotos}
           ssID={props.ssID}
+        />
+      ) : (
+        <CircularProgress
+          color="primary"
+          sx={{ alignSelf: 'center', marginTop: 8 }}
         />
       )}
     </>
