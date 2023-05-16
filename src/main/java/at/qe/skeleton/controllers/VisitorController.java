@@ -35,10 +35,9 @@ public class VisitorController {
      * @param multipartImage
      * @param id
      * @return id and name of Photo
-     * @throws IOException
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws IOException {
+    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setName(multipartImage.getName());
         try {
@@ -49,12 +48,12 @@ public class VisitorController {
             throw new NotFoundInDatabaseException("Could not get bytes for photo", dbPhoto.getId());
         }
         SensorStation ss = ssService.loadSSById(id);
-        if (ss != null) {
-            dbPhoto.setSensorStation(ss);
-            photoDataRepository.save(dbPhoto);
-            return ResponseEntity.ok(dbPhoto);
+        if (ss == null) {
+            throw new NotFoundInDatabaseException("Sensor Station", id);
         }
-        throw new NotFoundInDatabaseException("Sensor Station", id);
+        dbPhoto.setSensorStation(ss);
+        photoDataRepository.save(dbPhoto);
+        return ResponseEntity.ok(dbPhoto);
     }
 
     /**
@@ -63,11 +62,11 @@ public class VisitorController {
      * @return list of photos
      */
     @GetMapping(value = SS_PHOTOS_PATH)
-    public ResponseEntity<Collection<PhotoData>> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
+    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
             List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
-            return ResponseEntity.ok(photos);
+            return ResponseEntity.ok(photos.stream().map(PhotoData::getContent));
         }
         throw new NotFoundInDatabaseException("Sensor Station", id);
     }
