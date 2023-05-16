@@ -56,7 +56,7 @@ public class LoggingService {
         } else if (beginDate == null) {
             return getAllLogsTo(endDate);
         } else {
-            return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(
+            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(
                 beginDate.toEpochMilli(),
                 endDate.toEpochMilli()
             );
