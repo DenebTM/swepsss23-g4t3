@@ -106,7 +106,11 @@ public class MeasurementRestController implements BaseRestController {
             throw new BadRequestException("Invalid sensor values");
         }
 
-        return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
+        try {
+            return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
 }
