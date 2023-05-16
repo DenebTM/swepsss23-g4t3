@@ -2,10 +2,13 @@ import React from 'react'
 
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import CircularProgress from '@mui/material/CircularProgress'
 
 interface DashboardCardProps {
   /** The card contents */
   children: React.ReactNode
+  /** Whether to show a loading indicator */
+  loading?: boolean
 }
 
 /**
@@ -27,7 +30,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = (props) => {
           justifyContent: 'center',
         }}
       >
-        {props.children}
+        {props.loading ? <CircularProgress color="primary" /> : props.children}
       </CardContent>
     </Card>
   )

@@ -1,23 +1,21 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
+import { DashboardCard } from '@component-lib/DashboardCard'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
+import { useSensorStations } from '~/hooks/appContext'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { AccessPoint } from '~/models/accessPoint'
-import { SensorStation } from '~/models/sensorStation'
 
 import { StatusDonutCharts } from './StatusDonutCharts'
-
-interface DashboardStatusesProps {
-  sensorStations: SensorStation[]
-}
 
 /**
  * Component showing the statuses of access points and sensor stations in the dashboard
  */
-export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
+export const DashboardStatuses: React.FC = (props) => {
   const addSnackbarMessage = useAddSnackbarMessage()
+  const sensorStations = useSensorStations()
 
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
@@ -49,13 +47,13 @@ export const DashboardStatuses: React.FC<DashboardStatusesProps> = (props) => {
   }, [snackbarMessage])
 
   return (
-    <>
-      {accessPoints && (
+    <DashboardCard loading={sensorStations === null}>
+      {accessPoints && sensorStations && (
         <StatusDonutCharts
           accessPoints={accessPoints}
-          sensorStations={props.sensorStations}
+          sensorStations={sensorStations}
         />
       )}
-    </>
+    </DashboardCard>
   )
 }
