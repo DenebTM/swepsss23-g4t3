@@ -20,7 +20,7 @@ interface GalleryImageListProps {
 /**
  * Display a list of images in a grid format.
  * See https://mui.com/material-ui/react-image-list/ for more information.
- * The number of columsn is set dynamically according to the current screen width.
+ * The number of columns is set dynamically according to the current screen width.
  */
 export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
   const breakSm = useMediaQuery(theme.breakpoints.down('sm'))
