@@ -62,7 +62,6 @@ try:
     with open('conf.yaml', 'r') as f:
         config = yaml.safe_load(f)
         web_server_address = config['web_server_address']
-        web_server_address = 'http://' + web_server_address
         access_point_name = config['access_point_name']
         default_transmission_interval = config['default_transmission_interval']
 
@@ -71,7 +70,6 @@ except:
     with open('conf.example.yaml', 'r') as f:
         config = yaml.safe_load(f)
         web_server_address = config['web_server_address']
-        web_server_address = 'http://' + web_server_address
         access_point_name = config['access_point_name']
         access_point_address = web_server_address + '/' + access_point_name
         default_transmission_interval = config['default_transmission_interval']
