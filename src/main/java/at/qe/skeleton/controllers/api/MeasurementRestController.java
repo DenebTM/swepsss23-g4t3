@@ -44,12 +44,15 @@ public class MeasurementRestController implements BaseRestController {
         @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             Instant to
     ) {
-        // return measurements up to now by default
+        // return measurements up to latest available by default
         if (to == null) {
-            to = Instant.now();
+            Measurement lastMeasurement = measurementService.getCurrentMeasurement(id);
+            if (lastMeasurement != null) {
+                to = lastMeasurement.getTimestamp();
+            } else {
+                to = Instant.now(); // (no measurements will be returned if this is reached)
+            }
         }
-
-        measurementService.getCurrentMeasurement(id);
 
         // return one week of measurements by default
         if (from == null) {
