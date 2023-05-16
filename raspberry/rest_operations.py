@@ -43,13 +43,12 @@ async def initialize_accesspoint(session):
 async def get_ap_status(session):
     async with session.get('/access-points/' + common.access_point_name, headers=AUTH_HEADER) as response:
         #TODO: Log this
-        if response.status == STATUS_CODE_OK:
-            try:
-                data = await response.json()
-                return data['status']
-            except json.decoder.JSONDecodeError as e:
-                #TODO: Log this
-                return None
+        try:
+            data = await response.json()
+            return data['status']
+        except json.decoder.JSONDecodeError as e:
+            #TODO: Log this
+            return None
 
 @retry_connection_error(retries = 3, interval = 5)
 async def get_sensorstation_instructions(session):
@@ -65,6 +64,9 @@ async def get_sensorstation_instructions(session):
             except json.decoder.JSONDecodeError as e:
                 #TODO: log this
                 return paired_stations
+            except KeyError as e:
+                #TODO: log this
+                return paired_stations
         return paired_stations
 
 @retry_connection_error(retries = 3, interval = 5)
@@ -73,6 +75,7 @@ async def send_sensorstations_to_backend(session, sensorstations):
     async with session.post('/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail, headers=AUTH_HEADER) as response:
         if response.status == STATUS_CODE_OK:
             pass
+        #TODO: Log this
 
 @retry_connection_error(retries = 3, interval = 5)
 async def send_sensorstation_connection_status(session, sensorstation, status):
@@ -83,6 +86,7 @@ async def send_sensorstation_connection_status(session, sensorstation, status):
     async with session.put('/sensor-stations/' + str(sensorstation), json=ss_status, headers=AUTH_HEADER) as response:
         if response.status == STATUS_CODE_OK:
             pass
+        #TODO: Log this
 
 @retry_connection_error(retries = 3, interval = 5)
 async def send_warning_to_backend(sensorstation_id, session):
@@ -114,12 +118,16 @@ async def get_thresholds_update_db(sensorstation_id, session):
 @retry_connection_error(retries = 3, interval = 5)
 async def send_sensorvalues_to_backend(sensorstation_id, session):
     averages_dict = await database_operations.get_sensor_data_averages(sensorstation_id)
-    averages_dict['timestamp'] = int(time.time())
-    averages_json = json.dumps(averages_dict)
-    async with session.post('/sensor-station/' + str(sensorstation_id) + '/measurements', json=averages_json, headers=AUTH_HEADER) as response:
-        if response.status == STATUS_CODE_OK:
-            await database_operations.clear_sensor_data(sensorstation_id)
-            #TODO:Log this communication
-        else:
-            pass
-            #TODO: Log this and error handle
+    if averages_dict:
+        averages_dict['timestamp'] = int(time.time())
+        averages_json = json.dumps(averages_dict)
+        async with session.post('/sensor-station/' + str(sensorstation_id) + '/measurements', json=averages_json, headers=AUTH_HEADER) as response:
+            if response.status == STATUS_CODE_OK:
+                await database_operations.clear_sensor_data(sensorstation_id)
+                #TODO:Log this communication
+            else:
+                pass
+                #TODO: Log this and error handle
+    else:
+        print('averages_dict is empty')
+        #TODO: Log this
