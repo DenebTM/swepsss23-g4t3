@@ -26,7 +26,7 @@ public class Measurement {
     private Instant timestamp;
 
     @OneToOne
-    @JoinColumn(name = "VALUES_ID")
+    @JoinColumn(name = "VALUES_ID", nullable = false)
     @JsonIgnoreProperties({ "id" })
     private SensorValues data;
 

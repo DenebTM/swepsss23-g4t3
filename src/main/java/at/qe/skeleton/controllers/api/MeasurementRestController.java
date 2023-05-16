@@ -6,7 +6,6 @@ import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.*;
 import at.qe.skeleton.services.MeasurementService;
-import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.SensorStationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ public class MeasurementRestController implements BaseRestController {
     private SensorStationService ssService;
     @Autowired
     private MeasurementService measurementService;
-    @Autowired
-    private SensorValuesRepository sensorValuesRepository;
 
     private static final String MEASUREMENTS_PATH = "/measurements";
 
@@ -104,7 +101,7 @@ public class MeasurementRestController implements BaseRestController {
         var mapper = new ObjectMapper();
         try {
             SensorValues newValues = mapper.convertValue(json, SensorValues.class);
-            newMeasurement.setData(sensorValuesRepository.save(newValues));
+            newMeasurement.setData(newValues);
         } catch (IllegalArgumentException e){
             throw new BadRequestException("Invalid sensor values");
         }
