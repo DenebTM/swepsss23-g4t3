@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { alpha } from '@mui/material/styles'
+import { gridClasses } from '@mui/x-data-grid'
 import {
   GridColDef,
   GridRenderCellParams,
@@ -20,8 +22,10 @@ import {
   updateAccessPoint,
 } from '~/api/endpoints/accessPoints'
 import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
+import { theme } from '~/styles/theme'
 
-import { AddSensorStation } from './AddSensorStation/AddSensorStation'
+import { AddSensorStation } from './RowActions/AddSensorStation'
+import { ConfirmAccessPoint } from './RowActions/ConfirmAccessPoint'
 import { SensorStationChips } from './SensorStationChips'
 
 /** Map values from {@link ApStatus} to {@link StatusVariant} for display in {@link StatusCell} */
@@ -89,14 +93,13 @@ export const AccessPointsTable: React.FC = () => {
       field: 'sensorStations',
       headerName: 'Greenhouses',
       description: 'Greenhouses which transmit data to this access point',
-      flex: 1,
       renderCell: (
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
       ) => <SensorStationChips {...params} setRows={setAccessPoints} />,
       ...centerCell,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 105 * getMaxGreenhousesPerAp(),
+      width: 190 * getMaxGreenhousesPerAp(),
     },
     {
       ...centerCell,
@@ -104,7 +107,7 @@ export const AccessPointsTable: React.FC = () => {
       headerName: 'Last Update',
       description: 'When the access point was last updated',
       type: 'dateTime',
-      flex: 1,
+      width: 180,
       valueGetter: (params: GridValueGetterParams<AccessPoint, string>) =>
         dayjs(params.value).toDate(),
     },
@@ -125,7 +128,18 @@ export const AccessPointsTable: React.FC = () => {
           getEntityId={(r) => r.name}
           setRows={setAccessPoints}
         >
-          <AddSensorStation accessPointId={params.row.name} />
+          {params.row.status === ApStatus.UNCONFIRMED ? (
+            <ConfirmAccessPoint
+              accessPoint={params.row}
+              setAccessPoints={setAccessPoints}
+            />
+          ) : (
+            <AddSensorStation
+              accessPointId={params.row.name}
+              setAccessPoints={setAccessPoints}
+              status={params.row.status}
+            />
+          )}
         </DeleteCell>
       ),
     },
@@ -139,6 +153,15 @@ export const AccessPointsTable: React.FC = () => {
       rows={accessPoints}
       setRows={setAccessPoints}
       fetchRows={getAccessPoints}
+      getRowClassName={(params) => params.row.status}
+      sx={{
+        [`& .${gridClasses.row}.${ApStatus.UNCONFIRMED}`]: {
+          background: alpha(theme.warnContainer, 0.15),
+        },
+        [`& .${gridClasses.row}.${ApStatus.OFFLINE}`]: {
+          background: alpha(theme.errorContainer, 0.15),
+        },
+      }}
     />
   )
 }

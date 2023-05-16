@@ -1,13 +1,14 @@
 import React, { Dispatch, SetStateAction } from 'react'
 
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { GridRenderCellParams } from '@mui/x-data-grid'
 
 import { RemovableChip } from '@component-lib/RemovableChip'
 import { Tooltip } from '@component-lib/Tooltip'
 import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { emDash } from '~/common'
-import { useLoadSensorStations } from '~/hooks/appContext'
+import { useLoadSensorStations, useSensorStations } from '~/hooks/appContext'
 import { AccessPoint } from '~/models/accessPoint'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -22,6 +23,21 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
   props
 ) => {
   const loadSensorStations = useLoadSensorStations()
+  const sensorStations = useSensorStations()
+
+  /** Try to get sensor station status from loaded sensor stations */
+  const getSsStatus = (sensorStationId: SensorStationUuid): string => {
+    if (sensorStations !== null) {
+      const foundSensorStation = sensorStations.find(
+        (s) => s.ssID === sensorStationId
+      )
+      if (typeof foundSensorStation !== 'undefined') {
+        return foundSensorStation.status.toLowerCase()
+      }
+    }
+
+    return 'unknown' // Default value
+  }
 
   const afterDelete = (ssID: SensorStationUuid): void => {
     // Reload sensor stations and set in AppContext
@@ -55,7 +71,16 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
             entityName="greenhouse"
             handleDelete={() => deleteSensorStation(ssID)}
             afterDelete={() => afterDelete(ssID)}
-            label={String(ssID)}
+            label={
+              <Stack spacing={0}>
+                <Typography variant="labelLarge" color="primary">
+                  Greenhouse {String(ssID)}
+                </Typography>
+                <Typography variant="labelSmall" color="onSurfaceVariant">
+                  Status: {getSsStatus(ssID)}
+                </Typography>
+              </Stack>
+            }
           />
         ))
       ) : (
