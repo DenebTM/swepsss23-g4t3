@@ -29,7 +29,7 @@ def retry_connection_error(retries=5, interval=3):
 @retry_connection_error(retries = 3, interval = 5)
 async def initialize_accesspoint(session):
     global AUTH_TOKEN
-    data = json({'name': common.access_point_name, 'serverAddress': common.web_server_address})
+    data = json.dumps({'name': common.access_point_name, 'serverAddress': common.web_server_address})
     try:
         async with session.post('/access-points', json=data) as response:
             json_data = await response.json()
@@ -41,7 +41,7 @@ async def initialize_accesspoint(session):
 
 @retry_connection_error(retries = 3, interval = 5)
 async def get_ap_status(session):
-    async with session.get('/access-points/' + common.access_point_name, header=AUTH_HEADER) as response:
+    async with session.get('/access-points/' + common.access_point_name, headers=AUTH_HEADER) as response:
         #TODO: Log this
         if response.status == STATUS_CODE_OK:
             try:
@@ -54,7 +54,7 @@ async def get_ap_status(session):
 @retry_connection_error(retries = 3, interval = 5)
 async def get_sensorstation_instructions(session):
     paired_stations = {}
-    async with session.get('/access-points/' + common.access_point_name + '/sensor-stations', header=AUTH_HEADER) as response:
+    async with session.get('/access-points/' + common.access_point_name + '/sensor-stations', headers=AUTH_HEADER) as response:
         if response.status == STATUS_CODE_OK:
             try:
                 json_data = await response.json()
@@ -70,7 +70,7 @@ async def get_sensorstation_instructions(session):
 @retry_connection_error(retries = 3, interval = 5)
 async def send_sensorstations_to_backend(session, sensorstations):
     ss_avail = list(map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations))
-    async with session.post('/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail, header=AUTH_HEADER) as response:
+    async with session.post('/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail, headers=AUTH_HEADER) as response:
         if response.status == STATUS_CODE_OK:
             pass
 
@@ -80,14 +80,14 @@ async def send_sensorstation_connection_status(session, sensorstation, status):
         'accessPoint': common.access_point_name,
         'status': status
     }
-    async with session.put('/sensor-stations/' + str(sensorstation), json=ss_status, header=AUTH_HEADER) as response:
+    async with session.put('/sensor-stations/' + str(sensorstation), json=ss_status, headers=AUTH_HEADER) as response:
         if response.status == STATUS_CODE_OK:
             pass
 
 @retry_connection_error(retries = 3, interval = 5)
 async def send_warning_to_backend(sensorstation_id, session):
     data = {'id': sensorstation_id, 'status': 'WARNING'}
-    async with session.put('/sensor-stations/' + str(sensorstation_id), json=data, header=AUTH_HEADER) as response:
+    async with session.put('/sensor-stations/' + str(sensorstation_id), json=data, headers=AUTH_HEADER) as response:
         if response.status == STATUS_CODE_OK:
             pass
     #TODO: Log communication
@@ -96,7 +96,7 @@ async def send_warning_to_backend(sensorstation_id, session):
 async def clear_warning_on_backend(sensorstation_id, session, data):
     if int.from_bytes(data, 'little', signed=False) == 0:
         data = {'id': sensorstation_id, 'status': 'OK'}
-        async with session.put('/sensor-stations/' + str(sensorstation_id), json=data, header=AUTH_HEADER) as response:
+        async with session.put('/sensor-stations/' + str(sensorstation_id), json=data, headers=AUTH_HEADER) as response:
             if response.status == STATUS_CODE_OK:
                 pass
                 print(response.status)
@@ -116,7 +116,7 @@ async def send_sensorvalues_to_backend(sensorstation_id, session):
     averages_dict = await database_operations.get_sensor_data_averages(sensorstation_id)
     averages_dict['timestamp'] = int(time.time())
     averages_json = json.dumps(averages_dict)
-    async with session.post('/sensor-station/' + str(sensorstation_id) + '/measurements', json=averages_json, header=AUTH_HEADER) as response:
+    async with session.post('/sensor-station/' + str(sensorstation_id) + '/measurements', json=averages_json, headers=AUTH_HEADER) as response:
         if response.status == STATUS_CODE_OK:
             await database_operations.clear_sensor_data(sensorstation_id)
             #TODO:Log this communication

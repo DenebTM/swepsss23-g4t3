@@ -17,7 +17,7 @@ def station_idx(id):
 def status():
     global status_called
     status_called = True
-    response = {'name': 'AP1', 'serverAddress': 'localhost'}
+    response = {'name': 'AP1', 'serverAddress': 'localhost', 'token': 'idfc'}
     return jsonify(response), 200
 
 # Route that polls for connection update
