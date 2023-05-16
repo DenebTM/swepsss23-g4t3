@@ -6,7 +6,6 @@ import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorStationRepository;
 import at.qe.skeleton.repositories.SensorValuesRepository;
 
-import org.jboss.weld.exceptions.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +60,13 @@ public class MeasurementService {
     public Measurement saveMeasurement(Measurement m) {
         if (m.getData() == null) {
             throw new IllegalArgumentException("Sensor values must be provided");
+        }
+
+        if (measurementRepository.findFirstBySensorStationAndTimestamp(
+            m.getSensorStation(), 
+            m.getTimestamp()) != null
+        ) {
+            throw new IllegalArgumentException("Measurement with identical timestamp already exists for sensor station");
         }
 
         m.setData(sensorValuesRepository.save(m.getData()));
