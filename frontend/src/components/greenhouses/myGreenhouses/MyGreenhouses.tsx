@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
-import CircularProgress from '@mui/material/CircularProgress'
-
+import { Spinner } from '@component-lib/Spinner'
 import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageTitle } from '~/components/page/PageTitle'
@@ -35,10 +34,7 @@ export const MyGreenhouses: React.FC = () => {
           />
         ))
       ) : (
-        <CircularProgress
-          color="primary"
-          sx={{ alignSelf: 'center', marginTop: 8 }}
-        />
+        <Spinner center />
       )}
     </PageWrapper>
   )

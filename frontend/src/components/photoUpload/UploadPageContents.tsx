@@ -1,9 +1,9 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
-import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/system/Box'
 
+import { Spinner } from '@component-lib/Spinner'
 import { getSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -70,7 +70,7 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
       {typeof sensorStation !== 'undefined' ? (
         <UploadPageBody sensorStation={sensorStation} />
       ) : (
-        <CircularProgress color="primary" sx={{ marginTop: 4 }} />
+        <Spinner center />
       )}
     </Box>
   )

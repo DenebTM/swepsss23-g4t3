@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import CircularProgress from '@mui/material/CircularProgress'
-
+import { Spinner } from '@component-lib/Spinner'
 import { decryptSensorStationUuid, PAGE_URL, SS_UUID_PARAM } from '~/common'
 import { Error } from '~/components/page/error/Error'
 import { PageWrapper } from '~/components/page/PageWrapper'
@@ -38,10 +37,7 @@ export const PhotoUpload: React.FC = () => {
       {sensorStationUuid === INVALID_UUID ? (
         <Error message="Unable to parse greenhouse UUID" />
       ) : typeof sensorStationUuid === 'undefined' ? (
-        <CircularProgress
-          color="primary"
-          sx={{ placeSelf: 'center', marginTop: 8 }}
-        />
+        <Spinner center />
       ) : (
         <UploadPageContents ssID={sensorStationUuid} />
       )}
