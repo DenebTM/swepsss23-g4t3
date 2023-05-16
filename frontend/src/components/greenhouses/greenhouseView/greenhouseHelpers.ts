@@ -9,7 +9,7 @@ import { SensorStationUuid } from '~/models/sensorStation'
 
 /**
  * @param params The router params for the current greenhouse page
- * @returns The sensor station uuid for the current greenhouse page
+ * @returns The sensor station id for the current greenhouse page
  */
 export const getSsUuidFromParams = (
   params: Readonly<Params<string>>

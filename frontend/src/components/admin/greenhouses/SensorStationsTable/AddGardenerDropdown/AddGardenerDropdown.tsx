@@ -50,8 +50,9 @@ export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
            * 3) Whose name matches the search query (case-insensitive) */
           const filteredUsers = data.filter(
             (u: User) =>
-              [AuthUserRole.ADMIN, AuthUserRole.GARDENER].includes(u.role) &&
-              !props.sensorStation.gardeners.includes(u.username)
+              [AuthUserRole.ADMIN, AuthUserRole.GARDENER].includes(
+                u.userRole
+              ) && !props.sensorStation.gardeners.includes(u.username)
           )
           setPotentialGardeners(filteredUsers)
         })

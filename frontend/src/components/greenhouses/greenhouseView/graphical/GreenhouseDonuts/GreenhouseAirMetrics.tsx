@@ -5,7 +5,7 @@ import { SensorStationUuid } from '~/models/sensorStation'
 
 interface GreenhouseAirMetricsProps {
   measurement: Measurement | null
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**

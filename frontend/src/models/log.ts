@@ -21,7 +21,7 @@ enum LogLevel {
 }
 
 interface LogEntity {
-  uuid: string
+  ssID: string
   type: EntityType
 }
 

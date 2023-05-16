@@ -43,7 +43,7 @@ interface RemovableChipProps {
   /** Function to (asynchronously) delete or remove the entity. */
   handleDelete: () => Promise<any>
   /** Chip main label */
-  label: string
+  label: string | React.ReactNode
   /** Handle click on the main body of the chip */
   onClick?: React.MouseEventHandler
   /** Tooltip title for the main body of the chip */
