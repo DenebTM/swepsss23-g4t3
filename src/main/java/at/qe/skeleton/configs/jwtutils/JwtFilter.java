@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 
 /**
  * Custom OncePerRequestFilter filter to validate the JWT sent along with
@@ -48,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
             token = tokenHeader.substring(7);
             try {
                 username = tokenManager.getUsernameFromToken(token);
-            } catch (ExpiredJwtException e) {
+            } catch (ExpiredJwtException | SignatureException e) {
                 // This is an info message, not an error, as the user should be redirected to 
                 // log in again
                 logger.debug("JWT has expired");
