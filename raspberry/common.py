@@ -1,4 +1,5 @@
 import yaml
+import os
 
 log_filename = 'communication.log'
 
@@ -73,3 +74,9 @@ except:
         access_point_name = config['access_point_name']
         access_point_address = web_server_address + '/' + access_point_name
         default_transmission_interval = config['default_transmission_interval']
+
+if not os.path.exists('temp.log'):
+    open('temp.log', 'w')
+
+if not os.path.exists('audit.log'):
+    open('audit.log', 'w')
