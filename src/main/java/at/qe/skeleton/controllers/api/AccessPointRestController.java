@@ -19,7 +19,7 @@ public class AccessPointRestController implements BaseRestController {
     @Autowired
     private AccessPointService apService;
 
-    private static final String AP = "Access point";
+    public static final String AP = "Access point";
     private static final String AP_PATH = "/access-points";
     public static final String AP_NAME_PATH = AP_PATH + "/{name}";
 
