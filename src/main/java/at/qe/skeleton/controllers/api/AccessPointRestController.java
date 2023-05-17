@@ -7,6 +7,8 @@ import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.PostAccessPointResponse;
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +62,10 @@ public class AccessPointRestController implements BaseRestController {
      * @return newly created ap
      */
     @PostMapping(value = AP_PATH)
-    public ResponseEntity<PostAccessPointResponse> createAP(@RequestBody Map<String, Object> json) {
+    public ResponseEntity<PostAccessPointResponse> createAP(
+        @RequestBody Map<String, Object> json,
+        HttpServletRequest request
+    ) {
         String name = (String)json.get("name");
         if (name == null || name.equals("")) {
             throw new BadRequestException("No name given");
@@ -88,12 +93,16 @@ public class AccessPointRestController implements BaseRestController {
             );
         } 
 
+        ap.setServerAddress(serverAddress);
+        ap.setClientAddress(request.getRemoteAddr());
+
         // 200 and new JWT if access point exists with status != 'UNCONFIRMED'
         // furthermore, update AP status to ONLINE
         if (ap.getStatus().equals(AccessPointStatus.OFFLINE)) {
             ap.setStatus(AccessPointStatus.ONLINE);
-            ap = apService.saveAP(ap);
         }
+
+        ap = apService.saveAP(ap);
 
         String authToken = tokenManager.generateJwtToken("admin");
         return ResponseEntity.ok(new PostAccessPointResponse(ap, authToken));
