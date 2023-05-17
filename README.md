@@ -41,18 +41,15 @@ Run the following command to start a container with persistent storage for the d
 On Linux:
 
 ```
-docker run                                  \
-  --name planthealth_dbsrv                  \
-  --rm                                      \ # remove the container (not the volume) after exit
-  -v planthealth_db:/var/lib/mysql          \ # create a persistent volume for the database
-  -p 3306:3306                              \ # expose the MySQL service port
-
-  -e MYSQL_RANDOM_ROOT_PASSWORD="true"      \ # (unused, but required)
-  -e MYSQL_DATABASE=swe                     \ # database credentials
-  -e MYSQL_USER=swe                         \
-  -e MYSQL_PASSWORD=password                \
-
-  mariadb:latest                              # also valid: mysql:latest
+docker run --rm                         \
+  --name planthealth_dbsrv              \
+  -v planthealth_db:/var/lib/mysql      \
+  -p 3306:3306                          \
+  -e MYSQL_RANDOM_ROOT_PASSWORD="true"  \
+  -e MYSQL_DATABASE=swe                 \
+  -e MYSQL_USER=swe                     \
+  -e MYSQL_PASSWORD=password            \
+  mariadb:latest
 ```
 
 On Windows, you might have to run the entire command on one line:
