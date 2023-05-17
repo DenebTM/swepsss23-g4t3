@@ -1,13 +1,26 @@
 import logging
+import datetime
 
-logging.basicConfig(filename='temp.log', encoding='utf-8', format='%(asctime)s-%(levelname)s-%(message)s', datefmt='%d/%m/%Y %I:%M:%S %p')
+#Configure logger
+logging.basicConfig(filename='audit.log', format='%(asctime)s %(levelname)s: %(message)s')
 
-async def append_temporary_to_permanent_logfile():
-    with open('temp.log', 'r') as temp_file:
-        temp_lines = temp_file.readlines()
+log_data = []
 
-    with open('audit.log', 'a') as persistent_file:
-        persistent_file.writelines(temp_lines)
+async def log_to_file_and_list(level, message):
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    #Clear temp file
-    open('temp.log', 'w').close()
+
+    log_entry = {
+        'timestamp': timestamp,
+        'level': level,
+        'message': message 
+    }
+
+    logger = getattr(logging, level)
+    logger(message)
+
+    log_data.append(log_entry)
+
+async def clear_log_data():
+    global log_data
+    log_data.clear()
