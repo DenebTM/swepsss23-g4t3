@@ -162,6 +162,11 @@ public class SensorStationRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(SS, id);
         }
         ssService.deleteSS(ss);
+
+        // null related collections to prevent 500 error
+        ss.setGardeners(null);
+        ss.setMeasurements(null);
+
         return ResponseEntity.ok(ss);
     }
 
