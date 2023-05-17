@@ -47,7 +47,9 @@ export const DashboardStatuses: React.FC = (props) => {
   }, [snackbarMessage])
 
   return (
-    <DashboardCard loading={sensorStations === null}>
+    <DashboardCard
+      loading={sensorStations === null || typeof accessPoints === 'undefined'}
+    >
       {accessPoints && sensorStations && (
         <StatusDonutCharts
           accessPoints={accessPoints}
