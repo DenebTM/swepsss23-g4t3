@@ -17,6 +17,7 @@ public class MDCUserEntityFilter extends MDCAbstractEntityFilter {
 
     @Override
     protected Object entityId(HttpServletRequest request) {
+        // get the name of the currently authenticated user
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
             return auth.getName();
