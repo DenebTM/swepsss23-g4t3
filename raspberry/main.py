@@ -104,9 +104,6 @@ async def main():
                     print('Access point is offline')
                     connection_request = asyncio.Future()
                     await asyncio.sleep(30)
-            else:
-                print('webserver seems to be offline')
-                await asyncio.sleep(30)
 
 if __name__ == '__main__':
     retry_time = 5
