@@ -23,9 +23,9 @@ import {
   UPLOAD_ROOT,
 } from '~/common'
 import { ManageAccessPoints } from '~/components/admin/accessPoints/ManageAccessPoints'
+import { AdminLogs } from '~/components/admin/adminLogs/AdminLogs'
 import { ManageGreenhouses } from '~/components/admin/greenhouses/ManageGreenhouses'
 import { AdminHome } from '~/components/admin/home/AdminHome'
-import { AdminLogs } from '~/components/admin/logs/AdminLogs'
 import { ManageUsers } from '~/components/admin/users/ManageUsers'
 import { Dashboard } from '~/components/dashboard/Dashboard'
 import { GettingStarted } from '~/components/gettingStarted/GettingStarted'
