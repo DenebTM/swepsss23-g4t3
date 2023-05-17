@@ -1,6 +1,8 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.models.LoggingEventJson;
+import at.qe.skeleton.models.LoggingEventProperty;
+import at.qe.skeleton.repositories.LoggingEventPropertyRepository;
 import at.qe.skeleton.services.LoggingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,6 +25,9 @@ public class LoggingRestController implements BaseRestController {
     @Autowired
     LoggingService loggingService;
 
+    @Autowired
+    LoggingEventPropertyRepository propertyRepository;
+
     /**
      * GET route to filter logs according to a time interval, the logging level or not at all.
      * A JSON is requested that can contain the parameters "from", "to", and "level".
@@ -39,12 +44,19 @@ public class LoggingRestController implements BaseRestController {
             Instant to,
         @RequestParam(value = "level", required = false) String level
     ) {
+        List<LoggingEventProperty> props = propertyRepository.findAll();
+
         return ResponseEntity.ok(
             loggingService.filterLogsByLevel(
                 loggingService.getAllLogsInTimeInterval(from, to),
                 level
             ).stream()
-            .map(p -> new LoggingEventJson(p, null))
+            .map(event -> new LoggingEventJson(
+                event,
+                props.stream()
+                    .filter(prop -> prop.getEventId() == event.getEventId())
+                    .toList()
+            ))
             .collect(Collectors.toList())
         );
     }
