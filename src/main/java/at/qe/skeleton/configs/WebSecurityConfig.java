@@ -19,9 +19,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import at.qe.skeleton.configs.jwtutils.CustomAuthEntryPoint;
 import at.qe.skeleton.configs.jwtutils.JwtFilter;
-import at.qe.skeleton.configs.logging.MDCAccessPointEntityFilter;
-import at.qe.skeleton.configs.logging.MDCSensorStationEntityFilter;
-import at.qe.skeleton.configs.logging.MDCUserEntityFilter;
 
 /**
  * Spring configuration for web security.
@@ -65,10 +62,6 @@ public class WebSecurityConfig {
 
         // Add JWT filter for authentication
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-        http.addFilterAfter(new MDCUserEntityFilter(), JwtFilter.class);
-        http.addFilterAfter(new MDCAccessPointEntityFilter(), MDCUserEntityFilter.class);
-        http.addFilterAfter(new MDCSensorStationEntityFilter(), MDCAccessPointEntityFilter.class);
 
         return http.build();
     }
