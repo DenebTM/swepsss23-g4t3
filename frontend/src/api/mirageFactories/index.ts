@@ -15,7 +15,11 @@ import { userFactory } from './user'
  */
 export const factories: {
   [key: string]: FactoryDefinition<
-    Assign<object, FlattenFactoryMethods<unknown>>
+    Assign<
+      object,
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      FlattenFactoryMethods<any>
+    >
   >
 } = {
   user: userFactory,
