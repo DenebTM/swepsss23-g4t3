@@ -23,7 +23,7 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
                 await send_warning_to_backend(sensorstation_id, session)
     except Exception as e:
         print(e)
-        # TODO log error code
+        #TODO log error code
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
     errorCode = 1

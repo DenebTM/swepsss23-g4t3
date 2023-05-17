@@ -35,7 +35,7 @@ export const GreenhouseAccordionSummary: React.FC<
       >
         <Grid xs={12} sm={4} md={3}>
           <Typography color="onSurface">
-            Greenhouse {String(props.sensorStation.uuid)}
+            Greenhouse {String(props.sensorStation.ssID)}
           </Typography>
         </Grid>
         <Grid xs={12} sm={4} md={4}>
@@ -44,7 +44,7 @@ export const GreenhouseAccordionSummary: React.FC<
           </Typography>
         </Grid>
         <Grid xs={12} sm={4} md={5}>
-          <AccordionQuickActions sensorStationUuid={props.sensorStation.uuid} />
+          <AccordionQuickActions sensorStationUuid={props.sensorStation.ssID} />
         </Grid>
       </Grid>
     </AccordionSummary>

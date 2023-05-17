@@ -1,20 +1,23 @@
 package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.configs.WebSecurityConfig;
+import at.qe.skeleton.controllers.errors.BadRequestException;
+import at.qe.skeleton.controllers.errors.ForbiddenException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.UserRole;
-import at.qe.skeleton.services.UserService;
-import org.junit.jupiter.api.Assertions;
+import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
@@ -23,25 +26,25 @@ import java.util.*;
 class UserxRestControllerTest {
 
     @Autowired
-    private UserService userService;
+    private UserxService userService;
     @Autowired
     private UserxRestController userxRestController;
 
-    Userx user;
-    String username;
-    String createUsername;
-    String createPassword;
+    Userx testUser;
+    String testUsername;
+    String testCreateUsername;
+    String testCreatePassword;
     Map<String, Object> jsonCreateUser = new HashMap<>();
     Map<String, Object> jsonUpdateUser = new HashMap<>();
 
     @BeforeEach
     void setUp() {
-        username = "elvis";
-        user = userService.loadUserByUsername("elvis");
+        testUsername = "elvis";
+        testUser = userService.loadUserByUsername("elvis");
 
-        createUsername = "jsonUsername";
-        createPassword = "secretPassword";
-        jsonCreateUser.put("username", createUsername);
+        testCreateUsername = "jsonUsername";
+        testCreatePassword = "secretPassword";
+        jsonCreateUser.put("username", testCreateUsername);
         jsonCreateUser.put("password", "secretPassword");
         jsonCreateUser.put("firstName", "first");
         jsonCreateUser.put("lastName", "last");
@@ -57,85 +60,94 @@ class UserxRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetUsers() {
         int number = userService.getAllUsers().size();
-        ResponseEntity response = this.userxRestController.getUsers();
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(number, ((Collection) response.getBody()).size());
+        var response = userxRestController.getUsers();
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var users = response.getBody();
+        assertNotNull(users);
+        assertEquals(number, users.size());
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedGetUsers() {
-        try {
-            ResponseEntity response = this.userxRestController.getUsers();
-            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
-        } catch (Exception e) {
-            Assertions.assertTrue(e instanceof AccessDeniedException);
-        }
+        assertThrows(
+            AccessDeniedException.class,
+            () -> userxRestController.getUsers()
+        );
     }
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetUserByUsername() {
-        ResponseEntity response = this.userxRestController.getUserByUsername(username);
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertTrue(response.getBody() instanceof Userx);
-        if (response.getBody() instanceof Userx){
-            Assertions.assertEquals(username, ((Userx) response.getBody()).getUsername());
-            Assertions.assertEquals(user.getFirstName(), ((Userx) response.getBody()).getFirstName());
-            Assertions.assertEquals(user.getLastName(), ((Userx) response.getBody()).getLastName());
-        }
+        var response = userxRestController.getUserByUsername(testUsername);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var user = response.getBody();
+        assertNotNull(user);
+        assertEquals(testUser, user);
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedGetUserByUsername() {
-        try {
-            ResponseEntity response = this.userxRestController.getUserByUsername(username);
-            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
-        } catch (Exception e) {
-            Assertions.assertTrue(e instanceof AccessDeniedException);
-        }
+        assertThrows(
+            AccessDeniedException.class,
+            () -> userxRestController.getUserByUsername(testUsername)
+        );
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testCreateUser() {
-        ResponseEntity response = this.userxRestController.createUser(jsonCreateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertTrue(response.getBody() instanceof Userx);
-        if (response.getBody() instanceof Userx){
-            Assertions.assertEquals(createUsername, ((Userx) response.getBody()).getUsername());
-            Assertions.assertTrue(WebSecurityConfig.passwordEncoder().matches(createPassword, ((Userx) response.getBody()).getPassword()));
-            // default user role is USER
-            Assertions.assertEquals(UserRole.USER, ((Userx) response.getBody()).getUserRole());
-        }
+        var response = userxRestController.createUser(jsonCreateUser);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var user = response.getBody();
+        assertNotNull(user);
+        assertEquals(testCreateUsername, user.getUsername());
+        assertTrue(WebSecurityConfig.passwordEncoder().matches(testCreatePassword, user.getPassword()));
+        // default user role is USER
+        assertEquals(UserRole.USER, user.getUserRole());
+
         // if username is already in use, 400 bad request error
-        jsonCreateUser.replace("username", username);
-        ResponseEntity response400 = this.userxRestController.createUser(jsonCreateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        jsonCreateUser.replace("username", testUsername);
+        assertThrows(
+            BadRequestException.class,
+            () -> userxRestController.createUser(jsonCreateUser)
+        );
+
         // if username is not part of json body, 400 bad request error
-        response400 = this.userxRestController.createUser(jsonUpdateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        assertThrows(
+            BadRequestException.class,
+            () -> userxRestController.createUser(jsonUpdateUser)
+        );
+
         // if username is empty, 400 bad request error
         jsonCreateUser.replace("username", "");
-        response400 = this.userxRestController.createUser(jsonCreateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
-        jsonCreateUser.replace("username", createUsername);
+        assertThrows(
+            BadRequestException.class,
+            () -> userxRestController.createUser(jsonCreateUser)
+        );
+
         // if password is empty, 400 bad request error
+        jsonCreateUser.replace("username", testCreateUsername);
         jsonCreateUser.replace("password", "");
-        response400 = this.userxRestController.createUser(jsonCreateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        assertThrows(
+            BadRequestException.class,
+            () -> userxRestController.createUser(jsonCreateUser)
+        );
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedCreateUser() {
         try {
-            ResponseEntity response = this.userxRestController.createUser(jsonCreateUser);
-            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+            var response = userxRestController.createUser(jsonCreateUser);
+            assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
         } catch (Exception e) {
-            Assertions.assertTrue(e instanceof AccessDeniedException);
+            assertTrue(e instanceof AccessDeniedException);
         }
     }
 
@@ -143,33 +155,43 @@ class UserxRestControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateUser() {
-        ResponseEntity response = this.userxRestController.updateUser(username, jsonUpdateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertTrue(response.getBody() instanceof Userx);
-        if (response.getBody() instanceof Userx){
-            Assertions.assertEquals(username, ((Userx) response.getBody()).getUsername());
-        }
+        var response = userxRestController.updateUser(testUsername, jsonUpdateUser);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var user = response.getBody();
+        assertNotNull(user);
+        assertEquals((String)jsonUpdateUser.get("firstName"), user.getFirstName());
+        assertEquals((String)jsonUpdateUser.get("lastName"), user.getLastName());
+        assertEquals(UserRole.valueOf((String)jsonUpdateUser.get("userRole")), user.getUserRole());
+        assertTrue(WebSecurityConfig.passwordEncoder().matches((String)jsonUpdateUser.get("password"), user.getPassword()));
+
         // if username is part of json body, 400 bad request error
-        ResponseEntity response400 = this.userxRestController.updateUser(username, jsonCreateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        assertThrows(
+            BadRequestException.class,
+            () -> userxRestController.updateUser(testUsername, jsonCreateUser)
+        );
+
         // if password is empty, 400 bad request error
         jsonUpdateUser.replace("password", "");
-        response400 = this.userxRestController.updateUser(username, jsonUpdateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(400), response400.getStatusCode());
+        assertThrows(
+            BadRequestException.class,
+            () -> userxRestController.updateUser(testUsername, jsonCreateUser)
+        );
+
         // if username does not exist in database, 404 not found error
-        ResponseEntity response404 = this.userxRestController.updateUser("notExistingUsername", jsonUpdateUser);
-        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> userxRestController.updateUser("notExistingUsername", jsonCreateUser)
+        );
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedUpdateUser() {
-        try {
-            ResponseEntity response = this.userxRestController.updateUser(username, jsonUpdateUser);
-            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
-        } catch (Exception e) {
-            Assertions.assertTrue(e instanceof AccessDeniedException);
-        }
+        assertThrows(
+            AccessDeniedException.class,
+            () -> userxRestController.updateUser(testUsername, jsonUpdateUser)
+        );
     }
 
     @DirtiesContext
@@ -177,63 +199,74 @@ class UserxRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteUserByUsername() {
         int originalSize = userService.getAllUsers().size();
-        ResponseEntity response404 = this.userxRestController.deleteUserByUsername("notExistingUsername");
-        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-        ResponseEntity response403 = this.userxRestController.deleteUserByUsername("admin");
-        Assertions.assertSame(HttpStatusCode.valueOf(403), response403.getStatusCode(), "Self deletion is permitted.");
 
-        ResponseEntity response = this.userxRestController.deleteUserByUsername(username);
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(originalSize-1, userService.getAllUsers().size());
-        response404 = this.userxRestController.getUserByUsername(username);
-        Assertions.assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "User is still found in database after being deleted.");
+        var response = userxRestController.deleteUserByUsername(testUsername);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(originalSize-1, userService.getAllUsers().size());
+
+        // if username does not exist in database, 404 not found error
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> userxRestController.deleteUserByUsername("notExistingUsername")
+        );
+
+        // if user tries to delete themselves, 403 forbidden error
+        assertThrows(
+            ForbiddenException.class,
+            () -> userxRestController.deleteUserByUsername("admin")
+        );
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
     void testUnauthorizedDeleteUser() {
-        try {
-            ResponseEntity response = this.userxRestController.deleteUserByUsername(username);
-            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
-        } catch (Exception e) {
-            Assertions.assertTrue(e instanceof AccessDeniedException);
-        }
+        assertThrows(
+            AccessDeniedException.class,
+            () -> userxRestController.deleteUserByUsername(testUsername)
+        );
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetAssignedSS() {
-        ResponseEntity response = this.userxRestController.getAssignedSS(username);
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(user.getAssignedSS().size(), ((Collection) response.getBody()).size());
+        var response = userxRestController.getAssignedSS(testUsername);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var sensorStations = response.getBody();
+        assertNotNull(sensorStations);
+        assertEquals(testUser.getAssignedSS().size(), sensorStations.size());
+
         // if username is not GARDENER or ADMIN, return empty ArrayList
-        response = this.userxRestController.getAssignedSS("max");
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(0, ((Collection<?>) response.getBody()).size());
+        response = userxRestController.getAssignedSS("max");
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        sensorStations = response.getBody();
+        assertNotNull(sensorStations);
+        assertEquals(0, sensorStations.size());
+
         // if username does not exist in database, 404 not found error
-        ResponseEntity response404 = this.userxRestController.getAssignedSS("notExistingUsername");
-        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> userxRestController.getAssignedSS("notExistingUsername")
+        );
+    }
+
+    @Test
+    @WithMockUser(username = "max", authorities = {"USER"})
+    void testUnauthorizedGetAssignedSS() {
+        assertThrows(
+            AccessDeniedException.class,
+            () -> userxRestController.getAssignedSS("max")
+        );
     }
 
     @Test
     @WithMockUser(username = "susi", authorities = {"GARDENER"})
-    void testUnauthorizedGetAssignedSS() {
-        try {
-            ResponseEntity response = this.userxRestController.getAssignedSS(username);
-            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
-        } catch (Exception e) {
-            Assertions.assertTrue(e instanceof AccessDeniedException);
-        }
-    }
-    @Test
-    @WithMockUser(username = "max", authorities = {"USER"})
-    void testUnauthorizedGetAssignedSSUser() {
-        try {
-            ResponseEntity response = this.userxRestController.getAssignedSS(username);
-            Assertions.assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
-        } catch (Exception e) {
-            Assertions.assertTrue(e instanceof AccessDeniedException);
-        }
+    void testUnauthorizedGetAssignedSSOtherUser() {
+        assertThrows(
+            AccessDeniedException.class,
+            () -> userxRestController.getAssignedSS("max")
+        );
     }
 }
