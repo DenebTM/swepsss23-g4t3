@@ -62,6 +62,7 @@ public class WebSecurityConfig {
 
         // Add JWT filter for authentication
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new LogbackRequestFilter(), JwtFilter.class);
 
         return http.build();
     }
