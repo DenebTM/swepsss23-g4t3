@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import Box from '@mui/system/Box'
 
+import { Spinner } from '@component-lib/Spinner'
 import { getSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -66,8 +67,10 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
     >
       <UploadHeader ssID={props.ssID} />
 
-      {typeof sensorStation !== 'undefined' && (
+      {typeof sensorStation !== 'undefined' ? (
         <UploadPageBody sensorStation={sensorStation} />
+      ) : (
+        <Spinner center />
       )}
     </Box>
   )

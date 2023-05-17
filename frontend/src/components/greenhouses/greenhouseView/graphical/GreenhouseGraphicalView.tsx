@@ -79,27 +79,27 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
 
   return (
     <Grid container spacing={2} padding={2}>
-      {measurements && ( // qqjf TODO add a loading state to each card
-        <>
-          <Grid xs={12}>
-            <DashboardCard>
-              <GreenhouseMetricDonuts
-                measurement={measurements.length > 0 ? measurements[0] : null}
-                sensorStation={sensorStation}
-              />
-            </DashboardCard>
-          </Grid>
+      <Grid xs={12}>
+        <DashboardCard loading={typeof measurements === 'undefined'}>
+          {measurements && (
+            <GreenhouseMetricDonuts
+              measurement={measurements.length > 0 ? measurements[0] : null}
+              sensorStation={sensorStation}
+            />
+          )}
+        </DashboardCard>
+      </Grid>
 
-          <Grid xs={12}>
-            <DashboardCard>
-              <GreenhouseGraph
-                measurements={measurements}
-                sensorStation={sensorStation}
-              />
-            </DashboardCard>
-          </Grid>
-        </>
-      )}
+      <Grid xs={12}>
+        <DashboardCard loading={typeof measurements === 'undefined'}>
+          {measurements && (
+            <GreenhouseGraph
+              measurements={measurements}
+              sensorStation={sensorStation}
+            />
+          )}
+        </DashboardCard>
+      </Grid>
     </Grid>
   )
 }
