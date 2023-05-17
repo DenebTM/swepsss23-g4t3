@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -56,9 +57,11 @@ public class SensorStation {
     private SensorValues lowerBound;
 
     public SensorStation() {
+        this.measurements = new ArrayList<>();
     }
 
     public SensorStation(AccessPoint accessPoint, Long aggregationPeriod) {
+        this();
         this.accessPoint = accessPoint;
         this.aggregationPeriod = aggregationPeriod;
     }
@@ -128,6 +131,9 @@ public class SensorStation {
     }
 
     public Measurement getCurrentMeasurement() {
-        return measurements.get(measurements.size()-1);
+        if (this.getMeasurements() == null || this.getMeasurements().size() == 0) {
+            return null;
+        }
+        return this.getMeasurements().get(this.getMeasurements().size()-1);
     }
 }
