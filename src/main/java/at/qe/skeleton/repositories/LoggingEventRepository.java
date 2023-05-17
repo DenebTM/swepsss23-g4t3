@@ -1,6 +1,7 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.models.LoggingEvent;
+import at.qe.skeleton.models.enums.LogLevel;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface LoggingEventRepository extends AbstractRepository<LoggingEvent,
 
     List<LoggingEvent> findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(Long from, Long to);
 
-    List<LoggingEvent> findAllByLevelStringOrderByTimestmpAsc(String level);
+    List<LoggingEvent> findAllByLevelOrderByTimestmpAsc(LogLevel level);
 
     List<LoggingEvent> findAllByTimestmpGreaterThanEqualOrderByTimestmpAsc(Long from);
 

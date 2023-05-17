@@ -2,7 +2,9 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.models.LoggingEventJson;
 import at.qe.skeleton.models.LoggingEventProperty;
+import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.repositories.LoggingEventPropertyRepository;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.LoggingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
  */
 @RestController
 public class LoggingRestController implements BaseRestController {
+
+    @Autowired
+    AccessPointService apService;
 
     @Autowired
     LoggingService loggingService;
@@ -42,7 +47,7 @@ public class LoggingRestController implements BaseRestController {
             Instant from,
         @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             Instant to,
-        @RequestParam(value = "level", required = false) String level
+        @RequestParam(value = "level", required = false) LogLevel level
     ) {
         List<LoggingEventProperty> props = propertyRepository.findAll();
 
@@ -60,4 +65,5 @@ public class LoggingRestController implements BaseRestController {
             .collect(Collectors.toList())
         );
     }
+
 }

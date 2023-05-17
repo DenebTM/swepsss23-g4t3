@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.services.LoggingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,10 +101,9 @@ public class LoggingControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetLogsByLevel() {
         Map<String, Object> json = new HashMap<>();
-        List<String> levels = List.of("INFO", "WARN", "ERROR");
         
         int totalFilteredLogCount = 0;
-        for (String level : levels) {
+        for (LogLevel level : LogLevel.values()) {
             json.put("level", level);
             var serviceLogs = loggingService.getAllLogs();
             serviceLogs = loggingService.filterLogsByLevel(serviceLogs, level);

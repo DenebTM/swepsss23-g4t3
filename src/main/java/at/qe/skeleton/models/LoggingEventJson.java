@@ -3,6 +3,7 @@ package at.qe.skeleton.models;
 import java.time.Instant;
 import java.util.Collection;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import at.qe.skeleton.models.enums.LogEntityType;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @JsonSerialize
+@JsonDeserialize
 @Getter
 public class LoggingEventJson {
 
@@ -36,7 +38,7 @@ public class LoggingEventJson {
         this.id = event.getEventId();
         this.timestamp = Instant.ofEpochMilli(event.getTimestmp());
         this.message = event.getFormattedMessage();
-        this.level = LogLevel.valueOf(event.getLevelString());
+        this.level = event.getLevel();
 
         if (props == null) return;
         LoggingEventProperty originProp = null;
