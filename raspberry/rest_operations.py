@@ -30,13 +30,10 @@ def retry_connection_error(retries=5, interval=3):
 async def initialize_accesspoint(session):
     global AUTH_TOKEN
     data = json.dumps({'name': common.access_point_name, 'serverAddress': common.web_server_address})
-    try:
-        async with session.post('/access-points', json=data) as response:
-            json_data = await response.json()
-            AUTH_TOKEN = json_data['token'] 
-            return True
-    except aiohttp.ClientResponseError as e:
-        return False
+    async with session.post('/access-points', json=data) as response:
+        json_data = await response.json()
+        AUTH_TOKEN = json_data['token'] 
+        return True
         #TODO: Log this
 
 @retry_connection_error(retries = 3, interval = 5)
