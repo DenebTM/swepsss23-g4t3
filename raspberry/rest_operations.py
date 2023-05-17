@@ -6,7 +6,6 @@ import database_operations
 import functools
 import time
 
-STATUS_CODE_OK = 200
 AUTH_TOKEN = ''
 AUTH_HEADER = {'Authorization': f'Bearer {AUTH_TOKEN}'}
 
@@ -117,12 +116,8 @@ async def send_sensorvalues_to_backend(sensorstation_id, session):
         averages_dict['timestamp'] = int(time.time())
         averages_json = json.dumps(averages_dict)
         async with session.post('/api/sensor-station/' + str(sensorstation_id) + '/measurements', json=averages_json, headers=AUTH_HEADER) as response:
-            if response.status == STATUS_CODE_OK:
-                await database_operations.clear_sensor_data(sensorstation_id)
-                #TODO:Log this communication
-            else:
-                pass
-                #TODO: Log this and error handle
+            await database_operations.clear_sensor_data(sensorstation_id) #I guess here it makes kind of sense?
+            #TODO:Log this communication
     else:
         print('averages_dict is empty')
         #TODO: Log this
