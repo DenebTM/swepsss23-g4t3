@@ -1,5 +1,8 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
+import at.qe.skeleton.models.AccessPoint;
+import at.qe.skeleton.models.LoggingEvent;
 import at.qe.skeleton.models.LoggingEventJson;
 import at.qe.skeleton.models.LoggingEventProperty;
 import at.qe.skeleton.models.enums.LogLevel;
@@ -11,10 +14,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,4 +73,30 @@ public class LoggingRestController implements BaseRestController {
         );
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(AccessPointRestController.AP_NAME_PATH + "/logs")
+    public ResponseEntity<List<LoggingEventJson>> sendLogs(
+        @PathVariable(value = "name") String name,
+        @RequestBody List<LoggingEventJson> logs
+    ) {
+        AccessPoint ap = apService.loadAPByName(name);
+        // Return a 404 error if the access point is not found
+        if (ap == null) {
+            throw new NotFoundInDatabaseException(AccessPointRestController.AP, name);
+        }
+
+        List<LoggingEventJson> returnList = new ArrayList<>(logs.size());
+
+        for (LoggingEventJson log : logs) {
+            var savedLog = loggingService.saveLog(new LoggingEvent(
+                log.getMessage(),
+                log.getLevel(),
+                log.getTimestamp().toEpochMilli()
+            ));
+
+            returnList.add(new LoggingEventJson(savedLog, null));
+        }
+
+        return ResponseEntity.ok(logs);
+    }
 }

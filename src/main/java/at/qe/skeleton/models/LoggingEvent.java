@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -18,7 +16,6 @@ import org.hibernate.type.SqlTypes;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Table(name = "logging_event")
 public class LoggingEvent {
 
@@ -27,26 +24,22 @@ public class LoggingEvent {
     @GenericGenerator(name = "seq", strategy = "increment")
     @Column(name = "event_id")
     @JdbcTypeCode(SqlTypes.BIGINT)
-    @NonNull
     private Long eventId;
 
     @Column(name = "timestmp", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
-    @NonNull
     private Long timestmp;
 
     @Column(name = "formatted_message", nullable = false)
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
-    @NonNull
     private String formattedMessage;
 
     @Column(name = "level_string", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Enumerated(EnumType.STRING)
-    @NonNull
     private LogLevel level;
 
-    @Column(name = "logger_name", nullable = false)
+    @Column(name = "logger_name")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String loggerName;
 
@@ -74,20 +67,27 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String arg3;
 
-    @Column(name = "caller_filename", nullable = false)
+    @Column(name = "caller_filename")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerFilename;
 
-    @Column(name = "caller_class", nullable = false)
+    @Column(name = "caller_class")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerClass;
 
-    @Column(name = "caller_method", nullable = false)
+    @Column(name = "caller_method")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String callerMethod;
 
-    @Column(name = "caller_line", nullable = false)
+    @Column(name = "caller_line")
     @JdbcTypeCode(SqlTypes.CHAR)
     private String callerLine;
+
+
+    public LoggingEvent(String message, LogLevel level, Long timestamp) {
+        this.formattedMessage = message;
+        this.level = level;
+        this.timestmp = timestamp;
+    }
 
 }

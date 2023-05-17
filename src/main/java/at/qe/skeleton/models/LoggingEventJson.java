@@ -10,10 +10,14 @@ import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @JsonSerialize
 @JsonDeserialize
+@NoArgsConstructor
 @Getter
+@Setter
 public class LoggingEventJson {
 
     @AllArgsConstructor
