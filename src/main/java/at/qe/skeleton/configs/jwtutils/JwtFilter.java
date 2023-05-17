@@ -51,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 // This is an info message, not an error, as the user should be redirected to 
                 // log in again
-                logger.info("JWT has expired");
+                logger.debug("JWT has expired");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                         "You are unauthorized. Please log in.");
                 return;
@@ -60,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // If Authorization: Bearer [token] is not in the headers. This is a debug
             // message, not an error, as for the login route no authorization token should
             // be sent
-            logger.info("Bearer String not found in token");
+            logger.debug("Bearer String not found in token");
         }
 
         if (null != username && SecurityContextHolder.getContext().getAuthentication() == null) {
