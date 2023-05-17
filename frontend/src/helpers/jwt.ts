@@ -78,10 +78,12 @@ export const getUserRoleFromJwt = (): AuthUserRole | null => {
   if (jwt !== null && 'authorities' in jwt) {
     const role = jwt.authorities
     if (
-      typeof role === 'string' &&
-      Object.values(AuthUserRole).includes(role as AuthUserRole)
+      Array.isArray(role) &&
+      role.length > 0 &&
+      typeof role[0] === 'string' &&
+      Object.values(AuthUserRole).includes(role[0] as AuthUserRole)
     ) {
-      return role as AuthUserRole
+      return role[0] as AuthUserRole
     }
   }
 

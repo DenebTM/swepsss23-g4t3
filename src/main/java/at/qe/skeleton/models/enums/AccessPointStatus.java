@@ -4,6 +4,7 @@ public enum AccessPointStatus {
 
     ONLINE,
     OFFLINE,
-    SEARCHING
+    SEARCHING,
+    UNCONFIRMED
 
 }

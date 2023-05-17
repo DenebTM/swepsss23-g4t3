@@ -19,7 +19,16 @@ export const DashboardCard: React.FC<DashboardCardProps> = (props) => {
         minHeight: '200px', // TODO qqjf make this responsive
       }}
     >
-      <CardContent>{props.children}</CardContent>
+      <CardContent
+        sx={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {props.children}
+      </CardContent>
     </Card>
   )
 }
