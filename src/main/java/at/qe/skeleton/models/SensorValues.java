@@ -1,10 +1,12 @@
 package at.qe.skeleton.models;
 
+import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+
 import org.hibernate.annotations.GenericGenerator;
 
-import jakarta.persistence.*;
-
 @Entity
+@EqualsAndHashCode
 @Table(name = "SENSOR_VALUES")
 public class SensorValues {
 
