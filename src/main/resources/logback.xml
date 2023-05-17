@@ -21,7 +21,6 @@
 
     <!-- Database appender -->
     <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
-        <dbNameResolver class="at.qe.skeleton.configs.UserDBNameResolver"/>
         <connectionSource
                 class="ch.qos.logback.core.db.DriverManagerConnectionSource">
             <driverClass>${spring.datasource.driver-class-name}</driverClass>
@@ -71,14 +70,7 @@
             </layout>
         </encoder>
     </appender>
-
-    <configuration>
-        <appender name="map" class="at.qe.skeleton.configs.DBAppender"/>
-        <root level="info">
-            <appender-ref ref="map"/>
-        </root>
-    </configuration>
-
+    
     <logger name="infoLogger">
         <appender-ref ref="info" level="info"/>
     </logger>
