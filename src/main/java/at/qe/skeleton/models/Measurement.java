@@ -1,16 +1,20 @@
 package at.qe.skeleton.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-import org.hibernate.annotations.GenericGenerator;
-
 @Entity
-@NoArgsConstructor
 @Table(name = "MEASUREMENT")
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Measurement {
 
     @Id
@@ -22,7 +26,8 @@ public class Measurement {
     private Instant timestamp;
 
     @OneToOne
-    @JoinColumn(name = "VALUES_ID")
+    @JoinColumn(name = "VALUES_ID", nullable = false)
+    @JsonIgnoreProperties({ "id" })
     private SensorValues data;
 
     @JsonIgnore
