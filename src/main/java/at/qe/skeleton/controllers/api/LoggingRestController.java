@@ -56,21 +56,40 @@ public class LoggingRestController implements BaseRestController {
             Instant from,
         @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             Instant to,
-        @RequestParam(value = "level", required = false) LogLevel level
+        @RequestParam(value = "level", required = false) LogLevel level,
+        @RequestParam(value = "origin", required = false) String originType
     ) {
         List<LoggingEventProperty> props = propertyRepository.findAll();
 
         return ResponseEntity.ok(
+            // get logs from database
             loggingService.filterLogsByLevel(
                 loggingService.getAllLogsInTimeInterval(from, to),
                 level
             ).stream()
+            // convert logs to return type
             .map(event -> new LoggingEventJson(
                 event,
                 props.stream()
                     .filter(prop -> prop.getEventId() == event.getEventId())
                     .toList()
             ))
+            // filter by origin
+            .filter(event -> {
+                if (originType != null) {
+                    // require entity type be present
+                    if (event.getOrigin() == null) {
+                        return false;
+                    }
+
+                    // optionally filter for specific entity type
+                    if (!originType.equals("any") && !event.getOrigin().getType().name().equals(originType)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
             .collect(Collectors.toList())
         );
     }
