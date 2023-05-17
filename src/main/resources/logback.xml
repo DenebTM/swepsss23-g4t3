@@ -13,7 +13,7 @@
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+            <layout class="at.qe.skeleton.configs.logging.PatternLayoutWithUserContext">
                 <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) - U:%user - %logger{5} - %msg%n</pattern>
             </layout>
         </encoder>
@@ -43,7 +43,7 @@
             <totalSizeCap>100GB</totalSizeCap>
         </rollingPolicy>
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+            <layout class="at.qe.skeleton.configs.logging.PatternLayoutWithUserContext">
                 <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - U:%user - %logger{5} - %msg%n</pattern>
             </layout>
         </encoder>
@@ -65,7 +65,7 @@
             <totalSizeCap>100GB</totalSizeCap>
         </rollingPolicy>
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="at.qe.skeleton.configs.PatternLayoutWithUserContext">
+            <layout class="at.qe.skeleton.configs.logging.PatternLayoutWithUserContext">
                 <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - U:%user - %logger{5} - %msg%n</pattern>
             </layout>
         </encoder>
