@@ -9,6 +9,8 @@ from sensorvalues_operations import read_sensorvalues
 from sensorstation_operations import search_for_sensorstations
 import rest_operations
 
+RETRY_TIME = 10
+
 # Currently active sensor station tasks
 ss_tasks = {}
 async def sensor_station_manager(connection_request, session):
@@ -93,7 +95,6 @@ async def polling_loop(connection_request, session):
 #Füg header mit authorization hinzu
 async def main():
     while True:
-        retry_time = 5
         try:
             async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
                 connection_request = asyncio.Future()
@@ -114,14 +115,12 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            print(f'Could not reach PlantHealth server. Retrying in {retry_time} seconds')
-            time.sleep(retry_time)
-            retry_time = retry_time+5 if retry_time < 60 else 60
+            print(f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            time.sleep(RETRY_TIME)
             #TODO:Log this
         except aiohttp.ClientResponseError as e:
-            print(f'Unauthorized to talk to PlantHealth server. Retry in {retry_time} seconds.')
-            time.sleep(retry_time)
-            retry_time = retry_time+5 if retry_time < 60 else 60
+            print(f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            time.sleep(RETRY_TIME)
             #TODO:Log this
         except Exception as e:
             print(f'Unexpected error occured: {e}')
