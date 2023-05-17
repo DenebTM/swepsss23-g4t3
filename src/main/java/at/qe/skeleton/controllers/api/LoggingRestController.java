@@ -5,6 +5,7 @@ import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.LoggingEvent;
 import at.qe.skeleton.models.LoggingEventJson;
 import at.qe.skeleton.models.LoggingEventProperty;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.repositories.LoggingEventPropertyRepository;
 import at.qe.skeleton.services.AccessPointService;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,15 +90,24 @@ public class LoggingRestController implements BaseRestController {
         List<LoggingEventJson> returnList = new ArrayList<>(logs.size());
 
         for (LoggingEventJson log : logs) {
+            // save the log entry
             var savedLog = loggingService.saveLog(new LoggingEvent(
                 log.getMessage(),
                 log.getLevel(),
                 log.getTimestamp().toEpochMilli()
             ));
 
-            returnList.add(new LoggingEventJson(savedLog, null));
+            // associate the log entry with the send access point
+            var logProp = new LoggingEventProperty(
+                savedLog.getEventId(),
+                LogEntityType.ACCESS_POINT.name(),
+                ap.getName()
+            );
+            propertyRepository.save(logProp);
+
+            returnList.add(new LoggingEventJson(savedLog, Arrays.asList(logProp)));
         }
 
-        return ResponseEntity.ok(logs);
+        return ResponseEntity.ok(returnList);
     }
 }
