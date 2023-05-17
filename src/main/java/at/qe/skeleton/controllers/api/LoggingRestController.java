@@ -17,7 +17,7 @@ import java.util.List;
  * Rest Controller to display all available logs in the frontend.
  */
 @RestController
-public class LoggingController implements BaseRestController{
+public class LoggingRestController implements BaseRestController {
 
     @Autowired
     LoggingService loggingService;
