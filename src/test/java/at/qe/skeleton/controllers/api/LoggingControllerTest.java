@@ -31,7 +31,7 @@ public class LoggingControllerTest {
     }
 
     @Autowired
-    private LoggingController loggingController;
+    private LoggingRestController loggingController;
     @Autowired
     private LoggingService loggingService;
 
