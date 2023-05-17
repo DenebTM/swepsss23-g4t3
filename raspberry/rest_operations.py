@@ -132,6 +132,5 @@ async def send_sensorvalues_to_backend(sensorstation_id, session):
 
 @retry_connection_error(retries = 3, interval = 5)
 async def send_logs(session):
-    log_dict = json.dumps(logging_operations.log_data)
-    async with session.post('api/access-points/' + common.access_point_name + '/logs', json=log_dict) as response:
+    async with session.post('api/access-points/' + common.access_point_name + '/logs', json=logging_operations.log_data) as response:
         logging_operations.clear_log_data()
