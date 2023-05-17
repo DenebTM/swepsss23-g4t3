@@ -49,7 +49,7 @@ public class LoggingRestController implements BaseRestController {
      * @param json
      * @return
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER', 'USER')")
     @GetMapping("/logs")
     public ResponseEntity<List<LoggingEventJson>> getLogs(
         @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
