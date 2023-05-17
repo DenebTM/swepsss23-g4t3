@@ -12,7 +12,7 @@ async def search_for_sensorstations():
             devices = await scanner.discover()
             for d in devices:
                 if common.sensor_station_name in d.name:
-                    ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed= False)
+                    ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed=False)
                     sensorstations.append(ss_uuid)
 
                     common.known_ss[ss_uuid] = d.address

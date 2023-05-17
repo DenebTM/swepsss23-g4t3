@@ -73,6 +73,7 @@ async def cancel_ss_task(sensorstation_id):
     ss_tasks[sensorstation_id].cancel()
     del ss_tasks[sensorstation_id]
 
+        
 async def polling_loop(connection_request, session):
     while not connection_request.done():
         print('Inside AP Loop')
@@ -106,7 +107,6 @@ async def main():
             else:
                 print('webserver seems to be offline')
                 await asyncio.sleep(30)
-
 
 if __name__ == '__main__':
     retry_time = 5

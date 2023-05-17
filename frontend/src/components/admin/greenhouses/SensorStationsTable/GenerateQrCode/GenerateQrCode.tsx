@@ -5,6 +5,7 @@ import QrCode2Icon from '@mui/icons-material/QrCode2'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
+import Link from '@mui/material/Link'
 
 import { DialogHeader } from '@component-lib/DialogHeader'
 import { Tooltip } from '@component-lib/Tooltip'
@@ -23,7 +24,7 @@ const qrSize = 256
 const dialogTitleId = 'qr-dialog-title'
 
 interface GenerateQrCodeProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -35,7 +36,7 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
     const [qrDialogOpen, setQrDialogOpen] = useState(false)
 
     const uploadUrl = `${window.location.origin}${PAGE_URL.photoUpload.href(
-      props.uuid
+      props.ssID
     )}`
 
     /** Open the QR generation dialog when the icon is clicked */
@@ -67,16 +68,33 @@ export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
             handleClose={handleClose}
             subtitle="Display this QR code on greenhouses so that users can upload photos"
             titleId={dialogTitleId}
-            title={`Greenhouse ${props.uuid}`}
+            title={`Greenhouse ${props.ssID}`}
           />
 
-          <DialogContent sx={{ textAlign: 'center' }} id={qrCodeId}>
+          <DialogContent
+            sx={{
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            id={qrCodeId}
+          >
             <QRCode
               size={qrSize}
               style={{ height: 'auto', maxWidth: '50%', width: '50%' }}
               value={uploadUrl}
               viewBox={`0 0 ${qrSize} ${qrSize}`}
             />
+            <Link
+              sx={{ marginTop: 1 }}
+              underline="hover"
+              variant="labelSmall"
+              href={uploadUrl}
+              color="onSurfaceVariant"
+            >
+              {uploadUrl}
+            </Link>
           </DialogContent>
           <QrDialogActions qrCodeId={qrCodeId} />
         </Dialog>

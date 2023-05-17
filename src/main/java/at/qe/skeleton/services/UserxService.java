@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Scope("application")
-public class UserService {
+public class UserxService {
 
     @Autowired
     private UserxRepository userRepository;

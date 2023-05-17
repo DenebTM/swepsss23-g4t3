@@ -10,7 +10,7 @@ import { SensorStationUuid } from '~/models/sensorStation'
 import { GalleryImageList } from './GalleryImageList'
 
 interface GreenhouseGalleryProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -23,7 +23,7 @@ export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
 
   /** Load images from the API on component mount */
   useEffect(() => {
-    const photoPromise = cancelable(getSensorStationPhotos(props.uuid))
+    const photoPromise = cancelable(getSensorStationPhotos(props.ssID))
     photoPromise
       .then((data) => {
         setPhotos(data)
@@ -53,7 +53,7 @@ export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
         <GalleryImageList
           photos={photos}
           setPhotos={setPhotos}
-          uuid={props.uuid}
+          ssID={props.ssID}
         />
       )}
     </>

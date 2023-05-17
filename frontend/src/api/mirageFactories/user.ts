@@ -18,7 +18,7 @@ export const userFactory = Factory.extend<User>({
   lastName() {
     return faker.name.lastName()
   },
-  role() {
+  userRole() {
     return faker.helpers.arrayElement(Object.values(AuthUserRole))
   },
 })
