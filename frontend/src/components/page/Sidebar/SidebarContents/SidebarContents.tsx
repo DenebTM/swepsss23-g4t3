@@ -27,13 +27,13 @@ const topSidebarVals = (
     ...PAGE_URL.dashboard,
     icon: <HomeIcon />,
     childNodes: sensorStations.map((s) => ({
-      pageTitle: PAGE_URL.greenhouseView.pageTitle(s.uuid),
+      pageTitle: PAGE_URL.greenhouseView.pageTitle(s.ssID),
       href: PAGE_URL.greenhouseView.href(
-        s.uuid,
+        s.ssID,
         isUserLoggedIn ? SensorStationView.GRAPHICAL : SensorStationView.GALLERY
       ),
       icon: (
-        <Badge badgeContent={String(s.uuid)}>
+        <Badge badgeContent={String(s.ssID)}>
           <LocalFloristIcon />
         </Badge>
       ),

@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/material/styles'
 import {
   gridClasses,
   GridColDef,
+  GridRowClassNameParams,
   GridValidRowModel,
   DataGrid as MuiDataGrid,
   DataGridProps as MuiDataGridProps,
@@ -108,6 +109,8 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
   size?: 'medium' | 'small'
   /** If true, alter the colour of every second table row */
   zebraStripes?: boolean
+  /** Optionally override styles for each row */
+  getRowClassName?: (params: GridRowClassNameParams<R>) => string
 }
 
 /**
@@ -188,12 +191,19 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
         }
         rowHeight={props.size === 'small' ? 36 : 56}
         getRowClassName={
-          props.zebraStripes
+          typeof props.getRowClassName !== 'undefined'
+            ? props.getRowClassName
+            : props.zebraStripes
             ? (params) =>
                 params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
             : undefined
         }
-        sx={{ ...dataGridRowSx(theme) }}
+        sx={
+          {
+            ...dataGridRowSx(theme),
+            ...(props.sx ? props.sx : {}),
+          } as SxProps<Theme>
+        }
         {...gridProps}
       />
     </Box>
