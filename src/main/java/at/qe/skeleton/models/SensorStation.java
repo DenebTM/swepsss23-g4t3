@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,12 +14,9 @@ public class SensorStation {
 
     @Id
     @Column(name = "SS_ID")
-    private Integer id;
+    private Integer ssID;
 
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "name"
-    )
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("apName")
     @ManyToOne(optional = false)
@@ -26,12 +24,12 @@ public class SensorStation {
     private AccessPoint accessPoint;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "SS_STATUS")
     private SensorStationStatus status;
 
     @JsonBackReference
     @OneToMany(mappedBy = "sensorStation",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
     @OrderBy("timestamp asc")
@@ -42,7 +40,7 @@ public class SensorStation {
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
     @JsonIdentityReference(alwaysAsId = true)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GARDENER_SS",
             joinColumns = @JoinColumn(name = "SS_ID"),
             inverseJoinColumns = @JoinColumn(name = "USERNAME"))
@@ -59,15 +57,17 @@ public class SensorStation {
     private SensorValues lowerBound;
 
     public SensorStation() {
+        this.measurements = new ArrayList<>();
     }
 
     public SensorStation(AccessPoint accessPoint, Long aggregationPeriod) {
+        this();
         this.accessPoint = accessPoint;
         this.aggregationPeriod = aggregationPeriod;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getSsID() {
+        return ssID;
     }
 
     public AccessPoint getAccessPoint() {
@@ -94,8 +94,8 @@ public class SensorStation {
         return lowerBound;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setSsID(Integer ssID) {
+        this.ssID = ssID;
     }
 
     public void setAccessPoint(AccessPoint accessPoint) {
@@ -128,5 +128,12 @@ public class SensorStation {
 
     public void setGardeners(Set<Userx> gardeners) {
         this.gardeners = gardeners;
+    }
+
+    public Measurement getCurrentMeasurement() {
+        if (this.getMeasurements() == null || this.getMeasurements().size() == 0) {
+            return null;
+        }
+        return this.getMeasurements().get(this.getMeasurements().size()-1);
     }
 }

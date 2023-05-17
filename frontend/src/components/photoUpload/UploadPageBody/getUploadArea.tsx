@@ -1,11 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
-import LoadingButton from '@mui/lab/LoadingButton'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/system/Box'
-
 import { asUploadButton, UploadButtonProps } from '@rpldy/upload-button'
 import {
   useBatchAddListener,
@@ -14,7 +8,6 @@ import {
 } from '@rpldy/uploady'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { theme } from '~/styles/theme'
 
 /**
  * Current state of photo upload
@@ -26,8 +19,13 @@ export enum UploadStatus {
   FAILED = 'FAILED',
 }
 
+export interface UploadComponentProps extends UploadButtonProps {
+  uploading: boolean
+}
+
 /** Higher-order component to create a clickable upload area */
 export const getUploadArea = (
+  UploadComponent: React.FC<UploadComponentProps>,
   uploadStatus: UploadStatus,
   setUploadStatus: Dispatch<SetStateAction<UploadStatus>>
 ): React.FC<UploadButtonProps> =>
@@ -66,52 +64,5 @@ export const getUploadArea = (
       setUploadStatus(UploadStatus.UPLOADING)
     })
 
-    return (
-      <Box
-        {...props}
-        sx={{
-          padding: theme.spacing(6, 4),
-          cursor: 'pointer',
-          background: theme.surfaceBright,
-          border: `2px dashed ${theme.outlineVariant}`,
-          borderRadius: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          width: '90%',
-          maxWidth: '430px',
-          '&:hover': {
-            borderColor: theme.outline,
-          },
-        }}
-      >
-        <Stack
-          spacing={1}
-          direction="column"
-          sx={{ padding: 2, alignItems: 'center', marginBottom: 2 }}
-        >
-          <FileUploadOutlinedIcon
-            fontSize="large"
-            sx={{ color: theme.outline }}
-          />
-          <Typography color="onSurface" variant="titleMedium" align="center">
-            Select photo to upload
-          </Typography>
-        </Stack>
-        <LoadingButton
-          variant="contained"
-          fullWidth
-          size="large"
-          loading={uploading}
-          loadingPosition="center"
-          color="primary"
-          sx={{
-            '&.MuiLoadingButton-loading': {
-              background: theme.primary,
-            },
-          }}
-        >
-          Browse Files
-        </LoadingButton>
-      </Box>
-    )
+    return <UploadComponent {...props} uploading={uploading} />
   })

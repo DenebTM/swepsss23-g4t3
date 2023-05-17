@@ -1,9 +1,15 @@
 package at.qe.skeleton.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import at.qe.skeleton.models.enums.AccessPointStatus;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -11,6 +17,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ACCESS_POINT")
+@NoArgsConstructor
+@EqualsAndHashCode
 public class AccessPoint {
 
     @Id
@@ -24,18 +32,17 @@ public class AccessPoint {
     private String serverAddress;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "AP_STATUS")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private AccessPointStatus status;
 
-    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ssID")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "accessPoint",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
     private Set<SensorStation> sensorStations = new HashSet<>();
-
-    public AccessPoint() {
-    }
 
     public AccessPoint(String name) {
         this.name = name;
@@ -73,4 +80,7 @@ public class AccessPoint {
         this.status = status;
     }
 
+    public Set<SensorStation> getSensorStations() {
+        return sensorStations;
+    }
 }

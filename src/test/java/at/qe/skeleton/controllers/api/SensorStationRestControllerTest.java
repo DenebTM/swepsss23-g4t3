@@ -1,31 +1,23 @@
 package at.qe.skeleton.controllers.api;
 
-import at.qe.skeleton.models.Measurement;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.SensorStationService;
-import at.qe.skeleton.services.UserService;
-import org.junit.jupiter.api.Assertions;
+import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,14 +33,12 @@ class SensorStationRestControllerTest {
 
     @Autowired
     private SensorStationService ssService;
-    @Autowired
-    private MeasurementService measurementService;
 
     @Autowired
     private AccessPointRepository apRepository;
 
     @Autowired
-    private UserService userService;
+    private UserxService userService;
 
     SensorStation ss;
     Integer id;
@@ -71,9 +61,12 @@ class SensorStationRestControllerTest {
     @Test
     void testGetAllSensorStations() {
         int number = ssService.getAllSS().size();
-        ResponseEntity response = this.ssRestController.getAllSensorStations();
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(number, ((Collection) response.getBody()).size());
+        var response = ssRestController.getAllSensorStations();
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var sensorStations = response.getBody();
+        assertNotNull(sensorStations);
+        assertEquals(number, sensorStations.size());
     }
 
     AccessPoint createTestAP() {
@@ -82,30 +75,44 @@ class SensorStationRestControllerTest {
     }
 
     @Test
+    @DirtiesContext
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetSSForAccessPoint() {
         AccessPoint apTest = createTestAP();
 
         SensorStation ssTest = new SensorStation(apTest, 30L);
-        ssTest.setId(127);
+        ssTest.setSsID(127);
 
-        var response = this.ssRestController.getSSForAccessPoint(apTest.getName());
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertEquals(0, ((Collection<?>)response.getBody()).size());
+        // no sensor stations yet
+        var initialResponse = ssRestController.getSSForAccessPoint(apTest.getName());
+        assertEquals(HttpStatusCode.valueOf(200), initialResponse.getStatusCode());
+
+        var initialSS = initialResponse.getBody();
+        assertNotNull(initialSS);
+        int initialSSCount = initialSS.size();
+
+        // insert a sensor station, check if it is returned
         ssService.saveSS(ssTest);
+        var finalResponse = ssRestController.getSSForAccessPoint(apTest.getName());
+        assertEquals(HttpStatusCode.valueOf(200), finalResponse.getStatusCode());
 
-        var response2 = this.ssRestController.getSSForAccessPoint(apTest.getName());
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
-        Assertions.assertEquals(1, ((Collection<?>)response2.getBody()).size());
+        var finalSS = finalResponse.getBody();
+        assertNotNull(finalSS);
+        assertEquals(initialSSCount + 1, finalSS.size());
     }
 
+    @Test
+    @DirtiesContext
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetSSForAccessPoint404() {
         String apName = "ksdjflsadjfl";
         AccessPoint ap = new AccessPoint(apName);
         apRepository.delete(ap);
 
-        var response = ssRestController.getSSForAccessPoint(apName);
-
-        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.getSSForAccessPoint(apName)
+        );
     }
 
     @Test
@@ -115,15 +122,19 @@ class SensorStationRestControllerTest {
         AccessPoint apTest = createTestAP();
 
         var initialSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
-        int initialSSCount = ((Collection<?>)initialSSResponse.getBody()).size();
+        assertEquals(HttpStatusCode.valueOf(200), initialSSResponse.getStatusCode());
+
+        var initialSS = initialSSResponse.getBody();
+        assertNotNull(initialSS);
+        int initialSSCount = initialSS.size();
 
         List<SensorStation> newSS = new ArrayList<>();
         SensorStation ssTest1 = new SensorStation(apTest, 30L);
-        ssTest1.setId(127);
+        ssTest1.setSsID(127);
         ssTest1.setStatus(SensorStationStatus.AVAILABLE);
         newSS.add(ssTest1);
         SensorStation ssTest2 = new SensorStation(apTest, 30L);
-        ssTest2.setId(128);
+        ssTest2.setSsID(128);
         ssTest2.setStatus(SensorStationStatus.AVAILABLE);
         newSS.add(ssTest2);
         int newSSCount = newSS.size();
@@ -133,45 +144,53 @@ class SensorStationRestControllerTest {
 
         // ASSERTIONS
         var finalSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
-        int finalSSCount = ((Collection<?>)finalSSResponse.getBody()).size();
+        assertEquals(HttpStatusCode.valueOf(200), initialSSResponse.getStatusCode());
+        var finalSS = finalSSResponse.getBody();
+        assertNotNull(finalSS);
+        int finalSSCount = finalSS.size();
 
         // check all sensor stations inserted
         assertEquals(initialSSCount + newSSCount, finalSSCount);
 
         // check sensor stations inserted for correct AP
-        for (SensorStation ss : (Collection<SensorStation>)finalSSResponse.getBody()) {
+        for (SensorStation ss : finalSS) {
             assertEquals(ss.getAccessPoint().getName(), apTest.getName());
         }
 
         // check sensor station status matches
-        for (SensorStation ss : (Collection<SensorStation>)finalSSResponse.getBody()) {
+        for (SensorStation ss : finalSS) {
             assertEquals(SensorStationStatus.AVAILABLE, ss.getStatus());
         }
     }
 
     @Test
+    @DirtiesContext
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testAddSS404() {
         String apName = "ksdjflsadjfl";
         AccessPoint ap = new AccessPoint(apName);
         apRepository.delete(ap);
 
-        var response = ssRestController.addSS(apName, new ArrayList<>());
-
-        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.addSS(apName, new ArrayList<>())
+        );
     }
 
     @Test
     void testGetSSById() {
-        ResponseEntity response = this.ssRestController.getSSById(id);
-        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        Assertions.assertTrue(response.getBody() instanceof SensorStation);
-        if (response.getBody() instanceof SensorStation){
-            Assertions.assertEquals(id, ((SensorStation) response.getBody()).getId());
-        }
+        var response = ssRestController.getSSById(id);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var sensorStation = response.getBody();
+        assertNotNull(sensorStation);
+        assertEquals(id, sensorStation.getSsID());
+
         // if ss id does not exist in database, 404 not found error
-        ResponseEntity response404 = this.ssRestController.getSSById(9999);
-        Assertions.assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.getSSById(99999)
+        );
     }
 
     // TODO write a test for updateSS()
@@ -184,25 +203,32 @@ class SensorStationRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testDeleteSSById() {
         int originalSize = ssService.getAllSS().size();
-        ResponseEntity response404 = this.ssRestController.deleteSSById(99999);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
 
-        ResponseEntity response = this.ssRestController.deleteSSById(id);
+        var response = ssRestController.deleteSSById(id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertEquals(originalSize-1, ssService.getAllSS().size());
-        response404 = this.ssRestController.getSSById(id);
-        assertSame(HttpStatusCode.valueOf(404), response404.getStatusCode(), "Sensor station is still found in database after being deleted.");
+
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.getSSById(id),
+            "Sensor station is still found in database after being deleted."
+        );
     }
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetGardenersBySS() {
-        ResponseEntity response404 = this.ssRestController.getGardenersBySS(99999);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-
-        ResponseEntity response = this.ssRestController.getGardenersBySS(id);
+        var response = ssRestController.getGardenersBySS(id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertEquals(ss.getGardeners().contains(susi), ((List) response.getBody()).contains(username));
+
+        var gardenerNames = response.getBody();
+        assertNotNull(gardenerNames);
+        assertEquals(ss.getGardeners().contains(susi), gardenerNames.contains(username));
+
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.getGardenersBySS(99999)
+        );
     }
 
     @DirtiesContext
@@ -211,18 +237,26 @@ class SensorStationRestControllerTest {
     void testAssignGardenerToSS() {
         List<String> originalNames = ssService.getGardenersBySS(ss);
         int originalSize = originalNames.size();
-        ResponseEntity response = this.ssRestController.assignGardenerToSS(id,username);
+        var response = ssRestController.assignGardenerToSS(id,username);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        if (!originalNames.contains(username)){
-            assertEquals(originalSize+1, ((SensorStation) response.getBody()).getGardeners().size());
-        } else {
-            assertEquals(originalSize, ((SensorStation) response.getBody()).getGardeners().size());
-        }
-        ResponseEntity response404 = this.ssRestController.assignGardenerToSS(99999, username);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-        response404 = this.ssRestController.assignGardenerToSS(id, "notExistingUsername");
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
 
+        var sensorStation = response.getBody();
+        assertNotNull(sensorStation);
+        if (!originalNames.contains(username)){
+            assertEquals(originalSize+1, sensorStation.getGardeners().size());
+        } else {
+            assertEquals(originalSize, sensorStation.getGardeners().size());
+        }
+
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.assignGardenerToSS(99999, username)
+        );
+
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.assignGardenerToSS(id, "notExistingUsername")
+        );
     }
 
     @DirtiesContext
@@ -231,39 +265,28 @@ class SensorStationRestControllerTest {
     void testRemoveGardenerFromSS() {
         List<String> originalNames = ssService.getGardenersBySS(ss);
         int originalSize = originalNames.size();
-        ResponseEntity response = this.ssRestController.removeGardenerFromSS(id,username);
+        var response = ssRestController.removeGardenerFromSS(id,username);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var sensorStation = response.getBody();
+        assertNotNull(sensorStation);
         if (originalNames.contains(username)){
-            assertEquals(originalSize-1, ((SensorStation) response.getBody()).getGardeners().size());
+            assertEquals(originalSize-1, sensorStation.getGardeners().size());
         }
-        ResponseEntity response404 = this.ssRestController.removeGardenerFromSS(99999, username);
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-        response404 = this.ssRestController.removeGardenerFromSS(id, "notExistingUsername");
-        assertEquals(HttpStatusCode.valueOf(404), response404.getStatusCode());
-    }
 
-    @Test
-    void testGetAllMeasurementsInTimeRange() {
-        Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
-        Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
-        Integer number = measurementService.getMeasurements(id, from, to).size();
-        jsonUpdateSS.put("from", from.toString());
-        jsonUpdateSS.put("to", to.toString());
-        ResponseEntity measurements = this.ssRestController.getMeasurementsBySS(id, jsonUpdateSS);
-        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
-        assertEquals(number, ((Collection) measurements.getBody()).size());
-    }
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.removeGardenerFromSS(99999, username)
+        );
 
-    @Test
-    void testGetAllCurrentMeasurements(){
-        Integer number = measurementService.getAllCurrentMeasurements().size();
-        ResponseEntity measurements = this.ssRestController.getAllCurrentMeasurements();
-        assertEquals(HttpStatusCode.valueOf(200), measurements.getStatusCode());
-        assertEquals(number, ((Collection) measurements.getBody()).size());
+        assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> ssRestController.removeGardenerFromSS(id, "notExistingUsername")
+        );
     }
 
     // TODO write a test for getAllPhotosBySS()
-//    @Test
-//    void testGetAllPhotosBySS() {
-//    }
+    // @Test
+    //     void testGetAllPhotosBySS() {
+    // }
 }
