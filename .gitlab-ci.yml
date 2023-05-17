@@ -93,4 +93,3 @@ sonarqube-check:
   only:
     - main
     - dev
-    - raspberry/sonarqube
