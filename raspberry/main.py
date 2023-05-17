@@ -100,10 +100,6 @@ async def main():
                     polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
                     sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
                     await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-                else:
-                    print('Access point is offline')
-                    connection_request = asyncio.Future()
-                    await asyncio.sleep(30)
 
 if __name__ == '__main__':
     retry_time = 5

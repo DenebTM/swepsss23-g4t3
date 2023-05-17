@@ -8,7 +8,7 @@ five_min_ago = current_time - 300
 
 async def save_sensor_values_to_database(sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture):
     try:
-        db_conn.execute('INSERT INTO sensordata (id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        db_conn.execute('INSERT INTO sensordata (ssID, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                         (sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, int(time.time())))
         db_conn.commit()
     except Exception as e:
@@ -24,7 +24,7 @@ async def get_sensor_data_averages(sensorstation_id):
             AVG(air_pressure) AS air_pressure_avg, AVG(illuminance) AS illuminance_avg,
             AVG(air_quality_index) AS air_quality_index_avg, AVG(soil_moisture) AS soil_moisture_avg
             FROM sensordata
-            WHERE id = ?''',
+            WHERE ssID = ?''',
             (sensorstation_id,)
         )
         results = cursor.fetchone()
@@ -48,7 +48,7 @@ async def clear_sensor_data(sensorstation_id):
     try:
         db_conn.execute(
             '''DELETE FROM sensordata
-            WHERE id = ?''',
+            WHERE ssID = ?''',
             (sensorstation_id,)
         )
         db_conn.commit()
@@ -65,7 +65,7 @@ async def get_sensor_data_thresholds(sensorstation_id):
                 temperature_min, humidity_min, air_pressure_min, 
                 illuminance_min, air_quality_index_min, soil_moisture_min
                 FROM sensorstations
-                WHERE id = ?''',
+                WHERE ssID = ?''',
             (sensorstation_id,)
         )
         thresholds_query = cursor.fetchone()
@@ -96,7 +96,7 @@ async def get_sensor_data_thresholds(sensorstation_id):
 async def get_sensorstation_transmissioninterval(sensorstation_id):
     try:
         cursor = db_conn.cursor()
-        cursor.execute('SELECT transmissioninterval FROM sensorstations WHERE id = ?', (sensorstation_id,))
+        cursor.execute('SELECT transmissioninterval FROM sensorstations WHERE ssID = ?', (sensorstation_id,))
         transmission_interval = cursor.fetchone()[0]
         return transmission_interval
     except Exception as e:
@@ -105,7 +105,7 @@ async def get_sensorstation_transmissioninterval(sensorstation_id):
 
 async def initialize_sensorstation(sensorstation_id):        
     json_data = {
-        'id': sensorstation_id,
+        'ssID': sensorstation_id,
 
         'transmission_interval': common.default_transmission_interval,
         'accessPoint': common.access_point_name,
@@ -131,7 +131,7 @@ async def initialize_sensorstation(sensorstation_id):
 async def update_sensorstation(sensorstation):
     with db_conn:
         try:
-            sensorstation_id = sensorstation['id']
+            sensorstation_id = sensorstation['ssID']
             transmission_interval = sensorstation['transmission_interval']
 
             upper_bounds = sensorstation['upperBound']
@@ -151,7 +151,7 @@ async def update_sensorstation(sensorstation):
             soil_moisture_min = lower_bounds['soilMoisture']
             db_conn.execute(
                 '''INSERT OR REPLACE INTO sensorstations
-                (id, transmissioninterval,
+                (ssID, transmissioninterval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
