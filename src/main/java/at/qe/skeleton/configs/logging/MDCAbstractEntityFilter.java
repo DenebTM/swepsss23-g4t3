@@ -1,29 +1,33 @@
-package at.qe.skeleton.configs;
+package at.qe.skeleton.configs.logging;
 
 import java.io.IOException;
 
 import org.slf4j.MDC;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import at.qe.skeleton.models.enums.LogEntityType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class LogbackRequestFilter extends OncePerRequestFilter {
+public abstract class MDCAbstractEntityFilter extends OncePerRequestFilter {
+
+    protected abstract LogEntityType entityType();
+    protected abstract Object entityId(HttpServletRequest request);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null)
-        MDC.put("username", auth.getName());
+        final var entityType = entityType();
+        final var entityId = entityId(request); 
+        if (entityId != null) {
+            MDC.put(entityType.name(), entityId.toString());
+        }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);   
     }
 
 }

@@ -1,4 +1,4 @@
-package at.qe.skeleton.configs;
+package at.qe.skeleton.configs.logging;
 
 import ch.qos.logback.classic.PatternLayout;
 
