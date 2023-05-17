@@ -1,11 +1,14 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.configs.jwtutils.JwtManager;
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
+import at.qe.skeleton.models.PostAccessPointResponse;
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,9 @@ public class AccessPointRestController implements BaseRestController {
 
     @Autowired
     private AccessPointService apService;
+
+    @Autowired
+    private JwtManager tokenManager;
 
     public static final String AP = "Access point";
     private static final String AP_PATH = "/access-points";
@@ -49,30 +55,39 @@ public class AccessPointRestController implements BaseRestController {
     }
 
     /**
-     * POST route to create a new access Point, only allowed by ADMIN
+     * POST route to create a new Access Point
      * @param json body
      * @return newly created ap
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = AP_PATH)
-    public ResponseEntity<Object> createAP(@RequestBody Map<String, Object> json) {
-        AccessPoint newAP = new AccessPoint();
+    public ResponseEntity<PostAccessPointResponse> createAP(@RequestBody Map<String, Object> json) {
         String name = (String)json.get("name");
-        String serverAddress = (String)json.get("serverAddress");
         if (name == null || name.equals("")) {
-            throw new BadRequestException("No name is given");
+            throw new BadRequestException("No name given");
         }
-        if (apService.loadAPByName(name)!=null){
-            throw new BadRequestException("Name for access point is already in use");
-        }
-        if (serverAddress == null || serverAddress.equals("")) {
-            throw new BadRequestException("No server address is given");
-        }
-        newAP.setName(name);
-        newAP.setServerAddress(serverAddress);
-        newAP.setStatus(AccessPointStatus.UNCONFIRMED);
 
-        return ResponseEntity.ok(apService.saveAP(newAP));
+        String serverAddress = (String)json.get("serverAddress");
+        if (serverAddress == null || serverAddress.equals("")) {
+            throw new BadRequestException("No server address given");
+        }
+
+        String authToken = null;
+        AccessPoint ap = apService.loadAPByName(name);
+        if (ap != null) {
+            if (ap.getStatus() != AccessPointStatus.UNCONFIRMED) {
+                authToken = tokenManager.generateJwtToken("admin");
+            }
+            PostAccessPointResponse papp = new PostAccessPointResponse(ap, authToken);
+            return ResponseEntity.ok(papp);
+        } else {
+            ap = apService.saveAP(new AccessPoint(
+                name,
+                serverAddress,
+                AccessPointStatus.UNCONFIRMED
+            ));
+            PostAccessPointResponse papp = new PostAccessPointResponse(ap, authToken);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(papp);
+        }
     }
 
     /**

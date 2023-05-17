@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -50,7 +51,11 @@ public class WebSecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
 
         http.authorizeHttpRequests()
-                // Allow authorized access to API routes
+                // Allow access point to advertise self
+                .requestMatchers(HttpMethod.POST, "/api/access-points")
+                .permitAll()
+
+                // Allow authorized access to other API routes
                 .requestMatchers("/api/**")
                 .hasAnyAuthority("ADMIN", "GARDENER", "USER")
 
