@@ -11,7 +11,6 @@ from database_operations import save_sensor_values_to_database
 class TestReadSensorValue(unittest.IsolatedAsyncioTestCase):
 
     @patch('database_operations.save_sensor_values_to_database')
-    #@patch('sensorvalues_operations.BleakClient')
     async def test_read_sensorvalues(self, save_sensor_values_to_database):
         BleakClient = AsyncMock()
         #mock reading characteristic of BleakClient
