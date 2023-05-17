@@ -107,8 +107,8 @@ async def initialize_sensorstation(sensorstation_id):
     json_data = {
         'ssID': sensorstation_id,
 
-        'transmission_interval': common.default_transmission_interval,
-        'accessPoint': common.access_point_name,
+        'aggregationPeriod': common.default_transmission_interval,
+        'apName': common.access_point_name,
         'lowerBound': {
             'airPressure': 0,
             'airQuality': 0,
@@ -132,7 +132,7 @@ async def update_sensorstation(sensorstation):
     with db_conn:
         try:
             sensorstation_id = sensorstation['ssID']
-            transmission_interval = sensorstation['transmission_interval']
+            transmission_interval = sensorstation['aggregationPeriod']
 
             upper_bounds = sensorstation['upperBound']
             temperature_max = upper_bounds['temperature']
