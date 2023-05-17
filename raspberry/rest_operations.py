@@ -38,7 +38,8 @@ async def get_sensorstation_instructions(session):
             for station in json_data:
                 ss_id = station['id']
                 ss_status = station['status']
-                paired_stations[ss_id] = ss_status
+                if ss_status != 'AVAILABLE':
+                    paired_stations[ss_id] = ss_status
         return paired_stations
 
 @retry_connection_error(retries = 3, interval = 5)
