@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import { getSensorStationMeasurements } from '~/api/endpoints/sensorStations/measurements'
 import {
@@ -60,25 +61,27 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
   ]
 
   return (
-    <DataGrid<Measurement, any, Measurement>
-      columns={columns}
-      fetchRows={() =>
-        getSensorStationMeasurements(
-          props.ssID,
-          dayjs().subtract(1, 'week').toISOString(),
-          dayjs().toISOString()
-        )
-      }
-      getRowId={(row: Measurement) => row.id}
-      initialState={{
-        sorting: {
-          sortModel: [{ field: 'timestamp', sort: 'desc' }],
-        },
-      }}
-      rows={measurements}
-      setRows={setMeasurements}
-      size="small"
-      zebraStripes
-    />
+    <TablePaper>
+      <DataGrid<Measurement, any, Measurement>
+        columns={columns}
+        fetchRows={() =>
+          getSensorStationMeasurements(
+            props.ssID,
+            dayjs().subtract(1, 'week').toISOString(),
+            dayjs().toISOString()
+          )
+        }
+        getRowId={(row: Measurement) => row.id}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'timestamp', sort: 'desc' }],
+          },
+        }}
+        rows={measurements}
+        setRows={setMeasurements}
+        size="small"
+        zebraStripes
+      />
+    </TablePaper>
   )
 }
