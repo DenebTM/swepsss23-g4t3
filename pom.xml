@@ -37,16 +37,19 @@
         <yarn.version>v1.22.19</yarn.version>
 
         <!-- Allow Sonarqube to scan frontend code -->
-        <sonar.sources>src/main,frontend/src</sonar.sources>
+        <sonar.sources>src/main,frontend/src,raspberry</sonar.sources>
         <sonar.tests>src/test,frontend/src/tests</sonar.tests>
         <sonar.test.inclusions>src/test/**/*.java,frontend/src/tests/**/*.test.ts*</sonar.test.inclusions>
         <sonar.testExecutionReportPaths>frontend/sonar-report.xml</sonar.testExecutionReportPaths>
 
-        <sonar.exclusions>frontend/src/tests</sonar.exclusions>
-        <sonar.coverage.exclusions>src/test,frontend/src/tests</sonar.coverage.exclusions>
+        <sonar.exclusions>frontend/src/tests,raspberry/tests</sonar.exclusions>
+        <sonar.coverage.exclusions>src/test,frontend/src/tests,raspberry/tests,raspberry/mock_server</sonar.coverage.exclusions>
 
         <sonar.typescript.tsconfigPath>frontend/tsconfig.json</sonar.typescript.tsconfigPath>
         <sonar.javascript.lcov.reportPaths>frontend/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+
+        <sonar.python.version>3.9</sonar.python.version>
+        <sonar.python.coverage.reportPaths>raspberry/coverage.xml</sonar.python.coverage.reportPaths>
     </properties>
 
     <dependencies>
