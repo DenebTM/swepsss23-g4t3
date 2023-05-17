@@ -9,9 +9,8 @@ import Box from '@mui/system/Box'
 
 import { handleLogin } from '~/api/endpoints/login'
 import { onEnterKeypress, PAGE_URL } from '~/common'
-import { MessageType } from '~/contexts/SnackbarContext/types'
 import { setJwt } from '~/helpers/jwt'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { LoginResponse } from '~/models/login'
 import { theme } from '~/styles/theme'
 
@@ -21,7 +20,7 @@ import { theme } from '~/styles/theme'
  */
 export const LoginForm: React.FC = () => {
   const navigate = useNavigate()
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
   const usernameRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
 
@@ -40,11 +39,7 @@ export const LoginForm: React.FC = () => {
           navigate(PAGE_URL.dashboard.href)
         })
         .catch((err: Error) => {
-          addSnackbarMessage({
-            header: 'Login error',
-            body: err.message,
-            type: MessageType.ERROR,
-          })
+          addErrorSnackbar(err, 'Login error')
         })
         .finally(() => setLoggingIn(false))
     }
@@ -70,6 +65,7 @@ export const LoginForm: React.FC = () => {
           inputRef={usernameRef}
           onKeyPress={onEnterKeypress(handleApiLogin)}
           fullWidth
+          autoFocus
         />
         <TextField
           required

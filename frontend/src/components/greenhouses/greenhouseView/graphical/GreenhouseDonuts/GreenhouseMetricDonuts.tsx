@@ -8,6 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
+import { Spinner } from '@component-lib/Spinner'
 import { GreenhouseMetricRange, NON_AIR_METRICS } from '~/common'
 import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
@@ -46,7 +47,7 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   const donutHeight = breakSm ? 250 : breakMd ? 175 : 200
 
   if (sensorStation === null) {
-    return <div>TODO qqjf loading state</div>
+    return <Spinner />
   } else {
     const donutProps = (metricRange: GreenhouseMetricRange) => ({
       donutHeight: donutHeight,
@@ -85,7 +86,10 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
                 value={measurement.data.lightIntensity}
               />
             </Grid>
-            <Grid {...gridBreakpoints}>
+            <Grid
+              {...gridBreakpoints}
+              sx={{ alignSelf: 'center', textAlign: 'center' }}
+            >
               <GreenhouseAirMetrics
                 donutHeight={donutHeight}
                 measurement={props.measurement}

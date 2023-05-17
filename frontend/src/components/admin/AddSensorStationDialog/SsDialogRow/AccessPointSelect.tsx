@@ -6,9 +6,9 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
+import { Spinner } from '@component-lib/Spinner'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
-import { Message, MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { AccessPoint } from '~/models/accessPoint'
 import { ApStatus } from '~/models/accessPoint'
 
@@ -25,10 +25,10 @@ interface AccessPointSelectProps {
 export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
   props
 ): JSX.Element => {
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
   const [accessPoints, setAccessPoints] = useState<AccessPoint[] | undefined>()
 
-  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
+  const [snackbarError, setSnackbarError] = useState<Error | null>(null)
 
   /** Load a list of access points from the API on component mount */
   useEffect(() => {
@@ -38,24 +38,18 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
         // Filter out unconfirmed access points
         setAccessPoints(data.filter((ap) => ap.status !== ApStatus.UNCONFIRMED))
       })
-      .catch((err: Error) =>
-        setSnackbarMessage({
-          header: 'Could not load access points',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
-      )
+      .catch((err: Error) => setSnackbarError(err))
 
     // Cancel the promise callbacks on component unmount
     return apsPromise.cancel
   }, [])
 
-  /** Create a new snackbar if {@link snackbarMessage} has been updated */
+  /** Create a new snackbar if {@link snackbarError} has been updated */
   useEffect(() => {
-    if (snackbarMessage !== null) {
-      addSnackbarMessage(snackbarMessage)
+    if (snackbarError !== null) {
+      addErrorSnackbar(snackbarError, 'Could not load access points')
     }
-  }, [snackbarMessage])
+  }, [snackbarError])
 
   const handleChange = (event: SelectChangeEvent) => {
     const selectedApName = event.target.value as string
@@ -86,6 +80,6 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
       </Select>
     </FormControl>
   ) : (
-    <div>qqjf todo loading</div>
+    <Spinner />
   )
 }

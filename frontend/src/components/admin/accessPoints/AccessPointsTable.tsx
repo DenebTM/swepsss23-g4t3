@@ -15,6 +15,7 @@ import {
   statusCellMinWidth,
   StatusVariant,
 } from '@component-lib/Table/StatusCell'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import {
   deleteAccessPoint,
@@ -68,7 +69,7 @@ export const AccessPointsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<AccessPoint, any, AccessPoint>[] = [
-    { field: 'name', headerName: 'Name', flex: 1, editable: true },
+    { field: 'name', headerName: 'Name', width: 140, editable: true },
     {
       ...centerCell,
       field: 'status',
@@ -87,7 +88,7 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       field: 'serverAddress',
       headerName: 'Server Address',
-      flex: 1,
+      width: 130,
     },
     {
       field: 'sensorStations',
@@ -107,7 +108,7 @@ export const AccessPointsTable: React.FC = () => {
       headerName: 'Last Update',
       description: 'When the access point was last updated',
       type: 'dateTime',
-      width: 180,
+      width: 175,
       valueGetter: (params: GridValueGetterParams<AccessPoint, string>) =>
         dayjs(params.value).toDate(),
     },
@@ -115,7 +116,7 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       field: 'action',
       headerName: 'Actions',
-      flex: 1,
+      width: 120,
       sortable: false,
       filterable: false,
       renderCell: (
@@ -146,22 +147,24 @@ export const AccessPointsTable: React.FC = () => {
   ]
 
   return (
-    <DataGrid<AccessPoint, any, AccessPoint>
-      columns={columns}
-      getRowId={(row: AccessPoint) => row.name}
-      processRowUpdate={handleUpdateAp}
-      rows={accessPoints}
-      setRows={setAccessPoints}
-      fetchRows={getAccessPoints}
-      getRowClassName={(params) => params.row.status}
-      sx={{
-        [`& .${gridClasses.row}.${ApStatus.UNCONFIRMED}`]: {
-          background: alpha(theme.warnContainer, 0.15),
-        },
-        [`& .${gridClasses.row}.${ApStatus.OFFLINE}`]: {
-          background: alpha(theme.errorContainer, 0.15),
-        },
-      }}
-    />
+    <TablePaper>
+      <DataGrid<AccessPoint, any, AccessPoint>
+        columns={columns}
+        getRowId={(row: AccessPoint) => row.name}
+        processRowUpdate={handleUpdateAp}
+        rows={accessPoints}
+        setRows={setAccessPoints}
+        fetchRows={getAccessPoints}
+        getRowClassName={(params) => params.row.status}
+        sx={{
+          [`& .${gridClasses.row}.${ApStatus.UNCONFIRMED}`]: {
+            background: alpha(theme.warnContainer, 0.15),
+          },
+          [`& .${gridClasses.row}.${ApStatus.OFFLINE}`]: {
+            background: alpha(theme.errorContainer, 0.15),
+          },
+        }}
+      />
+    </TablePaper>
   )
 }

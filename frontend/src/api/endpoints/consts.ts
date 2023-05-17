@@ -16,6 +16,7 @@ export const unauthorised = (message?: string): Response =>
 export const API_URI = {
   accessPoints: '/access-points',
   gardeners: '/gardeners',
+  logs: '/logs',
   measurements: '/measurements',
   photos: '/photos',
   sensorStations: '/sensor-stations',

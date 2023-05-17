@@ -56,7 +56,7 @@ async def get_sensorstation_instructions(session):
         try:
             json_data = await response.json()
             for station in json_data:
-                ss_id = station['id']
+                ss_id = station['ssID']
                 ss_status = station['status']
                 if ss_status != 'AVAILABLE':
                     paired_stations[ss_id] = ss_status
@@ -78,7 +78,7 @@ async def send_sensorstations_to_backend(session, sensorstations):
 @retry_connection_error(retries = 3, interval = 5)
 async def send_sensorstation_connection_status(session, sensorstation, status):
     ss_status = {
-        'accessPoint': common.access_point_name,
+        'apName': common.access_point_name,
         'status': status
     }
     async with session.put('/api/sensor-stations/' + str(sensorstation), json=ss_status, headers=AUTH_HEADER) as response:
@@ -95,7 +95,7 @@ async def send_warning_to_backend(sensorstation_id, session):
 @retry_connection_error(retries = 3, interval = 5)
 async def clear_warning_on_backend(sensorstation_id, session, data):
     if int.from_bytes(data, 'little', signed=False) == 0:
-        data = {'id': sensorstation_id, 'status': 'OK'}
+        data = {'ssID': sensorstation_id, 'status': 'OK'}
         async with session.put('/api/sensor-stations/' + str(sensorstation_id), json=data, headers=AUTH_HEADER) as response:
             pass
             print(response.status)

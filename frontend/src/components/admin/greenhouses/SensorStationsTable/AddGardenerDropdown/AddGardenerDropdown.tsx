@@ -6,8 +6,7 @@ import IconButton from '@mui/material/IconButton'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { getUsers } from '~/api/endpoints/user'
-import { Message, MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
 import { AuthUserRole, User } from '~/models/user'
 import { theme } from '~/styles/theme'
@@ -33,11 +32,11 @@ interface AddGardenerDropdownProps {
  */
 export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
   React.memo((props): JSX.Element => {
-    const addSnackbarMessage = useAddSnackbarMessage()
+    const addErrorSnackbar = useAddErrorSnackbar()
 
     const [potentialGardeners, setPotentialGardeners] = useState<User[]>()
     const [selectOpen, setSelectOpen] = useState(false)
-    const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
+    const [snackbarError, setSnackbarError] = useState<Error | null>(null)
 
     /** Load users from the API on component mount and whenever `props.sensorStation` has been updated */
     useEffect(() => {
@@ -56,24 +55,18 @@ export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
           )
           setPotentialGardeners(filteredUsers)
         })
-        .catch((err: Error) =>
-          setSnackbarMessage({
-            header: 'Could not load users',
-            body: err.message,
-            type: MessageType.ERROR,
-          })
-        )
+        .catch((err: Error) => setSnackbarError(err))
 
       // Cancel the promise callbacks on component unmount
       return usersPromise.cancel
     }, [props.sensorStation])
 
-    /** Create a new snackbar if {@link snackbarMessage} has been updated */
+    /** Create a new snackbar if {@link snackbarError} has been updated */
     useEffect(() => {
-      if (snackbarMessage !== null) {
-        addSnackbarMessage(snackbarMessage)
+      if (snackbarError !== null) {
+        addErrorSnackbar(snackbarError, 'Could not load users')
       }
-    }, [snackbarMessage])
+    }, [snackbarError])
 
     /** Open the gardener select when the icon is clicked */
     const handleIconClick = (e: React.MouseEvent) => {

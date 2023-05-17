@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.controllers.api.SensorStationRestController;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
@@ -26,7 +27,7 @@ public class VisitorController {
     @Autowired
     private PhotoDataRepository photoDataRepository;
 
-    private static final String SS_PHOTOS_PATH = "/sensor-stations/{uuid}/photos";
+    private static final String SS_PHOTOS_PATH = SensorStationRestController.SS_ID_PATH + "/photos";
 
     /**
      * Route to POST images to the photo gallery
@@ -36,7 +37,7 @@ public class VisitorController {
      * @throws IOException
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) throws IOException {
+    ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) throws IOException {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setName(multipartImage.getName());
         try {
@@ -59,7 +60,7 @@ public class VisitorController {
      * @return list of photos
      */
     @GetMapping(value = SS_PHOTOS_PATH)
-    public ResponseEntity<Collection<PhotoData>> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
+    public ResponseEntity<Collection<PhotoData>> getAllPhotosBySS(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
             List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);

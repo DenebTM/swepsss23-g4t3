@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { Spinner } from '@component-lib/Spinner'
 import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageTitle } from '~/components/page/PageTitle'
@@ -23,7 +24,7 @@ export const MyGreenhouses: React.FC = () => {
       <PageHeader
         left={<PageTitle>{PAGE_URL.myGreenhouses.pageTitle}</PageTitle>}
       />
-      {sensorStations &&
+      {sensorStations ? (
         sensorStations.map((s) => (
           <GreenhouseAccordion
             key={s.ssID}
@@ -31,7 +32,10 @@ export const MyGreenhouses: React.FC = () => {
             sensorStation={s}
             setExpanded={setExpanded}
           />
-        ))}
+        ))
+      ) : (
+        <Spinner center />
+      )}
     </PageWrapper>
   )
 }
