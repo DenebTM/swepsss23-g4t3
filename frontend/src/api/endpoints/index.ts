@@ -5,6 +5,7 @@ import { AppRegistry, Endpoints } from '~/api/mirageTypes'
 import { mockedAccessPointReqs } from './accessPoints'
 import { API_URI } from './consts'
 import { mockedLoginEndpoints } from './login'
+import { mockedLogReqs } from './logs'
 import { mockedPhotoReqs } from './photo'
 import {
   GARDENER_PATH,
@@ -25,6 +26,7 @@ export const endpoints: Endpoints = {
   [GARDENER_PATH]: mockedSensorStationGardenerReqs,
   [MEASUREMENT_PATH]: mockedSensorStationMeasurementReqs,
   [API_URI.photos]: mockedPhotoReqs,
+  [API_URI.logs]: mockedLogReqs,
 }
 
 /** Initialise all seed data used by mirage */
@@ -39,6 +41,9 @@ export const createSeedData = (
 
   // Create sensor stations (and the associated gardeners, access points, and measurements)
   server.createList('sensorStation', faker.datatype.number({ min: 1, max: 3 }))
+
+  // Createlog entries
+  server.createList('logEntry', faker.datatype.number({ min: 8, max: 40 }))
 
   return server
 }

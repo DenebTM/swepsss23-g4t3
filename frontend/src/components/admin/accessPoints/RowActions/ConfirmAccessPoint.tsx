@@ -30,7 +30,6 @@ export const ConfirmAccessPoint: React.FC<ConfirmAccessPointProps> = React.memo(
       setUpdating(true)
       updateAccessPoint(props.accessPoint.name, { status: ApStatus.ONLINE })
         .then((updatedAp) => {
-          console.log(updatedAp)
           // Update table row
           props.setAccessPoints((oldAps) => {
             if (typeof oldAps === 'undefined') {
