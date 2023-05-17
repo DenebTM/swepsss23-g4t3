@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public class SensorStation {
 
     @JsonBackReference
     @OneToMany(mappedBy = "sensorStation",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
     @OrderBy("timestamp asc")
@@ -39,7 +40,7 @@ public class SensorStation {
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
     @JsonIdentityReference(alwaysAsId = true)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GARDENER_SS",
             joinColumns = @JoinColumn(name = "SS_ID"),
             inverseJoinColumns = @JoinColumn(name = "USERNAME"))
@@ -56,9 +57,11 @@ public class SensorStation {
     private SensorValues lowerBound;
 
     public SensorStation() {
+        this.measurements = new ArrayList<>();
     }
 
     public SensorStation(AccessPoint accessPoint, Long aggregationPeriod) {
+        this();
         this.accessPoint = accessPoint;
         this.aggregationPeriod = aggregationPeriod;
     }
@@ -128,6 +131,9 @@ public class SensorStation {
     }
 
     public Measurement getCurrentMeasurement() {
-        return measurements.get(measurements.size()-1);
+        if (this.getMeasurements() == null || this.getMeasurements().size() == 0) {
+            return null;
+        }
+        return this.getMeasurements().get(this.getMeasurements().size()-1);
     }
 }

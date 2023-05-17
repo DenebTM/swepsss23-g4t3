@@ -66,6 +66,11 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
       .handleDelete()
       .then(() => {
         props.afterDelete?.()
+        addSnackbarMessage({
+          header: 'Success',
+          body: `Removed ${props.entityName}`,
+          type: MessageType.CONFIRM,
+        })
       })
       .catch((err: Error) => {
         addSnackbarMessage({

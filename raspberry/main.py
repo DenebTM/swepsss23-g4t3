@@ -78,6 +78,7 @@ async def cancel_ss_task(sensorstation_id):
     ss_tasks[sensorstation_id].cancel()
     del ss_tasks[sensorstation_id]
 
+
 async def polling_loop(connection_request, session):
     while not connection_request.done():
         print('Inside AP Loop')
