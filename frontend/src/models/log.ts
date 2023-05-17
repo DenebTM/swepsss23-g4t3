@@ -4,9 +4,9 @@ import { Timestamp } from './timestamp'
  * A single log entry
  */
 export interface AuditLogEntry {
-  details: string
+  message: string
   level: LogLevel
-  origin: LogEntity
+  origin: LogEntity | null
   timestamp: Timestamp
 }
 
