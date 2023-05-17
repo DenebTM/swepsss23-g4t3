@@ -89,6 +89,12 @@ public class AccessPointRestController implements BaseRestController {
         } 
 
         // 200 and new JWT if access point exists with status != 'UNCONFIRMED'
+        // furthermore, update AP status to ONLINE
+        if (ap.getStatus().equals(AccessPointStatus.OFFLINE)) {
+            ap.setStatus(AccessPointStatus.ONLINE);
+            ap = apService.saveAP(ap);
+        }
+
         String authToken = tokenManager.generateJwtToken("admin");
         return ResponseEntity.ok(new PostAccessPointResponse(ap, authToken));
     }
