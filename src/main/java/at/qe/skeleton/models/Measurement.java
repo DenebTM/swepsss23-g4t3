@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @NoArgsConstructor
@@ -13,7 +14,8 @@ import java.time.LocalDateTime;
 public class Measurement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO , generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     private Integer id;
 
     @Column(name = "TIMESTAMP")
@@ -51,5 +53,13 @@ public class Measurement {
 
     public void setSensorStation(SensorStation sensorStation) {
         this.sensorStation = sensorStation;
+    }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setData(SensorValues data) {
+        this.data = data;
     }
 }
