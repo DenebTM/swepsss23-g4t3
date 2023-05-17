@@ -1,6 +1,5 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.MeasurementRepository;
@@ -8,7 +7,6 @@ import at.qe.skeleton.repositories.SensorStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +33,7 @@ public class SensorStationService {
      * @return the sensor station with the given id
      */
     public SensorStation loadSSById(Integer id) {
-        return ssRepository.findFirstById(id);
+        return ssRepository.findFirstBySsID(id);
     }
 
     /**

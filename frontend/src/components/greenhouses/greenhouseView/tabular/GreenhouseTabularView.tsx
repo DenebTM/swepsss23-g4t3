@@ -15,7 +15,7 @@ import { Measurement } from '~/models/measurement'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 interface GreenhouseTabularViewProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -64,7 +64,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
       columns={columns}
       fetchRows={() =>
         getSensorStationMeasurements(
-          props.uuid,
+          props.ssID,
           dayjs().subtract(1, 'week').toISOString(),
           dayjs().toISOString()
         )
