@@ -36,7 +36,7 @@ async def get_sensorstation_instructions(session):
         if response.status == 200:
             json_data = await response.json()
             for station in json_data:
-                ss_id = station['id']
+                ss_id = station['ssID']
                 ss_status = station['status']
                 if ss_status != 'AVAILABLE':
                     paired_stations[ss_id] = ss_status
