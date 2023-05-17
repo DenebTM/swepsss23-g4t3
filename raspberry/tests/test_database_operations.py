@@ -97,7 +97,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
                 'user1',
                 'user2'
             ],
-            'transmission_interval': TRANSMISSION_INTERVAL,
+            'aggregationPeriod': TRANSMISSION_INTERVAL,
             'accessPoint': 'AccessPoint1',
             'lowerBound': {
                 'airPressure': MOCK_THRESHOLDS_TUPLE[11],

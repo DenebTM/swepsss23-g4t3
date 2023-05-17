@@ -57,7 +57,7 @@ async def send_sensorstations_to_backend(session, sensorstations):
 @retry_connection_error(retries = 3, interval = 5)
 async def send_sensorstation_connection_status(session, sensorstation, status):
     ss_status = {
-        'accessPoint': common.access_point_name,
+        'apName': common.access_point_name,
         'status': status
     }
     async with session.put('/api/sensor-stations/' + str(sensorstation), json=ss_status) as response:

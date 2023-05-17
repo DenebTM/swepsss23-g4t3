@@ -47,8 +47,8 @@ def threshold_update(id):
                 'user1',
                 'user2'
             ],
-            'transmission_interval': 20,
-            'accessPoint': 'AccessPoint1',
+            'aggregationPeriod': 20,
+            'apName': 'AccessPoint1',
             'lowerBound': {
                 'airPressure': 0,
                 'airQuality': 0,
