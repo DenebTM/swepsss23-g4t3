@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
+import { Spinner } from '@component-lib/Spinner'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -86,6 +87,6 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
       </Select>
     </FormControl>
   ) : (
-    <div>qqjf todo loading</div>
+    <Spinner />
   )
 }

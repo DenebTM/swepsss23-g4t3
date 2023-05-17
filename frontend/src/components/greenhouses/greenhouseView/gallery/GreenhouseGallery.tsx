@@ -1,6 +1,7 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
+import { Spinner } from '@component-lib/Spinner'
 import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/sensorStations'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
@@ -49,12 +50,14 @@ export const GreenhouseGallery: React.FC<GreenhouseGalleryProps> = (props) => {
 
   return (
     <>
-      {photos && (
+      {photos ? (
         <GalleryImageList
           photos={photos}
           setPhotos={setPhotos}
           ssID={props.ssID}
         />
+      ) : (
+        <Spinner center />
       )}
     </>
   )
