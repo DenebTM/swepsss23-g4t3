@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -14,6 +17,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ACCESS_POINT")
+@NoArgsConstructor
+@EqualsAndHashCode
 public class AccessPoint {
 
     @Id
@@ -34,13 +39,10 @@ public class AccessPoint {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ssID")
     @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "accessPoint",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
     private Set<SensorStation> sensorStations = new HashSet<>();
-
-    public AccessPoint() {
-    }
 
     public AccessPoint(String name) {
         this.name = name;
