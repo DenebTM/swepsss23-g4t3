@@ -5,6 +5,7 @@ import json
 import database_operations
 import functools
 import time
+import logging_operations
 
 STATUS_CODE_OK = 200
 AUTH_TOKEN = ''
@@ -128,3 +129,9 @@ async def send_sensorvalues_to_backend(sensorstation_id, session):
     else:
         print('averages_dict is empty')
         #TODO: Log this
+
+@retry_connection_error(retries = 3 interval = 5)
+async def send_logs(session):
+    log_dict = json.dumps(logging_operations.log_data)
+    async with session.post('/access-points/' + common.access_point_name + '/logs', json=log_dict) as response:
+        logging_operations.clear_log_data()
