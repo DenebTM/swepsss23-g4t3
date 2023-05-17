@@ -17,6 +17,9 @@ backend-unit-test-job:
     - mvn -Dskip.npm -Dskip.yarn -Dskip.installnodenpm -Dskip.installyarn test
   allow_failure: false
   retry: 1
+  only:
+    changes:
+      - src/**/*
 
 frontend-unit-test-job:
   extends: .before_script_template
@@ -28,6 +31,9 @@ frontend-unit-test-job:
     - yarn test
   allow_failure: false
   retry: 1
+  only:
+    changes:
+      - frontend/**/*
 
 arduino-build-job:
   stage: test
@@ -40,6 +46,9 @@ arduino-build-job:
     - pio run
   allow_failure: false
   retry: 1
+  only:
+    changes:
+      - arduino/**/*
 
 raspberry-unit-test-job:
   stage: test
@@ -52,7 +61,9 @@ raspberry-unit-test-job:
     - python -m unittest tests/*.py
   allow_failure: false
   retry: 1
-
+  only:
+    changes:
+      - raspberry/**/*
 
 sonarqube-check:
   extends: .before_script_template
@@ -66,6 +77,16 @@ sonarqube-check:
       - .sonar/cache
   script:
     - echo "Running sonar analysis for ${SONAR_PROJECT_KEY}"
+
+    - apk --update add python3 sqlite
+    - python3 -m ensurepip
+    - pip3 install asyncio aiohttp bleak pyyaml coverage
+    - cd raspberry
+    - python -m coverage run --source=. -m unittest discover tests || true
+    - mv .coverage ..
+    - cd ..
+    - python -m coverage xml -o raspberry/coverage.xml --omit="raspberry/tests/*"
+
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
   retry: 1
