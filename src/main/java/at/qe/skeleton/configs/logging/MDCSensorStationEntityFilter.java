@@ -18,6 +18,7 @@ public class MDCSensorStationEntityFilter extends MDCAbstractEntityFilter {
 
     @Override
     protected Object entityId(HttpServletRequest request) {
+        // get access to the `id` in `/sensor-station/{id}`
         @SuppressWarnings("unchecked")
         Map<String, String> pathVariables =
             (Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE); 

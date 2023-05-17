@@ -11,6 +11,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Request interceptor (set up in WebMvcConfig) that adds properties to
+ * Logback's Mapped Diagnostic Context (https://logback.qos.ch/manual/mdc.html)
+ * for each request.
+ * 
+ * These properties are available in the {@code logging_entity_exception} table
+ * for each log event corresponding to the request.
+ */
 @Component
 public abstract class MDCAbstractEntityFilter implements HandlerInterceptor {
 
