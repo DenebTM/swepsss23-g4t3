@@ -8,13 +8,14 @@ import at.qe.skeleton.services.SensorStationService;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Collection;
+import java.io.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Rest controller to enable access to uploading a photo or viewing all photos of a specific
@@ -60,14 +61,31 @@ public class VisitorController {
      * Route to GET all photos from a specific sensor-station by its ID
      * @param id
      * @return list of photos
+     * see maybe https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/
      */
-    @GetMapping(value = SS_PHOTOS_PATH)
-    public ResponseEntity<Object> getAllPhotosBySS(@PathVariable(value = "uuid") Integer id) {
-        SensorStation ss = ssService.loadSSById(id);
-        if (ss != null) {
-            List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
-            return ResponseEntity.ok(photos.stream().map(PhotoData::getContent));
+    @GetMapping(value = SS_PHOTOS_PATH + "/{pid}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] getPhotoById(@PathVariable(value = "pid") Integer id) throws IOException {
+        if (photoDataRepository.findById(id).isPresent()) {
+            if (photoDataRepository.findById(id).get().getContent().length == 0) {
+                System.out.println("no bytes");
+            }
+            return photoDataRepository.findById(id).get().getContent();
         }
-        throw new NotFoundInDatabaseException("Sensor Station", id);
+        throw new IOException();
+    }
+
+    @GetMapping(SS_PHOTOS_PATH)
+    public ResponseEntity<Object> getPhotosBySSAsId(@PathVariable(value = "uuid") Integer id) {
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss == null) {
+            //TODO: insert correct body
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no ss found");
+        }
+        List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
+        if (photos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no photos found");
+        }
+        List<Integer> ids = photos.stream().map(PhotoData::getId).collect(Collectors.toList());
+        return ResponseEntity.ok(ids);
     }
 }
