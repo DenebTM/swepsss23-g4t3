@@ -22,7 +22,7 @@ public class LoggingEventJson {
 
     @AllArgsConstructor
     @Getter
-    static class LogEntity {
+    public static class LogEntity {
         LogEntityType type;
         Object id;
     }
