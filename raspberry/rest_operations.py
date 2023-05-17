@@ -11,12 +11,12 @@ def retry_connection_error(retries=5, interval=3):
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
-            for _ in range(retries):
+            for i in range(retries):
                 try:
                     return await func(*args, **kwargs)
                 except aiohttp.ClientConnectionError:
                     await asyncio.sleep(interval)
-                    print(f'retrying rn in {func.__name__}')
+                    print(f'Retrying in {func.__name__}. Attempt {i+1} out of {retries}')
                     # TODO: Log this for specific function with func.__name__
             raise aiohttp.ClientConnectionError(f"ClientConnectionError in function '{func.__name__}'")
         return wrapper  # Moved outside the for loop
