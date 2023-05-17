@@ -48,7 +48,7 @@ async def initialize_accesspoint(session):
 
 @retry_connection_error(retries = 3, interval = 5)
 async def send_sensorstations_to_backend(session, sensorstations):
-    ss_avail = list(map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations))
+    ss_avail = list(map(lambda id: { 'ssID': id, 'status': 'AVAILABLE' }, sensorstations))
     async with session.post('/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail) as response:
         if response.status == 200:
             pass
