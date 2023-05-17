@@ -14,7 +14,7 @@ def station_idx(id):
 
 
 #Route that initiates connection
-@app.route('/access-points', methods=['POST'])
+@app.route('/api/access-points', methods=['POST'])
 def status():
     global status_called
     status_called = True
@@ -22,7 +22,7 @@ def status():
     return jsonify(response), 200
 
 # Route that polls for connection update
-@app.route('/access-points/AP1', methods=['GET'])
+@app.route('/api/access-points/AP1', methods=['GET'])
 def accesspoint_connection():
     if status_called:
         response = {'status': 'SEARCHING'}
@@ -37,7 +37,7 @@ def accesspoint_connection():
         return jsonify('Forbidden'), 401
 
 # Route to get new sensor station thresholds
-@app.route('/sensor-stations/<id>', methods=['GET'])
+@app.route('/api/sensor-stations/<id>', methods=['GET'])
 def threshold_update(id):
     if status_called:
         response = {
@@ -72,7 +72,7 @@ def threshold_update(id):
         return jsonify('Forbidden'), 401
 
 # Route that asks for instructions for each sensor station
-@app.route('/access-points/AP1/sensor-stations', methods=['GET'])
+@app.route('/api/access-points/AP1/sensor-stations', methods=['GET'])
 def get_all_ss():
     global stations
     if status_called:
@@ -81,7 +81,7 @@ def get_all_ss():
         return jsonify('Forbidden'), 401
 
 # Route to update connection status in backend
-@app.route('/sensor-stations/<id>', methods=['PUT'])
+@app.route('/api/sensor-stations/<id>', methods=['PUT'])
 def update_ss_status(id):
     global stations
     if status_called:
@@ -102,7 +102,7 @@ def update_ss_status(id):
         return jsonify('Forbidden'), 401
 
 # Route to send back the sensor stations
-@app.route('/access-points/AP1/sensor-stations', methods=['POST'])
+@app.route('/api/access-points/AP1/sensor-stations', methods=['POST'])
 def send_found_ss():
     global stations
     if status_called:
@@ -121,7 +121,7 @@ def send_found_ss():
     
 
 # Route to send sensor data
-@app.route('/sensor-station/<id>/measurements', methods=['POST'])
+@app.route('/api/sensor-station/<id>/measurements', methods=['POST'])
 def send_sensor_data(id):
     if status_called:
         return jsonify('OK'), 200
