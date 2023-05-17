@@ -96,10 +96,6 @@ public class LoggingEvent {
     @JdbcTypeCode(SqlTypes.CHAR)
     private String callerLine;
 
-    @Column(name = "caller_user")
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    private String callerUser;
-
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,8 +103,4 @@ public class LoggingEvent {
     @Column(name = "event_id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long eventId;
-
-    public void setCallerUser(String callerUser) {
-        this.callerUser = callerUser;
-    }
 }
