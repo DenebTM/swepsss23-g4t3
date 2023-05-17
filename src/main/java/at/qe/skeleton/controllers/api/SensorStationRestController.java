@@ -105,8 +105,12 @@ public class SensorStationRestController implements BaseRestController {
 
         List<SensorStation> retSSList = new ArrayList<>();
         for (SensorStation newSS : newSSList) {
-            newSS.setAccessPoint(ap);
-            retSSList.add(ssService.saveSS(newSS));
+            SensorStation existingSS = ssService.loadSSById(newSS.getSsID());
+
+            if (existingSS == null) {
+                newSS.setAccessPoint(ap);
+                retSSList.add(ssService.saveSS(newSS));
+            }
         }
         return ResponseEntity.ok(retSSList);
     }
