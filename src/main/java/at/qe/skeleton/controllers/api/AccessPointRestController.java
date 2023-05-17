@@ -71,11 +71,10 @@ public class AccessPointRestController implements BaseRestController {
             throw new BadRequestException("No server address given");
         }
 
-        String authToken = null;
-        HttpStatus status = HttpStatus.OK;
         AccessPoint ap = apService.loadAPByName(name);
+
+        // 401 and no token if access point is new or not yet confirmed
         if (ap == null || ap.getStatus() == AccessPointStatus.UNCONFIRMED) {
-            status = HttpStatus.UNAUTHORIZED;
             if (ap == null) {
                 ap = apService.saveAP(new AccessPoint(
                     name,
@@ -83,13 +82,15 @@ public class AccessPointRestController implements BaseRestController {
                     AccessPointStatus.UNCONFIRMED
                 ));
             }
-        } else {
-            authToken = tokenManager.generateJwtToken("admin");
-        }
 
-        return ResponseEntity.status(status).body(
-            new PostAccessPointResponse(ap, authToken)
-        );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new PostAccessPointResponse(ap, null)
+            );
+        } 
+
+        // 200 and new JWT if access point exists with status != 'UNCONFIRMED'
+        String authToken = tokenManager.generateJwtToken("admin");
+        return ResponseEntity.ok(new PostAccessPointResponse(ap, authToken));
     }
 
     /**
