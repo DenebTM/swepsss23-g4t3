@@ -8,7 +8,7 @@ status_called = False
 stations = []
 def station_idx(id):
     try:
-        return [station['id'] == id for station in stations].index(True)
+        return [station['ssID'] == id for station in stations].index(True)
     except ValueError:
         return -1
 
@@ -41,7 +41,7 @@ def accesspoint_connection():
 def threshold_update(id):
     if status_called:
         response = {
-            'id': id,
+            'ssID': id,
             'status': 'OK',
             'gardeners':[
                 'user1',
@@ -108,10 +108,10 @@ def send_found_ss():
     if status_called:
         new_ss = request.get_json()
         for ss in new_ss:
-            ss_id = ss['id']
+            ss_id = ss['ssID']
             idx = station_idx(ss_id)
             if idx == -1:
-                stations.append({ 'id': ss_id, 'status': 'PAIRING' })
+                stations.append({ 'ssID': ss_id, 'status': 'PAIRING' })
                 print('new station added; current stations: ', stations)
 
         return jsonify('OK'), 200
