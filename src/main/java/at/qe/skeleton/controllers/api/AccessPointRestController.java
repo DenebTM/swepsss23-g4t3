@@ -72,22 +72,24 @@ public class AccessPointRestController implements BaseRestController {
         }
 
         String authToken = null;
+        HttpStatus status = HttpStatus.OK;
         AccessPoint ap = apService.loadAPByName(name);
-        if (ap != null) {
-            if (ap.getStatus() != AccessPointStatus.UNCONFIRMED) {
-                authToken = tokenManager.generateJwtToken("admin");
+        if (ap == null || ap.getStatus() == AccessPointStatus.UNCONFIRMED) {
+            status = HttpStatus.UNAUTHORIZED;
+            if (ap == null) {
+                ap = apService.saveAP(new AccessPoint(
+                    name,
+                    serverAddress,
+                    AccessPointStatus.UNCONFIRMED
+                ));
             }
-            PostAccessPointResponse papp = new PostAccessPointResponse(ap, authToken);
-            return ResponseEntity.ok(papp);
         } else {
-            ap = apService.saveAP(new AccessPoint(
-                name,
-                serverAddress,
-                AccessPointStatus.UNCONFIRMED
-            ));
-            PostAccessPointResponse papp = new PostAccessPointResponse(ap, authToken);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(papp);
+            authToken = tokenManager.generateJwtToken("admin");
         }
+
+        return ResponseEntity.status(status).body(
+            new PostAccessPointResponse(ap, authToken)
+        );
     }
 
     /**
