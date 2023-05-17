@@ -60,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // If Authorization: Bearer [token] is not in the headers. This is a debug
             // message, not an error, as for the login route no authorization token should
             // be sent
-            logger.debug("Bearer String not found in token");
+            logger.info("Bearer String not found in token");
         }
 
         if (null != username && SecurityContextHolder.getContext().getAuthentication() == null) {
