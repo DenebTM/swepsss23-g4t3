@@ -17,9 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
@@ -108,8 +105,12 @@ public class SensorStationRestController implements BaseRestController {
 
         List<SensorStation> retSSList = new ArrayList<>();
         for (SensorStation newSS : newSSList) {
-            newSS.setAccessPoint(ap);
-            retSSList.add(ssService.saveSS(newSS));
+            SensorStation existingSS = ssService.loadSSById(newSS.getSsID());
+
+            if (existingSS == null) {
+                newSS.setAccessPoint(ap);
+                retSSList.add(ssService.saveSS(newSS));
+            }
         }
         return ResponseEntity.ok(retSSList);
     }
@@ -161,6 +162,11 @@ public class SensorStationRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(SS, id);
         }
         ssService.deleteSS(ss);
+
+        // null related collections to prevent 500 error
+        ss.setGardeners(null);
+        ss.setMeasurements(null);
+
         return ResponseEntity.ok(ss);
     }
 
