@@ -1,17 +1,22 @@
 package at.qe.skeleton.models;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collection;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@JsonSerialize
+@Getter
 public class LoggingEventJson {
 
     @AllArgsConstructor
-    class LogEntity {
+    @Getter
+    static class LogEntity {
         LogEntityType type;
         Object id;
     }
@@ -33,8 +38,7 @@ public class LoggingEventJson {
         this.message = event.getFormattedMessage();
         this.level = LogLevel.valueOf(event.getLevelString());
 
-        props = Arrays.asList(new LoggingEventProperty("0", "USER", "0"));
-
+        if (props == null) return;
         LoggingEventProperty originProp = null;
         for (String type : new String[]{"USER", "ACCESS_POINT", "SENSOR_STATION"}) {
             var maybeProp = props.stream().filter(p -> p.getMappedKey().equals(type)).findFirst();
