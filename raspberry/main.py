@@ -92,8 +92,8 @@ async def polling_loop(connection_request, session):
 
 #Füg header mit authorization hinzu
 async def main():
+    retry_time = 5
     while True:
-        retry_time = 5
         try:
             async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
                 connection_request = asyncio.Future()
@@ -105,12 +105,11 @@ async def main():
                         polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
                         sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
                         await asyncio.gather(polling_loop_task, sensor_station_manager_task)
+                        retry_time = 5
                     else:
                         print('Access point is offline')
                         connection_request = asyncio.Future()
                         await asyncio.sleep(30)
-                else:
-                    raise aiohttp.ClientResponseError
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
