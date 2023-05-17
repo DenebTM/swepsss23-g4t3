@@ -40,6 +40,9 @@ public class AccessPoint {
     @NonNull
     private String serverAddress;
 
+    @Column(name = "CLIENT_ADDRESS")
+    private String clientAddress;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "AP_STATUS")
     @JdbcTypeCode(SqlTypes.VARCHAR)
