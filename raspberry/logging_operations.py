@@ -23,3 +23,4 @@ async def log_to_file_and_list(level, message):
 async def clear_log_data():
     global log_data
     log_data.clear()
+   
