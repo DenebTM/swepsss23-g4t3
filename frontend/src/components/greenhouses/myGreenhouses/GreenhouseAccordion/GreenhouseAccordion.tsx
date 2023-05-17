@@ -23,15 +23,15 @@ export const GreenhouseAccordion: React.FC<GreenhouseAccordionProps> = (
 ) => {
   /** Either expand the current panel or close the panel on click. */
   const handleChange =
-    (uuid: SensorStationUuid) =>
+    (ssID: SensorStationUuid) =>
     (event: React.SyntheticEvent, isExpanded: boolean) => {
-      props.setExpanded(isExpanded ? uuid : null)
+      props.setExpanded(isExpanded ? ssID : null)
     }
 
   return (
     <Accordion
       expanded={props.expanded}
-      onChange={handleChange(props.sensorStation.uuid)}
+      onChange={handleChange(props.sensorStation.ssID)}
       TransitionProps={{ unmountOnExit: true }}
       sx={{
         '&.Mui-expanded:last-of-type': {

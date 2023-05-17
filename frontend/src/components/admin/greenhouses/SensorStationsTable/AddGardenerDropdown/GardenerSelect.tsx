@@ -33,7 +33,7 @@ export const GardenerSelect: React.FC<GardenerSelectProps> = (props) => {
   const handleChange = (event: SelectChangeEvent) => {
     const selectedUser = event.target.value as string
 
-    assignGardener(props.sensorStation.uuid, selectedUser)
+    assignGardener(props.sensorStation.ssID, selectedUser)
       .then((updatedSs: SensorStation) => {
         // Update sensor station in state
         props.setSensorStations((oldValue) => {
@@ -41,7 +41,7 @@ export const GardenerSelect: React.FC<GardenerSelectProps> = (props) => {
             return []
           } else {
             return oldValue.map((ss: SensorStation) =>
-              props.sensorStation.uuid === ss.uuid ? updatedSs : ss
+              props.sensorStation.ssID === ss.ssID ? updatedSs : ss
             )
           }
         })

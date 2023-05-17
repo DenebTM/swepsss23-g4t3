@@ -14,7 +14,7 @@ async def search_for_sensorstations():
             devices = await scanner.discover()
             for d in devices:
                 if common.sensor_station_name in d.name:
-                    ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed= False)
+                    ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed=False)
                     sensorstations.append(ss_uuid)
 
                     common.known_ss[ss_uuid] = d.address
@@ -38,7 +38,7 @@ async def search_for_sensorstations():
 async def send_sensorstations_to_backend(session, sensorstations):
     ss_avail = list(map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations))
 
-    async with session.post(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail) as response:
+    async with session.post('/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail) as response:
         data = await response.json()
         print(data)
 
@@ -48,6 +48,6 @@ async def send_sensorstation_connection_status(session, sensorstation, status):
         'accessPoint': common.access_point_name,
         'status': status
     }
-    async with session.put(common.web_server_address + '/sensor-stations/' + str(sensorstation), json=ss_status) as response:
+    async with session.put('/sensor-stations/' + str(sensorstation), json=ss_status) as response:
         response = await response.json()
         print(response)
