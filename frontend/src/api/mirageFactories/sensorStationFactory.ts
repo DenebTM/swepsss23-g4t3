@@ -97,35 +97,46 @@ export const sensorStationFactory = Factory.extend<
       faker.datatype.number({ min: 0, max: 30 })
     ) as ModelInstance<Measurement>[]
 
-    // Create bound objects
-    const lowerBound: ModelInstance<SensorValues> = server.create('sensorValue')
-    const upperBound: ModelInstance<SensorValues> = server.create('sensorValue')
-
     // Generate upper and lower bounds near the generated measurements
     const measurementVals: SensorValues[] = measurements.map(
       (m) => m.attrs.data
     )
-    const minSensorValues = measurementVals.reduce(
-      compareSensorVals(Math.min),
-      lowerBound.attrs
-    )
-    const maxSensorValues = measurementVals.reduce(
-      compareSensorVals(Math.max),
-      upperBound.attrs
-    )
 
-    // Randomly jitter max and min values
-    lowerBound.update(randomJitter(minSensorValues))
-    upperBound.update(randomJitter(maxSensorValues))
+    // Create bounds objects, returning null with a 25% probability
+    const boundIsNullDenom = 4
+
+    // Generate mocked lower bound
+    let lowerBound: ModelInstance<SensorValues> | null = null
+    if (faker.datatype.number({ min: 0, max: boundIsNullDenom - 1 }) === 0) {
+      lowerBound = server.create('sensorValue') as ModelInstance<SensorValues>
+      const minSensorValues = measurementVals.reduce(
+        compareSensorVals(Math.min),
+        lowerBound.attrs
+      )
+      // Randomly jitter min values
+      lowerBound.update(randomJitter(minSensorValues))
+    }
+
+    // Generate mocked upper bound
+    let upperBound: ModelInstance<SensorValues> | null = null
+    if (faker.datatype.number({ min: 0, max: boundIsNullDenom - 1 }) === 0) {
+      upperBound = server.create('sensorValue') as ModelInstance<SensorValues>
+      const maxSensorValues = measurementVals.reduce(
+        compareSensorVals(Math.max),
+        upperBound.attrs
+      )
+      // Randomly jitter min values
+      upperBound.update(randomJitter(maxSensorValues))
+    }
 
     // Update sensorStation object
     sensorStation.update({
       currentMeasurement:
         measurements.length > 0 ? measurements[0].attrs : null,
       gardeners: gardenerIds,
-      lowerBound: lowerBound.attrs,
+      lowerBound: lowerBound ? lowerBound.attrs : null,
       measurements: measurements.map((m) => m.attrs),
-      upperBound: upperBound.attrs,
+      upperBound: upperBound ? upperBound.attrs : null,
       apName: ap.attrs.name,
     })
   },
