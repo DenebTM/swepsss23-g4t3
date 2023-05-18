@@ -6,6 +6,5 @@ export type PhotoId = number
 /** Type alias for a string path to an photo */
 export interface Photo {
   id: PhotoId
-  url: string
   uploaded: Timestamp
 }

@@ -44,6 +44,11 @@ public class MeasurementRestController implements BaseRestController {
         @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             Instant to
     ) {
+        SensorStation ss = ssService.loadSSById(id);
+        if (ss == null) {
+            throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
+        }
+
         // return measurements up to latest available by default
         if (to == null) {
             Measurement lastMeasurement = measurementService.getCurrentMeasurement(id);
