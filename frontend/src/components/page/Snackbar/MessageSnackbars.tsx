@@ -63,10 +63,10 @@ export const MessageSnackbars: React.FC<Record<string, never>> = (props) => {
         sx={{
           width: '100%',
           position: 'fixed',
-          bottom: 0,
-          padding: snackbarSpacing,
+          padding: `${snackbarSpacing} ${snackbarSpacing} 0`, // No bottom padding to avoid hiding logout button
           alignItems: smallDisplay ? 'center' : 'flex-start',
           zIndex: theme.zIndex.snackbar, // Show in front of main page body
+          bottom: '36px',
         }}
       >
         {snackbarState.messages.map((msg: MessageState) => (
