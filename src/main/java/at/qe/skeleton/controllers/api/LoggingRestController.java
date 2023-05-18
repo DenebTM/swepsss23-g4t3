@@ -37,7 +37,7 @@ public class LoggingRestController implements BaseRestController {
     AccessPointService apService;
 
     @Autowired
-    LoggingService loggingService;
+    LoggingService logger;
 
     @Autowired
     LoggingEventPropertyRepository propertyRepository;
@@ -63,8 +63,8 @@ public class LoggingRestController implements BaseRestController {
 
         return ResponseEntity.ok(
             // get logs from database
-            loggingService.filterLogsByLevelIn(
-                loggingService.getAllLogsInTimeInterval(from, to),
+            logger.filterLogsByLevelIn(
+                logger.getAllLogsInTimeInterval(from, to),
                 levels
             ).stream()
             // convert logs to return type
@@ -110,7 +110,7 @@ public class LoggingRestController implements BaseRestController {
 
         for (LoggingEventJson log : logs) {
             // save the log entry
-            var savedLog = loggingService.saveLog(new LoggingEvent(
+            var savedLog = logger.saveLog(new LoggingEvent(
                 log.getMessage(),
                 log.getLevel(),
                 log.getTimestamp().toEpochMilli()
@@ -126,6 +126,8 @@ public class LoggingRestController implements BaseRestController {
 
             returnList.add(new LoggingEventJson(savedLog, Arrays.asList(logProp)));
         }
+
+        logger.info("Received log entries from access point", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
 
         return ResponseEntity.ok(returnList);
     }
