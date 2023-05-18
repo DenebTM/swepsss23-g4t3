@@ -76,7 +76,7 @@ export const DashboardTable: React.FC = (props) => {
         columns={columns}
         getRowId={(row: SensorStation) => row.ssID}
         rows={sensorStations ?? undefined}
-        noRowsMessage="No measurements to display"
+        noRowsMessage="No measurements to display. You will see current values here once you connect at least one greenhouse."
       />
     </TablePaper>
   )
