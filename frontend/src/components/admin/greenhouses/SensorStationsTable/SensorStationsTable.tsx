@@ -125,7 +125,7 @@ export const SensorStationsTable: React.FC = () => {
       ) => <GardenerChips {...params} setRows={handleUpdateSensorStations} />,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 130 * maxGardenersPerGreenhouse,
+      width: Math.max(130 * maxGardenersPerGreenhouse, 100),
     },
     {
       ...centerCell,
