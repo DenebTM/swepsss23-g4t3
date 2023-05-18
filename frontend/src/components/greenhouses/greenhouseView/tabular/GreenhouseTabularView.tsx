@@ -66,13 +66,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
     <TablePaper>
       <DataGrid<Measurement, any, Measurement>
         columns={columns}
-        fetchRows={() =>
-          getSensorStationMeasurements(
-            props.ssID,
-            dayjs().subtract(1, 'week').toISOString(),
-            dayjs().toISOString()
-          )
-        }
+        fetchRows={() => getSensorStationMeasurements(props.ssID)}
         getRowId={(row: Measurement) => row.id}
         initialState={{
           sorting: {
