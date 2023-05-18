@@ -11,6 +11,7 @@ import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -285,11 +286,11 @@ public class SensorStationRestController implements BaseRestController {
 
     /**
      * Route to DELete pictures from the gallery
-     * @param photoId
+     * @param photoId id of photo to be deleted
      * @return the picture if found
      */
     @DeleteMapping(value = SS_ID_PHOTOS_PATH + "/{photoId}")
-    ResponseEntity<String> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "id") Integer id) {
+    ResponseEntity<String> deletePhoto(@PathVariable(value = "photoId") Integer photoId, @PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);

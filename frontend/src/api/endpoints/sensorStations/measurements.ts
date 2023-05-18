@@ -10,7 +10,7 @@ import { API_URI, notFound, success } from '../consts'
 
 /**
  * GET /api/sensor-stations/{ssID}/measurements
- * @returns The current
+ * @returns The measurements from the last week by default, otherwise between the given from and to dates
  */
 export const getSensorStationMeasurements = async (
   sensorStationUuid: SensorStationUuid,
