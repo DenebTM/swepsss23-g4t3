@@ -93,12 +93,12 @@ async def get_sensor_data_thresholds(sensorstation_id):
         # TODO: Implement logging
         return {}
 
-async def get_sensorstation_transmissioninterval(sensorstation_id):
+async def get_sensorstation_aggregation_period(sensorstation_id):
     try:
         cursor = db_conn.cursor()
-        cursor.execute('SELECT transmissioninterval FROM sensorstations WHERE ssID = ?', (sensorstation_id,))
-        transmission_interval = cursor.fetchone()[0]
-        return transmission_interval
+        cursor.execute('SELECT aggregation_period FROM sensorstations WHERE ssID = ?', (sensorstation_id,))
+        aggregation_period = cursor.fetchone()[0]
+        return aggregation_period
     except Exception as e:
             db_conn.rollback()
             print(f'Error fetching data for sensorstation {sensorstation_id}: {e}')
@@ -107,7 +107,7 @@ async def initialize_sensorstation(sensorstation_id):
     json_data = {
         'ssID': sensorstation_id,
 
-        'aggregationPeriod': common.default_transmission_interval,
+        'aggregationPeriod': common.default_aggregation_period,
         'apName': common.access_point_name,
         'lowerBound': {
             'airPressure': 0,
@@ -146,7 +146,7 @@ async def update_sensorstation(sensorstation):
     with db_conn:
         try:
             sensorstation_id = sensorstation['ssID']
-            transmission_interval = sensorstation['aggregationPeriod']
+            aggregation_period = sensorstation['aggregationPeriod']
 
             upper_bounds = sensorstation['upperBound']
             temperature_max = upper_bounds['temperature']
@@ -165,13 +165,13 @@ async def update_sensorstation(sensorstation):
             soil_moisture_min = lower_bounds['soilMoisture']
             db_conn.execute(
                 '''INSERT OR REPLACE INTO sensorstations
-                (ssID, transmissioninterval,
+                (ssID, aggregation_period,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (sensorstation_id, transmission_interval,
+                (sensorstation_id, aggregation_period,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,

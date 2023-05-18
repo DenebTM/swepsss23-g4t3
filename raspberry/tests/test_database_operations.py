@@ -5,10 +5,10 @@ from unittest.mock import MagicMock, patch
 import time
 
 #TODO: implement logging testing
-from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensor_data_thresholds, update_sensorstation, get_sensorstation_transmissioninterval
+from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensor_data_thresholds, update_sensorstation, get_sensorstation_aggregation_period
 
 SENSORSTATION_ID = 1
-TRANSMISSION_INTERVAL = 300
+AGGREGATION_PERIOD = 300
 MOCK_VALUES_TUPLE = (10,20,30,40,50,60)
 MOCK_THRESHOLDS_TUPLE = (100,100,100,100,100,100,0,0,0,0,0,0)
 
@@ -47,15 +47,15 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result, expected_results)
 
     @patch('database_operations.db_conn')
-    async def test_get_sensorstation_transmissioninterval(self, db_conn):
+    async def test_get_sensorstation_aggregation_period(self, db_conn):
         cursor = MagicMock()
         db_conn.cursor.return_value = cursor
-        cursor.fetchone.return_value = (TRANSMISSION_INTERVAL,)
+        cursor.fetchone.return_value = (AGGREGATION_PERIOD,)
        
         # Call the function with a mock sensorstation_id
-        transmission_interval = await get_sensorstation_transmissioninterval(SENSORSTATION_ID)
+        transmission_interval = await get_sensorstation_aggregation_period(SENSORSTATION_ID)
         # Check that the function returned the expected value
-        self.assertEqual(transmission_interval, TRANSMISSION_INTERVAL)
+        self.assertEqual(transmission_interval, AGGREGATION_PERIOD)
 
     # Test get_sensor_data_thresholds function
     @patch('database_operations.db_conn')
@@ -97,7 +97,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
                 'user1',
                 'user2'
             ],
-            'aggregationPeriod': TRANSMISSION_INTERVAL,
+            'aggregationPeriod': AGGREGATION_PERIOD,
             'accessPoint': 'AccessPoint1',
             'lowerBound': {
                 'airPressure': MOCK_THRESHOLDS_TUPLE[11],
@@ -121,13 +121,13 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         # check if the data is inserted correctly
         db_conn.execute.assert_called_once_with(
                 '''INSERT OR REPLACE INTO sensorstations
-                (ssID, transmissioninterval,
+                (ssID, aggregation_period,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,
                 air_quality_index_min, soil_moisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (SENSORSTATION_ID, TRANSMISSION_INTERVAL, MOCK_THRESHOLDS_TUPLE[0], MOCK_THRESHOLDS_TUPLE[1], 
+                (SENSORSTATION_ID, AGGREGATION_PERIOD, MOCK_THRESHOLDS_TUPLE[0], MOCK_THRESHOLDS_TUPLE[1], 
                  MOCK_THRESHOLDS_TUPLE[2], MOCK_THRESHOLDS_TUPLE[3], MOCK_THRESHOLDS_TUPLE[4], MOCK_THRESHOLDS_TUPLE[5], 
                  MOCK_THRESHOLDS_TUPLE[6], MOCK_THRESHOLDS_TUPLE[7], MOCK_THRESHOLDS_TUPLE[8], MOCK_THRESHOLDS_TUPLE[9], 
                  MOCK_THRESHOLDS_TUPLE[10], MOCK_THRESHOLDS_TUPLE[11]))
