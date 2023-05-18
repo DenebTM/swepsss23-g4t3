@@ -153,6 +153,7 @@ public class AccessPointRestController implements BaseRestController {
                 throw new BadRequestException("Invalid status given");
             }
         }
+
         return ResponseEntity.ok(apService.saveAP(ap));
     }
 
