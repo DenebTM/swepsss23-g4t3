@@ -3,6 +3,7 @@ package at.qe.skeleton.controllers.api;
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.*;
+import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
@@ -106,6 +107,10 @@ public class SensorStationRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
             throw new NotFoundInDatabaseException("Access point", String.valueOf(apName));
+        }
+
+        if (!ap.getStatus().equals(AccessPointStatus.SEARCHING)) {
+            throw new BadRequestException("Access point " + ap.getName() + " is not in SEARCHING mode");
         }
 
         List<SensorStation> retSSList = new ArrayList<>();
