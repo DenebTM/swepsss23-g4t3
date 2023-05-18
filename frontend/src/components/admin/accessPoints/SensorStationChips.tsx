@@ -1,14 +1,16 @@
-import { RemovableChip } from '@component-lib/RemovableChip'
-import { Tooltip } from '@component-lib/Tooltip'
+import React, { Dispatch, SetStateAction } from 'react'
+
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { GridRenderCellParams } from '@mui/x-data-grid'
-import React, { Dispatch, SetStateAction } from 'react'
+
+import { RemovableChip } from '@component-lib/RemovableChip'
+import { Tooltip } from '@component-lib/Tooltip'
 import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { emDash } from '~/common'
 import { useLoadSensorStations, useSensorStations } from '~/hooks/appContext'
 import { AccessPoint } from '~/models/accessPoint'
-import { SensorStationUuid } from '~/models/sensorStation'
+import { SensorStationUuid, StationStatus } from '~/models/sensorStation'
 
 interface SensorStationChipsProps
   extends GridRenderCellParams<AccessPoint, any, AccessPoint> {
@@ -61,22 +63,25 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
   }
 
   return (
-    <Stack spacing={1} padding={2} direction='row'>
+    <Stack spacing={1} padding={2} direction="row">
       {props.row.sensorStations.length > 0 ? (
         props.row.sensorStations
-          .filter((ssID) => getSsStatus(ssID) !== 'available')
+          .filter(
+            (ssID) =>
+              getSsStatus(ssID) !== StationStatus.AVAILABLE.toLowerCase()
+          )
           .map((ssID: SensorStationUuid) => (
             <RemovableChip
               key={ssID}
-              entityName='greenhouse'
+              entityName="greenhouse"
               handleDelete={() => deleteSensorStation(ssID)}
               afterDelete={() => afterDelete(ssID)}
               label={
                 <Stack spacing={0}>
-                  <Typography variant='labelLarge' color='primary'>
+                  <Typography variant="labelLarge" color="primary">
                     Greenhouse {String(ssID)}
                   </Typography>
-                  <Typography variant='labelSmall' color='onSurfaceVariant'>
+                  <Typography variant="labelSmall" color="onSurfaceVariant">
                     Status: {getSsStatus(ssID)}
                   </Typography>
                 </Stack>
