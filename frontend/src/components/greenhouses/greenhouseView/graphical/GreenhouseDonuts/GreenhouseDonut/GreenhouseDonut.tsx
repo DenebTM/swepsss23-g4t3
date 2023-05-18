@@ -16,8 +16,8 @@ interface GreenhouseDonutProps {
   donutHeight: number
   icon: React.ReactNode
   metricRange: GreenhouseMetricRange
-  maxThreshold: number
-  minThreshold: number
+  maxThreshold: number | undefined
+  minThreshold: number | undefined
   value: number
 }
 
@@ -28,7 +28,10 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const outOfRange =
-    props.value < props.minThreshold || props.value > props.maxThreshold
+    (typeof props.minThreshold !== 'undefined' &&
+      props.value < props.minThreshold) ||
+    (typeof props.maxThreshold !== 'undefined' &&
+      props.value > props.maxThreshold)
 
   return (
     <Box minWidth={props.donutHeight} height={props.donutHeight}>
@@ -37,8 +40,8 @@ export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
           data={[
             {
               metricRange: props.metricRange,
-              minThreshold: props.minThreshold,
-              maxThreshold: props.maxThreshold,
+              minThreshold: props.minThreshold ?? props.metricRange.min,
+              maxThreshold: props.maxThreshold ?? props.metricRange.max,
               value: props.value,
             },
           ]}
