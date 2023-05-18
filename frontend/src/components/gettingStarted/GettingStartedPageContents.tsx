@@ -12,18 +12,6 @@ import { GreenhouseIcon } from '~/common'
 import { PAGE_URL } from '~/common'
 import { theme } from '~/styles/theme'
 
-/** Reusable component for subheadings inside getting started page */
-const GettingStartedSubheading = (props: { children: React.ReactNode }) => (
-  <Typography
-    component="h6"
-    variant="titleLarge"
-    color="onSurfaceVariant"
-    gutterBottom
-  >
-    {props.children}
-  </Typography>
-)
-
 /** Reusable component for body text inside getting started page */
 const GettingStartedBody = (props: {
   children: React.ReactNode
@@ -40,8 +28,21 @@ const GettingStartedBody = (props: {
 )
 
 /** Reusable component for each subsection of the getting started page */
-const GettingStartedSection = (props: { children: React.ReactNode }) => (
-  <Card sx={{ padding: theme.spacing(3) }}>{props.children}</Card>
+const GettingStartedSection = (props: {
+  children: React.ReactNode
+  subheading: string
+}) => (
+  <Card sx={{ padding: theme.spacing(3) }}>
+    <Typography
+      component="h6"
+      variant="titleLarge"
+      color="onSurfaceVariant"
+      gutterBottom
+    >
+      {props.subheading}
+    </Typography>
+    {props.children}
+  </Card>
 )
 
 /** Reusable component for ordered lists inside getting started page */
@@ -87,10 +88,7 @@ export const GettingStartedPageContents: React.FC = () => {
 
   return (
     <Stack spacing={2} sx={{ padding: theme.spacing(2, 0) }}>
-      <GettingStartedSection>
-        <GettingStartedSubheading>
-          Connecting an Access Point
-        </GettingStartedSubheading>
+      <GettingStartedSection subheading="Connecting an Access Point">
         <GettingStartedOl>
           <GettingStartedLi>
             Plug in the Raspberry Pi and connect it to the network via Wi-Fi.
@@ -117,10 +115,7 @@ export const GettingStartedPageContents: React.FC = () => {
         </GettingStartedOl>
       </GettingStartedSection>
 
-      <GettingStartedSection>
-        <GettingStartedSubheading>
-          Pairing a Greenhouse
-        </GettingStartedSubheading>
+      <GettingStartedSection subheading="Pairing a Greenhouse">
         <GettingStartedOl>
           <GettingStartedLi>
             Set the Greenhouse's ID using the DIP switch.
@@ -161,9 +156,7 @@ export const GettingStartedPageContents: React.FC = () => {
         </GettingStartedBody>
       </GettingStartedSection>
 
-      <GettingStartedSection>
-        <GettingStartedSubheading>Sensor Warnings</GettingStartedSubheading>
-
+      <GettingStartedSection subheading="Sensor Warnings">
         <GettingStartedBody gutterBottom>
           Go to{' '}
           <Link
