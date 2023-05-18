@@ -110,7 +110,7 @@ public class LoggingRestController implements BaseRestController {
         for (LoggingEventJson log : logs) {
             // save the log entry
             var savedLog = logger.saveLog(new LoggingEvent(
-                log.getMessage(),
+                "From AP " + ap.getName() + ": " + log.getMessage(),
                 log.getLevel(),
                 log.getTimestamp().toEpochMilli()
             ));

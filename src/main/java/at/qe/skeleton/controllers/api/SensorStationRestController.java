@@ -131,6 +131,8 @@ public class SensorStationRestController implements BaseRestController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
+        String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
@@ -168,7 +170,7 @@ public class SensorStationRestController implements BaseRestController {
                 }
 
                 if (!newAggregationPeriod.equals(oldAggregationPeriod)) {
-                    logger.info("Changed aggregation period", LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+                    logger.info("Aggregation period changed by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
                 }
 
                 ss.setAggregationPeriod(newAggregationPeriod);

@@ -125,8 +125,9 @@ public class MeasurementRestController implements BaseRestController {
         }
 
         try {
+            newMeasurement = measurementService.saveMeasurement(newMeasurement);
             logger.info("New measurements received", LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
-            return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
+            return ResponseEntity.ok(newMeasurement);
         } catch (Exception e) {
             logger.warn("Unknown error receiving measurements: " + e.getMessage(), LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
             throw new BadRequestException(e.getMessage());
