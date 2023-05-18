@@ -7,10 +7,7 @@ import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
-import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +25,13 @@ import java.util.List;
 @RestController
 public class VisitorController {
 
+    private static final String SS_PHOTOS_PATH = SensorStationRestController.SS_ID_PATH + "/photos";
+    private static final Long MAX_IMAGE_SIZE = 8 * 1024 * 1024L;
+
     @Autowired
     private SensorStationService ssService;
     @Autowired
     private PhotoDataRepository photoDataRepository;
-
-    private static final String SS_PHOTOS_PATH = SensorStationRestController.SS_ID_PATH + "/photos";
 
     /**
      * Route to POST images to the photo gallery
@@ -42,11 +40,11 @@ public class VisitorController {
      * @return id and name of Photo
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
+    ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
         PhotoData dbPhoto = new PhotoData();
         try {
-            if (multipartImage.getSize() > 8000000) {
-                throw new SizeLimitExceededException("", multipartImage.getSize(), 8);
+            if (multipartImage.getSize() > MAX_IMAGE_SIZE) {
+                throw new MaxUploadSizeExceededException(MAX_IMAGE_SIZE);
             }
             if (multipartImage.getBytes().length == 0) {
                 throw new BadRequestException("Could not get bytes for photo");
@@ -55,16 +53,10 @@ public class VisitorController {
             dbPhoto.setContent(multipartImage.getBytes());
             SensorStation ss = ssService.loadSSById(id);
             if (ss == null) {
-                throw new NotFoundInDatabaseException("Sensor station", id);
+                throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
             }
             dbPhoto.setSensorStation(ss);
             photoDataRepository.save(dbPhoto);
-        } catch (SizeLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Size limit for photo exceeded");
-        } catch (FileSizeLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File size limit for photo exceeded");
-        }  catch (MaxUploadSizeExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
         } catch (IOException e) {
             throw new NotFoundInDatabaseException("Bytes for photo", dbPhoto.getId());
         }
