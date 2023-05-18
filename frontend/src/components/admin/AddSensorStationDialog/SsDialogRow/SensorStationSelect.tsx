@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react'
 
+import CircularProgress from '@mui/material/CircularProgress'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -36,7 +37,7 @@ export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
   }
 
   if (sensorStations === null) {
-    return <div>qqjf TODO loading</div>
+    return <CircularProgress />
   } else {
     // Only show sensor stations which are in PAIRING mode for the selected access point
     const apSensorStations = sensorStations.filter(

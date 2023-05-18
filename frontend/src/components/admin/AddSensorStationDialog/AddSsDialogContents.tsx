@@ -93,7 +93,7 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
 
       <SsDialogRow
         row={2}
-        description='Press the button on the sensor station to turn on Bluetooth then click "Start Scan". The sensor station will be automatically detected.'
+        description="Press the button on the sensor station to turn on Bluetooth. The sensor station will be automatically detected."
         title="Activate Sensor Station"
       >
         <SensorStationSelect
