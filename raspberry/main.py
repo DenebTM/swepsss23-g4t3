@@ -96,7 +96,6 @@ async def polling_loop(connection_request, session):
 
 #Füg header mit authorization hinzu
 async def main():
-    retry_time = 5
     while True:
         try:
             async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
@@ -118,13 +117,13 @@ async def main():
             connection_request.set_result('Done')
             await logging_operations.log_to_file_and_list('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
             time.sleep(RETRY_TIME)
+            
         except aiohttp.ClientResponseError as e:
-            print(f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            await logging_operations.log_to_file_and_list('WARNING', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
             time.sleep(RETRY_TIME)
-            #TODO:Log this
+
         except Exception as e:
-            print(f'Unexpected error occured: {e}')
-            #TODO:Log this
+            await logging_operations.log_to_file_and_list('ERROR' f'Unexpected error occured: {e}')
 
 if __name__ == '__main__':
     asyncio.run(main())
