@@ -21,7 +21,7 @@ public class PhotoDataTest {
     PhotoDataRepository photoDataRepository;
 
     @Test
-    public void uploadImage() throws IOException {
+    public void testUploadImage() throws IOException {
         PhotoData img = new PhotoData("example2", null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
         photoDataRepository.save(img);
         int id = img.getId();
