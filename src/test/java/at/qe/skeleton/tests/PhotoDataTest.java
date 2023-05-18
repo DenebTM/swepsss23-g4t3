@@ -10,7 +10,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,13 +21,11 @@ public class PhotoDataTest {
     PhotoDataRepository photoDataRepository;
 
     @Test
-    public void uploadImage() throws IOException {
-        PhotoData img = new PhotoData("example2", null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
+    public void testUploadImage() throws IOException {
+        PhotoData img = new PhotoData(null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
         photoDataRepository.save(img);
         int id = img.getId();
-        assert(photoDataRepository.findByName("example2").isPresent());
         assert(photoDataRepository.findById(id).isPresent());
-        assertEquals(photoDataRepository.findByName("example2").get(), img);
         assertEquals(photoDataRepository.findById(id).get(), img);
         assertTrue(photoDataRepository.findById(id).get().getContent().length > 0);
     }
