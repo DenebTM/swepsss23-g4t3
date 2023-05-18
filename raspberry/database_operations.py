@@ -56,7 +56,7 @@ async def clear_sensor_data(sensorstation_id):
         print(f'couldnt delete sensordata. Error: {e}')
         #TODO: Logging implementation 
 
-async def get_sensor_data_thresholds(sensorstation_id):
+async def get_sensorstation_thresholds(sensorstation_id):
     try:
         cursor = db_conn.cursor()
         cursor.execute(
@@ -148,21 +148,26 @@ async def update_sensorstation(sensorstation):
             sensorstation_id = sensorstation['ssID']
             aggregation_period = sensorstation['aggregationPeriod']
 
+            thresholds = await get_sensorstation_thresholds(sensorstation_id)
+
             upper_bounds = sensorstation['upperBound']
-            temperature_max = upper_bounds['temperature']
-            humidity_max = upper_bounds['humidity']
-            air_pressure_max = upper_bounds['airPressure']
-            illuminance_max = upper_bounds['lightIntensity']
-            air_quality_index_max = upper_bounds['airQuality']
-            soil_moisture_max = upper_bounds['soilMoisture']
+            if upper_bounds is not None:
+                thresholds['temperature_max'] = upper_bounds['temperature']
+                thresholds['humidity_max'] = upper_bounds['humidity']
+                thresholds['air_pressure_max'] = upper_bounds['airPressure']
+                thresholds['illuminance_max'] = upper_bounds['lightIntensity']
+                thresholds['air_quality_index_max'] = upper_bounds['airQuality']
+                thresholds['soil_moisture_max'] = upper_bounds['soilMoisture']
 
             lower_bounds = sensorstation['lowerBound']
-            temperature_min = lower_bounds['temperature']
-            humidity_min = lower_bounds['humidity']
-            air_pressure_min = lower_bounds['airPressure']
-            illuminance_min = lower_bounds['lightIntensity']
-            air_quality_index_min = lower_bounds['airQuality']
-            soil_moisture_min = lower_bounds['soilMoisture']
+            if lower_bounds is not None:
+                thresholds['temperature_min'] = lower_bounds['temperature']
+                thresholds['humidity_min'] = lower_bounds['humidity']
+                thresholds['air_pressure_min'] = lower_bounds['airPressure']
+                thresholds['illuminance_min'] = lower_bounds['lightIntensity']
+                thresholds['air_quality_index_min'] = lower_bounds['airQuality']
+                thresholds['soil_moisture_min'] = lower_bounds['soilMoisture']
+
             db_conn.execute(
                 '''INSERT OR REPLACE INTO sensorstations
                 (ssID, aggregation_period,
@@ -172,10 +177,14 @@ async def update_sensorstation(sensorstation):
                 air_quality_index_min, soil_moisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                 (sensorstation_id, aggregation_period,
-                temperature_max, humidity_max, air_pressure_max, illuminance_max,
-                air_quality_index_max, soil_moisture_max,
-                temperature_min, humidity_min, air_pressure_min, illuminance_min,
-                air_quality_index_min, soil_moisture_min))
+
+                thresholds['temperature_max'], thresholds['humidity_max'],
+                thresholds['air_pressure_max'], thresholds['illuminance_max'],
+                thresholds['air_quality_index_max'], thresholds['soil_moisture_max'],
+
+                thresholds['temperature_min'], thresholds['humidity_min'],
+                thresholds['air_pressure_min'], thresholds['illuminance_min'],
+                thresholds['air_quality_index_min'], thresholds['soil_moisture_min']))
             db_conn.commit()
         except Exception as e:
             db_conn.rollback()
