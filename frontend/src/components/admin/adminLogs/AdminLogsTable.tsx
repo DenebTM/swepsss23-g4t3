@@ -7,6 +7,10 @@ import {
 } from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
+import {
+  DateRangeFilter,
+  DateValue,
+} from '@component-lib/Table/DateRangeFilter'
 import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
 import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
@@ -30,6 +34,8 @@ const centerCell: Partial<GridColDef<LogEntry, any, LogEntry>> = {
  * Table containing a paginated list of logs
  */
 export const AdminLogsTable: React.FC = () => {
+  const [from, setFrom] = useState<DateValue>(dayjs().subtract(1, 'week'))
+  const [to, setTo] = useState<DateValue>(dayjs())
   const [logEntries, setLogEntries] = useState<LogEntry[]>()
 
   /** Columns for the logs table */
@@ -67,18 +73,22 @@ export const AdminLogsTable: React.FC = () => {
       width: 175,
       valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
         dayjs(params.value).toDate(),
+      filterable: false,
     },
   ]
 
   return (
     <TablePaper>
+      <DateRangeFilter from={from} to={to} setFrom={setFrom} setTo={setTo} />
+
       <DataGrid<LogEntry, any, LogEntry>
         columns={columns}
         getRowId={(row: LogEntry) => row.id}
         rows={logEntries}
         setRows={setLogEntries}
-        fetchRows={getLogs}
+        fetchRows={(params) => getLogs(params)}
         noRowsMessage="No logs to display"
+        params={{ from: from, to: to }}
       />
     </TablePaper>
   )
