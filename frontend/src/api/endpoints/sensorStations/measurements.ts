@@ -42,8 +42,8 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
       const ssMeasurements: Measurement[] = sensorStation.attrs.measurements
 
       if (typeof body.from === 'undefined' && typeof body.to === 'undefined') {
-        // Return the first measurement if there is one
-        return success(ssMeasurements.length > 0 ? [ssMeasurements[0]] : [])
+        // Return all measurements for now
+        return success(ssMeasurements.length > 0 ? ssMeasurements : [])
       } else {
         return success(
           ssMeasurements.filter(
