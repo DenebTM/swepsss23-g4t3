@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import Typography from '@mui/material/Typography'
+
 import { Spinner } from '@component-lib/Spinner'
 import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
@@ -25,14 +27,21 @@ export const MyGreenhouses: React.FC = () => {
         left={<PageTitle>{PAGE_URL.myGreenhouses.pageTitle}</PageTitle>}
       />
       {sensorStations ? (
-        sensorStations.map((s) => (
-          <GreenhouseAccordion
-            key={s.ssID}
-            expanded={expanded === s.ssID}
-            sensorStation={s}
-            setExpanded={setExpanded}
-          />
-        ))
+        sensorStations.length > 0 ? (
+          sensorStations.map((s) => (
+            <GreenhouseAccordion
+              key={s.ssID}
+              expanded={expanded === s.ssID}
+              sensorStation={s}
+              setExpanded={setExpanded}
+            />
+          ))
+        ) : (
+          <Typography variant="bodyLarge" color="onSurface" marginTop={2}>
+            You can manage your greenhouses here once you are assigned to at
+            least one greenhouse.
+          </Typography>
+        )
       ) : (
         <Spinner center />
       )}
