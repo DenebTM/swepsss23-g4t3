@@ -12,7 +12,7 @@ root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
 log_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 # log to file
-file_handler = logging.FileHandler("audit.log")
+file_handler = logging.FileHandler('audit.log')
 file_handler.setFormatter(log_formatter)
 root_logger.addHandler(file_handler)
 # log to stdout

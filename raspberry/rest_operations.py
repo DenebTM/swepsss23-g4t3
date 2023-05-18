@@ -31,12 +31,10 @@ async def initialize_accesspoint(session):
             auth_token = json_data['token'] 
             session.headers.add('Authorization', f'Bearer {auth_token}')
             await logging_operations.log_to_file_and_list('INFO', f'Initialized access point for IP: {common.web_server_address}')
-            return True
     except aiohttp.ClientResponseError as e:
-        await logging_operations.log_to_file_and_list('WARNING', f'Unauthorized to talk to PlantHealth server.')
-        session.headers.pop('token')
-        return False
-        #TODO: Log this
+        if 'Authorization' in session.headers:
+            session.headers.pop('Authorization')
+        raise e
 
 @retry_connection_error(retries = 3, interval = 5)
 async def get_ap_status(session):
