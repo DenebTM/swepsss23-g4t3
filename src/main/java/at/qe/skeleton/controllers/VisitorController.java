@@ -6,6 +6,7 @@ import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeException;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -39,12 +41,16 @@ public class VisitorController {
      * @param id id of sensor station to upload to
      * @return id and name of Photo
      */
+    @ExceptionHandler({SizeException.class, MultipartException.class})
     @PostMapping(value = SS_PHOTOS_PATH)
     ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
         PhotoData dbPhoto = new PhotoData();
         try {
+            if (multipartImage.getSize() > 8000000) {
+                throw new SizeLimitExceededException("", multipartImage.getSize(), 8);
+            }
             if (multipartImage.getBytes().length == 0) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bytes have length 0");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bytes have length 0");
             }
             dbPhoto.setUploaded(LocalDateTime.now());
             dbPhoto.setName(multipartImage.getName());
