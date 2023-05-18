@@ -25,7 +25,7 @@ public class LoggingService {
      * @return list of logs
      */
     public List<LoggingEvent> getAllLogs() {
-        return loggingEventRepository.findAllByOrderByTimestmpAsc();
+        return loggingEventRepository.findAllByOrderByTimestmpDesc();
     }
 
     /**
@@ -34,7 +34,7 @@ public class LoggingService {
      * @return list of logs in time period beginning - 'to'
      */
     public List<LoggingEvent> getAllLogsTo(Instant endDate) {
-        return loggingEventRepository.findAllByTimestmpLessThanEqualOrderByTimestmpAsc(endDate.toEpochMilli());
+        return loggingEventRepository.findAllByTimestmpLessThanEqualOrderByTimestmpDesc(endDate.toEpochMilli());
     }
 
     /**
@@ -43,7 +43,7 @@ public class LoggingService {
      * @return list of logs in time period 'from' - ending
      */
     public List<LoggingEvent> getAllLogsFrom(Instant beginDate) {
-        return loggingEventRepository.findAllByTimestmpGreaterThanEqualOrderByTimestmpAsc(beginDate.toEpochMilli());
+        return loggingEventRepository.findAllByTimestmpGreaterThanEqualOrderByTimestmpDesc(beginDate.toEpochMilli());
     }
 
     /**
@@ -61,7 +61,7 @@ public class LoggingService {
         } else if (beginDate == null) {
             return getAllLogsTo(endDate);
         } else {
-            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(
+            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpDesc(
                 beginDate.toEpochMilli(),
                 endDate.toEpochMilli()
             );
@@ -75,7 +75,7 @@ public class LoggingService {
      * @return all logs that have the set level
      */
     public List<LoggingEvent> getLogsByLevelIn(List<LogLevel> levels) {
-        return loggingEventRepository.findAllByLevelInOrderByTimestmpAsc(levels);
+        return loggingEventRepository.findAllByLevelInOrderByTimestmpDesc(levels);
     }
 
     public List<LoggingEvent> filterLogsByLevelIn(List<LoggingEvent> logs, List<LogLevel> levels) {
