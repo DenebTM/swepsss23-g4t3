@@ -106,7 +106,7 @@ public class LoggingControllerTest {
         for (LogLevel level : LogLevel.values()) {
             json.put("level", level);
             var serviceLogs = loggingService.getAllLogs();
-            serviceLogs = loggingService.filterLogsByLevel(serviceLogs, level);
+            serviceLogs = loggingService.filterLogsByLevelIn(serviceLogs, level);
 
             var response = loggingController.getLogs(null, null, level, null);
             int numberOfLogs = serviceLogs.size();

@@ -74,17 +74,17 @@ public class LoggingServiceTest {
     @Test
     void testGetLogsByLevel() {
         logger.info("info log");
-        List<LoggingEvent> infoLogs = loggingService.getLogsByLevel(LogLevel.INFO);
+        List<LoggingEvent> infoLogs = loggingService.getLogsByLevelIn(LogLevel.INFO);
         for (LoggingEvent l : infoLogs) {
             Assertions.assertEquals(LogLevel.INFO, l.getLevel());
         }
         logger.warn("warn log");
-        List<LoggingEvent> warnLogs = loggingService.getLogsByLevel(LogLevel.WARN);
+        List<LoggingEvent> warnLogs = loggingService.getLogsByLevelIn(LogLevel.WARN);
         for (LoggingEvent l : warnLogs) {
             Assertions.assertEquals(LogLevel.WARN, l.getLevel());
         }
         logger.error("error log");
-        List<LoggingEvent> errorLogs = loggingService.getLogsByLevel(LogLevel.ERROR);
+        List<LoggingEvent> errorLogs = loggingService.getLogsByLevelIn(LogLevel.ERROR);
         for (LoggingEvent l : errorLogs) {
             Assertions.assertEquals(LogLevel.ERROR, l.getLevel());
         }

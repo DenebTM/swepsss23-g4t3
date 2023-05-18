@@ -14,7 +14,7 @@ public interface LoggingEventRepository extends AbstractRepository<LoggingEvent,
 
     List<LoggingEvent> findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(Long from, Long to);
 
-    List<LoggingEvent> findAllByLevelOrderByTimestmpAsc(LogLevel level);
+    List<LoggingEvent> findAllByLevelInOrderByTimestmpAsc(List<LogLevel> level);
 
     List<LoggingEvent> findAllByTimestmpGreaterThanEqualOrderByTimestmpAsc(Long from);
 
