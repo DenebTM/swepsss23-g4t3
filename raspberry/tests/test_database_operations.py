@@ -34,10 +34,10 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         # Define the expected results
         expected_results = {
             'temperature': MOCK_VALUES_TUPLE[0],
-            'humidity': MOCK_VALUES_TUPLE[1],
+            'humidity': MOCK_VALUES_TUPLE[1] / 100,
             'airPressure': MOCK_VALUES_TUPLE[2],
             'lightIntensity': MOCK_VALUES_TUPLE[3],
-            'airQualityIndex': MOCK_VALUES_TUPLE[4],
+            'airQuality': MOCK_VALUES_TUPLE[4],
             'soilMoisture': MOCK_VALUES_TUPLE[5]
         }
         # Call the function with the mocked parameters
