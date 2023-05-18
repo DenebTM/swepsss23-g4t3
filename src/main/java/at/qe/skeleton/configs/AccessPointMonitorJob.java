@@ -20,8 +20,8 @@ import at.qe.skeleton.services.LoggingService;
 @EnableScheduling
 public class AccessPointMonitorJob {
 
-    private final static long CHECK_INTERVAL_MS = 10 * 1000;
-    private final static long AP_TIMEOUT_MS = 60 * 1000;
+    private static final long CHECK_INTERVAL_MS = 10 * 1000L;
+    private static final long AP_TIMEOUT_MS = 60 * 1000L;
 
     @Autowired
     private AccessPointRepository apRepository;

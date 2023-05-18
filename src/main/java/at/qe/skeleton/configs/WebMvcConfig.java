@@ -43,16 +43,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new MDCUserEntityFilter());
-        registry.addInterceptor(new MDCAccessPointEntityFilter())
-            // .addPathPatterns("/access-points/**")
-            ;
-        // registry.addInterceptor(new MDCSensorStationEntityFilter())
-            // .addPathPatterns(
-            //     "/access-points/**/sensor-stations/**",
-            //     "/sensor-stations/**",
-            //     "/sensor-stations/**/**"
-            // )
-            ;
+        registry.addInterceptor(new MDCAccessPointEntityFilter());
     }
 
 }

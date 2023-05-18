@@ -54,10 +54,10 @@ public class LoggingEventJson {
         }
                 
         if (originProp != null) {
-            var type = LogEntityType.valueOf(originProp.getMappedKey());
+            var entityType = LogEntityType.valueOf(originProp.getMappedKey());
             var id = originProp.getMappedValue();
 
-            this.origin = new LogEntity(type, id);
+            this.origin = new LogEntity(entityType, entityId);
         }
     }
 
