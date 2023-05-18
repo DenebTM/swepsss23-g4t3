@@ -42,29 +42,27 @@ public class VisitorController {
     @PostMapping(value = SS_PHOTOS_PATH)
     ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
         PhotoData dbPhoto = new PhotoData();
-        dbPhoto.setUploaded(LocalDateTime.now());
-        dbPhoto.setName(multipartImage.getName());
         try {
             if (multipartImage.getBytes().length == 0) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bytes have length 0");
             }
+            dbPhoto.setUploaded(LocalDateTime.now());
+            dbPhoto.setName(multipartImage.getName());
             dbPhoto.setContent(multipartImage.getBytes());
+            SensorStation ss = ssService.loadSSById(id);
+            if (ss == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
+            }
+            dbPhoto.setSensorStation(ss);
+            photoDataRepository.save(dbPhoto);
         } catch (SizeLimitExceededException e) {
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Size limit for photo exceeded");
         } catch (FileSizeLimitExceededException e) {
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File size limit for photo exceeded");
+        }  catch (MaxUploadSizeExceededException e) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not get bytes for photo");
-        }
-        SensorStation ss = ssService.loadSSById(id);
-        if (ss == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
-        }
-        dbPhoto.setSensorStation(ss);
-        try {
-            photoDataRepository.save(dbPhoto);
-        } catch (MaxUploadSizeExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
         }
         return ResponseEntity.ok(dbPhoto);
     }
@@ -97,9 +95,6 @@ public class VisitorController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
         }
         List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
-        if (photos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photos not found");
-        }
         return ResponseEntity.ok(photos);
     }
 }
