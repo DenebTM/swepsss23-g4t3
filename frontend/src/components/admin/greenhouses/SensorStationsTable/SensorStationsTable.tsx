@@ -160,6 +160,7 @@ export const SensorStationsTable: React.FC = () => {
         columns={columns}
         getRowId={(row: SensorStation) => row.ssID}
         rows={sensorStations}
+        noRowsMessage="No greenhouses to display"
       />
     </TablePaper>
   )

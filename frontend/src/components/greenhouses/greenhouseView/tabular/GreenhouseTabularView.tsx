@@ -77,6 +77,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
         setRows={setMeasurements}
         size="small"
         zebraStripes
+        noRowsMessage="No measurements to display"
       />
     </TablePaper>
   )
