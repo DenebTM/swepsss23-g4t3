@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import { SxProps, Theme } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 import {
   gridClasses,
   GridColDef,
@@ -82,7 +83,7 @@ const dataGridRowSx = (theme: Theme): SxProps<Theme> => {
 
 /** Extend and limit {@link MuiDataGridProps} to provide additional type hints and safety. */
 interface DataGridProps<R extends GridValidRowModel, V, F>
-  extends Omit<MuiDataGridProps<R>, 'rows'> {
+  extends Omit<MuiDataGridProps<R>, 'rows' | 'components'> {
   // DataGrid props
   /** The column definition for the table */
   columns: GridColDef<R, V, F>[]
@@ -100,6 +101,8 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
    * using `props.setRows`. If `fetchRows` is undefined then only the initial value of `props.rows` will be displayed.
    */
   fetchRows?: () => Promise<R[]>
+  /** Message to show if the unfiltered data contains no elements. */
+  noRowsMessage?: string
   /**
    * Function to update row data in the state of the parent component.
    * If left undefined, then the table contents can not be updated or edited.
@@ -204,6 +207,23 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
             ...(props.sx ? props.sx : {}),
           } as SxProps<Theme>
         }
+        components={{
+          NoRowsOverlay: () => (
+            <Typography
+              variant="bodyMedium"
+              color="onSurface"
+              sx={{
+                display: 'flex',
+                height: '100%',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {props.noRowsMessage ?? 'No rows'}
+            </Typography>
+          ),
+        }}
         {...gridProps}
       />
     </Box>

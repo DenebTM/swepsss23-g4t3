@@ -64,11 +64,11 @@ export const GreenhouseAccordionContents: React.FC<
     handleSaveRow(
       updateSensorStation(props.sensorStation.ssID, {
         lowerBound: {
-          ...props.sensorStation.lowerBound,
+          ...(props.sensorStation.lowerBound ?? {}),
           [valueKey]: lower,
         },
         upperBound: {
-          ...props.sensorStation.upperBound,
+          ...(props.sensorStation.upperBound ?? {}),
           [valueKey]: upper,
         },
       })
@@ -99,40 +99,51 @@ export const GreenhouseAccordionContents: React.FC<
         return Promise.resolve()
       })
 
+  const saveRow = (v: ValueRange, row: GreenhouseMetricRange) =>
+    typeof v.lower === 'undefined' || typeof v.upper === 'undefined'
+      ? Promise.reject({
+          message: 'Both upper and lower boundaries must be set',
+        })
+      : handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
+
   return (
     <TableContainer>
       <Table sx={{ width: '100%' }} aria-label="greenhouse settings table">
         <TableBody>
-          {GREENHOUSE_METRICS.map((row: GreenhouseMetricRange) => {
-            const ariaLabel = `title-${row.valueKey}`
-            return (
-              <EditableTableRow<ValueRange>
-                key={row.valueKey}
-                ariaLabel={ariaLabel}
-                editableCell={(
-                  editableCellProps: EditableCellProps<ValueRange>
-                ) => (
-                  <GreenhouseEditableRangeCell
-                    labelledBy={ariaLabel}
-                    sensorStation={props.sensorStation}
-                    {...row}
-                    {...editableCellProps}
-                  />
-                )}
-                editing={editing === row.valueKey}
-                saveRow={(v: ValueRange) =>
-                  handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
-                }
-                startEditing={() => setEditing(row.valueKey)}
-                title={row.displayName}
-                typographyProps={typographyProps}
-                value={{
-                  lower: props.sensorStation.lowerBound[row.valueKey],
-                  upper: props.sensorStation.upperBound[row.valueKey],
-                }}
-              />
-            )
-          })}
+          {Object.values(GREENHOUSE_METRICS).map(
+            (row: GreenhouseMetricRange) => {
+              const ariaLabel = `title-${row.valueKey}`
+              return (
+                <EditableTableRow<ValueRange>
+                  key={row.valueKey}
+                  ariaLabel={ariaLabel}
+                  editableCell={(
+                    editableCellProps: EditableCellProps<ValueRange>
+                  ) => (
+                    <GreenhouseEditableRangeCell
+                      labelledBy={ariaLabel}
+                      sensorStation={props.sensorStation}
+                      {...row}
+                      {...editableCellProps}
+                    />
+                  )}
+                  editing={editing === row.valueKey}
+                  saveRow={(v: ValueRange) => saveRow(v, row)}
+                  startEditing={() => setEditing(row.valueKey)}
+                  title={row.displayName}
+                  typographyProps={typographyProps}
+                  value={{
+                    lower: props.sensorStation.lowerBound
+                      ? props.sensorStation.lowerBound[row.valueKey]
+                      : row.min,
+                    upper: props.sensorStation.upperBound
+                      ? props.sensorStation.upperBound[row.valueKey]
+                      : row.max,
+                  }}
+                />
+              )
+            }
+          )}
           <EditableTableRow<number>
             ariaLabel={aggregationPeriodAriaLabel}
             editableCell={(editableCellProps: EditableCellProps<number>) => (
