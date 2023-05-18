@@ -41,9 +41,9 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
     <Box sx={{ width: '100%', height: '100%' }}>
       {props.photos.length > 0 ? (
         <ImageList variant="masonry" cols={numImageColumns()} gap={4}>
-          {props.photos.map((im) => (
+          {props.photos.map((im, idx) => (
             <ImageListItem
-              key={im.url}
+              key={`${im.uploaded}-${idx}`}
               alt={`Photograph of a plant for greenhouse ${props.ssID}`}
               photo={im}
               setPhotos={props.setPhotos}
