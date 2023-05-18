@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.Arrays;
 import java.time.LocalDateTime;
 
 /**
@@ -95,14 +96,5 @@ public class PhotoData {
         this.name = name;
         this.sensorStation = sensorStation;
         this.content = content;
-    }
-
-    @Override
-    public String toString() {
-        return "PhotoData{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", sensorStation=" + sensorStation +
-                '}';
     }
 }
