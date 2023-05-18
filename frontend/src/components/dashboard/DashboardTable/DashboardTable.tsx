@@ -41,18 +41,20 @@ export const DashboardTable: React.FC = (props) => {
         `Greenhouse ${params.value}`,
       width: 120,
     },
-    ...GREENHOUSE_METRICS.map((metricRange: GreenhouseMetricRange) => ({
-      field: metricRange.valueKey,
-      headerName: greenhouseMetricWithUnit(metricRange),
-      description: metricRange.description,
-      valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
-        params.row.currentMeasurement
-          ? roundMetric(
-              params.row.currentMeasurement.data[metricRange.valueKey]
-            )
-          : emDash,
-      ...metricColumnParams,
-    })),
+    ...Object.values(GREENHOUSE_METRICS).map(
+      (metricRange: GreenhouseMetricRange) => ({
+        field: metricRange.valueKey,
+        headerName: greenhouseMetricWithUnit(metricRange),
+        description: metricRange.description,
+        valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
+          params.row.currentMeasurement
+            ? roundMetric(
+                params.row.currentMeasurement.data[metricRange.valueKey]
+              )
+            : emDash,
+        ...metricColumnParams,
+      })
+    ),
     {
       field: 'timestamp',
       headerName: 'Last Updated',

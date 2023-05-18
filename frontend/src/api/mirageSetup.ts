@@ -22,7 +22,7 @@ export const mirageSetup = (
   if (!import.meta.env.DEV && environment !== MOCK_API) {
     return
   }
-  return
+  // return
 
   const server = createServer({
     models,
