@@ -66,10 +66,9 @@ public class VisitorController {
     }
 
     /**
-     * Route to GET all photos from a specific sensor-station by its ID
-     * @param id
-     * @return list of photos
-     * see maybe https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/
+     * Route to GET a single photo as jpeg image by its ID
+     * @param id id of the photo
+     * @return jpeg image
      */
     @GetMapping(value = "photos/{photoId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer id){
@@ -82,6 +81,11 @@ public class VisitorController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
     }
 
+    /**
+     * Route to get a list of all photos from a specific sensor station as json
+     * @param id id of the sensor station
+     * @return list of PhotoData objects
+     */
     @GetMapping(value = SS_PHOTOS_PATH)
     public ResponseEntity<Object> getPhotosBySSAsId(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
