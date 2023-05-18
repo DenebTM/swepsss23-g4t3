@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -74,19 +75,19 @@ public class LoggingServiceTest {
     @Test
     void testGetLogsByLevel() {
         logger.info("info log");
-        List<LoggingEvent> infoLogs = loggingService.getLogsByLevelIn(LogLevel.INFO);
+        List<LoggingEvent> infoLogs = loggingService.getLogsByLevelIn(Arrays.asList(LogLevel.INFO));
         for (LoggingEvent l : infoLogs) {
-            Assertions.assertEquals(LogLevel.INFO, l.getLevel());
+            Assertions.assertEquals(Arrays.asList(LogLevel.INFO), l.getLevel());
         }
         logger.warn("warn log");
-        List<LoggingEvent> warnLogs = loggingService.getLogsByLevelIn(LogLevel.WARN);
+        List<LoggingEvent> warnLogs = loggingService.getLogsByLevelIn(Arrays.asList(LogLevel.WARN));
         for (LoggingEvent l : warnLogs) {
-            Assertions.assertEquals(LogLevel.WARN, l.getLevel());
+            Assertions.assertEquals(Arrays.asList(LogLevel.WARN), l.getLevel());
         }
         logger.error("error log");
-        List<LoggingEvent> errorLogs = loggingService.getLogsByLevelIn(LogLevel.ERROR);
+        List<LoggingEvent> errorLogs = loggingService.getLogsByLevelIn(Arrays.asList(LogLevel.ERROR));
         for (LoggingEvent l : errorLogs) {
-            Assertions.assertEquals(LogLevel.ERROR, l.getLevel());
+            Assertions.assertEquals(Arrays.asList(LogLevel.ERROR), l.getLevel());
         }
     }
 }
