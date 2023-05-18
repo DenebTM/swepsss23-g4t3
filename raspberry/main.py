@@ -39,7 +39,7 @@ async def sensor_station_manager(connection_request, session):
                         ss_tasks[ss_id].cancel()
                         del ss_tasks[ss_id]
                     except:
-                        print(f"error canceling task for", ss_id)
+                        print(f'error canceling task for', ss_id)
 
         print('Finished SS Manager Loop')
         await asyncio.sleep(10)
