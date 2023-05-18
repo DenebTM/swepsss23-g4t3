@@ -93,7 +93,7 @@ public class AccessPointRestController implements BaseRestController {
                     AccessPointStatus.UNCONFIRMED
                 ));
 
-                logger.info("New access point added", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                logger.info("New access point created", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
             }
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
