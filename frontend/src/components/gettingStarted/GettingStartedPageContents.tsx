@@ -122,15 +122,15 @@ export const GettingStartedPageContents: React.FC = () => {
         </GettingStartedOl>
       </GettingStartedSection>
 
-      <GettingStartedSection subheading="Pairing a Greenhouse">
+      <GettingStartedSection subheading="Pairing With a Greenhouse">
         <GettingStartedOl>
           <GettingStartedLi>
-            Set the Greenhouse's ID using the DIP switch.
+            Set the greenhouse's ID using the DIP switch.
           </GettingStartedLi>
           <GettingStartedLi>
             The LED will initially glow solid red.
             <br />
-            Press the righmost button on the Greenhouse (the one connected to
+            Press the righmost button on the greenhouse (the one connected to
             pin D2 of the Arduino). The LED will begin rapidly flashing blue.
           </GettingStartedLi>
           <GettingStartedLi>
@@ -146,20 +146,20 @@ export const GettingStartedPageContents: React.FC = () => {
             Click the <GreenhouseIcon {...iconProps} /> button on the right.
           </GettingStartedLi>
           <GettingStartedLi>
-            Wait roughly 10 seconds, then open the Sensor Station dropdown menu.
-            Select the ID of the Greenhouse with the ID that you want to pair.
+            Wait roughly 10 seconds, then open the sensor station dropdown menu.
+            Select the ID of the greenhouse with the ID that you want to pair.
           </GettingStartedLi>
           <GettingStartedLi>
-            Press "Confirm". After a few more seconds, the LED on the Greenhouse
+            Press "Confirm". After a few more seconds, the LED on the greenhouse
             should turn green, and you will be able to view measurements on the
             corresponding page under "Dashboard".
           </GettingStartedLi>
         </GettingStartedOl>
         <GettingStartedBody>
-          If the Greenhouse loses connection, it will only re-pair to the
+          If the greenhouse loses connection, it will only re-pair to the
           previously connected access point. This condition is signaled by slow
           red flashing of the LED. To re-pair, simply press the rightmost button
-          on the Greenhouse again.
+          on the greenhouse again.
         </GettingStartedBody>
       </GettingStartedSection>
 
@@ -173,7 +173,7 @@ export const GettingStartedPageContents: React.FC = () => {
             {PAGE_URL.myGreenhouses.pageTitle}
           </Link>{' '}
           in order to configure thresholds for sensor readings. If the sensor
-          values fall outside of those thresholds, the Greenhouse will emit a
+          values fall outside of those thresholds, the greenhouse will emit a
           period beeping noise and display any combination of six different
           codes, one for each sensor value.
           <br />
@@ -185,7 +185,7 @@ export const GettingStartedPageContents: React.FC = () => {
         </GettingStartedBody>
 
         <GettingStartedBody gutterBottom>
-          Sensor warnings are not cleared automatically, the Greenhouse will
+          Sensor warnings are not cleared automatically, the greenhouse will
           keep emitting an audiovisual warning until the warning state has been
           cleared.
         </GettingStartedBody>
@@ -206,7 +206,7 @@ export const GettingStartedPageContents: React.FC = () => {
             .
           </GettingStartedLi>
           <GettingStartedLi>
-            Press the middle button on the Greenhouse (connected to pin D3 of
+            Press the middle button on the greenhouse (connected to pin D3 of
             the Arduino).
           </GettingStartedLi>
         </GettingStartedOl>
