@@ -15,6 +15,18 @@ import { theme } from '~/styles/theme'
 
 import { PageTitle } from '../page/PageTitle'
 
+/** Reusable component for subheadings inside getting started page */
+const GettingStartedSubheading = (props: { children: React.ReactNode }) => (
+  <Typography component="h6" variant="titleLarge" color="onSurfaceVariant">
+    {props.children}
+  </Typography>
+)
+
+/** Reusable component for each subsection of the getting started page */
+const GettingStartedSection = (props: { children: React.ReactNode }) => (
+  <Card sx={{ padding: theme.spacing(3, 2) }}>{props.children}</Card>
+)
+
 /** Props for links in the GettingStarted page */
 const linkProps: Partial<LinkProps> = {
   underline: 'always',
@@ -50,8 +62,10 @@ export const GettingStarted: React.FC = () => {
       </Typography>
 
       <Stack spacing={2} sx={{ padding: theme.spacing(2, 0) }}>
-        <Card sx={{ padding: 1.5 }}>
-          <Typography variant="h6">Connecting an Access Point</Typography>
+        <GettingStartedSection>
+          <GettingStartedSubheading>
+            Connecting an Access Point
+          </GettingStartedSubheading>
           <ol>
             <li>
               Plug in the Raspberry Pi and connect it to the network via Wi-Fi.
@@ -76,10 +90,12 @@ export const GettingStarted: React.FC = () => {
               the web server.
             </li>
           </ol>
-        </Card>
+        </GettingStartedSection>
 
-        <Card sx={{ padding: 1.5 }}>
-          <Typography variant="h6">Pairing a Greenhouse</Typography>
+        <GettingStartedSection>
+          <GettingStartedSubheading>
+            Pairing a Greenhouse
+          </GettingStartedSubheading>
           <ol>
             <li>Set the Greenhouse's ID using the DIP switch.</li>
             <li>
@@ -117,10 +133,10 @@ export const GettingStarted: React.FC = () => {
             slow red flashing of the LED. To re-pair, simply press the rightmost
             button on the Greenhouse again.
           </p>
-        </Card>
+        </GettingStartedSection>
 
-        <Card sx={{ padding: 1.5 }}>
-          <Typography variant="h6">Sensor warnings</Typography>
+        <GettingStartedSection>
+          <GettingStartedSubheading>Sensor warnings</GettingStartedSubheading>
           <p>
             Go to{' '}
             <Link
@@ -163,7 +179,7 @@ export const GettingStarted: React.FC = () => {
               </li>
             </ol>
           </p>
-        </Card>
+        </GettingStartedSection>
       </Stack>
     </PageWrapper>
   )
