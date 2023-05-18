@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import MuiImageListItem from '@mui/material/ImageListItem'
 
-import { getPhotoByIdUrl } from '~/api/endpoints/sensorStations/photos'
+import { getPhotoByIdUrl } from '~/api/endpoints/photo'
 import { useUsername, useUserRole } from '~/hooks/user'
 import { Photo } from '~/models/photo'
 import { SensorStation } from '~/models/sensorStation'
@@ -56,11 +56,14 @@ export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
         alt={props.alt}
         loading="lazy"
       />
-      <DeleteImageBar
-        photo={props.photo}
-        setPhotos={props.setPhotos}
-        show={showItemBar}
-      />
+      {props.sensorStation && (
+        <DeleteImageBar
+          photo={props.photo}
+          setPhotos={props.setPhotos}
+          show={showItemBar}
+          ssID={props.sensorStation.ssID}
+        />
+      )}
     </MuiImageListItem>
   )
 }

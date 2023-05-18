@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
-import { _get } from '~/api/intercepts'
+import { _delete, _get } from '~/api/intercepts'
 import { API_DEV_URL, UPLOADED_PHOTO_KEY } from '~/common'
 import { Photo, PhotoId } from '~/models/photo'
 import { SensorStationUuid } from '~/models/sensorStation'
@@ -20,11 +20,15 @@ export const getSensorStationPhotos = async (
     false
   )
 
-/*
- * Photo to get a single photo by id
+/**
+ * DEL /api/photos/${photoId}
+ * Delete a single photo by ID
  */
-export const getPhotoByIdUrl = (photoId: PhotoId): string =>
-  `${API_DEV_URL}${API_URI.photos}/${photoId}`
+export const deletePhoto = async (
+  ssID: SensorStationUuid,
+  photoId: PhotoId
+): Promise<void> =>
+  _delete(`${API_URI.sensorStations}/${ssID}${API_URI.photos}/${photoId}`)
 
 /** POST url to upload photos for a given sensor station */
 export const uploadPhotosUrl = (sensorStationId: SensorStationUuid) =>
@@ -38,17 +42,6 @@ const mockedSsPhotosRoute = `${mockedSensorStationRoute}${API_URI.photos}`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
-  /** Mock response from {@link getPhotoByIdUrl} */
-  server.get(`${API_URI.photos}/:photoId`, (schema: AppSchema, request) => {
-    const fakePhotoUrl = faker.image.nature(
-      faker.datatype.number({ min: 300, max: 900 }),
-      faker.datatype.number({ min: 200, max: 600 }),
-      true
-    )
-
-    return success(fakePhotoUrl)
-  })
-
   /** Mock {@link getSensorStationPhotos} */
   server.get(mockedSsPhotosRoute, (schema: AppSchema, request) => {
     const ssID: SensorStationUuid = Number(request.params.ssID)
@@ -62,11 +55,6 @@ export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
     const fakePhotoIds = faker.helpers.arrayElements([...Array(20).keys()])
     const fakePhotos: Photo[] = fakePhotoIds.map((photoId: PhotoId) => ({
       id: photoId,
-      url: faker.image.nature(
-        faker.datatype.number({ min: 300, max: 900 }),
-        faker.datatype.number({ min: 200, max: 600 }),
-        true
-      ),
       uploaded: faker.date
         .between('2023-03-29T00:00:00.000Z', '2023-03-30T00:00:00.000Z')
         .toISOString(),
@@ -88,5 +76,11 @@ export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
     } else {
       return notFound(`sensor station ${ssID}`)
     }
+  })
+
+  /** Mock {@link deletePhoto} */
+  server.delete(mockedSsPhotosRoute, (schema: AppSchema, request) => {
+    // Hard-code a success for now
+    return success('Photo deleted')
   })
 }
