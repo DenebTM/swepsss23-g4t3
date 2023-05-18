@@ -10,7 +10,7 @@ import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStatio
 import { emDash } from '~/common'
 import { useLoadSensorStations, useSensorStations } from '~/hooks/appContext'
 import { AccessPoint } from '~/models/accessPoint'
-import { SensorStationUuid } from '~/models/sensorStation'
+import { SensorStationUuid, StationStatus } from '~/models/sensorStation'
 
 interface SensorStationChipsProps
   extends GridRenderCellParams<AccessPoint, any, AccessPoint> {
@@ -65,24 +65,29 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
   return (
     <Stack spacing={1} padding={2} direction="row">
       {props.row.sensorStations.length > 0 ? (
-        props.row.sensorStations.map((ssID: SensorStationUuid) => (
-          <RemovableChip
-            key={ssID}
-            entityName="greenhouse"
-            handleDelete={() => deleteSensorStation(ssID)}
-            afterDelete={() => afterDelete(ssID)}
-            label={
-              <Stack spacing={0}>
-                <Typography variant="labelLarge" color="primary">
-                  Greenhouse {String(ssID)}
-                </Typography>
-                <Typography variant="labelSmall" color="onSurfaceVariant">
-                  Status: {getSsStatus(ssID)}
-                </Typography>
-              </Stack>
-            }
-          />
-        ))
+        props.row.sensorStations
+          .filter(
+            (ssID) =>
+              getSsStatus(ssID) !== StationStatus.AVAILABLE.toLowerCase()
+          )
+          .map((ssID: SensorStationUuid) => (
+            <RemovableChip
+              key={ssID}
+              entityName="greenhouse"
+              handleDelete={() => deleteSensorStation(ssID)}
+              afterDelete={() => afterDelete(ssID)}
+              label={
+                <Stack spacing={0}>
+                  <Typography variant="labelLarge" color="primary">
+                    Greenhouse {String(ssID)}
+                  </Typography>
+                  <Typography variant="labelSmall" color="onSurfaceVariant">
+                    Status: {getSsStatus(ssID)}
+                  </Typography>
+                </Stack>
+              }
+            />
+          ))
       ) : (
         <Tooltip
           title={`No greenhouses are connected to ${props.row.name}`}

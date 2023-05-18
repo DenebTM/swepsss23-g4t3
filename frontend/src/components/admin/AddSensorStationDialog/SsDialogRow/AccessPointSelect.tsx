@@ -9,7 +9,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { Spinner } from '@component-lib/Spinner'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
-import { AccessPoint } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 import { ApStatus } from '~/models/accessPoint'
 
 const apLabelId = 'select-access-point'
@@ -27,6 +27,9 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
 ): JSX.Element => {
   const addErrorSnackbar = useAddErrorSnackbar()
   const [accessPoints, setAccessPoints] = useState<AccessPoint[] | undefined>()
+  const [value, setValue] = useState<AccessPointId>(
+    props.accessPoint?.name ?? ''
+  )
 
   const [snackbarError, setSnackbarError] = useState<Error | null>(null)
 
@@ -43,6 +46,11 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
     // Cancel the promise callbacks on component unmount
     return apsPromise.cancel
   }, [])
+
+  /** Update select value */
+  useEffect(() => {
+    setValue(props.accessPoint?.name ?? '')
+  }, [props.accessPoint])
 
   /** Create a new snackbar if {@link snackbarError} has been updated */
   useEffect(() => {
@@ -61,7 +69,7 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
     <FormControl fullWidth>
       <InputLabel id={apLabelId}>Access Point</InputLabel>
       <Select
-        value={props.accessPoint?.name ?? ''}
+        value={value}
         onChange={handleChange}
         label="Access Point"
         labelId={apLabelId}

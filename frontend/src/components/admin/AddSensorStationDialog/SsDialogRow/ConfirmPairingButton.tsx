@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-
 import LoadingButton from '@mui/lab/LoadingButton'
-
+import React, { useState } from 'react'
 import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useLoadSensorStations } from '~/hooks/appContext'
@@ -28,7 +26,9 @@ export const ConfirmPairingButton: React.FC<ConfirmPairingButtonProps> = (
     if (typeof props.sensorStationId !== 'undefined') {
       // Button is disabled anyway, this typeguarding is for typescript
       setConfirming(true)
-      updateSensorStation(props.sensorStationId, { status: StationStatus.OK })
+      updateSensorStation(props.sensorStationId, {
+        status: StationStatus.PAIRING,
+      })
         .then(() => {
           // Reload sensor stations and close modal
           loadSensorStations()
@@ -55,13 +55,13 @@ export const ConfirmPairingButton: React.FC<ConfirmPairingButtonProps> = (
   return (
     <LoadingButton
       disabled={typeof props.sensorStationId === 'undefined'}
-      variant="contained"
+      variant='contained'
       onClick={handlePairWithSs}
       fullWidth
-      size="large"
+      size='large'
       loading={confirming}
-      loadingPosition="center"
-      color="primary"
+      loadingPosition='center'
+      color='primary'
       sx={{
         '&.MuiLoadingButton-loading': {
           background: theme.primary,
