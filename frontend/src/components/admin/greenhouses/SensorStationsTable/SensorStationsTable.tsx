@@ -159,7 +159,7 @@ export const SensorStationsTable: React.FC = () => {
       <DataGrid<SensorStation, any, SensorStation>
         columns={columns}
         getRowId={(row: SensorStation) => row.ssID}
-        rows={sensorStations}
+        rows={sensorStations ?? undefined}
         noRowsMessage="No greenhouses to display"
       />
     </TablePaper>

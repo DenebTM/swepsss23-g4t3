@@ -93,7 +93,7 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
    */
   processRowUpdate?: RowUpdateFunction<R>
   /** Rows to display in the table. Pagination is handled internally. If undefined, then display a loading indicator. */
-  rows: readonly R[] | undefined | null
+  rows: readonly R[] | undefined
 
   // Additional props
   /**
