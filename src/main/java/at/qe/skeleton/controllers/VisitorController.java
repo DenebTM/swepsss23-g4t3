@@ -47,11 +47,6 @@ public class VisitorController {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setUploaded(LocalDateTime.now());
         dbPhoto.setName(multipartImage.getName());
-
-        //limit file size to 8MB
-        if(multipartImage.getSize()/1000000 > 8) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
-        }
         try {
             if (multipartImage.getBytes().length == 0) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bytes have length 0");
@@ -64,7 +59,11 @@ public class VisitorController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
         }
         dbPhoto.setSensorStation(ss);
-        photoDataRepository.save(dbPhoto);
+        try {
+            photoDataRepository.save(dbPhoto);
+        } catch (MaxUploadSizeExceededException e) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
+        }
         return ResponseEntity.ok(dbPhoto);
     }
 
