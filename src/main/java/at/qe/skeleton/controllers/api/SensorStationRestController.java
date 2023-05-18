@@ -246,11 +246,11 @@ public class SensorStationRestController implements BaseRestController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Gardener is not assigned to Sensor Station.");
             }
             Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
-            if (maybePhoto.isPresent()) {
-                photoDataRepository.delete(maybePhoto.get());
-                return ResponseEntity.ok("Photo deleted");
+            if (maybePhoto.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
             }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
+            photoDataRepository.delete(maybePhoto.get());
+            return ResponseEntity.ok("Photo deleted");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
     }
