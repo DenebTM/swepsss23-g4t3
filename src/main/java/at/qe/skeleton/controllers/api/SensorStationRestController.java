@@ -243,16 +243,16 @@ public class SensorStationRestController implements BaseRestController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             if (!gardeners.contains(currentPrincipalName) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Gardener is not assigned to Sensor Station.");
+                throw new AccessDeniedException("Gardener is not assigned to Sensor Station.");
             }
             Optional<PhotoData> maybePhoto = photoDataRepository.findByIdAndSensorStation(photoId, ss);
             if (maybePhoto.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
+                throw new NotFoundInDatabaseException("Photo", id);
             }
             photoDataRepository.delete(maybePhoto.get());
             return ResponseEntity.ok("Photo deleted");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
+        throw new NotFoundInDatabaseException(SS, id);
     }
 
 }

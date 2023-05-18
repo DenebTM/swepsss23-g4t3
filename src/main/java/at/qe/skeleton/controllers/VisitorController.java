@@ -1,6 +1,8 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.controllers.api.SensorStationRestController;
+import at.qe.skeleton.controllers.errors.BadRequestException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
@@ -47,13 +49,13 @@ public class VisitorController {
                 throw new SizeLimitExceededException("", multipartImage.getSize(), 8);
             }
             if (multipartImage.getBytes().length == 0) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bytes have length 0");
+                throw new BadRequestException("Could not get bytes for photo");
             }
             dbPhoto.setUploaded(LocalDateTime.now());
             dbPhoto.setContent(multipartImage.getBytes());
             SensorStation ss = ssService.loadSSById(id);
             if (ss == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
+                throw new NotFoundInDatabaseException("Sensor station", id);
             }
             dbPhoto.setSensorStation(ss);
             photoDataRepository.save(dbPhoto);
@@ -64,7 +66,7 @@ public class VisitorController {
         }  catch (MaxUploadSizeExceededException e) {
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not get bytes for photo");
+            throw new NotFoundInDatabaseException("Bytes for photo", dbPhoto.getId());
         }
         return ResponseEntity.ok(dbPhoto);
     }
@@ -78,11 +80,11 @@ public class VisitorController {
     public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer id){
         if (photoDataRepository.findById(id).isPresent()) {
             if (photoDataRepository.findById(id).get().getContent().length == 0) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Byte content of photo not found");
+                throw new NotFoundInDatabaseException("Bytes for photo", id);
             }
             return ResponseEntity.ok(photoDataRepository.findById(id).get().getContent());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
+        throw new NotFoundInDatabaseException("Photo", id);
     }
 
     /**
@@ -94,7 +96,7 @@ public class VisitorController {
     public ResponseEntity<Object> getPhotosBySSAsId(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
+            throw new NotFoundInDatabaseException("Sensor station", id);
         }
         List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
         return ResponseEntity.ok(photos);
