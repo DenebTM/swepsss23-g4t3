@@ -2,13 +2,27 @@ import React, { Dispatch, SetStateAction } from 'react'
 
 import Stack from '@mui/material/Stack'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import {
+  DateTimePicker,
+  DateTimePickerSlotsComponentsProps,
+} from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
 import dayjs, { Dayjs } from 'dayjs'
 import { theme } from '~/styles/theme'
 
 export type DateValue = Dayjs | null
+
+const pickerStyleProps: Partial<DateTimePickerSlotsComponentsProps<DateValue>> =
+  {
+    day: {
+      sx: {
+        '&.Mui-disabled': {
+          background: theme.ref.neutral[95],
+        },
+      },
+    },
+  }
 
 interface DateRangeFilterProps {
   from: DateValue
@@ -40,6 +54,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = (props) => {
                 ? 'Select a date in the past'
                 : '',
             },
+            ...pickerStyleProps,
           }}
         />
         <DateTimePicker
@@ -63,6 +78,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = (props) => {
                 ? 'Select a date in the past'
                 : '',
             },
+            ...pickerStyleProps,
           }}
         />
       </Stack>
