@@ -37,7 +37,7 @@ public class VisitorController {
      * @throws IOException
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) throws IOException {
+    public ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) throws IOException {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setName(multipartImage.getName());
         try {
