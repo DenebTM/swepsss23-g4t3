@@ -46,7 +46,7 @@ export const DeleteImageBar: React.FC<DeleteImageBarProps> = (props) => {
         addSnackbarMessage({
           header: 'Success',
           body: 'Photo deleted',
-          type: MessageType.ERROR,
+          type: MessageType.CONFIRM,
         })
       })
       .catch((err: Error) => {

@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react'
 import DialogContent from '@mui/material/DialogContent'
 
 import { getAccessPoint, updateAccessPoint } from '~/api/endpoints/accessPoints'
-import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useLoadSensorStations } from '~/hooks/appContext'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 import { SensorStationUuid } from '~/models/sensorStation'
 
@@ -26,7 +25,7 @@ interface AddSsDialogContentsProps {
 export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
   props
 ): JSX.Element => {
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
   const loadSensorStations = useLoadSensorStations()
 
   const [accessPoint, setAccessPoint] = useState<AccessPoint | undefined>()
@@ -57,11 +56,7 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
           props.updateApInState?.(updatedAp)
         })
         .catch((err: Error) => {
-          addSnackbarMessage({
-            header: 'Unable to update access point status',
-            body: err.message,
-            type: MessageType.ERROR,
-          })
+          addErrorSnackbar(err, 'Unable to update access point status')
         })
     }
   }
@@ -76,11 +71,7 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
         getAccessPoint(accessPoint.name)
           .then((ap) => setAccessPoint(ap))
           .catch((err: Error) => {
-            addSnackbarMessage({
-              header: 'Unable to reload access point',
-              body: err.message,
-              type: MessageType.ERROR,
-            })
+            addErrorSnackbar(err, 'Unable to reload access point')
           })
       }
     }, 2000)
