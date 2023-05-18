@@ -1,19 +1,22 @@
 import { Timestamp } from './timestamp'
 
+type LogId = number
+
 /**
  * A single log entry
  */
-export interface AuditLogEntry {
-  details: string
+export interface LogEntry {
+  id: LogId
   level: LogLevel
-  origin: LogEntity
+  message: string
+  origin: LogEntity | null
   timestamp: Timestamp
 }
 
 /**
- * Severity warnings for an {@link AuditLogEntry}
+ * Severity warnings for an {@link LogEntry}
  */
-enum LogLevel {
+export enum LogLevel {
   DEBUG = 'DEBUG',
   INFO = 'INFO',
   WARN = 'WARN',
@@ -21,14 +24,14 @@ enum LogLevel {
 }
 
 interface LogEntity {
-  ssID: string
+  id: number
   type: EntityType
 }
 
 /**
- * Entities involved in an {@link AuditLogEntry}
+ * Entities involved in an {@link LogEntry}
  */
-enum EntityType {
+export enum EntityType {
   USER = 'USER',
   ACCESS_POINT = 'ACCESS_POINT',
   SENSOR_STATION = 'SENSOR_STATION',

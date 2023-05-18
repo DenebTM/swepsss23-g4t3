@@ -5,8 +5,7 @@ import Box from '@mui/system/Box'
 
 import { Spinner } from '@component-lib/Spinner'
 import { getSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
-import { Message, MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
@@ -24,10 +23,10 @@ interface UploadPageContentsProps {
 export const UploadPageContents: React.FC<UploadPageContentsProps> = (
   props
 ) => {
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
 
   const [sensorStation, setSensorStation] = useState<SensorStation>()
-  const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
+  const [snackbarError, setSnackbarError] = useState<Error | null>(null)
 
   /** Load sensor station from the API on component mount */
   useEffect(() => {
@@ -36,24 +35,18 @@ export const UploadPageContents: React.FC<UploadPageContentsProps> = (
       .then((data) => {
         setSensorStation(data)
       })
-      .catch((err: Error) =>
-        setSnackbarMessage({
-          header: 'Could not load sensor station',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
-      )
+      .catch((err: Error) => setSnackbarError(err))
 
     // Cancel the promise callbacks on component unmount
     return ssPromise.cancel
-  }, [setSnackbarMessage])
+  }, [setSnackbarError])
 
-  /** Create a new snackbar if {@link snackbarMessage} has been updated */
+  /** Create a new snackbar if {@link snackbarError} has been updated */
   useEffect(() => {
-    if (snackbarMessage !== null) {
-      addSnackbarMessage(snackbarMessage)
+    if (snackbarError !== null) {
+      addErrorSnackbar(snackbarError, 'Could not load sensor station')
     }
-  }, [snackbarMessage])
+  }, [snackbarError])
 
   return (
     <Box
