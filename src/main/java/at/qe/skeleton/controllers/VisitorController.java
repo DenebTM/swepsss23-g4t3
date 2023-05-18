@@ -1,14 +1,12 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.controllers.api.SensorStationRestController;
-import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
-import org.jboss.weld.context.http.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * Rest controller to enable access to uploading a photo or viewing all photos of a specific
@@ -39,8 +35,8 @@ public class VisitorController {
 
     /**
      * Route to POST images to the photo gallery
-     * @param multipartImage
-     * @param id
+     * @param multipartImage image file
+     * @param id id of sensor station to upload to
      * @return id and name of Photo
      */
     @PostMapping(value = SS_PHOTOS_PATH)
