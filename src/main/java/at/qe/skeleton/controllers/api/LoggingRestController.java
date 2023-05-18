@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,15 +115,26 @@ public class LoggingRestController implements BaseRestController {
                 log.getTimestamp().toEpochMilli()
             ));
 
+            List<LoggingEventProperty> logProps = new ArrayList<>();
+
             // associate the log entry with the send access point
-            var logProp = new LoggingEventProperty(
+            var apLogProp = new LoggingEventProperty(
                 savedLog.getEventId(),
                 LogEntityType.ACCESS_POINT.name(),
                 ap.getName()
             );
-            propertyRepository.save(logProp);
+            logProps.add(propertyRepository.save(apLogProp));
 
-            returnList.add(new LoggingEventJson(savedLog, Arrays.asList(logProp)));
+            if (log.getOrigin() != null) {
+                var remoteLogProp = new LoggingEventProperty(
+                    savedLog.getEventId(),
+                    log.getOrigin().getType().name(),
+                    log.getOrigin().getId().toString()
+                );
+                logProps.add(propertyRepository.save(remoteLogProp));
+            }
+
+            returnList.add(new LoggingEventJson(savedLog, logProps));
         }
 
         logger.info("Received " + logs.size() + " new log entries from access point", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
