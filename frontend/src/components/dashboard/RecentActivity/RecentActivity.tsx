@@ -24,6 +24,7 @@ export const RecentActivity: React.FC = () => {
       from: dayjs().subtract(1, 'week').toISOString(),
       to: dayjs().toISOString(),
       level: [LogLevel.WARN, LogLevel.ERROR],
+      origin: 'any',
     })
       .then((data) => {
         setLogEntries(data)

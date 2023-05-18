@@ -22,7 +22,11 @@ export const getLogs = async (
   } = {
     origin: 'any',
   }
-): Promise<LogEntry[]> => _get(API_URI.logs, { params })
+): Promise<LogEntry[]> =>
+  _get(API_URI.logs, {
+    params,
+    paramsSerializer: { indexes: null }, // pass level as "level" instead of "level[]"
+  })
 
 /** Mocked log functions */
 export const mockedLogReqs: EndpointReg = (server: Server) => {
