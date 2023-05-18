@@ -106,7 +106,7 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 190 * getMaxGreenhousesPerAp(),
+      width: Math.max(190 * getMaxGreenhousesPerAp(), 100),
     },
     {
       ...centerCell,
