@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -67,5 +68,17 @@ public class VisitorControllerTest {
         }
         MultipartFile result = new MockMultipartFile(name, originalFileName, contentType, content);
         Assertions.assertThrows(NotFoundInDatabaseException.class, () -> visitorController.uploadPhoto(result, 99));
+    }
+
+    @Test
+    void testNoPhotosToReturn() {
+        if (!photoDataRepository.findAll().isEmpty()) {
+            List<PhotoData> list = photoDataRepository.findAll();
+            for (PhotoData p :
+                    list) {
+                photoDataRepository.delete(p);
+            }
+        }
+        Assertions.assertTrue(Objects.requireNonNull(visitorController.getAllPhotosBySS(1).getBody()).isEmpty());
     }
 }
