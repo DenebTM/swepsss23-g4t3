@@ -116,7 +116,8 @@ public class SensorStationRestController implements BaseRestController {
                 newSS.setAccessPoint(ap);
                 retSSList.add(ssService.saveSS(newSS));
 
-                logger.info("Registered available sensor station " + newSS.getSsID(), LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                logger.info("Sensor station " + newSS.getSsID() + " found by access point",
+                    LogEntityType.ACCESS_POINT, ap.getName(), getClass());
             }
         }
         return ResponseEntity.ok(retSSList);
