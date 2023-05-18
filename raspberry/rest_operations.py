@@ -4,7 +4,7 @@ import aiohttp
 import json
 import database_operations
 import functools
-import time
+from datetime import datetime
 
 # This function makes it so that each rest call retries 5 times before raising an ClientConnectionError
 def retry_connection_error(retries=5, interval=3):
@@ -111,7 +111,7 @@ async def get_thresholds_update_db(sensorstation_id, session):
 async def send_sensorvalues_to_backend(sensorstation_id, session):
     averages_dict = await database_operations.get_sensor_data_averages(sensorstation_id)
     if averages_dict:
-        averages_dict['timestamp'] = int(time.time())
+        averages_dict['timestamp'] = datetime.now().isoformat() + 'Z'
         async with session.post('/api/sensor-stations/' + str(sensorstation_id) + '/measurements', json=averages_dict) as response:
             await database_operations.clear_sensor_data(sensorstation_id) #I guess here it makes kind of sense?
             #TODO:Log this communication
