@@ -109,7 +109,6 @@ async def main():
                         polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
                         sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
                         await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-                        retry_time = 5
                     else:
                         print('Access point is offline')
                         connection_request = asyncio.Future()
@@ -117,7 +116,7 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            logging_operations.log_to_file_and_list('Error', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            await logging_operations.log_to_file_and_list('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
             time.sleep(RETRY_TIME)
         except aiohttp.ClientResponseError as e:
             print(f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
