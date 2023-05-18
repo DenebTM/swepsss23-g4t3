@@ -34,6 +34,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
 
   /** Load measurements from the API on component mount */
   useEffect(() => {
+    setMeasurements(undefined)
     const measurementPromise = cancelable(
       getSensorStationMeasurements(
         props.ssID,
@@ -45,7 +46,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
 
     // Cancel the promise callbacks on component unmount
     return measurementPromise.cancel
-  }, [])
+  }, [props.ssID])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
   useEffect(() => {
@@ -75,7 +76,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
       ? sensorStations.find((s) => s.ssID === props.ssID)
       : null
     setSensorStation(foundSs ?? null)
-  }, [sensorStations])
+  }, [props.ssID, sensorStations])
 
   return (
     <Grid container spacing={2} padding={2}>
