@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.controllers.api.SensorStationRestController;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
@@ -31,7 +32,7 @@ public class VisitorController {
     @Autowired
     private PhotoDataRepository photoDataRepository;
 
-    private static final String SS_PHOTOS_PATH = "/sensor-stations/{uuid}/photos";
+    private static final String SS_PHOTOS_PATH = SensorStationRestController.SS_ID_PATH + "/photos";
 
     /**
      * Route to POST images to the photo gallery
@@ -77,7 +78,7 @@ public class VisitorController {
         throw new IllegalArgumentException("No Photo associated to this id");
     }
 
-    @GetMapping(SS_PHOTOS_PATH)
+    @GetMapping(value = SS_PHOTOS_PATH)
     public ResponseEntity<Object> getPhotosBySSAsId(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {

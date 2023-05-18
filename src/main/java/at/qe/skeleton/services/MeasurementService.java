@@ -4,25 +4,33 @@ import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorStationRepository;
+import at.qe.skeleton.repositories.SensorValuesRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MeasurementService {
 
     @Autowired
     MeasurementRepository measurementRepository;
+
     @Autowired
     SensorStationRepository ssRepository;
 
-    public List<Measurement> getMeasurements(Integer ssId, Instant from, Instant to){
+    @Autowired
+    SensorValuesRepository sensorValuesRepository;
+
+    public List<Measurement> getMeasurements(Integer ssId, Instant from, Instant to) {
         SensorStation ss = ssRepository.findFirstBySsID(ssId);
         return measurementRepository.
-            findAllBySensorStationAndTimestampGreaterThanAndTimestampLessThanOrderByTimestampAsc(ss, from, to);
+            findAllBySensorStationAndTimestampGreaterThanEqualAndTimestampLessThanEqualOrderByTimestampAsc(ss, from, to);
     }
 
     public Measurement getCurrentMeasurement(Integer ssId) {
@@ -34,24 +42,35 @@ public class MeasurementService {
         return null;
     }
 
-    public List<Measurement> getAllCurrentMeasurements(){
-        List<Measurement> result = new ArrayList<>();
-        List<Measurement> measurements = measurementRepository.findAllByOrderBySensorStationAscTimestampDesc();
-        ArrayList<Integer> ssids = new ArrayList<>();
-        for (Measurement m : measurements) {
-            if (!ssids.contains(m.getSensorStation().getSsID())) {
-                ssids.add(m.getSensorStation().getSsID());
-                result.add(m);
-            }
+    public Map<Integer, Measurement> getAllCurrentMeasurements() {
+        Collection<SensorStation> sensorStations = ssRepository.findAll();
+        Map<Integer, Measurement> result = new HashMap<>(sensorStations.size());
+
+        for (SensorStation ss : sensorStations) {
+            result.put(ss.getSsID(), getCurrentMeasurement(ss.getSsID()));
         }
+
         return result;
     }
 
-    public Object getMeasurementById(Integer id){
+    public Object getMeasurementById(Integer id) {
         return measurementRepository.findFirstById(id);
     }
 
-    public Measurement saveMeasurement(Measurement m){
+    public Measurement saveMeasurement(Measurement m) {
+        if (m.getData() == null) {
+            throw new IllegalArgumentException("Sensor values must be provided");
+        }
+
+        if (measurementRepository.findFirstBySensorStationAndTimestamp(
+            m.getSensorStation(), 
+            m.getTimestamp()) != null
+        ) {
+            throw new IllegalArgumentException("Measurement with identical timestamp already exists for sensor station");
+        }
+
+        m.setData(sensorValuesRepository.save(m.getData()));
+
         return measurementRepository.save(m);
     }
 }

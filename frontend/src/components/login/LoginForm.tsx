@@ -70,6 +70,7 @@ export const LoginForm: React.FC = () => {
           inputRef={usernameRef}
           onKeyPress={onEnterKeypress(handleApiLogin)}
           fullWidth
+          autoFocus
         />
         <TextField
           required
