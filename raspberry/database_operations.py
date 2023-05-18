@@ -13,7 +13,6 @@ async def save_sensor_values_to_database(sensorstation_id, temperature, humidity
         db_conn.commit()
     except Exception as e:
         print(e)
-        #TODO: log the failure and send to backend etc
 
 #returns a mean of the values of the sensorstation
 async def get_sensor_data_averages(sensorstation_id):
@@ -42,7 +41,6 @@ async def get_sensor_data_averages(sensorstation_id):
         return averages_dict
     except Exception as e:
         print('Database access error:', e)
-        # TODO: Implement logging
 
 async def clear_sensor_data(sensorstation_id):
     try:
@@ -54,7 +52,6 @@ async def clear_sensor_data(sensorstation_id):
         db_conn.commit()
     except Exception as e:
         print(f'couldnt delete sensordata. Error: {e}')
-        #TODO: Logging implementation 
 
 async def get_sensorstation_thresholds(sensorstation_id):
     try:
@@ -90,7 +87,6 @@ async def get_sensorstation_thresholds(sensorstation_id):
             return {}
     except Exception as e:
         print('Database access error:', e)
-        # TODO: Implement logging
         return {}
 
 async def get_sensorstation_aggregation_period(sensorstation_id):
@@ -187,5 +183,4 @@ async def update_sensorstation(sensorstation):
                 thresholds['airQuality_min'], thresholds['soilMoisture_min']))
             db_conn.commit()
         except Exception as e:
-            db_conn.rollback()
             print(f'Error inserting data for sensorstation {sensorstation_id}: {e}')
