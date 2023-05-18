@@ -20,7 +20,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         await save_sensor_values_to_database(SENSORSTATION_ID, MOCK_VALUES_TUPLE[0], MOCK_VALUES_TUPLE[1], MOCK_VALUES_TUPLE[2], MOCK_VALUES_TUPLE[3], MOCK_VALUES_TUPLE[4], MOCK_VALUES_TUPLE[5])
 
         # Assert that the mock database connection was called with the correct SQL query and parameters
-        db_conn.execute.assert_called_once_with('INSERT INTO sensordata (id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        db_conn.execute.assert_called_once_with('INSERT INTO sensordata (ssID, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                         (SENSORSTATION_ID, MOCK_VALUES_TUPLE[0], MOCK_VALUES_TUPLE[1], MOCK_VALUES_TUPLE[2], MOCK_VALUES_TUPLE[3], MOCK_VALUES_TUPLE[4], MOCK_VALUES_TUPLE[5], int(time.time())))
         db_conn.commit.assert_called_once()
 
@@ -91,13 +91,13 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
     async def test_update_sensorstation(self, db_conn):
         #set up json which is received 
         json_data = {
-            'id': SENSORSTATION_ID,
+            'ssID': SENSORSTATION_ID,
             'status': 'OK',
             'gardeners':[
                 'user1',
                 'user2'
             ],
-            'transmission_interval': TRANSMISSION_INTERVAL,
+            'aggregationPeriod': TRANSMISSION_INTERVAL,
             'accessPoint': 'AccessPoint1',
             'lowerBound': {
                 'airPressure': MOCK_THRESHOLDS_TUPLE[11],
@@ -121,7 +121,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         # check if the data is inserted correctly
         db_conn.execute.assert_called_once_with(
                 '''INSERT OR REPLACE INTO sensorstations
-                (id, transmissioninterval,
+                (ssID, transmissioninterval,
                 temperature_max, humidity_max, air_pressure_max, illuminance_max,
                 air_quality_index_max, soil_moisture_max,
                 temperature_min, humidity_min, air_pressure_min, illuminance_min,

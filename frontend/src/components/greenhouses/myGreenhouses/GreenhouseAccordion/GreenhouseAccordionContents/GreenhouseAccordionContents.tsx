@@ -13,8 +13,7 @@ import {
   ValueRange,
 } from '~/common'
 import { AppContext } from '~/contexts/AppContext/AppContext'
-import { MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
@@ -39,7 +38,7 @@ export const GreenhouseAccordionContents: React.FC<
   GreenhouseAccordionContentsProps
 > = (props) => {
   const { setSensorStations } = React.useContext(AppContext)
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
 
   /** Store the key of the row that is currently being edited in the state (otherwise `false`)*/
   const [editing, setEditing] = useState<
@@ -93,11 +92,7 @@ export const GreenhouseAccordionContents: React.FC<
         })
       })
       .catch((err: Error) => {
-        addSnackbarMessage({
-          header: 'Could not save updated value',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
+        addErrorSnackbar(err, 'Could not save updated value')
       })
       .finally(() => {
         setEditing(false)
