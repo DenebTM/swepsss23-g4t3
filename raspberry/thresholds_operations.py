@@ -1,11 +1,11 @@
 import common
-from database_operations import get_sensor_data_thresholds, get_sensor_data_averages
+from database_operations import get_sensorstation_thresholds, get_sensor_data_averages
 from rest_operations import send_warning_to_backend, clear_warning_on_backend
 import asyncio
 
 async def check_values_for_thresholds(sensorstation_client, sensorstation_id, session):
     try:
-        thresholds_dict = await get_sensor_data_thresholds(sensorstation_id)
+        thresholds_dict = await get_sensorstation_thresholds(sensorstation_id)
         averages_dict = await get_sensor_data_averages(sensorstation_id)
 
         if thresholds_dict is None or averages_dict is None:
@@ -23,7 +23,7 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
                 await send_warning_to_backend(sensorstation_id, session)
     except Exception as e:
         print(e)
-        # TODO log error code
+        #TODO log error code
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
     errorCode = 1

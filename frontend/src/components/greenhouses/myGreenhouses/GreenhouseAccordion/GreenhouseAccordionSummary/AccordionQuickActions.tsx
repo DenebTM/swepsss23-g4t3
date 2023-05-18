@@ -2,12 +2,12 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
+import GalleryIcon from '@component-lib/icons/GalleryIcon'
 import { Tooltip } from '@component-lib/Tooltip'
 import { PAGE_URL, SensorStationView } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
@@ -37,7 +37,7 @@ export const AccordionQuickActions: React.FC<AccordionQuickActionsProps> = (
     },
     {
       title: 'Gallery',
-      icon: <ImageOutlinedIcon />,
+      icon: <GalleryIcon />,
       url: PAGE_URL.greenhouseView.href(
         props.sensorStationUuid,
         SensorStationView.GALLERY

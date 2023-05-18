@@ -28,12 +28,12 @@ warning_active_uuid = base_uuid.format('ff80')
 
 #global dictionary failure_uuids
 failure_uuids = {
-    'air_pressure': air_pressure_failure_uuid,
+    'airPressure': air_pressure_failure_uuid,
     'temperature': temperature_failure_uuid,
     'humidity': humidity_failure_uuid,
-    'illuminance': illuminance_failure_uuid,
-    'air_quality_index': air_quality_index_failure_uuid,
-    'soil_moisture': soil_moisture_failure_uuid
+    'lightIntensity': illuminance_failure_uuid,
+    'airQuality': air_quality_index_failure_uuid,
+    'soilMoisture': soil_moisture_failure_uuid
 }
 
 known_ss_filename = 'known_sensorstations.yaml'
@@ -64,7 +64,7 @@ try:
         config = yaml.safe_load(f)
         web_server_address = config['web_server_address']
         access_point_name = config['access_point_name']
-        default_transmission_interval = config['default_transmission_interval']
+        default_aggregation_period = config['default_transmission_interval']
 
 except:
     print('Caught Exception. Probably conf.yaml doesnt exist yet. Program will start with dev-config')
@@ -73,7 +73,7 @@ except:
         web_server_address = config['web_server_address']
         access_point_name = config['access_point_name']
         access_point_address = web_server_address + '/' + access_point_name
-        default_transmission_interval = config['default_transmission_interval']
+        default_aggregation_period = config['default_transmission_interval']
 
 if not os.path.exists('audit.log'):
     open('audit.log', 'w')

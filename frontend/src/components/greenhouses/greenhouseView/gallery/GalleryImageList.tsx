@@ -14,7 +14,7 @@ import { ImageListItem } from './ImageListItem/ImageListItem'
 interface GalleryImageListProps {
   photos: Photo[]
   setPhotos: Dispatch<SetStateAction<Photo[] | undefined>>
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -44,7 +44,7 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
           {props.photos.map((im) => (
             <ImageListItem
               key={im.url}
-              alt={`Photograph of a plant for greenhouse ${props.uuid}`}
+              alt={`Photograph of a plant for greenhouse ${props.ssID}`}
               photo={im}
               setPhotos={props.setPhotos}
             />

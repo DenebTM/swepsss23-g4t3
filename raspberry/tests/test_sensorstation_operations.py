@@ -17,7 +17,7 @@ class TestSearchForSensorstations(unittest.IsolatedAsyncioTestCase):
         mock_device_1.details = {
             'props': {
                 'ServiceData': {
-                    common.device_information_uuid: b'\x01'  # Mocked service data
+                    common.device_information_uuid: b'\x01'  # Station ID encoded as a single byte == 1
                 }
             }
         }
@@ -28,7 +28,7 @@ class TestSearchForSensorstations(unittest.IsolatedAsyncioTestCase):
         mock_device_2.details = {
             'props': {
                 'ServiceData': {
-                    common.device_information_uuid: b'\x02'  # Mocked service data
+                    common.device_information_uuid: b'\x02'  # Station ID encoded as a single byte == 2
                 }
             }
         }
