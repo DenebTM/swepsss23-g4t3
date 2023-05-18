@@ -19,7 +19,6 @@ import { LogEntry, LogLevel } from '~/models/log'
 
 /** Map values from {@link LogLevel} to {@link StatusVariant} for display in {@link StatusCell} */
 const logLevelToStatusVariant: { [key in LogLevel]: StatusVariant } = {
-  [LogLevel.DEBUG]: StatusVariant.OK,
   [LogLevel.INFO]: StatusVariant.INFO,
   [LogLevel.WARN]: StatusVariant.WARNING,
   [LogLevel.ERROR]: StatusVariant.ERROR,
