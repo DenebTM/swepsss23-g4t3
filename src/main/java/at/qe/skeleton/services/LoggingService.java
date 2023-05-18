@@ -1,8 +1,13 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.models.LoggingEvent;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.repositories.LoggingEventRepository;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +19,8 @@ public class LoggingService {
 
     @Autowired
     LoggingEventRepository loggingEventRepository;
+    
+    private Log logger = LogFactory.getLog(getClass());
 
     /**
      * Returns all available logs from the repository, ordered by timestamp (latest events are shown first)
@@ -94,5 +101,26 @@ public class LoggingService {
         }
 
         return false;
+    }
+
+    public void debug(String message, LogEntityType entityType, Object entityId) {
+        MDC.put(entityType.name(), entityId.toString());
+        logger.debug(message);
+    }
+
+    public void info(String message, LogEntityType entityType, Object entityId) {
+        MDC.put(entityType.name(), entityId.toString());
+        logger.info(message);
+    }
+
+    public void warn(String message, LogEntityType entityType, Object entityId) {
+        MDC.put(entityType.name(), entityId.toString());
+        logger.warn(message);
+    }
+
+    public void error(String message, LogEntityType entityType, Object entityId) {
+        MDC.put(entityType.name(), entityId.toString());
+        logger.error(message);
+
     }
 }
