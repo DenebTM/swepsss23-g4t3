@@ -25,7 +25,6 @@ public class PhotoDataTest {
         PhotoData img = new PhotoData("example2", null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
         photoDataRepository.save(img);
         int id = img.getId();
-        //PhotoData testimg = new PhotoData(2, "photo2", null, new byte[0]);
         assert(photoDataRepository.findByName("example2").isPresent());
         assert(photoDataRepository.findById(id).isPresent());
         assertEquals(photoDataRepository.findByName("example2").get(), img);
