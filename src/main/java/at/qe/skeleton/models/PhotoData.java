@@ -33,11 +33,6 @@ public class PhotoData {
     @Column(name = "ID")
     private Integer id;
 
-    // TODO: (in service or controller) allow saving a photo with a randomized name
-    @JsonIgnore
-    @Column(name = "NAME", unique = true)
-    private String name;
-
     @Column(name = "UPLOADED")
     private LocalDateTime uploaded;
 
@@ -57,14 +52,6 @@ public class PhotoData {
 
     public void setUploaded(LocalDateTime uploaded) {
         this.uploaded = uploaded;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public byte[] getContent() {
@@ -91,8 +78,7 @@ public class PhotoData {
         this.sensorStation = sensorStation;
     }
 
-    public PhotoData(String name, SensorStation sensorStation, byte[] content) {
-        this.name = name;
+    public PhotoData(SensorStation sensorStation, byte[] content) {
         this.sensorStation = sensorStation;
         this.content = content;
     }
