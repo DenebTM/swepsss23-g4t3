@@ -9,6 +9,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * This class defines custom exception handlers for the ReST controllers
@@ -55,4 +56,18 @@ public class ErrorHandler {
             .status(HttpStatus.FORBIDDEN)
             .body(ex.getMessage());
     }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String name = ex.getName();
+        @SuppressWarnings("null")
+        String type = ex.getRequiredType().getSimpleName();
+        Object value = ex.getValue();
+        String message = String.format("Invalid %s value for '%s': %s", type, name, value);
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(message);
+    }
+
 }
