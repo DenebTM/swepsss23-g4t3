@@ -9,6 +9,8 @@ from sensorvalues_operations import read_sensorvalues
 from sensorstation_operations import search_for_sensorstations
 import rest_operations
 
+RETRY_TIME = 10
+
 # Currently active sensor station tasks
 ss_tasks = {}
 async def sensor_station_manager(connection_request, session):
@@ -46,11 +48,11 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     try:
         transmission_interval = common.polling_interval
         async with BleakClient(sensorstation_mac) as client:
-            await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
+            await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, 'OK')
             await database_operations.initialize_sensorstation(sensorstation_id)
             asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done() and client.is_connected:
-                transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
+                transmission_interval = await database_operations.get_sensorstation_aggregation_period(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
                 await rest_operations.get_thresholds_update_db(sensorstation_id, session)
                 await check_values_for_thresholds(client, sensorstation_id, session)
@@ -65,16 +67,17 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     except asyncio.CancelledError as e:
         await database_operations.clear_sensor_data(sensorstation_id)
         await database_operations.delete_sensorstation(sensorstation_id)
-        print(f'task {sensorstation_id} canceled and clean_uped')
+        print(f'task {sensorstation_id} canceled and cleaned up')
         #TODO: log this 
     except Exception as e:
         #TODO: log and send to backend
-        print('Unexpected error occured in sensor_station_task', e.with_traceback())
+        print('Unexpected error occured in sensor_station_task', e)
 
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
     ss_tasks[sensorstation_id].cancel()
     del ss_tasks[sensorstation_id]
+
 
 async def polling_loop(connection_request, session):
     while not connection_request.done():
@@ -113,14 +116,12 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            print(f'Could not reach PlantHealth server. Retrying in {retry_time} seconds')
-            time.sleep(retry_time)
-            retry_time = retry_time+5 if retry_time < 60 else 60
+            print(f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            time.sleep(RETRY_TIME)
             #TODO:Log this
         except aiohttp.ClientResponseError as e:
-            print(f'Unauthorized to talk to PlantHealth server. Retry in {retry_time} seconds.')
-            time.sleep(retry_time)
-            retry_time = retry_time+5 if retry_time < 60 else 60
+            print(f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            time.sleep(RETRY_TIME)
             #TODO:Log this
         except Exception as e:
             print(f'Unexpected error occured: {e}')

@@ -2,9 +2,9 @@ import React from 'react'
 
 import { getSensorStations } from '~/api/endpoints/sensorStations/sensorStations'
 import { AppContext } from '~/contexts/AppContext/AppContext'
-import { SnackbarContext } from '~/contexts/SnackbarContext/SnackbarContext'
-import { MessageType } from '~/contexts/SnackbarContext/types'
 import { SensorStation } from '~/models/sensorStation'
+
+import { useAddErrorSnackbar } from './snackbar'
 
 /**
  * Hook to get the current values of the fetched sensor stations in the global AppContext.
@@ -27,17 +27,14 @@ export const useSensorStations = (): SensorStation[] | null => {
  */
 export const useLoadSensorStations = (): (() => void) => {
   const { setSensorStations } = React.useContext(AppContext)
-  const { addMessage } = React.useContext(SnackbarContext)
+  const addErrorSnackbar = useAddErrorSnackbar()
+
   return () =>
     getSensorStations()
       .then((data) => {
         setSensorStations(data)
       })
       .catch((err: Error) =>
-        addMessage({
-          header: 'Could not load greenhouses',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
+        addErrorSnackbar(err, 'Could not load greenhouses')
       )
 }

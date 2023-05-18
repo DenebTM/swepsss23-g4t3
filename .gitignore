@@ -13,3 +13,11 @@ target/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# python coverage library
+.coverage
+raspberry/.coverage
+raspberry/coverage.xml
+
+# backend logs
+logs/

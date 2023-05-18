@@ -3,9 +3,13 @@ import React from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 
+import { Spinner } from './Spinner'
+
 interface DashboardCardProps {
   /** The card contents */
   children: React.ReactNode
+  /** Whether to show a loading indicator */
+  loading?: boolean
 }
 
 /**
@@ -19,7 +23,16 @@ export const DashboardCard: React.FC<DashboardCardProps> = (props) => {
         minHeight: '200px', // TODO qqjf make this responsive
       }}
     >
-      <CardContent>{props.children}</CardContent>
+      <CardContent
+        sx={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {props.loading ? <Spinner /> : props.children}
+      </CardContent>
     </Card>
   )
 }
