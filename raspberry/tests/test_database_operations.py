@@ -69,16 +69,16 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         expected_results = {
             'temperature_max': MOCK_THRESHOLDS_TUPLE[0],
             'humidity_max': MOCK_THRESHOLDS_TUPLE[1],
-            'air_pressure_max': MOCK_THRESHOLDS_TUPLE[2],
-            'illuminance_max': MOCK_THRESHOLDS_TUPLE[3],
-            'air_quality_index_max': MOCK_THRESHOLDS_TUPLE[4],
-            'soil_moisture_max': MOCK_THRESHOLDS_TUPLE[5],
+            'airPressure_max': MOCK_THRESHOLDS_TUPLE[2],
+            'lightIntensity_max': MOCK_THRESHOLDS_TUPLE[3],
+            'airQuality_max': MOCK_THRESHOLDS_TUPLE[4],
+            'soilMoisture_max': MOCK_THRESHOLDS_TUPLE[5],
             'temperature_min': MOCK_THRESHOLDS_TUPLE[6],
             'humidity_min': MOCK_THRESHOLDS_TUPLE[7],
-            'air_pressure_min': MOCK_THRESHOLDS_TUPLE[8],
-            'illuminance_min': MOCK_THRESHOLDS_TUPLE[9],
-            'air_quality_index_min': MOCK_THRESHOLDS_TUPLE[10],
-            'soil_moisture_min': MOCK_THRESHOLDS_TUPLE[11]
+            'airPressure_min': MOCK_THRESHOLDS_TUPLE[8],
+            'lightIntensity_min': MOCK_THRESHOLDS_TUPLE[9],
+            'airQuality_min': MOCK_THRESHOLDS_TUPLE[10],
+            'soilMoisture_min': MOCK_THRESHOLDS_TUPLE[11]
         }
 
         # Call the function with the mocked parameters
@@ -122,10 +122,10 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         db_conn.execute.assert_called_once_with(
                 '''INSERT OR REPLACE INTO sensorstations
                 (ssID, aggregation_period,
-                temperature_max, humidity_max, air_pressure_max, illuminance_max,
-                air_quality_index_max, soil_moisture_max,
-                temperature_min, humidity_min, air_pressure_min, illuminance_min,
-                air_quality_index_min, soil_moisture_min)
+                temperature_max, humidity_max, airPressure_max, lightIntensity_max,
+                airQuality_max, soilMoisture_max,
+                temperature_min, humidity_min, airPressure_min, lightIntensity_min,
+                airQuality_min, soilMoisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                 (SENSORSTATION_ID, AGGREGATION_PERIOD, MOCK_THRESHOLDS_TUPLE[0], MOCK_THRESHOLDS_TUPLE[1], 
                  MOCK_THRESHOLDS_TUPLE[2], MOCK_THRESHOLDS_TUPLE[3], MOCK_THRESHOLDS_TUPLE[4], MOCK_THRESHOLDS_TUPLE[5], 

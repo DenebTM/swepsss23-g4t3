@@ -60,10 +60,10 @@ async def get_sensorstation_thresholds(sensorstation_id):
     try:
         cursor = db_conn.cursor()
         cursor.execute(
-            f'''SELECT temperature_max, humidity_max, air_pressure_max, 
-                illuminance_max, air_quality_index_max, soil_moisture_max,
-                temperature_min, humidity_min, air_pressure_min, 
-                illuminance_min, air_quality_index_min, soil_moisture_min
+            f'''SELECT temperature_max, humidity_max, airPressure_max, 
+                lightIntensity_max, airQuality_max, soilMoisture_max,
+                temperature_min, humidity_min, airPressure_min, 
+                lightIntensity_min, airQuality_min, soilMoisture_min
                 FROM sensorstations
                 WHERE ssID = ?''',
             (sensorstation_id,)
@@ -74,16 +74,16 @@ async def get_sensorstation_thresholds(sensorstation_id):
             thresholds_dict = {
                 'temperature_max': thresholds_query[0],
                 'humidity_max': thresholds_query[1],
-                'air_pressure_max': thresholds_query[2],
-                'illuminance_max': thresholds_query[3],
-                'air_quality_index_max': thresholds_query[4],
-                'soil_moisture_max': thresholds_query[5],
+                'airPressure_max': thresholds_query[2],
+                'lightIntensity_max': thresholds_query[3],
+                'airQuality_max': thresholds_query[4],
+                'soilMoisture_max': thresholds_query[5],
                 'temperature_min': thresholds_query[6],
                 'humidity_min': thresholds_query[7],
-                'air_pressure_min': thresholds_query[8],
-                'illuminance_min': thresholds_query[9],
-                'air_quality_index_min': thresholds_query[10],
-                'soil_moisture_min': thresholds_query[11]
+                'airPressure_min': thresholds_query[8],
+                'lightIntensity_min': thresholds_query[9],
+                'airQuality_min': thresholds_query[10],
+                'soilMoisture_min': thresholds_query[11]
             }
             return thresholds_dict
         else:
@@ -154,37 +154,37 @@ async def update_sensorstation(sensorstation):
             if upper_bounds is not None:
                 thresholds['temperature_max'] = upper_bounds['temperature']
                 thresholds['humidity_max'] = upper_bounds['humidity']
-                thresholds['air_pressure_max'] = upper_bounds['airPressure']
-                thresholds['illuminance_max'] = upper_bounds['lightIntensity']
-                thresholds['air_quality_index_max'] = upper_bounds['airQuality']
-                thresholds['soil_moisture_max'] = upper_bounds['soilMoisture']
+                thresholds['airPressure_max'] = upper_bounds['airPressure']
+                thresholds['lightIntensity_max'] = upper_bounds['lightIntensity']
+                thresholds['airQuality_max'] = upper_bounds['airQuality']
+                thresholds['soilMoisture_max'] = upper_bounds['soilMoisture']
 
             lower_bounds = sensorstation['lowerBound']
             if lower_bounds is not None:
                 thresholds['temperature_min'] = lower_bounds['temperature']
                 thresholds['humidity_min'] = lower_bounds['humidity']
-                thresholds['air_pressure_min'] = lower_bounds['airPressure']
-                thresholds['illuminance_min'] = lower_bounds['lightIntensity']
-                thresholds['air_quality_index_min'] = lower_bounds['airQuality']
-                thresholds['soil_moisture_min'] = lower_bounds['soilMoisture']
+                thresholds['airPressure_min'] = lower_bounds['airPressure']
+                thresholds['lightIntensity_min'] = lower_bounds['lightIntensity']
+                thresholds['airQuality_min'] = lower_bounds['airQuality']
+                thresholds['soilMoisture_min'] = lower_bounds['soilMoisture']
 
             db_conn.execute(
                 '''INSERT OR REPLACE INTO sensorstations
                 (ssID, aggregation_period,
-                temperature_max, humidity_max, air_pressure_max, illuminance_max,
-                air_quality_index_max, soil_moisture_max,
-                temperature_min, humidity_min, air_pressure_min, illuminance_min,
-                air_quality_index_min, soil_moisture_min)
+                temperature_max, humidity_max, airPressure_max, lightIntensity_max,
+                airQuality_max, soilMoisture_max,
+                temperature_min, humidity_min, airPressure_min, lightIntensity_min,
+                airQuality_min, soilMoisture_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                 (sensorstation_id, aggregation_period,
 
                 thresholds['temperature_max'], thresholds['humidity_max'],
-                thresholds['air_pressure_max'], thresholds['illuminance_max'],
-                thresholds['air_quality_index_max'], thresholds['soil_moisture_max'],
+                thresholds['airPressure_max'], thresholds['lightIntensity_max'],
+                thresholds['airQuality_max'], thresholds['soilMoisture_max'],
 
                 thresholds['temperature_min'], thresholds['humidity_min'],
-                thresholds['air_pressure_min'], thresholds['illuminance_min'],
-                thresholds['air_quality_index_min'], thresholds['soil_moisture_min']))
+                thresholds['airPressure_min'], thresholds['lightIntensity_min'],
+                thresholds['airQuality_min'], thresholds['soilMoisture_min']))
             db_conn.commit()
         except Exception as e:
             db_conn.rollback()
