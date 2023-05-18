@@ -74,6 +74,7 @@ export const DashboardTable: React.FC = (props) => {
         columns={columns}
         getRowId={(row: SensorStation) => row.ssID}
         rows={sensorStations ?? undefined}
+        noRowsMessage="No measurements to display"
       />
     </TablePaper>
   )

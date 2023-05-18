@@ -164,6 +164,7 @@ export const AccessPointsTable: React.FC = () => {
             background: alpha(theme.errorContainer, 0.15),
           },
         }}
+        noRowsMessage="No access points to display"
       />
     </TablePaper>
   )

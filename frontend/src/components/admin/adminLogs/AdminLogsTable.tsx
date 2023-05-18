@@ -78,6 +78,7 @@ export const AdminLogsTable: React.FC = () => {
         rows={logEntries}
         setRows={setLogEntries}
         fetchRows={getLogs}
+        noRowsMessage="No logs to display"
       />
     </TablePaper>
   )
