@@ -17,11 +17,7 @@ import at.qe.skeleton.repositories.SensorStationRepository;
 import at.qe.skeleton.services.LoggingService;
 
 /**
- * This class runs a scheduled job that periodically checks the lastUpdate time
- * of each access point. If the access point has not communicated with the
- * backend in over 60 seconds, the status is changed to OFFLINE.
- * 
- * This is not done for UNCONFIRMED access points.
+ * This class contains scheduled jobs for monitoring and cleanup
  */
 @Configuration
 @EnableScheduling
@@ -39,12 +35,16 @@ public class AccessPointMonitorJob {
     @Autowired
     private LoggingService logger;
 
+    /**
+     * Periodically check if confirmed access points are still communicating
+     * with the backend
+     * 
+     * If an access point has not communicated with the backend in 60 seconds,
+     * its status is set to offline.
+     */
     @Scheduled(initialDelay = CHECK_INTERVAL_MS, fixedDelay = CHECK_INTERVAL_MS)
     public void checkAccessPoints() {
-        for (AccessPoint ap : apRepository.findAll()) {
-            // ignore access points not yet approved by admin
-            if (ap.getStatus().equals(AccessPointStatus.UNCONFIRMED)) break;
-
+        for (AccessPoint ap : apRepository.findAllByStatusNot(AccessPointStatus.UNCONFIRMED)) {
             if (ap.getLastUpdate().plusMillis(AP_TIMEOUT_MS).isBefore(Instant.now())) {
                 for (SensorStation ss : ap.getSensorStations()) {
                     // TODO: Remove AVAILABLE stations
@@ -69,6 +69,23 @@ public class AccessPointMonitorJob {
                 if (!oldApStatus.equals(newApStatus)) {
                     logger.warn("Access point status changed to " + newApStatus.name(), LogEntityType.ACCESS_POINT, ap.getName(), getClass());
                 }
+            }
+        }
+    }
+
+    /**
+     * Periodically remove AVAILABLE sensor stations from access points that
+     * are no longer in SEARCHING mode
+     */
+    @Scheduled(initialDelay = CHECK_INTERVAL_MS, fixedDelay = CHECK_INTERVAL_MS)
+    public void pruneAvailableStations() {
+        for (AccessPoint ap : apRepository.findAllByStatusNot(AccessPointStatus.SEARCHING)) {
+            for (SensorStation ss :
+                    ap.getSensorStations().stream()
+                    .filter(s -> s.getStatus().equals(SensorStationStatus.AVAILABLE))
+                    .toList()
+            ) {
+                ssRepository.delete(ss);
             }
         }
     }
