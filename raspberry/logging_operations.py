@@ -3,11 +3,22 @@ import datetime
 import asyncio
 from common import access_point_name
 import rest_operations
+import sys
 
 SENDING_INTERVAL = 60
 
-# Configure logger
-logging.basicConfig(filename='audit.log', format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
+## Configure logger
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+log_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+# log to file
+file_handler = logging.FileHandler("audit.log")
+file_handler.setFormatter(log_formatter)
+root_logger.addHandler(file_handler)
+# log to stdout
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(log_formatter)
+root_logger.addHandler(console_handler)
 
 log_data = []
 

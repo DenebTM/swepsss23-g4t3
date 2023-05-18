@@ -44,7 +44,7 @@ async def get_ap_status(session):
         try:
             data = await response.json()
             status = data['status']
-            await logging_operations.log_to_file_and_list('INFO', f'Retreived access point status: {status}')
+            await logging_operations.log_to_file_and_list('INFO', f'Retrieved access point status: {status}')
             return status
         except json.decoder.JSONDecodeError as e:
             await logging_operations.log_to_file_and_list('ERROR', f'Couldnt parse json in get_ap_status. Error: {e}')
@@ -68,7 +68,7 @@ async def get_sensorstation_instructions(session):
         except KeyError as e:
             await logging_operations.log_to_file_and_list('ERROR', f'KeyError in get_sensorstation_instructions. Error: {e}')
             return paired_stations
-    await logging_operations.log_to_file_and_list('INFO', f'Retreived sensorstation instructions. SS: {paired_stations}')
+    await logging_operations.log_to_file_and_list('INFO', f'Retrieved sensorstation instructions. SS: {paired_stations}')
     return paired_stations
 
 @retry_connection_error(retries = 3, interval = 5)
