@@ -120,7 +120,7 @@ def send_found_ss():
     
 
 # Route to send sensor data
-@app.route('/api/sensor-station/<id>/measurements', methods=['POST'])
+@app.route('/api/sensor-stations/<id>/measurements', methods=['POST'])
 def send_sensor_data(id):
     if status_called:
         return jsonify('OK'), 200

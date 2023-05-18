@@ -63,7 +63,7 @@ try:
         config = yaml.safe_load(f)
         web_server_address = config['web_server_address']
         access_point_name = config['access_point_name']
-        default_transmission_interval = config['default_transmission_interval']
+        default_aggregation_period = config['default_transmission_interval']
 
 except:
     print('Caught Exception. Probably conf.yaml doesnt exist yet. Program will start with dev-config')
@@ -72,4 +72,4 @@ except:
         web_server_address = config['web_server_address']
         access_point_name = config['access_point_name']
         access_point_address = web_server_address + '/' + access_point_name
-        default_transmission_interval = config['default_transmission_interval']
+        default_aggregation_period = config['default_transmission_interval']
