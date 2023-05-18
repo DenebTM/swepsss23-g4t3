@@ -22,12 +22,10 @@ public class PhotoDataTest {
 
     @Test
     public void testUploadImage() throws IOException {
-        PhotoData img = new PhotoData("example2", null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
+        PhotoData img = new PhotoData(null, FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg")));
         photoDataRepository.save(img);
         int id = img.getId();
-        assert(photoDataRepository.findByName("example2").isPresent());
         assert(photoDataRepository.findById(id).isPresent());
-        assertEquals(photoDataRepository.findByName("example2").get(), img);
         assertEquals(photoDataRepository.findById(id).get(), img);
         assertTrue(photoDataRepository.findById(id).get().getContent().length > 0);
     }
