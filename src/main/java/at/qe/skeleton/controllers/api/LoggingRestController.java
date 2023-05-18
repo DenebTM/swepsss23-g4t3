@@ -71,7 +71,7 @@ public class LoggingRestController implements BaseRestController {
             .map(event -> new LoggingEventJson(
                 event,
                 props.stream()
-                    .filter(prop -> prop.getEventId() == event.getEventId())
+                    .filter(prop -> prop.getEventId().equals(event.getEventId()))
                     .toList()
             ))
             // filter by origin
@@ -127,7 +127,7 @@ public class LoggingRestController implements BaseRestController {
             returnList.add(new LoggingEventJson(savedLog, Arrays.asList(logProp)));
         }
 
-        logger.info("Received log entries from access point", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+        logger.info("Received " + logs.size() + " new log entries from access point", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
 
         return ResponseEntity.ok(returnList);
     }
