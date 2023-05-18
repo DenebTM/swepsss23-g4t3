@@ -101,7 +101,7 @@ public class UserxRestController implements BaseRestController {
         }
         newUser = userService.saveUser(newUser);
 
-        logger.info("New user added by " + authenticatedUser, null, bcryptPassword, getClass());
+        logger.info("New user added by " + authenticatedUser, LogEntityType.USER, newUser.getUsername(), getClass());
         return ResponseEntity.ok(userService.saveUser(newUser));
     }
 
