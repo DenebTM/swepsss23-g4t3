@@ -11,7 +11,6 @@ import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
