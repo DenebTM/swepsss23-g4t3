@@ -7,6 +7,7 @@ import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.jboss.weld.context.http.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,11 @@ public class VisitorController {
             if (multipartImage.getBytes().length == 0) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bytes have length 0");
             }
+            dbPhoto.setContent(multipartImage.getBytes());
+        } catch (SizeLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Size limit for photo exceeded");
+        } catch (FileSizeLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File size limit for photo exceeded");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not get bytes for photo");
         }
