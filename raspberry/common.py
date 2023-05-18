@@ -31,7 +31,7 @@ failure_uuids = {
     'temperature': temperature_failure_uuid,
     'humidity': humidity_failure_uuid,
     'lightIntensity': illuminance_failure_uuid,
-    'airQualityIndex': air_quality_index_failure_uuid,
+    'airQuality': air_quality_index_failure_uuid,
     'soilMoisture': soil_moisture_failure_uuid
 }
 
