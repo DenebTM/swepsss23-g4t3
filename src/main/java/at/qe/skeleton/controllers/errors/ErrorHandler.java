@@ -82,7 +82,7 @@ public class ErrorHandler {
     ResponseEntity<String> maxUploadSizeExceededHandler(Exception e) {
         return ResponseEntity
             .status(HttpStatus.PAYLOAD_TOO_LARGE)
-            .body("Upload file size too large (maximum 8 MiB)");
+            .body("Upload file size too large (max 8 MiB)");
     }
 
 }
