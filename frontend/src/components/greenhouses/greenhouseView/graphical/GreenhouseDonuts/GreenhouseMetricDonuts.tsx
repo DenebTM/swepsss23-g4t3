@@ -53,8 +53,12 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
       donutHeight: donutHeight,
       metricRange: metricRange,
       sensorStation: sensorStation,
-      maxThreshold: sensorStation.upperBound[metricRange.valueKey],
-      minThreshold: sensorStation.lowerBound[metricRange.valueKey],
+      maxThreshold: sensorStation.upperBound
+        ? sensorStation.upperBound[metricRange.valueKey]
+        : undefined,
+      minThreshold: sensorStation.lowerBound
+        ? sensorStation.lowerBound[metricRange.valueKey]
+        : undefined,
     })
 
     return (
@@ -67,21 +71,21 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
           <Grid container spacing={1} padding={2}>
             <Grid {...gridBreakpoints}>
               <GreenhouseDonut
-                {...donutProps(NON_AIR_METRICS[0])}
+                {...donutProps(NON_AIR_METRICS['temperature'])}
                 icon={<ThermostatIcon {...donutIconProps} />}
                 value={measurement.data.temperature}
               />
             </Grid>
             <Grid {...gridBreakpoints}>
               <GreenhouseDonut
-                {...donutProps(NON_AIR_METRICS[1])}
+                {...donutProps(NON_AIR_METRICS['soilMoisture'])}
                 icon={<WaterDropOutlinedIcon {...donutIconProps} />}
                 value={measurement.data.soilMoisture}
               />
             </Grid>
             <Grid {...gridBreakpoints}>
               <GreenhouseDonut
-                {...donutProps(NON_AIR_METRICS[2])}
+                {...donutProps(NON_AIR_METRICS['lightIntensity'])}
                 icon={<LightModeOutlinedIcon {...donutIconProps} />}
                 value={measurement.data.lightIntensity}
               />
