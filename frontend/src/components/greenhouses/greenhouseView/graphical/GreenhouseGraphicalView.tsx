@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import { DashboardCard } from '@component-lib/DashboardCard'
-import dayjs from 'dayjs'
 import { getSensorStationMeasurements } from '~/api/endpoints/sensorStations/measurements'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useSensorStations } from '~/hooks/appContext'
@@ -36,11 +35,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
   useEffect(() => {
     setMeasurements(undefined)
     const measurementPromise = cancelable(
-      getSensorStationMeasurements(
-        props.ssID,
-        dayjs().subtract(1, 'week').toISOString(),
-        dayjs().toISOString()
-      )
+      getSensorStationMeasurements(props.ssID)
     )
     loadMeasurements(measurementPromise)
 
