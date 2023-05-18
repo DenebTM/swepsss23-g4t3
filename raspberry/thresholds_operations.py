@@ -24,7 +24,7 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
                 await send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session)
                 await send_warning_to_backend(sensorstation_id, session)
     except Exception as e:
-        await logging_operations.log_to_file_and_list('Warning', f'Error in threshold check: {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        await logging_operations.log_to_file_and_list('WARN', f'Error in threshold check: {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
         
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
