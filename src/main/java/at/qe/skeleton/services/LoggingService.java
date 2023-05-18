@@ -74,16 +74,16 @@ public class LoggingService {
      * @param level logging level
      * @return all logs that have the set level
      */
-    public List<LoggingEvent> getLogsByLevel(LogLevel level) {
-        return loggingEventRepository.findAllByLevelOrderByTimestmpAsc(level);
+    public List<LoggingEvent> getLogsByLevelIn(List<LogLevel> levels) {
+        return loggingEventRepository.findAllByLevelInOrderByTimestmpAsc(levels);
     }
 
-    public List<LoggingEvent> filterLogsByLevel(List<LoggingEvent> logs, LogLevel level) {
-        if (level == null) {
+    public List<LoggingEvent> filterLogsByLevelIn(List<LoggingEvent> logs, List<LogLevel> levels) {
+        if (levels == null) {
             return logs;
         }
 
-        return logs.stream().filter(l -> level.equals(l.getLevel())).toList();
+        return logs.stream().filter(l -> levels.contains(l.getLevel())).toList();
     }
 
     public LoggingEvent saveLog(LoggingEvent log) {
