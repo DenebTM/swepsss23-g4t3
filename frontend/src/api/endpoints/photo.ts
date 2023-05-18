@@ -1,25 +1,27 @@
+import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
-import { _delete } from '~/api/intercepts'
+import { API_DEV_URL } from '~/common'
 import { PhotoId } from '~/models/photo'
-import { SensorStation } from '~/models/sensorStation'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
 import { API_URI, success } from './consts'
 
-/**
- * DEL /api/photos/${photoId}
- * Delete a single photo by ID
+/*
+ * Photo to get a single photo by id
  */
-export const deletePhoto = async (photoId: PhotoId): Promise<SensorStation> => {
-  return _delete(`${API_URI.photos}/${photoId}`)
-}
+export const getPhotoByIdUrl = (photoId: PhotoId): string =>
+  `${API_DEV_URL}${API_URI.photos}/${photoId}`
 
 /** Mocked sensor station functions relating to photos */
 export const mockedPhotoReqs: EndpointReg = (server: Server) => {
-  /** Mock {@link deleteAccessPoint} */
-  server.delete(`${API_URI.photos}/:photoId`, (schema: AppSchema, request) => {
-    //const photoId: PhotoId = Number(request.params.photoId)
-    // Hard-code a success for now. Photos could be moved into the database later if required.
-    return success('Photo deleted')
+  /** Mock response from {@link getPhotoByIdUrl} */
+  server.get(`${API_URI.photos}/:photoId`, (schema: AppSchema, request) => {
+    const fakePhotoUrl = faker.image.nature(
+      faker.datatype.number({ min: 300, max: 900 }),
+      faker.datatype.number({ min: 200, max: 600 }),
+      true
+    )
+
+    return success(fakePhotoUrl)
   })
 }
