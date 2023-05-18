@@ -94,13 +94,11 @@ async def polling_loop(connection_request, session):
             await rest_operations.send_sensorstations_to_backend(session, sensorstations)
         await asyncio.sleep(10)
 
-#Füg header mit authorization hinzu
 async def main():
     while True:
         try:
             async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
                 connection_request = asyncio.Future()
-                print('This should only be Printed at the start and when AP is offline')
                 ap_initialized = await rest_operations.initialize_accesspoint(session)
                 if ap_initialized:
                     polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
