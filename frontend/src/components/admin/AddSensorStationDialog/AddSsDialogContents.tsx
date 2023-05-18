@@ -67,7 +67,6 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
     const apLoadInterval = setInterval(() => {
       if (typeof accessPoint !== 'undefined') {
         loadSensorStations()
-
         getAccessPoint(accessPoint.name)
           .then((ap) => setAccessPoint(ap))
           .catch((err: Error) => {
@@ -75,8 +74,9 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
           })
       }
     }, 2000)
-    return clearInterval(apLoadInterval)
-  }, [])
+
+    return () => clearInterval(apLoadInterval)
+  }, [accessPoint, loadSensorStations])
 
   return (
     <DialogContent sx={{ textAlign: 'center' }}>
