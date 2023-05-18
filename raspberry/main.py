@@ -112,7 +112,7 @@ async def main():
                         connection_request = asyncio.Future()
                         await asyncio.sleep(30)
                 else:
-                    raise aiohttp.ClientResponseError
+                    raise aiohttp.ClientResponseError('Temporary message for status code above 2xx')
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
