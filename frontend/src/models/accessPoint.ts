@@ -5,6 +5,7 @@ export type AccessPointId = string
 
 /** Information about a single access point */
 export interface AccessPoint {
+  clientAddress: string // IPv6 or IPv4 address
   lastUpdate: Timestamp
   name: AccessPointId
   sensorStations: SensorStationUuid[]
