@@ -11,11 +11,11 @@ export interface SensorStation {
   apName: AccessPointId
   aggregationPeriod: number // Transmission interval in seconds
   gardeners: Username[]
-  lowerBound: SensorValues
+  lowerBound: SensorValues | null
   currentMeasurement: Measurement | null
   measurements: Measurement[]
   status: StationStatus
-  upperBound: SensorValues
+  upperBound: SensorValues | null
 }
 
 /** Possible status values for a {@link SensorStation} */

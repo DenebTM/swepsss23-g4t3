@@ -1,5 +1,6 @@
 import { Server } from 'miragejs'
 import { _delete, _get, _put } from '~/api/intercepts'
+import { SensorValues } from '~/models/measurement'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
@@ -40,7 +41,14 @@ export const deleteSensorStation = async (
  */
 export const updateSensorStation = async (
   sensorStationUuid: SensorStationUuid,
-  newParams: Omit<Partial<SensorStation>, 'ssID'>
+  newParams: Omit<
+    Partial<SensorStation>,
+    'ssID' | 'upperBound' | 'lowerBound'
+  > &
+    Partial<{
+      lowerBound: Partial<SensorValues>
+      upperBound: Partial<SensorValues>
+    }>
 ): Promise<SensorStation> => {
   return _put(`${API_URI.sensorStations}/${sensorStationUuid}`, newParams)
 }
