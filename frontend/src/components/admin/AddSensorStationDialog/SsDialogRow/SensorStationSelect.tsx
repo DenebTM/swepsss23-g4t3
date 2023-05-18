@@ -14,6 +14,7 @@ import {
   SensorStationUuid,
   StationStatus,
 } from '~/models/sensorStation'
+import { theme } from '~/styles/theme'
 
 const ssSelectLabelId = 'select-sensor-station'
 
@@ -69,6 +70,11 @@ export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
             onChange={handleChange}
             label="Sensor Station"
             labelId={ssSelectLabelId}
+            sx={{
+              '&.Mui-disabled': {
+                background: theme.inverseOnSurface,
+              },
+            }}
           >
             {apSensorStations.map((ss: SensorStation) => (
               <MenuItem key={ss.ssID} value={ss.ssID}>
