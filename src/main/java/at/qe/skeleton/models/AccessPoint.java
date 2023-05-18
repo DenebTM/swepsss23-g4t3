@@ -60,6 +60,7 @@ public class AccessPoint {
 
     public AccessPoint(String name) {
         this.name = name;
+        this.status = AccessPointStatus.UNCONFIRMED;
     }
 
 }
