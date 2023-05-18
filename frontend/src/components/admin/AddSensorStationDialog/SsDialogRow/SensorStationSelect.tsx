@@ -1,10 +1,12 @@
-import { Spinner } from '@component-lib/Spinner'
-import { Tooltip } from '@component-lib/Tooltip'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+
+import { Spinner } from '@component-lib/Spinner'
+import { Tooltip } from '@component-lib/Tooltip'
 import { useSensorStations } from '~/hooks/appContext'
 import { AccessPoint } from '~/models/accessPoint'
 import { SensorStationUuid, StationStatus } from '~/models/sensorStation'
@@ -75,7 +77,7 @@ export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
             }
             value={props.sensorStationId ?? ''}
             onChange={handleChange}
-            label='Sensor Station'
+            label="Sensor Station"
             labelId={ssSelectLabelId}
             sx={{
               '&.Mui-disabled': {
