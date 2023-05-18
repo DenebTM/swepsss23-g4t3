@@ -39,14 +39,16 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
    * Columns for the greenhouse measurement table.
    */
   const columns: GridColDef<Measurement, any, Measurement>[] = [
-    ...GREENHOUSE_METRICS.map((metricRange: GreenhouseMetricRange) => ({
-      field: metricRange.valueKey,
-      headerName: greenhouseMetricWithUnit(metricRange),
-      description: metricRange.description,
-      valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
-        roundMetric(params.row.data[metricRange.valueKey]),
-      ...metricColumnParams,
-    })),
+    ...Object.values(GREENHOUSE_METRICS).map(
+      (metricRange: GreenhouseMetricRange) => ({
+        field: metricRange.valueKey,
+        headerName: greenhouseMetricWithUnit(metricRange),
+        description: metricRange.description,
+        valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
+          roundMetric(params.row.data[metricRange.valueKey]),
+        ...metricColumnParams,
+      })
+    ),
     {
       field: 'timestamp',
       headerName: 'Timestamp',
@@ -64,13 +66,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
     <TablePaper>
       <DataGrid<Measurement, any, Measurement>
         columns={columns}
-        fetchRows={() =>
-          getSensorStationMeasurements(
-            props.ssID,
-            dayjs().subtract(1, 'week').toISOString(),
-            dayjs().toISOString()
-          )
-        }
+        fetchRows={() => getSensorStationMeasurements(props.ssID)}
         getRowId={(row: Measurement) => row.id}
         initialState={{
           sorting: {
