@@ -14,12 +14,11 @@ import { API_URI, notFound, success } from '../consts'
  */
 export const getSensorStationMeasurements = async (
   sensorStationUuid: SensorStationUuid,
-  from?: Timestamp,
-  to?: Timestamp
+  params?: { from?: Timestamp; to?: Timestamp }
 ): Promise<Measurement[]> =>
   _get(
     `${API_URI.sensorStations}/${sensorStationUuid}${API_URI.measurements}`,
-    { params: { from: from, to: to } }
+    { params: params }
   )
 
 /** Path to get sensor station measurements for mocked routes */
