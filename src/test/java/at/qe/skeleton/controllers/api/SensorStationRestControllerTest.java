@@ -8,6 +8,7 @@ import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.AccessPointRepository;
+import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +44,10 @@ class SensorStationRestControllerTest {
 
     @Autowired
     private AccessPointRepository apRepository;
+    @Autowired
+    private MeasurementService measurementService;
+    @Autowired
+    private MeasurementRestController measurementRestController;
 
     @Autowired
     private UserxService userService;
@@ -319,8 +328,31 @@ class SensorStationRestControllerTest {
         );
     }
 
-    // TODO write a test for getAllPhotosBySS()
-    // @Test
-    //     void testGetAllPhotosBySS() {
-    // }
+    @Test
+    void testGetAllMeasurementsInTimeRange() {
+        Instant from = LocalDateTime.of(2023, Month.MARCH, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Instant to = LocalDateTime.of(2023, Month.MAY, 1, 20, 10, 40).toInstant(ZoneOffset.UTC);
+        Integer number = measurementService.getMeasurements(id, from, to).size();
+        //jsonUpdateSS.put("from", from.toString());
+        //jsonUpdateSS.put("to", to.toString());
+
+        var response = measurementRestController.getMeasurementsBySS(id, from, to);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var measurements = response.getBody();
+        assertNotNull(measurements);
+        assertEquals(number, measurements.size());
+    }
+
+    @Test
+    void testGetAllCurrentMeasurements(){
+        Integer number = measurementService.getAllCurrentMeasurements().size();
+
+        var response = measurementRestController.getAllCurrentMeasurements();
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var measurements = response.getBody();
+        assertNotNull(measurements);
+        assertEquals(number, measurements.size());
+    }
 }

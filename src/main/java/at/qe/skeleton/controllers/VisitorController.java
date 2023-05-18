@@ -48,7 +48,7 @@ public class VisitorController {
      * @return id and name of Photo
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer ssId) {
+    public ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer ssId) {
         PhotoData dbPhoto = new PhotoData();
         try {
             if (multipartImage.getSize() > MAX_IMAGE_SIZE) {
@@ -97,7 +97,7 @@ public class VisitorController {
      * @return list of PhotoData objects
      */
     @GetMapping(value = SS_PHOTOS_PATH)
-    public ResponseEntity<Object> getSSPhotoList(@PathVariable(value = "id") Integer ssId) {
+    public ResponseEntity<List<PhotoData>> getSSPhotoList(@PathVariable(value = "id") Integer ssId) {
         SensorStation ss = ssService.loadSSById(ssId);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, ssId);

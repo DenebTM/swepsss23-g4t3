@@ -96,13 +96,4 @@ public class PhotoData {
         this.sensorStation = sensorStation;
         this.content = content;
     }
-
-    @Override
-    public String toString() {
-        return "PhotoData{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", sensorStation=" + sensorStation +
-                '}';
-    }
 }
