@@ -5,8 +5,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 import { assignGardener } from '~/api/endpoints/sensorStations/gardeners'
-import { MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
 import { Username } from '~/models/user'
 
@@ -25,7 +24,7 @@ interface GardenerSelectProps {
  * @see https://www.npmjs.com/package/react-searchable-select-mui
  */
 export const GardenerSelect: React.FC<GardenerSelectProps> = (props) => {
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
   const [search, setSearch] = useState('')
 
   const resetSearch = () => setSearch('')
@@ -33,7 +32,7 @@ export const GardenerSelect: React.FC<GardenerSelectProps> = (props) => {
   const handleChange = (event: SelectChangeEvent) => {
     const selectedUser = event.target.value as string
 
-    assignGardener(props.sensorStation.uuid, selectedUser)
+    assignGardener(props.sensorStation.ssID, selectedUser)
       .then((updatedSs: SensorStation) => {
         // Update sensor station in state
         props.setSensorStations((oldValue) => {
@@ -41,17 +40,13 @@ export const GardenerSelect: React.FC<GardenerSelectProps> = (props) => {
             return []
           } else {
             return oldValue.map((ss: SensorStation) =>
-              props.sensorStation.uuid === ss.uuid ? updatedSs : ss
+              props.sensorStation.ssID === ss.ssID ? updatedSs : ss
             )
           }
         })
       })
       .catch((err: Error) => {
-        addSnackbarMessage({
-          header: 'Unable to assign gardener to greenhouse',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
+        addErrorSnackbar(err, 'Unable to assign gardener to greenhouse')
       })
   }
 

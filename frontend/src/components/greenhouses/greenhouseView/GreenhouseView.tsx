@@ -19,7 +19,7 @@ import { GreenhouseTabularView } from './tabular/GreenhouseTabularView'
  * Supports viewing a tabular, graphical, or gallery view of the given sensor station.
  */
 export const GreenhouseView: React.FC = () => {
-  const [uuid, setUuid] = useState<SensorStationUuid>()
+  const [ssID, setUuid] = useState<SensorStationUuid>()
   const [view, setView] = useState<SensorStationView>()
   const params = useParams()
   const [search] = useSearchParams()
@@ -34,21 +34,21 @@ export const GreenhouseView: React.FC = () => {
     setView(getViewFromSearchParams(search))
   }, [search])
 
-  // TODO qqjf add error handling if uuid or view are invalid
-  if (typeof uuid !== 'undefined' && typeof view !== 'undefined') {
+  // TODO qqjf add error handling if ssID or view are invalid
+  if (typeof ssID !== 'undefined' && typeof view !== 'undefined') {
     return (
       <PageWrapper
         permittedRoles={PAGE_URL.greenhouseView.permittedRoles(view)}
       >
-        <GreenhouseViewHeader view={view} uuid={uuid} />
+        <GreenhouseViewHeader view={view} ssID={ssID} />
         {(() => {
           switch (view) {
             case SensorStationView.GALLERY:
-              return <GreenhouseGallery uuid={uuid} />
+              return <GreenhouseGallery ssID={ssID} />
             case SensorStationView.TABLE:
-              return <GreenhouseTabularView uuid={uuid} />
+              return <GreenhouseTabularView ssID={ssID} />
             default:
-              return <GreenhouseGraphicalView uuid={uuid} />
+              return <GreenhouseGraphicalView ssID={ssID} />
           }
         })()}
       </PageWrapper>

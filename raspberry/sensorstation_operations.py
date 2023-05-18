@@ -1,7 +1,5 @@
 from bleak import BleakScanner
 from bleak.exc import BleakError
-import yaml
-import json
 import common
 
 
@@ -11,10 +9,10 @@ async def search_for_sensorstations():
         sensorstations = []
         async with BleakScanner() as scanner:
             await scanner.stop() # end scanning process for sure to avoid conflicts
-            devices = await scanner.discover(timeout=10.0)
+            devices = await scanner.discover()
             for d in devices:
                 if common.sensor_station_name in d.name:
-                    ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed= False)
+                    ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed=False)
                     sensorstations.append(ss_uuid)
 
                     common.known_ss[ss_uuid] = d.address
@@ -33,21 +31,3 @@ async def search_for_sensorstations():
         # write error to audit log
         print(f'Error: {e}')
         return sensorstations
-
-
-async def send_sensorstations_to_backend(session, sensorstations):
-    ss_avail = list(map(lambda id: { 'id': id, 'status': 'AVAILABLE' }, sensorstations))
-
-    async with session.post(common.web_server_address + '/access-points/' + common.access_point_name + '/sensor-stations', json=ss_avail) as response:
-        data = await response.json()
-        print(data)
-
-
-async def send_sensorstation_connection_status(session, sensorstation, status):
-    ss_status = {
-        'accessPoint': common.access_point_name,
-        'status': status
-    }
-    async with session.put(common.web_server_address + '/sensor-stations/' + str(sensorstation), json=ss_status) as response:
-        response = await response.json()
-        print(response)

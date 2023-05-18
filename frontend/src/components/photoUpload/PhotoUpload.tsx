@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import { Spinner } from '@component-lib/Spinner'
 import { decryptSensorStationUuid, PAGE_URL, SS_UUID_PARAM } from '~/common'
 import { Error } from '~/components/page/error/Error'
 import { PageWrapper } from '~/components/page/PageWrapper'
@@ -32,16 +33,13 @@ export const PhotoUpload: React.FC = () => {
   }, [search])
 
   return (
-    <PageWrapper
-      hideSidebar
-      permittedRoles={PAGE_URL.photoUpload.permittedRoles}
-    >
+    <PageWrapper permittedRoles={PAGE_URL.photoUpload.permittedRoles}>
       {sensorStationUuid === INVALID_UUID ? (
         <Error message="Unable to parse greenhouse UUID" />
       ) : typeof sensorStationUuid === 'undefined' ? (
-        'TODO qqjf: loading'
+        <Spinner center />
       ) : (
-        <UploadPageContents uuid={sensorStationUuid} />
+        <UploadPageContents ssID={sensorStationUuid} />
       )}
     </PageWrapper>
   )

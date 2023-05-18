@@ -1,9 +1,9 @@
 import common
 from database_operations import get_sensor_data_thresholds, get_sensor_data_averages
+from rest_operations import send_warning_to_backend, clear_warning_on_backend
 import asyncio
 
-async def check_values_for_thresholds(sensorstation_client, sensorstation_id, transmission_interval,session):
-    await asyncio.sleep(transmission_interval)
+async def check_values_for_thresholds(sensorstation_client, sensorstation_id, session):
     try:
         thresholds_dict = await get_sensor_data_thresholds(sensorstation_id)
         averages_dict = await get_sensor_data_averages(sensorstation_id)
@@ -16,7 +16,6 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, tr
     except Exception as e:
         print(e)
         #TODO log error code
-
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
     errorCode = 1
@@ -32,18 +31,4 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
         )
     except:
         print('couldnt write to gatt')
-        #TODO log error code
-
-
-async def send_warning_to_backend(sensorstation_id, session):
-    data = {'id': sensorstation_id, 'status': 'WARNING'}
-    async with session.put(common.web_server_address + '/sensor-stations/' + str(sensorstation_id), json=data) as response:
-        print(response.status)
-    #TODO: Log communication
-
-async def clear_warning_on_backend(sensorstation_id, session, data):
-    if int.from_bytes(data, 'little', signed=False) == 0:
-        data = {'id': sensorstation_id, 'status': 'OK'}
-        async with session.put(common.web_server_address + '/sensor-stations/' + str(sensorstation_id), json=data) as response:
-            print(response.status)
-        #TODO: Log communication
+        #TODO log error code       

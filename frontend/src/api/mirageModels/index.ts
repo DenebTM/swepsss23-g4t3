@@ -1,6 +1,7 @@
 import { belongsTo, hasMany, Model } from 'miragejs'
 import { ModelDefinition } from 'miragejs/-types'
 import { AccessPoint } from '~/models/accessPoint'
+import { LogEntry } from '~/models/log'
 import { Measurement, SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 import { User } from '~/models/user'
@@ -20,6 +21,7 @@ const _SensorValuesModel: ModelDefinition<SensorValues> = Model.extend({})
 const _MeasurementModel: ModelDefinition<Measurement> = Model.extend({
   sensorValues: belongsTo,
 })
+const _LogEntryModel: ModelDefinition<LogEntry> = Model.extend({})
 
 /** Models so that the mocked API knows what types of entities to expect. */
 export const models = {
@@ -28,4 +30,5 @@ export const models = {
   measurement: _MeasurementModel,
   sensorStation: _SensorStationModel,
   sensorValue: _SensorValuesModel,
+  logEntry: _LogEntryModel,
 }

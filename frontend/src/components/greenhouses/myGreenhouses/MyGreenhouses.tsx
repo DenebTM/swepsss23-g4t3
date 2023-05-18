@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { Spinner } from '@component-lib/Spinner'
 import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageTitle } from '~/components/page/PageTitle'
@@ -15,7 +16,7 @@ import { GreenhouseAccordion } from './GreenhouseAccordion/GreenhouseAccordion'
 export const MyGreenhouses: React.FC = () => {
   const sensorStations = useSensorStations() // qqjf TODO reload periodically?
 
-  // Store the currently expanded uuid in the state if an accordion is expanded, otherwise `null`
+  // Store the currently expanded ssID in the state if an accordion is expanded, otherwise `null`
   const [expanded, setExpanded] = useState<SensorStationUuid | null>(null)
 
   return (
@@ -23,15 +24,18 @@ export const MyGreenhouses: React.FC = () => {
       <PageHeader
         left={<PageTitle>{PAGE_URL.myGreenhouses.pageTitle}</PageTitle>}
       />
-      {sensorStations &&
+      {sensorStations ? (
         sensorStations.map((s) => (
           <GreenhouseAccordion
-            key={s.uuid}
-            expanded={expanded === s.uuid}
+            key={s.ssID}
+            expanded={expanded === s.ssID}
             sensorStation={s}
             setExpanded={setExpanded}
           />
-        ))}
+        ))
+      ) : (
+        <Spinner center />
+      )}
     </PageWrapper>
   )
 }

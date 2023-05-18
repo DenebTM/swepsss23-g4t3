@@ -56,7 +56,7 @@ public class LoggingService {
         } else if (beginDate == null) {
             return getAllLogsTo(endDate);
         } else {
-            return loggingEventRepository.findAllByTimestmpGreaterThanAndTimestmpLessThanOrderByTimestmpAsc(
+            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(
                 beginDate.toEpochMilli(),
                 endDate.toEpochMilli()
             );
@@ -69,18 +69,20 @@ public class LoggingService {
      * @param level logging level
      * @return all logs that have the set level
      */
-    public List<LoggingEvent> getLogsByLevel(String level) {
-        return loggingEventRepository.findAllByLevelStringOrderByTimestmpAsc(level);
+    public List<LoggingEvent> getLogsByLevel(LogLevel level) {
+        return loggingEventRepository.findAllByLevelOrderByTimestmpAsc(level);
     }
 
-    public List<LoggingEvent> filterLogsByLevel(List<LoggingEvent> logs, String level) {
+    public List<LoggingEvent> filterLogsByLevel(List<LoggingEvent> logs, LogLevel level) {
         if (level == null) {
             return logs;
         }
-        if (isValidLevel(level)) {
-            return logs.stream().filter(l -> level.equals(l.getLevelString())).toList();
-        }
-        return new ArrayList<>();
+
+        return logs.stream().filter(l -> level.equals(l.getLevel())).toList();
+    }
+
+    public LoggingEvent saveLog(LoggingEvent log) {
+        return loggingEventRepository.save(log);
     }
 
     public static boolean isValidLevel(String test) {
