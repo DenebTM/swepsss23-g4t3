@@ -1,9 +1,11 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.services.MeasurementService;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +83,9 @@ class SensorStationRestControllerTest {
 
     AccessPoint createTestAP() {
         String apName = "AP Test";
-        return apRepository.save(new AccessPoint(apName));
+        AccessPoint newAP = new AccessPoint(apName);
+        newAP.setStatus(AccessPointStatus.ONLINE);
+        return apRepository.save(newAP);
     }
 
     @Test
@@ -129,6 +134,8 @@ class SensorStationRestControllerTest {
     void testAddSS() {
         // INITIALIZATION
         AccessPoint apTest = createTestAP();
+        apTest.setStatus(AccessPointStatus.SEARCHING);
+        apTest = apRepository.save(apTest);
 
         var initialSSResponse = ssRestController.getSSForAccessPoint(apTest.getName());
         assertEquals(HttpStatusCode.valueOf(200), initialSSResponse.getStatusCode());
@@ -169,6 +176,33 @@ class SensorStationRestControllerTest {
         // check sensor station status matches
         for (SensorStation ss : finalSS) {
             assertEquals(SensorStationStatus.AVAILABLE, ss.getStatus());
+        }
+    }
+
+    @Test
+    @DirtiesContext
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testAddSS400() {
+        // INITIALIZATION
+        AccessPoint apTest = createTestAP();
+
+        SensorStation ssTest = new SensorStation(apTest, 30L);
+        ssTest.setSsID(127);
+        ssTest.setStatus(SensorStationStatus.AVAILABLE);
+
+        // TEST + ASSERTIONS
+        for (AccessPointStatus status : AccessPointStatus.values()) {
+            apTest.setStatus(status);
+            apRepository.save(apTest);
+            if (status.equals(AccessPointStatus.SEARCHING)) {
+                assertDoesNotThrow(
+                    () -> ssRestController.addSS(apTest.getName(), Arrays.asList(ssTest))
+                );
+            } else {
+                assertThrows(BadRequestException.class,
+                    () -> ssRestController.addSS(apTest.getName(), Arrays.asList(ssTest))
+                );
+            }
         }
     }
 

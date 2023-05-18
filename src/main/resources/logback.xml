@@ -21,8 +21,7 @@
 
     <!-- Database appender -->
     <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
-        <connectionSource
-                class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
             <driverClass>${spring.datasource.driver-class-name}</driverClass>
             <url>${spring.datasource.url}</url>
             <user>${spring.datasource.username}</user>
@@ -82,7 +81,7 @@
     </logger>
 
     <root level="info">
-        <appender-ref ref="stdout"/>
+        <appender-ref ref="stdout" level="info"/>
         <appender-ref ref="info" level="info"/>
         <appender-ref ref="warnError" level="warn"/>
         <appender-ref ref="db" level="info"/>
