@@ -67,7 +67,7 @@ public class MeasurementRestController implements BaseRestController {
 
         // return one week of measurements by default
         if (from == null) {
-            from = to.minusSeconds(60 * 60 * 24 * 7);
+            from = to.minusSeconds(7 * 24 * 60 * 60L);
         }
 
         // return 400 error if "from"-date is after "to"-date
@@ -101,14 +101,15 @@ public class MeasurementRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
         }
 
+        final String JSON_TIMESTAMP_KEY = "timestamp";
         Instant timestamp = Instant.now();
-        if (json.containsKey("timestamp")) {
+        if (json.containsKey(JSON_TIMESTAMP_KEY)) {
             try {
-                timestamp = Instant.parse((String)json.get("timestamp"));
+                timestamp = Instant.parse((String)json.get(JSON_TIMESTAMP_KEY));
             } catch (DateTimeException e){
                 throw new BadRequestException("Invalid timestamp");
             }
-            json.remove("timestamp");
+            json.remove(JSON_TIMESTAMP_KEY);
         }
 
         Measurement newMeasurement = new Measurement();

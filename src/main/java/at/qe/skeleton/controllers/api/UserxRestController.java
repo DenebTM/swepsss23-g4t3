@@ -90,7 +90,7 @@ public class UserxRestController implements BaseRestController {
 
         Userx newUser = new Userx();
         newUser.setUsername(username);
-        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
+        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get(PW));
         newUser.setPassword(bcryptPassword);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
         if (json.containsKey(FN)) {
@@ -137,7 +137,7 @@ public class UserxRestController implements BaseRestController {
             if (userService.isNotValidPassword(password)) {
                 throw new BadRequestException("Password is not valid.");
             }
-            String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
+            String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get(PW));
             user.setPassword(bcryptPassword);
         }
         if (json.containsKey("userRole")) {

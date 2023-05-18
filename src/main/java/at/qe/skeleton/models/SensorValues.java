@@ -2,11 +2,13 @@ package at.qe.skeleton.models;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
 @Table(name = "SENSOR_VALUES")
 public class SensorValues {
 
@@ -33,9 +35,6 @@ public class SensorValues {
 
     @Column(name = "LIGHT_INTENSITY")
     private Double lightIntensity;
-
-    public SensorValues() {
-    }
 
     public Integer getId() {
         return id;
