@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import CheckIcon from '@mui/icons-material/Check'
 import Card from '@mui/material/Card'
 import Link, { LinkProps } from '@mui/material/Link'
+import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/system/Stack'
 
@@ -13,7 +14,27 @@ import { theme } from '~/styles/theme'
 
 /** Reusable component for subheadings inside getting started page */
 const GettingStartedSubheading = (props: { children: React.ReactNode }) => (
-  <Typography component="h6" variant="titleLarge" color="onSurfaceVariant">
+  <Typography
+    component="h6"
+    variant="titleLarge"
+    color="onSurfaceVariant"
+    gutterBottom
+  >
+    {props.children}
+  </Typography>
+)
+
+/** Reusable component for body text inside getting started page */
+const GettingStartedBody = (props: {
+  children: React.ReactNode
+  gutterBottom?: boolean
+}) => (
+  <Typography
+    component="p"
+    variant="bodyMedium"
+    color="onSurface"
+    gutterBottom={props.gutterBottom}
+  >
     {props.children}
   </Typography>
 )
@@ -21,6 +42,35 @@ const GettingStartedSubheading = (props: { children: React.ReactNode }) => (
 /** Reusable component for each subsection of the getting started page */
 const GettingStartedSection = (props: { children: React.ReactNode }) => (
   <Card sx={{ padding: theme.spacing(3) }}>{props.children}</Card>
+)
+
+/** Reusable component for ordered lists inside getting started page */
+const GettingStartedOl = (props: { children: React.ReactNode }) => (
+  <List
+    component="ol"
+    sx={{
+      lineHeight: 'initial',
+      '> li': {
+        listStyle: 'auto inside',
+        color: theme.onSurface,
+      },
+    }}
+  >
+    {props.children}
+  </List>
+)
+
+/** Reusable component for list elements inside getting started page */
+const GettingStartedLi = (props: { children: React.ReactNode }) => (
+  <li style={{ paddingBottom: 6 }}>
+    <Typography
+      color="onSurface"
+      variant="labelLarge"
+      sx={{ listStyle: 'auto inside' }}
+    >
+      {props.children}
+    </Typography>
+  </li>
 )
 
 /** Props for links in the GettingStarted page */
@@ -41,17 +91,17 @@ export const GettingStartedPageContents: React.FC = () => {
         <GettingStartedSubheading>
           Connecting an Access Point
         </GettingStartedSubheading>
-        <ol>
-          <li>
+        <GettingStartedOl>
+          <GettingStartedLi>
             Plug in the Raspberry Pi and connect it to the network via Wi-Fi.
-          </li>
-          <li>
+          </GettingStartedLi>
+          <GettingStartedLi>
             Run the './configure' script to set up the correct web server
             address. Make sure to check your firewall settings in order to allow
             external devices to connect to the web server running on your
             machine.
-          </li>
-          <li>
+          </GettingStartedLi>
+          <GettingStartedLi>
             Run 'python3 main.py'. The Access Point will automatically register
             itself with the web server and be displayed on the{' '}
             <Link
@@ -63,23 +113,25 @@ export const GettingStartedPageContents: React.FC = () => {
             page with a yellow highlight and status "unconfirmed". Press the{' '}
             <CheckIcon fontSize="small" /> button to confirm and allow it to
             communicate with the web server.
-          </li>
-        </ol>
+          </GettingStartedLi>
+        </GettingStartedOl>
       </GettingStartedSection>
 
       <GettingStartedSection>
         <GettingStartedSubheading>
           Pairing a Greenhouse
         </GettingStartedSubheading>
-        <ol>
-          <li>Set the Greenhouse's ID using the DIP switch.</li>
-          <li>
+        <GettingStartedOl>
+          <GettingStartedLi>
+            Set the Greenhouse's ID using the DIP switch.
+          </GettingStartedLi>
+          <GettingStartedLi>
             The LED will initially glow solid red.
             <br />
             Press the righmost button on the Greenhouse (the one connected to
             pin D2 of the Arduino). The LED will begin rapidly flashing blue.
-          </li>
-          <li>
+          </GettingStartedLi>
+          <GettingStartedLi>
             Navigate to{' '}
             <Link
               onClick={() => navigate(PAGE_URL.manageAccessPoints.href)}
@@ -87,31 +139,32 @@ export const GettingStartedPageContents: React.FC = () => {
             >
               {PAGE_URL.manageAccessPoints.pageTitle}
             </Link>
-          </li>
-          <li>
+          </GettingStartedLi>
+          <GettingStartedLi>
             Click the <GreenhouseIcon fontSize="small" /> button on the right.
-          </li>
-          <li>
+          </GettingStartedLi>
+          <GettingStartedLi>
             Wait roughly 10 seconds, then open the Sensor Station dropdown menu.
             Select the ID of the Greenhouse with the ID that you want to pair.
-          </li>
-          <li>
+          </GettingStartedLi>
+          <GettingStartedLi>
             Press "Confirm". After a few more seconds, the LED on the Greenhouse
             should turn green, and you will be able to view measurements on the
             corresponding page under "Dashboard".
-          </li>
-        </ol>
-        <p>
+          </GettingStartedLi>
+        </GettingStartedOl>
+        <GettingStartedBody>
           If the Greenhouse loses connection, it will only re-pair to the
           previously connected access point. This condition is signaled by slow
           red flashing of the LED. To re-pair, simply press the rightmost button
           on the Greenhouse again.
-        </p>
+        </GettingStartedBody>
       </GettingStartedSection>
 
       <GettingStartedSection>
-        <GettingStartedSubheading>Sensor warnings</GettingStartedSubheading>
-        <p>
+        <GettingStartedSubheading>Sensor Warnings</GettingStartedSubheading>
+
+        <GettingStartedBody gutterBottom>
           Go to{' '}
           <Link
             onClick={() => navigate(PAGE_URL.myGreenhouses.href)}
@@ -129,30 +182,34 @@ export const GettingStartedPageContents: React.FC = () => {
             this page
           </Link>{' '}
           of the project wiki.
-        </p>
-        <p>
+        </GettingStartedBody>
+
+        <GettingStartedBody gutterBottom>
           Sensor warnings are not cleared automatically, the Greenhouse will
           keep emitting an audiovisual warning until the warning state has been
           cleared.
-          <br />
+        </GettingStartedBody>
+
+        <GettingStartedBody>
           In order to clear active sensor warnings:
-          <ol>
-            <li>
-              Ensure that the sensor values are within the thresholds set on{' '}
-              <Link
-                onClick={() => navigate(PAGE_URL.myGreenhouses.href)}
-                {...linkProps}
-              >
-                {PAGE_URL.myGreenhouses.pageTitle}
-              </Link>
-              .
-            </li>
-            <li>
-              Press the middle button on the Greenhouse (connected to pin D3 of
-              the Arduino).
-            </li>
-          </ol>
-        </p>
+        </GettingStartedBody>
+
+        <GettingStartedOl>
+          <GettingStartedLi>
+            Ensure that the sensor values are within the thresholds set on{' '}
+            <Link
+              onClick={() => navigate(PAGE_URL.myGreenhouses.href)}
+              {...linkProps}
+            >
+              {PAGE_URL.myGreenhouses.pageTitle}
+            </Link>
+            .
+          </GettingStartedLi>
+          <GettingStartedLi>
+            Press the middle button on the Greenhouse (connected to pin D3 of
+            the Arduino).
+          </GettingStartedLi>
+        </GettingStartedOl>
       </GettingStartedSection>
     </Stack>
   )
