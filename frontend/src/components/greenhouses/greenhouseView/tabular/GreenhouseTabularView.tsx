@@ -74,12 +74,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
 
       <DataGrid<Measurement, any, Measurement>
         columns={columns}
-        fetchRows={() =>
-          getSensorStationMeasurements(props.ssID, {
-            from: from?.toISOString(),
-            to: to?.toISOString(),
-          })
-        }
+        fetchRows={(params) => getSensorStationMeasurements(props.ssID, params)}
         getRowId={(row: Measurement) => row.id}
         initialState={{
           sorting: {
@@ -91,6 +86,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
         size="small"
         zebraStripes
         noRowsMessage="No measurements to display"
+        params={{ from: from?.toISOString(), to: to?.toISOString() }}
       />
     </TablePaper>
   )
