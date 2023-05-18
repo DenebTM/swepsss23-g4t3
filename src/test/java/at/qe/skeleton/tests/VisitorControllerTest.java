@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -50,8 +52,10 @@ public class VisitorControllerTest {
         photoDataRepository.save(testPhoto2);
         photoDataRepository.save(testPhoto3);
 
-        Collection<PhotoData> response = visitorController.getAllPhotosBySS(1).getBody();
+        List<PhotoData> response = (List<PhotoData>) visitorController.getPhotosBySSAsId(ss.getSsID()).getBody();
+        List<Integer> ids = photoDataRepository.findAll().stream().map(PhotoData::getId).collect(Collectors.toList());
         Assertions.assertEquals(3, response.size());
+        Assertions.assertEquals(ids, response.stream().map(PhotoData::getId).collect(Collectors.toList()));
     }
 
     @Test
@@ -79,6 +83,6 @@ public class VisitorControllerTest {
                 photoDataRepository.delete(p);
             }
         }
-        Assertions.assertTrue(Objects.requireNonNull(visitorController.getAllPhotosBySS(1).getBody()).isEmpty());
+        Assertions.assertTrue(((List<PhotoData>) visitorController.getPhotosBySSAsId(1).getBody()).isEmpty());
     }
 }
