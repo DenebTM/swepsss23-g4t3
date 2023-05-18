@@ -2,7 +2,7 @@ import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
 import { Spinner } from '@component-lib/Spinner'
-import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/sensorStations'
+import { getSensorStationPhotos } from '~/api/endpoints/sensorStations/photos'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { Photo } from '~/models/photo'
 import { SensorStationUuid } from '~/models/sensorStation'

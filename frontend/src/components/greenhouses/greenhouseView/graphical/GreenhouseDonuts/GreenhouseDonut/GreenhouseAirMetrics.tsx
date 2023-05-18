@@ -34,10 +34,13 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
   const outOfRange =
     sensorStation !== null &&
     measurement !== null &&
-    AIR_METRICS.some(
+    Object.values(AIR_METRICS).some(
       (mr: GreenhouseMetricRange) =>
-        measurement.data[mr.valueKey] < sensorStation.lowerBound[mr.valueKey] ||
-        measurement.data[mr.valueKey] > sensorStation.upperBound[mr.valueKey]
+        (sensorStation.lowerBound !== null &&
+          measurement.data[mr.valueKey] <
+            sensorStation.lowerBound[mr.valueKey]) ||
+        (sensorStation.upperBound !== null &&
+          measurement.data[mr.valueKey] > sensorStation.upperBound[mr.valueKey])
     )
 
   if (sensorStation === null) {
@@ -49,10 +52,14 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
       <Box minWidth={props.donutHeight} height={props.donutHeight}>
         <ResponsiveContainer width="100%" height="100%">
           <RadialChart
-            data={AIR_METRICS.map((metricRange) => ({
+            data={Object.values(AIR_METRICS).map((metricRange) => ({
               metricRange: metricRange,
-              maxThreshold: sensorStation.upperBound[metricRange.valueKey],
-              minThreshold: sensorStation.lowerBound[metricRange.valueKey],
+              maxThreshold: sensorStation.upperBound
+                ? sensorStation.upperBound[metricRange.valueKey]
+                : metricRange.max,
+              minThreshold: sensorStation.lowerBound
+                ? sensorStation.lowerBound[metricRange.valueKey]
+                : metricRange.min,
               value: measurement.data[metricRange.valueKey],
             }))}
             innerRadius="65%"

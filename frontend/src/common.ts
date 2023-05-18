@@ -239,8 +239,8 @@ export interface GreenhouseMetricRange {
   valueKey: keyof SensorValues
 }
 
-export const NON_AIR_METRICS: GreenhouseMetricRange[] = [
-  {
+export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
+  temperature: {
     colour: theme.purple,
     displayName: 'Temperature',
     valueKey: 'temperature',
@@ -249,7 +249,7 @@ export const NON_AIR_METRICS: GreenhouseMetricRange[] = [
     max: 65,
     step: 5,
   },
-  {
+  soilMoisture: {
     colour: theme.tertiary,
     displayName: 'Soil Moisture',
     valueKey: 'soilMoisture',
@@ -258,7 +258,7 @@ export const NON_AIR_METRICS: GreenhouseMetricRange[] = [
     max: 100,
     step: 5,
   },
-  {
+  lightIntensity: {
     colour: theme.green,
     displayName: 'Light',
     valueKey: 'lightIntensity',
@@ -267,10 +267,10 @@ export const NON_AIR_METRICS: GreenhouseMetricRange[] = [
     max: 1000,
     step: 20,
   },
-]
+}
 
-export const AIR_METRICS: GreenhouseMetricRange[] = [
-  {
+export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
+  airPressure: {
     colour: theme.warn,
     displayName: 'Air Pressure',
     valueKey: 'airPressure',
@@ -279,7 +279,7 @@ export const AIR_METRICS: GreenhouseMetricRange[] = [
     max: 1300,
     step: 50,
   },
-  {
+  humidity: {
     colour: theme.pink,
     displayName: 'Humidity',
     valueKey: 'humidity',
@@ -288,7 +288,7 @@ export const AIR_METRICS: GreenhouseMetricRange[] = [
     max: 100,
     step: 5,
   },
-  {
+  airQuality: {
     colour: theme.blue,
     displayName: 'Air Quality',
     description: 'Index of Air Quality (IAQ)',
@@ -298,12 +298,12 @@ export const AIR_METRICS: GreenhouseMetricRange[] = [
     max: 500,
     step: 25,
   },
-]
+}
 
-export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
+export const GREENHOUSE_METRICS: { [key: string]: GreenhouseMetricRange } = {
   ...NON_AIR_METRICS,
   ...AIR_METRICS,
-]
+}
 
 export const greenhouseMetricWithUnit = (
   metricRange: GreenhouseMetricRange
