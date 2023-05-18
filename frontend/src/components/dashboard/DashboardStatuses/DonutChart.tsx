@@ -21,7 +21,6 @@ export const DonutChart: React.FC<DonutChartProps> = (props) => {
   const [legend, setLegend] = useState<
     { index: number; clientX: number; clientY: number } | undefined
   >()
-  console.log(props)
 
   const onPieEnter = (data: any, index: number, e: React.MouseEvent) => {
     setLegend({
