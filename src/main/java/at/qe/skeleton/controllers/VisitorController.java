@@ -52,7 +52,6 @@ public class VisitorController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bytes have length 0");
             }
             dbPhoto.setUploaded(LocalDateTime.now());
-            dbPhoto.setName(multipartImage.getName());
             dbPhoto.setContent(multipartImage.getBytes());
             SensorStation ss = ssService.loadSSById(id);
             if (ss == null) {
