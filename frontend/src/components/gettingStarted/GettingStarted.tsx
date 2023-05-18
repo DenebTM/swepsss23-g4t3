@@ -1,7 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link as ReactLink } from 'react-router-dom'
 
 import CheckIcon from '@mui/icons-material/Check'
+import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 
 import { GreenhouseIcon } from '~/common'
@@ -41,8 +42,10 @@ export const GettingStarted: React.FC = () => {
         <li>
           Run 'python3 main.py'. The Access Point will automatically register
           itself with the web server and be displayed on the{' '}
-          <Link to={PAGE_URL.manageAccessPoints.href}>
-            {PAGE_URL.manageAccessPoints.pageTitle}
+          <Link>
+            <ReactLink to={PAGE_URL.manageAccessPoints.href}>
+              {PAGE_URL.manageAccessPoints.pageTitle}
+            </ReactLink>
           </Link>{' '}
           page with a yellow highlight and status "unconfirmed". Press the{' '}
           <CheckIcon /> button to confirm and allow it to communicate with the
@@ -61,8 +64,10 @@ export const GettingStarted: React.FC = () => {
         </li>
         <li>
           Navigate to{' '}
-          <Link to={PAGE_URL.manageAccessPoints.href}>
-            {PAGE_URL.manageAccessPoints.pageTitle}
+          <Link>
+            <ReactLink to={PAGE_URL.manageAccessPoints.href}>
+              {PAGE_URL.manageAccessPoints.pageTitle}
+            </ReactLink>
           </Link>
         </li>
         <li>
