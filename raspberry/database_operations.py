@@ -133,8 +133,6 @@ async def delete_sensorstation(sensorstation_id):
         )
         db_conn.commit()
     except Exception as e:
-        #TODO: log this
-        db_conn.rollback()
         print(f'couldnt delete sensorstation. Error:{e}')
 
 
