@@ -6,7 +6,9 @@ import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.PostAccessPointResponse;
 import at.qe.skeleton.models.enums.AccessPointStatus;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.services.AccessPointService;
+import at.qe.skeleton.services.LoggingService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class AccessPointRestController implements BaseRestController {
 
     @Autowired
     private JwtManager tokenManager;
+
+    @Autowired
+    private LoggingService logger;
 
     public static final String AP = "Access point";
     private static final String AP_PATH = "/access-points";
@@ -80,13 +85,15 @@ public class AccessPointRestController implements BaseRestController {
         AccessPoint ap = apService.loadAPByName(name);
 
         // 401 and no token if access point is new or not yet confirmed
-        if (ap == null || ap.getStatus() == AccessPointStatus.UNCONFIRMED) {
+        if (ap == null || ap.getStatus().equals(AccessPointStatus.UNCONFIRMED)) {
             if (ap == null) {
                 ap = apService.saveAP(new AccessPoint(
                     name,
                     serverAddress,
                     AccessPointStatus.UNCONFIRMED
                 ));
+
+                logger.info("New access point created", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
             }
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
@@ -130,11 +137,23 @@ public class AccessPointRestController implements BaseRestController {
         }
         if (json.containsKey("status")) {
             try {
-                ap.setStatus(AccessPointStatus.valueOf((String)json.get("status")));
+                AccessPointStatus oldStatus = ap.getStatus();
+                AccessPointStatus newStatus = AccessPointStatus.valueOf((String)json.get("status"));
+                ap.setStatus(newStatus);
+
+                if (!newStatus.equals(oldStatus)) {
+                    String message = "Access point status changed to " + newStatus.name();
+                    if (newStatus.equals(AccessPointStatus.OFFLINE)) {
+                        logger.warn(message, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                    } else {
+                        logger.info(message, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                    }
+                }
             } catch (IllegalArgumentException e){
                 throw new BadRequestException("Invalid status given");
             }
         }
+
         return ResponseEntity.ok(apService.saveAP(ap));
     }
 
@@ -152,6 +171,9 @@ public class AccessPointRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(AP, name);
         }
         apService.deleteAP(ap);
+
+        logger.info("Access point deleted", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+
         return ResponseEntity.ok(ap);
     }
 

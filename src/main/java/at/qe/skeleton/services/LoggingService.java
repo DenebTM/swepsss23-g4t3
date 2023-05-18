@@ -1,8 +1,13 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.models.LoggingEvent;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.repositories.LoggingEventRepository;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +25,7 @@ public class LoggingService {
      * @return list of logs
      */
     public List<LoggingEvent> getAllLogs() {
-        return loggingEventRepository.findAllByOrderByTimestmpAsc();
+        return loggingEventRepository.findAllByOrderByTimestmpDesc();
     }
 
     /**
@@ -29,7 +34,7 @@ public class LoggingService {
      * @return list of logs in time period beginning - 'to'
      */
     public List<LoggingEvent> getAllLogsTo(Instant endDate) {
-        return loggingEventRepository.findAllByTimestmpLessThanEqualOrderByTimestmpAsc(endDate.toEpochMilli());
+        return loggingEventRepository.findAllByTimestmpLessThanEqualOrderByTimestmpDesc(endDate.toEpochMilli());
     }
 
     /**
@@ -38,7 +43,7 @@ public class LoggingService {
      * @return list of logs in time period 'from' - ending
      */
     public List<LoggingEvent> getAllLogsFrom(Instant beginDate) {
-        return loggingEventRepository.findAllByTimestmpGreaterThanEqualOrderByTimestmpAsc(beginDate.toEpochMilli());
+        return loggingEventRepository.findAllByTimestmpGreaterThanEqualOrderByTimestmpDesc(beginDate.toEpochMilli());
     }
 
     /**
@@ -56,7 +61,7 @@ public class LoggingService {
         } else if (beginDate == null) {
             return getAllLogsTo(endDate);
         } else {
-            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(
+            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpDesc(
                 beginDate.toEpochMilli(),
                 endDate.toEpochMilli()
             );
@@ -69,30 +74,48 @@ public class LoggingService {
      * @param level logging level
      * @return all logs that have the set level
      */
-    public List<LoggingEvent> getLogsByLevel(LogLevel level) {
-        return loggingEventRepository.findAllByLevelOrderByTimestmpAsc(level);
+    public List<LoggingEvent> getLogsByLevelIn(List<LogLevel> levels) {
+        return loggingEventRepository.findAllByLevelInOrderByTimestmpDesc(levels);
     }
 
-    public List<LoggingEvent> filterLogsByLevel(List<LoggingEvent> logs, LogLevel level) {
-        if (level == null) {
+    public List<LoggingEvent> filterLogsByLevelIn(List<LoggingEvent> logs, List<LogLevel> levels) {
+        if (levels == null) {
             return logs;
         }
 
-        return logs.stream().filter(l -> level.equals(l.getLevel())).toList();
+        return logs.stream().filter(l -> levels.contains(l.getLevel())).toList();
     }
 
     public LoggingEvent saveLog(LoggingEvent log) {
         return loggingEventRepository.save(log);
     }
 
-    public static boolean isValidLevel(String test) {
+    public void debug(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
 
-        for (LogLevel l : LogLevel.values()) {
-            if (l.name().equals(test)) {
-                return true;
-            }
-        }
+        MDC.put(entityType.name(), entityId.toString());
+        logger.debug(message);
+    }
 
-        return false;
+    public void info(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
+
+        MDC.put(entityType.name(), entityId.toString());
+        logger.info(message);
+    }
+
+    public void warn(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
+
+        MDC.put(entityType.name(), entityId.toString());
+        logger.warn(message);
+    }
+
+    public void error(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
+
+        MDC.put(entityType.name(), entityId.toString());
+        logger.error(message);
+
     }
 }
