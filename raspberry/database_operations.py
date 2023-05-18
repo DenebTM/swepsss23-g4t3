@@ -30,9 +30,9 @@ async def get_sensor_data_averages(sensorstation_id):
         results = cursor.fetchone()
 
         averages_dict = {
-            'temperature': results[0],
+            'temperature': results[0] / 100,
             'humidity': results[1] / 100,
-            'airPressure': results[2],
+            'airPressure': results[2] / 1000,
             'lightIntensity': results[3],
             'airQuality': results[4],
             'soilMoisture': results[5]
