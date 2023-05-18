@@ -16,6 +16,13 @@ import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.SensorStationRepository;
 import at.qe.skeleton.services.LoggingService;
 
+/**
+ * This class runs a scheduled job that periodically checks the lastUpdate time
+ * of each access point. If the access point has not communicated with the
+ * backend in over 60 seconds, the status is changed to OFFLINE.
+ * 
+ * This is not done for UNCONFIRMED access points.
+ */
 @Configuration
 @EnableScheduling
 public class AccessPointMonitorJob {
@@ -35,6 +42,9 @@ public class AccessPointMonitorJob {
     @Scheduled(initialDelay = CHECK_INTERVAL_MS, fixedDelay = CHECK_INTERVAL_MS)
     public void checkAccessPoints() {
         for (AccessPoint ap : apRepository.findAll()) {
+            // ignore access points not yet approved by admin
+            if (ap.getStatus().equals(AccessPointStatus.UNCONFIRMED)) break;
+
             if (ap.getLastUpdate().plusMillis(AP_TIMEOUT_MS).isBefore(Instant.now())) {
                 for (SensorStation ss : ap.getSensorStations()) {
                     if (!ss.getStatus().equals(SensorStationStatus.OFFLINE)) {
