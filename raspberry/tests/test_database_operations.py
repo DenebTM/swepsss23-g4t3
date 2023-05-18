@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import time
 
 #TODO: implement logging testing
-from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensor_data_thresholds, update_sensorstation, get_sensorstation_aggregation_period
+from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensorstation_thresholds, update_sensorstation, get_sensorstation_aggregation_period
 
 SENSORSTATION_ID = 1
 AGGREGATION_PERIOD = 300
@@ -82,7 +82,7 @@ class TestDatabaseOperations(unittest.IsolatedAsyncioTestCase):
         }
 
         # Call the function with the mocked parameters
-        result = await get_sensor_data_thresholds(SENSORSTATION_ID)
+        result = await get_sensorstation_thresholds(SENSORSTATION_ID)
 
         # Check the results against the expected results
         self.assertEqual(result, expected_results)
