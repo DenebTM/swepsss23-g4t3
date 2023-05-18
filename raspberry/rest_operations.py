@@ -112,7 +112,7 @@ async def get_thresholds_update_db(sensorstation_id, session):
 async def send_sensorvalues_to_backend(sensorstation_id, session):
     averages_dict = await database_operations.get_sensor_data_averages(sensorstation_id)
     if averages_dict:
-        averages_dict['timestamp'] = datetime.now().isoformat() + 'Z'
+        averages_dict['timestamp'] = datetime.utcnow().isoformat() + 'Z'
         async with session.post('/api/sensor-stations/' + str(sensorstation_id) + '/measurements', json=averages_dict) as response:
             await database_operations.clear_sensor_data(sensorstation_id) #I guess here it makes kind of sense?
             #TODO:Log this communication

@@ -1,8 +1,6 @@
 import yaml
 import os
 
-log_filename = 'communication.log'
-
 sensor_station_name = 'PH SensorStation'
 
 # global constants taken out of the BLE Communication Spec
@@ -16,7 +14,7 @@ illuminance_uuid = base_uuid.format('2afb')
 air_quality_index_uuid = base_uuid.format('f105')
 soil_moisture_uuid = base_uuid.format('f106')
 
-# global constants for the error messages takne out of the ble communication Spec
+# global constants for the error messages taken out of the ble communication Spec
 error_service_uuid = base_uuid.format('ff00')
 air_pressure_failure_uuid = base_uuid.format('ff01')
 temperature_failure_uuid = base_uuid.format('ff02')
