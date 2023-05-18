@@ -81,6 +81,7 @@ async def cancel_ss_task(sensorstation_id):
 
 
 async def polling_loop(connection_request, session):
+    asyncio.create_task(logging_operations.log_sending_loop(session, connection_request))
     while not connection_request.done():
         print('Inside AP Loop')
         new_status = await rest_operations.get_ap_status(session)

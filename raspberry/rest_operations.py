@@ -118,7 +118,7 @@ async def send_sensorvalues_to_backend(sensorstation_id, session):
         await logging_operations.log_to_file_and_list('ERROR', f'Couldnt accumulate sensor values for sensorstation: {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
 
 @retry_connection_error(retries = 3, interval = 5)
-async def send_logs(session):
-    async with session.post('/api/access-points/' + common.access_point_name + '/logs', json=logging_operations.log_data) as response:
-        logging_operations.clear_log_data()
+async def send_logs(session, logging_data):
+    async with session.post('/api/access-points/' + common.access_point_name + '/logs', json=logging_data) as response:
+        await logging_operations.clear_log_data()
         await logging_operations.log_to_file_and_list('INFO', f'Sent logs to web server.')

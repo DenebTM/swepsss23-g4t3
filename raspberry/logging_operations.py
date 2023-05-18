@@ -1,7 +1,10 @@
 import logging
 import datetime
-
+import asyncio
 from common import access_point_name
+import rest_operations
+
+SENDING_INTERVAL = 60
 
 # Configure logger
 logging.basicConfig(filename='audit.log', format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
@@ -29,3 +32,8 @@ async def log_to_file_and_list(level, message, entity_type='ACCESS_POINT', entit
 async def clear_log_data():
     global log_data
     log_data.clear()
+
+async def log_sending_loop(session, connection_request):
+    while not connection_request.done():
+        await asyncio.sleep(SENDING_INTERVAL)
+        await rest_operations.send_logs(session, log_data)
