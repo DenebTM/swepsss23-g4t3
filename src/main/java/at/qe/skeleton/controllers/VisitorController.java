@@ -41,7 +41,6 @@ public class VisitorController {
      * @param id id of sensor station to upload to
      * @return id and name of Photo
      */
-    @ExceptionHandler({SizeException.class, MultipartException.class})
     @PostMapping(value = SS_PHOTOS_PATH)
     ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
         PhotoData dbPhoto = new PhotoData();
