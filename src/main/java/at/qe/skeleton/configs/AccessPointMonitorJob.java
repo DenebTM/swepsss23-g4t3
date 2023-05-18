@@ -20,8 +20,8 @@ import at.qe.skeleton.services.LoggingService;
 @EnableScheduling
 public class AccessPointMonitorJob {
 
-    private final static long CHECK_INTERVAL = 10;
-    private final static long AP_TIMEOUT = 60;
+    private final static long CHECK_INTERVAL_MS = 10 * 1000;
+    private final static long AP_TIMEOUT_MS = 60 * 1000;
 
     @Autowired
     private AccessPointRepository apRepository;
@@ -32,10 +32,10 @@ public class AccessPointMonitorJob {
     @Autowired
     private LoggingService logger;
 
-    @Scheduled(initialDelay = CHECK_INTERVAL, fixedDelay = CHECK_INTERVAL)
+    @Scheduled(initialDelay = CHECK_INTERVAL_MS, fixedDelay = CHECK_INTERVAL_MS)
     public void checkAccessPoints() {
         for (AccessPoint ap : apRepository.findAll()) {
-            if (ap.getLastUpdate().plusSeconds(AP_TIMEOUT).isBefore(Instant.now())) {
+            if (ap.getLastUpdate().plusMillis(AP_TIMEOUT_MS).isBefore(Instant.now())) {
                 for (SensorStation ss : ap.getSensorStations()) {
                     if (!ss.getStatus().equals(SensorStationStatus.OFFLINE)) {
                         logger.warn("Sensor station status changed to OFFLINE", LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
