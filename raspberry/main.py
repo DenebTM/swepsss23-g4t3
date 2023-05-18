@@ -2,13 +2,14 @@ import asyncio
 import aiohttp
 import time
 from bleak import BleakClient, BleakError
-
 import common
 import database_operations
 from thresholds_operations import check_values_for_thresholds
 from sensorvalues_operations import read_sensorvalues
 from sensorstation_operations import search_for_sensorstations
 import rest_operations
+
+RETRY_TIME = 10
 
 # Currently active sensor station tasks
 ss_tasks = {}
@@ -47,33 +48,37 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     try:
         transmission_interval = common.polling_interval
         async with BleakClient(sensorstation_mac) as client:
-            await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, 'ONLINE')
+            await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, 'OK')
             await database_operations.initialize_sensorstation(sensorstation_id)
             asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done() and client.is_connected:
-                transmission_interval = await database_operations.get_sensorstation_transmissioninterval(sensorstation_id)
+                transmission_interval = await database_operations.get_sensorstation_aggregation_period(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
+                await rest_operations.get_thresholds_update_db(sensorstation_id, session)
                 await check_values_for_thresholds(client, sensorstation_id, session)
                 await rest_operations.send_sensorvalues_to_backend(sensorstation_id, session)
-                await rest_operations.get_thresholds_update_db(sensorstation_id, session)
 
     except BleakError as e:
-        print(e)
         print('couldnt connect to sensorstation') 
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
         await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
         await cancel_ss_task(sensorstation_id)
         #TODO: log and send to backend
+    except asyncio.CancelledError as e:
+        await database_operations.clear_sensor_data(sensorstation_id)
+        await database_operations.delete_sensorstation(sensorstation_id)
+        print(f'task {sensorstation_id} canceled and cleaned up')
+        #TODO: log this 
     except Exception as e:
         #TODO: log and send to backend
-        print('Other exception in sensorstation task', e.with_traceback())
+        print('Unexpected error occured in sensor_station_task', e)
 
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
     ss_tasks[sensorstation_id].cancel()
     del ss_tasks[sensorstation_id]
 
-        
+
 async def polling_loop(connection_request, session):
     while not connection_request.done():
         print('Inside AP Loop')
@@ -88,31 +93,39 @@ async def polling_loop(connection_request, session):
             await rest_operations.send_sensorstations_to_backend(session, sensorstations)
         await asyncio.sleep(10)
 
+#Füg header mit authorization hinzu
 async def main():
     while True:
-        async with aiohttp.ClientSession(base_url=common.web_server_address) as session:
-            connection_request = asyncio.Future()
-            print('This should only be Printed at the start and when AP is offline')
-            response = await rest_operations.initialize_accesspoint(session)
-            if response.status == 200:
-                ap_status = await rest_operations.get_ap_status(session)
-                if ap_status in ['ONLINE', 'SEARCHING']:
-                    polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
-                    sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
-                    await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-
-if __name__ == '__main__':
-    retry_time = 5
-    while True:
         try:
-            asyncio.run(main())
-            break
+            async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
+                connection_request = asyncio.Future()
+                print('This should only be Printed at the start and when AP is offline')
+                ap_initialized = await rest_operations.initialize_accesspoint(session)
+                if ap_initialized:
+                    ap_status = await rest_operations.get_ap_status(session)
+                    if ap_status in ['ONLINE', 'SEARCHING']:
+                        polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
+                        sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
+                        await asyncio.gather(polling_loop_task, sensor_station_manager_task)
+                    else:
+                        print('Access point is offline')
+                        connection_request = asyncio.Future()
+                        await asyncio.sleep(30)
+                else:
+                    raise aiohttp.ClientResponseError('Temporary message for status code above 2xx')
+                
         except aiohttp.ClientConnectionError as e:
-            print(f'Could not reach PlantHealth server. Retrying in {retry_time} seconds')
-            time.sleep(retry_time)
-            retry_time = retry_time+5 if retry_time < 60 else 60
+            connection_request.set_result('Done')
+            print(f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            time.sleep(RETRY_TIME)
             #TODO:Log this
-        
+        except aiohttp.ClientResponseError as e:
+            print(f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            time.sleep(RETRY_TIME)
+            #TODO:Log this
         except Exception as e:
             print(f'Unexpected error occured: {e}')
             #TODO:Log this
+
+if __name__ == '__main__':
+    asyncio.run(main())

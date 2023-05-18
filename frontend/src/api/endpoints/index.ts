@@ -15,10 +15,11 @@ import {
   MEASUREMENT_PATH,
   mockedSensorStationMeasurementReqs,
 } from './sensorStations/measurements'
+import { mockedSensorStationPhotoReqs } from './sensorStations/photos'
 import { mockedSensorStationReqs } from './sensorStations/sensorStations'
 import { mockedUserReqs } from './user'
 
-/** All endpoints mocked by mirage */
+/** All endpoints eith /api prefix mocked by mirage */
 export const endpoints: Endpoints = {
   [API_URI.users]: mockedUserReqs,
   [API_URI.accessPoints]: mockedAccessPointReqs,
@@ -27,6 +28,12 @@ export const endpoints: Endpoints = {
   [MEASUREMENT_PATH]: mockedSensorStationMeasurementReqs,
   [API_URI.photos]: mockedPhotoReqs,
   [API_URI.logs]: mockedLogReqs,
+}
+
+/** Endpoints which do not use the /api prefix */
+export const noPrefixEndpoints: Endpoints = {
+  [`${API_URI.sensorStations}`]: mockedSensorStationPhotoReqs,
+  ...mockedLoginEndpoints,
 }
 
 /** Initialise all seed data used by mirage */
@@ -47,6 +54,3 @@ export const createSeedData = (
 
   return server
 }
-
-/** Endpoints for login and logout routes. Defined separately to other endpoints due to these routes not using the /api prefix. */
-export const loginEndpoints: Endpoints = mockedLoginEndpoints
