@@ -53,6 +53,7 @@ public class AccessPointRestController implements BaseRestController {
         if (ap == null) {
             throw new NotFoundInDatabaseException(AP, name);
         }
+        apService.setLastUpdate(ap);
         return ResponseEntity.ok(ap);
     }
 
@@ -103,6 +104,7 @@ public class AccessPointRestController implements BaseRestController {
         }
 
         ap = apService.saveAP(ap);
+        apService.setLastUpdate(ap);
 
         String authToken = tokenManager.generateJwtToken("admin");
         return ResponseEntity.ok(new PostAccessPointResponse(ap, authToken));

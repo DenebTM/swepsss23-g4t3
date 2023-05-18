@@ -49,4 +49,13 @@ public class AccessPointService {
         apRepository.delete(ap);
     }
 
+    /**
+     * set an AP's {@code lastUpdate} to the currrent system time
+     * @param ap to set lastUpdate value for
+     */
+    public void setLastUpdate(AccessPoint ap) {
+        ap.setLastUpdate(LocalDateTime.now());
+        apRepository.save(ap);
+    }
+
 }
