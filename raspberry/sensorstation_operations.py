@@ -21,7 +21,7 @@ async def search_for_sensorstations():
             if len(sensorstations) > 0:
                 await logging_operations.log_to_file_and_list('INFO', f'Sensorstations found are : {sensorstations}')
             else:
-                await logging_operations.log_to_file_and_list('WARNING', 'No sensorstations were found')       
+                await logging_operations.log_to_file_and_list('INFO', 'No sensorstations were found')       
         return sensorstations   
     
     except BleakError as e:
