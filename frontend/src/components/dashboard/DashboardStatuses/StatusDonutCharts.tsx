@@ -103,7 +103,7 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
       const calculatedDonutHeight = stackDonuts
         ? containerWidth
         : Math.floor(containerWidth / 2)
-      setDonutHeight(Math.min(calculatedDonutHeight, 240))
+      setDonutHeight(Math.min(calculatedDonutHeight, 200))
     }
   }, [donutContainerRef, windowSize])
 
