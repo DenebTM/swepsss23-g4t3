@@ -74,4 +74,4 @@ except:
         default_aggregation_period = config['default_transmission_interval']
 
 if not os.path.exists('audit.log'):
-    open('audit.log', 'w')
+    open('audit.log', 'w').close()

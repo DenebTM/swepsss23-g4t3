@@ -4,7 +4,7 @@ import datetime
 from common import access_point_name
 
 # Configure logger
-logging.basicConfig(filename='audit.log', format='%(asctime)s %(levelname)s: %(message)s')
+logging.basicConfig(filename='audit.log', format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 
 log_data = []
 
@@ -21,6 +21,7 @@ async def log_to_file_and_list(level, message, entity_type='ACCESS_POINT', entit
         }
     }
 
+    #logging.log(getattr(logging, level), message)
     logging.log(getattr(logging, level), message)
 
     log_data.append(log_entry)
