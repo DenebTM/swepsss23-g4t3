@@ -109,7 +109,7 @@ public class SensorStationRestController implements BaseRestController {
             throw new NotFoundInDatabaseException("Access point", String.valueOf(apName));
         }
 
-        if (!ap.getStatus().equals(AccessPointStatus.SEARCHING)) {
+        if (!AccessPointStatus.SEARCHING.equals(ap.getStatus())) {
             throw new BadRequestException("Access point " + ap.getName() + " is not in SEARCHING mode");
         }
 
