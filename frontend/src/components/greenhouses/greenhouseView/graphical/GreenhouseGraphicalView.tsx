@@ -79,7 +79,9 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
         <DashboardCard loading={typeof measurements === 'undefined'}>
           {measurements && (
             <GreenhouseMetricDonuts
-              measurement={measurements.length > 0 ? measurements[0] : null}
+              measurement={
+                sensorStation ? sensorStation.currentMeasurement : null
+              }
               sensorStation={sensorStation}
             />
           )}
