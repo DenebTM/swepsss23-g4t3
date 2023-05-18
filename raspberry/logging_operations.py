@@ -7,7 +7,7 @@ logging.basicConfig(filename='audit.log', format='%(asctime)s %(levelname)s: %(m
 log_data = []
 
 async def log_to_file_and_list(level, message):
-    timestamp = datetime.datetime.now().isoformat()
+    timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
     log_entry = {
         'timestamp': timestamp+'Z', #For backend reasons
