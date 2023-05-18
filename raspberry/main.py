@@ -100,11 +100,11 @@ async def main():
         try:
             async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
                 connection_request = asyncio.Future()
-                ap_initialized = await rest_operations.initialize_accesspoint(session)
-                if ap_initialized:
-                    polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
-                    sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
-                    await asyncio.gather(polling_loop_task, sensor_station_manager_task)
+                await rest_operations.initialize_accesspoint(session)
+
+                polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
+                sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
+                await asyncio.gather(polling_loop_task, sensor_station_manager_task)
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
