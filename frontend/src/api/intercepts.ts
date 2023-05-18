@@ -53,9 +53,13 @@ const axiosWrapper = async <R extends RestVariant, T = unknown, D = unknown>(
   ) => Promise<AxiosResponse<T, D>>,
   url: string,
   arg2: WrapperArg2<R, D>,
-  arg3: WrapperArg3<R, D> = undefined
+  arg3: WrapperArg3<R, D> = undefined,
+  addApiPrefix = true
 ): Promise<T> => {
-  const apiUrl = `${API_DEV_URL}/api${url}`
+  const apiUrl = addApiPrefix
+    ? `${API_DEV_URL}/api${url}`
+    : `${API_DEV_URL}${url}`
+
   // Return axios response data
   return axiosFun(apiUrl, arg2, arg3)
     .then((res: AxiosResponse<T, D>) => res.data)
@@ -138,9 +142,16 @@ export const _delete = <T = unknown, D = unknown>(
  */
 export const _get = <T = unknown, D = unknown>(
   url: string,
-  config?: AxiosRequestConfig<D>
+  config?: AxiosRequestConfig<D>,
+  addApiPrefix = true
 ): Promise<T> =>
-  axiosWrapper<GetOrDel, T, D>(axios.get, url, authConfig(config))
+  axiosWrapper<GetOrDel, T, D>(
+    axios.get,
+    url,
+    authConfig(config),
+    undefined,
+    addApiPrefix
+  )
 
 /**
  * Custom wrapper for axios.post to reduce boilerplate code
