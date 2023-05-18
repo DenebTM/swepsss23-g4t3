@@ -42,7 +42,7 @@ public class VisitorController {
      * @return id and name of Photo
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
         PhotoData dbPhoto = new PhotoData();
         try {
             if (multipartImage.getSize() > 8000000) {
