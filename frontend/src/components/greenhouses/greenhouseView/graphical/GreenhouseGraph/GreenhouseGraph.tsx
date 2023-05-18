@@ -18,7 +18,7 @@ import {
   roundMetric,
 } from '~/common'
 import { Measurement, SensorValues } from '~/models/measurement'
-import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
+import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 import {
@@ -31,8 +31,7 @@ import {
 
 interface GreenhouseGraphProps {
   measurements: Measurement[]
-  sensorStation: SensorStation | undefined
-  uuid: SensorStationUuid
+  sensorStation: SensorStation | null
 }
 
 /**
@@ -42,7 +41,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
   const [data, setData] = useState<DataValue[]>()
 
   useEffect(() => {
-    if (typeof props.sensorStation !== 'undefined') {
+    if (props.sensorStation) {
       const lower: SensorValues = props.sensorStation.lowerBound
       const upper: SensorValues = props.sensorStation.upperBound
 

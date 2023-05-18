@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface SensorStationRepository extends AbstractRepository<SensorStation, Long>{
 
-    SensorStation findFirstById(Integer id);
+    SensorStation findFirstBySsID(Integer ssID);
 
     @Query("SELECT s FROM SensorStation s WHERE s.accessPoint.name = :ap_name")
     List<SensorStation> findByApName(@Param("ap_name") String apName);

@@ -43,7 +43,7 @@ interface RemovableChipProps {
   /** Function to (asynchronously) delete or remove the entity. */
   handleDelete: () => Promise<any>
   /** Chip main label */
-  label: string
+  label: string | React.ReactNode
   /** Handle click on the main body of the chip */
   onClick?: React.MouseEventHandler
   /** Tooltip title for the main body of the chip */
@@ -66,6 +66,11 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
       .handleDelete()
       .then(() => {
         props.afterDelete?.()
+        addSnackbarMessage({
+          header: 'Success',
+          body: `Removed ${props.entityName}`,
+          type: MessageType.CONFIRM,
+        })
       })
       .catch((err: Error) => {
         addSnackbarMessage({

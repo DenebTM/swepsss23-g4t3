@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.services.LoggingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class LoggingControllerTest {
     }
 
     @Autowired
-    private LoggingController loggingController;
+    private LoggingRestController loggingController;
     @Autowired
     private LoggingService loggingService;
 
@@ -41,7 +42,7 @@ public class LoggingControllerTest {
     public void testGetAllLogs() {
         int numberOfLogs = loggingService.getAllLogs().size();
 
-        var response = loggingController.getLogs(null, null, null);
+        var response = loggingController.getLogs(null, null, null, null);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         var logs = response.getBody();
@@ -55,7 +56,7 @@ public class LoggingControllerTest {
     void testGetLogsFrom(){
         Instant from = parseInstant("2023-05-09");
 
-        var response = loggingController.getLogs(from, null, null);
+        var response = loggingController.getLogs(from, null, null, null);
         int numberOfLogs = loggingService.getAllLogsFrom(from).size();
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
@@ -70,7 +71,7 @@ public class LoggingControllerTest {
     void testGetLogsTo() {
         Instant to = parseInstant("2023-05-09");
 
-        var response = loggingController.getLogs(null, to, null);
+        var response = loggingController.getLogs(null, to, null, null);
         int numberOfLogs = loggingService.getAllLogsTo(to).size();
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
@@ -86,7 +87,7 @@ public class LoggingControllerTest {
         Instant from = parseInstant("2023-05-09");
         Instant to = parseInstant("2023-05-11");
 
-        var response = loggingController.getLogs(from, to, null);
+        var response = loggingController.getLogs(from, to, null, null);
         int numberOfLogs = loggingService.getAllLogsInTimeInterval(from, to).size();
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
@@ -100,15 +101,14 @@ public class LoggingControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetLogsByLevel() {
         Map<String, Object> json = new HashMap<>();
-        List<String> levels = List.of("INFO", "WARN", "ERROR");
         
         int totalFilteredLogCount = 0;
-        for (String level : levels) {
+        for (LogLevel level : LogLevel.values()) {
             json.put("level", level);
             var serviceLogs = loggingService.getAllLogs();
             serviceLogs = loggingService.filterLogsByLevel(serviceLogs, level);
 
-            var response = loggingController.getLogs(null, null, level);
+            var response = loggingController.getLogs(null, null, level, null);
             int numberOfLogs = serviceLogs.size();
             assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 

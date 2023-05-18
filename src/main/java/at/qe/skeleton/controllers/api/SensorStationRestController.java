@@ -2,20 +2,12 @@ package at.qe.skeleton.controllers.api;
 
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
-import at.qe.skeleton.models.PhotoData;
-import at.qe.skeleton.models.AccessPoint;
-import at.qe.skeleton.models.Measurement;
-import at.qe.skeleton.models.SensorStation;
-import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.models.*;
+import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
-import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.AccessPointService;
-import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.SensorStationService;
 import at.qe.skeleton.services.UserxService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,12 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.DateTimeException;
-import java.time.Instant;
 import java.util.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class SensorStationRestController implements BaseRestController {
@@ -41,23 +28,17 @@ public class SensorStationRestController implements BaseRestController {
     private AccessPointService apService;
 
     @Autowired
-    private MeasurementService measurementService;
-    @Autowired
     private PhotoDataRepository photoDataRepository;
 
     @Autowired
     private UserxService userService;
 
-    @Autowired
-    private SensorValuesRepository sensorValuesRepository;
-
-    private static final String SS = "Sensor station";
+    public static final String SS = "Sensor station";
     private static final String SS_PATH = "/sensor-stations";
     private static final String SS_AP_PATH = AccessPointRestController.AP_NAME_PATH + SS_PATH;
-    private static final String SS_ID_PATH = SS_PATH + "/{uuid}";
+    public static final String SS_ID_PATH = SS_PATH + "/{id}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
-    private static final String MEASUREMENTS_PATH = "/measurements";
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -90,7 +71,7 @@ public class SensorStationRestController implements BaseRestController {
      * @return sensor station
      */
     @GetMapping(value = SS_ID_PATH)
-    public ResponseEntity<SensorStation> getSSById(@PathVariable(value = "uuid") Integer id) {
+    public ResponseEntity<SensorStation> getSSById(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
         // Return a 404 error if the sensor-station is not found
@@ -124,8 +105,12 @@ public class SensorStationRestController implements BaseRestController {
 
         List<SensorStation> retSSList = new ArrayList<>();
         for (SensorStation newSS : newSSList) {
-            newSS.setAccessPoint(ap);
-            retSSList.add(ssService.saveSS(newSS));
+            SensorStation existingSS = ssService.loadSSById(newSS.getSsID());
+
+            if (existingSS == null) {
+                newSS.setAccessPoint(ap);
+                retSSList.add(ssService.saveSS(newSS));
+            }
         }
         return ResponseEntity.ok(retSSList);
     }
@@ -138,7 +123,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
-    public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "uuid") Integer id,  @RequestBody Map<String, Object> json) {
+    public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
@@ -153,7 +138,9 @@ public class SensorStationRestController implements BaseRestController {
         }
         if (json.containsKey("aggregationPeriod")) {
             try {
-                ss.setAggregationPeriod(Long.valueOf((String)json.get("aggregationPeriod")));
+                Long aggregationPeriod = Long.valueOf((Integer)json.get("aggregationPeriod"));
+                if (aggregationPeriod<=0){ throw new BadRequestException("Invalid aggregation period");}
+                ss.setAggregationPeriod(aggregationPeriod);
             } catch (IllegalArgumentException e){
                 throw new BadRequestException("Invalid aggregation period");
             }
@@ -168,13 +155,18 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_PATH)
-    public ResponseEntity<SensorStation> deleteSSById(@PathVariable(value = "uuid") Integer id) {
+    public ResponseEntity<SensorStation> deleteSSById(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be deleted does not exist
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
         }
         ssService.deleteSS(ss);
+
+        // null related collections to prevent 500 error
+        ss.setGardeners(null);
+        ss.setMeasurements(null);
+
         return ResponseEntity.ok(ss);
     }
 
@@ -185,7 +177,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = SS_ID_GARDENER_PATH)
-    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "uuid") Integer id){
+    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "id") Integer id){
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
@@ -202,7 +194,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
@@ -223,7 +215,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "uuid") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
         SensorStation ss = ssService.loadSSById(id);
         Userx user = userService.loadUserByUsername(username);
         if (ss == null) {
@@ -243,7 +235,7 @@ public class SensorStationRestController implements BaseRestController {
      * @return the picture if found
      */
     @DeleteMapping(value = SS_ID_PHOTOS_PATH + "/{photoId}")
-    ResponseEntity<String> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "uuid") Integer id) {
+    ResponseEntity<String> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss != null) {
             List<String> gardeners = ssService.getGardenersBySS(ss);
@@ -261,100 +253,6 @@ public class SensorStationRestController implements BaseRestController {
             throw new NotFoundInDatabaseException("Photo", id);
         }
         throw new NotFoundInDatabaseException(SS, id);
-    }
-
-    /**
-     * a route to GET current or historic sensor station measurement values
-     * @param id
-     * @param json
-     * @return List of historic measurements for given time frame or current/recent measurement
-     */
-    @GetMapping(value = SS_ID_PATH + MEASUREMENTS_PATH)
-    public ResponseEntity<List<Measurement>> getMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json){
-        Instant from = Instant.now();       // if "from"-date is present in json body, it will be changed to that date
-        Instant to = Instant.now();         // if "to"-date is present in json body, it will be changed to that date
-
-        // if keys "from" and "to" are missing in json body return the most recent/current measurement
-        if (!json.containsKey("from") && !json.containsKey("to")){
-            Measurement currentMeasurement = measurementService.getCurrentMeasurement(id);
-            if (currentMeasurement == null){
-                return ResponseEntity.ok(new ArrayList<>());
-            } else {
-                return ResponseEntity.ok(new ArrayList<>(Arrays.asList(currentMeasurement)));
-            }
-        }
-        // return a 400 error if there is a "to"-date but no "from"-date given in json body
-        if (!json.containsKey("from") && json.containsKey("to")){
-            throw new BadRequestException("Start or end date missing");
-        }
-        // return 400 error if "from"-date isn't iso formatted
-        if (json.containsKey("from")) {
-            try {
-                from = Instant.parse((String)json.get("from"));
-            } catch (DateTimeException e){
-                throw new BadRequestException("Invalid start date");
-            }
-        }
-        // return 400 error if "to"-date isn't iso formatted
-        if (json.containsKey("to")) {
-            try {
-                to = Instant.parse((String)json.get("to"));
-            } catch (DateTimeException e){
-                throw new BadRequestException("Invalid end date");
-            }
-        }
-        // return 400 error if "from"-date is after "to"-date
-        if (from.isAfter(to)){
-            throw new BadRequestException("End date must not be before start date");
-        }
-        return ResponseEntity.ok(measurementService.getMeasurements(id, from, to));
-    }
-
-    /**
-     * a route to Get a list of all current measurements
-     * @return An object containing the returned measurements indexed by sensor station
-     */
-    @GetMapping(value = MEASUREMENTS_PATH)
-    public ResponseEntity<List<Measurement>> getAllCurrentMeasurements(){
-        return ResponseEntity.ok(measurementService.getAllCurrentMeasurements());
-    }
-
-    /**
-     * a POST route to create a new measurement, for AP to send new measurement data
-     * @param id
-     * @param json
-     * @return the newly created measurement object
-     */
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping(value = SS_ID_PATH + MEASUREMENTS_PATH)
-    public ResponseEntity<Object> sendMeasurementsBySS(@PathVariable(value = "uuid") Integer id, @RequestBody Map<String, Object> json) {
-        SensorStation ss = ssService.loadSSById(id);
-        if (ss == null) {
-            throw new NotFoundInDatabaseException(SS, id);
-        }
-
-        if (!json.containsKey("timestamp")){
-            throw new BadRequestException("No timestamp");
-        }
-
-        Measurement newMeasurement = new Measurement();
-        newMeasurement.setSensorStation(ss);
-        try {
-            newMeasurement.setTimestamp(Instant.parse((String)json.get("timestamp")));
-        } catch (DateTimeException e){
-            throw new BadRequestException("Invalid timestamp");
-        }
-        json.remove("timestamp");
-
-        var mapper = new ObjectMapper();
-        try {
-            SensorValues newValues = mapper.convertValue(json, SensorValues.class);
-            newMeasurement.setData(sensorValuesRepository.save(newValues));
-        } catch (IllegalArgumentException e){
-            throw new BadRequestException("Invalid sensor values");
-        }
-
-        return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
     }
 
 }

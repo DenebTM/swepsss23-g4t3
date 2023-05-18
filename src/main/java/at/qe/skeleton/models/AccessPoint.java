@@ -1,80 +1,65 @@
 package at.qe.skeleton.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import at.qe.skeleton.models.enums.AccessPointStatus;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "ACCESS_POINT")
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
+@EqualsAndHashCode
 public class AccessPoint {
 
     @Id
     @Column(name = "AP_NAME", nullable = false)
+    @NonNull
     private String name;
 
     @Column(name = "LAST_UPDATE")
-    private LocalDateTime lastUpdate;
+    private Instant lastUpdate;
 
     @Column(name = "SERVER_ADDRESS")
+    @NonNull
     private String serverAddress;
 
-    //TODO: is this column still 'status' anywhere else?
+    @Column(name = "CLIENT_ADDRESS")
+    private String clientAddress;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "AP_STATUS")
     @JdbcTypeCode(SqlTypes.VARCHAR)
+    @NonNull
     private AccessPointStatus status;
 
-    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ssID")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "accessPoint",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
     private Set<SensorStation> sensorStations = new HashSet<>();
 
-    public AccessPoint() {
-    }
 
     public AccessPoint(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public String getServerAddress() {
-        return serverAddress;
-    }
-
-    public AccessPointStatus getStatus() {
-        return this.status;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public void setServerAddress(String serverAddress) {
-        this.serverAddress = serverAddress;
-    }
-
-    public void setStatus(AccessPointStatus status) {
-        this.status = status;
     }
 
 }
