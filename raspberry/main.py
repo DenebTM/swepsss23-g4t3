@@ -115,7 +115,7 @@ async def main():
             time.sleep(RETRY_TIME)
 
         except Exception as e:
-            await logging_operations.log_to_file_and_list('ERROR' f'Unexpected error occured: {e}')
+            await logging_operations.log_to_file_and_list('ERROR', f'Unexpected error occured: {e}')
 
 if __name__ == '__main__':
     asyncio.run(main())
