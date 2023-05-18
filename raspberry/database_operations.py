@@ -31,11 +31,11 @@ async def get_sensor_data_averages(sensorstation_id):
 
         averages_dict = {
             'temperature': results[0],
-            'humidity': results[1],
-            'air_pressure': results[2],
-            'illuminance': results[3],
-            'air_quality_index': results[4],
-            'soil_moisture': results[5]
+            'humidity': results[1] / 100,
+            'airPressure': results[2],
+            'lightIntensity': results[3],
+            'airQuality': results[4],
+            'soilMoisture': results[5]
         }
         cursor.close()
 
