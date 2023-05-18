@@ -68,14 +68,14 @@ public class VisitorController {
      * see maybe https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/
      */
     @GetMapping(value = SS_PHOTOS_PATH + "/{photoId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] getPhotoById(@PathVariable(value = "photoId") Integer id) throws Exception {
+    public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer id) throws Exception {
         if (photoDataRepository.findById(id).isPresent()) {
             if (photoDataRepository.findById(id).get().getContent().length == 0) {
-                throw new NoSuchFieldException("Photo is present in database but has no contents");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Byte content of photo not found");
             }
-            return photoDataRepository.findById(id).get().getContent();
+            return ResponseEntity.ok(photoDataRepository.findById(id).get().getContent());
         }
-        throw new IllegalArgumentException("No Photo associated to this id");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
     }
 
     @GetMapping(value = SS_PHOTOS_PATH)
