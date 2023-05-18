@@ -68,10 +68,7 @@ public class VisitorController {
      * see maybe https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/
      */
     @GetMapping(value = "photos/{photoId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer id, @PathVariable(value = "id") Integer ssId) throws Exception {
-        if (ssService.loadSSById(ssId) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
-        }
+    public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer id){
         if (photoDataRepository.findById(id).isPresent()) {
             if (photoDataRepository.findById(id).get().getContent().length == 0) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Byte content of photo not found");
@@ -91,7 +88,6 @@ public class VisitorController {
         if (photos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photos not found");
         }
-        //List<Integer> ids = photos.stream().map(PhotoData::getId).collect(Collectors.toList());
         return ResponseEntity.ok(photos);
     }
 }
