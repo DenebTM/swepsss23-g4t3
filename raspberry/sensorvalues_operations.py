@@ -2,6 +2,7 @@ import database_operations
 from bleak import BleakError
 import asyncio
 import common
+import logging_operations
 
 READ_SENSOR_INTERVAL = 5
 
@@ -16,5 +17,6 @@ async def read_sensorvalues(client, sensorstation_id, connection_request):
             soil_moisture = int.from_bytes(await client.read_gatt_char(common.soil_moisture_uuid), 'little', signed=False)        
             await database_operations.save_sensor_values_to_database(sensorstation_id, temperature, humidity, air_pressure, illuminance, air_quality_index, soil_moisture)
             await asyncio.sleep(READ_SENSOR_INTERVAL)
-        except BleakError:
-            pass #TODO: logging
+        except BleakError as e:
+            await logging_operations.log_to_file_and_list('ERROR', f'BleakError while retreiving sensorvalues from sensorstation: {sensorstation_id}. Error: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        

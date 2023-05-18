@@ -93,80 +93,84 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
   const donutHeight = stackDonuts ? 150 : 200
 
   /** Generate access point chart data to display */
-  const accessPointData: DonutValue[] = props.accessPoints.reduce(
-    (counts: DonutValue[], ap: AccessPoint) => {
-      let status: string
+  const accessPointData: DonutValue[] | null =
+    props.accessPoints.length > 0
+      ? props.accessPoints.reduce((counts: DonutValue[], ap: AccessPoint) => {
+          let status: string
 
-      switch (ap.status) {
-        case ApStatus.OFFLINE:
-          status = OFFLINE
-          break
+          switch (ap.status) {
+            case ApStatus.OFFLINE:
+              status = OFFLINE
+              break
 
-        case ApStatus.UNCONFIRMED:
-          status = WARN
-          break
+            case ApStatus.UNCONFIRMED:
+              status = WARN
+              break
 
-        case ApStatus.SEARCHING:
-          status = UPDATING
-          break
+            case ApStatus.SEARCHING:
+              status = UPDATING
+              break
 
-        default:
-          status = ONLINE
-          break
-      }
+            default:
+              status = ONLINE
+              break
+          }
 
-      return counts.map((c) =>
-        c.displayName === status
-          ? {
-              ...c,
-              entities: [ap.name, ...c.entities],
-              value: c.value + 1,
-            }
-          : c
-      )
-    },
-    initialAccessPointData
-  )
+          return counts.map((c) =>
+            c.displayName === status
+              ? {
+                  ...c,
+                  entities: [ap.name, ...c.entities],
+                  value: c.value + 1,
+                }
+              : c
+          )
+        }, initialAccessPointData)
+      : null
 
   /**
    * Generate sensor station chart data to display.
-   * qqjf TODO add additional possible status values
    */
-  const sensorStationData: DonutValue[] = props.sensorStations.reduce(
-    (counts: DonutValue[], ss: SensorStation) => {
-      let status: string
+  const sensorStationData: DonutValue[] | null =
+    props.sensorStations.length > 0
+      ? props.sensorStations.reduce(
+          (counts: DonutValue[], ss: SensorStation) => {
+            let status: string
 
-      switch (ss.status) {
-        case StationStatus.OFFLINE:
-        case StationStatus.PAIRING_FAILED:
-          status = OFFLINE
-          break
+            switch (ss.status) {
+              case StationStatus.OFFLINE:
+              case StationStatus.PAIRING_FAILED:
+                status = OFFLINE
+                break
 
-        case StationStatus.WARNING:
-          status = WARN
-          break
+              case StationStatus.WARNING:
+                status = WARN
+                break
 
-        case StationStatus.PAIRING:
-          status = UPDATING
-          break
+              case StationStatus.PAIRING:
+              case StationStatus.AVAILABLE:
+                status = UPDATING
+                break
 
-        default:
-          status = ONLINE
-          break
-      }
-
-      return counts.map((c) =>
-        c.displayName === status
-          ? {
-              ...c,
-              entities: [`Greenhouse ${ss.ssID}`, ...c.entities],
-              value: c.value + 1,
+              case StationStatus.OK:
+              default:
+                status = ONLINE
+                break
             }
-          : c
-      )
-    },
-    initialSensorStationData
-  )
+
+            return counts.map((c) =>
+              c.displayName === status
+                ? {
+                    ...c,
+                    entities: [`Greenhouse ${ss.ssID}`, ...c.entities],
+                    value: c.value + 1,
+                  }
+                : c
+            )
+          },
+          initialSensorStationData
+        )
+      : null
 
   return (
     <Box component="div" sx={{ display: 'flex', flexDirection: 'column' }}>

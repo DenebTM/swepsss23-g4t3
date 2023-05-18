@@ -26,10 +26,12 @@ export const measurementToGraphValues = (
   valueGetter: (value: number, valueKey: keyof SensorValues) => number
 ): GraphValues =>
   Object.fromEntries(
-    GREENHOUSE_METRICS.map((metricRange: GreenhouseMetricRange) => [
-      metricRange.valueKey,
-      valueGetter(m.data[metricRange.valueKey], metricRange.valueKey),
-    ])
+    Object.values(GREENHOUSE_METRICS).map(
+      (metricRange: GreenhouseMetricRange) => [
+        metricRange.valueKey,
+        valueGetter(m.data[metricRange.valueKey], metricRange.valueKey),
+      ]
+    )
   ) as GraphValues
 
 /** Type of values passed to the greenhouse graph component */
