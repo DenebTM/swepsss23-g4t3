@@ -25,6 +25,17 @@ export const GettingStarted: React.FC = () => {
       <p>
         <b>Note:</b> It is assumed that all devices are already set up with the
         necessary dependencies/project files/firmware/wiring/etc.
+        <br />
+        <br />
+        For additional information, please refer to the project{' '}
+        <Link href="https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/home">
+          wiki
+        </Link>{' '}
+        and{' '}
+        <Link href="https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/blob/690e66b84beca72c807af26bdeec6f2d37fd7929/README.md">
+          README
+        </Link>
+        .
       </p>
 
       <Typography variant="h6" fontStyle="italic">
@@ -59,8 +70,10 @@ export const GettingStarted: React.FC = () => {
       <ol>
         <li>Set the Greenhouse's ID using the DIP switch.</li>
         <li>
-          Press the righmost button (the one connected to ) connected to pin D2
-          of the Arduino. The LED will begin flashing blue.
+          The LED will initially glow solid red.
+          <br />
+          Press the righmost button on the Greenhouse (the one connected to pin
+          D2 of the Arduino). The LED will begin rapidly flashing blue.
         </li>
         <li>
           Navigate to{' '}
@@ -83,6 +96,56 @@ export const GettingStarted: React.FC = () => {
           corresponding page under "Dashboard".
         </li>
       </ol>
+      <p>
+        If the Greenhouse loses connection, it will only re-pair to the
+        previously connected access point. This condition is signaled by slow
+        red flashing of the LED. To re-pair, simply press the rightmost button
+        on the Greenhouse again.
+      </p>
+
+      <Typography variant="h6" fontStyle="italic">
+        Sensor warnings
+      </Typography>
+      <p>
+        Go to{' '}
+        <Link>
+          <ReactLink to={PAGE_URL.myGreenhouses.href}>
+            {PAGE_URL.myGreenhouses.pageTitle}
+          </ReactLink>
+        </Link>{' '}
+        in order to configure thresholds for sensor readings. If the sensor
+        values fall outside of those thresholds, the Greenhouse will emit a
+        period beeping noise and display any combination of six different codes,
+        one for each sensor value.
+        <br />
+        The different LED codes are detailed on{' '}
+        <Link href="https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/Sensor%20Station%20LED%20Status%20Codes#sensor-warnings">
+          this page
+        </Link>{' '}
+        of the project wiki.
+      </p>
+      <p>
+        Sensor warnings are not cleared automatically, the Greenhouse will keep
+        emitting an audiovisual warning until the warning state has been
+        cleared.
+        <br />
+        In order to clear active sensor warnings:
+        <ol>
+          <li>
+            Ensure that the sensor values are within the thresholds set on{' '}
+            <Link>
+              <ReactLink to={PAGE_URL.myGreenhouses.href}>
+                {PAGE_URL.myGreenhouses.pageTitle}
+              </ReactLink>
+            </Link>
+            .
+          </li>
+          <li>
+            Press the middle button on the Greenhouse (connected to pin D3 of
+            the Arduino).
+          </li>
+        </ol>
+      </p>
     </PageWrapper>
   )
 }
