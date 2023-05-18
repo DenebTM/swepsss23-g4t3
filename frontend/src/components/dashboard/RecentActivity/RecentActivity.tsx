@@ -7,7 +7,7 @@ import { DashboardCard } from '@component-lib/DashboardCard'
 import dayjs from 'dayjs'
 import { getLogs } from '~/api/endpoints/logs'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
-import { LogEntry } from '~/models/log'
+import { LogEntry, LogLevel } from '~/models/log'
 
 import { RecentActivityList } from './RecentActivityList'
 
@@ -23,6 +23,7 @@ export const RecentActivity: React.FC = () => {
     getLogs({
       from: dayjs().subtract(1, 'week').toISOString(),
       to: dayjs().toISOString(),
+      level: [LogLevel.WARN, LogLevel.ERROR],
     })
       .then((data) => {
         setLogEntries(data)
