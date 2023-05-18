@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +42,7 @@ public class VisitorController {
     @PostMapping(value = SS_PHOTOS_PATH)
     ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "uuid") Integer id) {
         PhotoData dbPhoto = new PhotoData();
+        dbPhoto.setUploaded(LocalDateTime.now());
         dbPhoto.setName(multipartImage.getName());
         try {
             dbPhoto.setContent(multipartImage.getBytes());
@@ -63,29 +66,28 @@ public class VisitorController {
      * @return list of photos
      * see maybe https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/
      */
-    @GetMapping(value = SS_PHOTOS_PATH + "/{pid}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] getPhotoById(@PathVariable(value = "pid") Integer id) throws IOException {
+    @GetMapping(value = SS_PHOTOS_PATH + "/{photoId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] getPhotoById(@PathVariable(value = "photoId") Integer id) throws Exception {
         if (photoDataRepository.findById(id).isPresent()) {
             if (photoDataRepository.findById(id).get().getContent().length == 0) {
-                System.out.println("no bytes");
+                throw new NoSuchFieldException("Photo is present in database but has no contents");
             }
             return photoDataRepository.findById(id).get().getContent();
         }
-        throw new IOException();
+        throw new IllegalArgumentException("No Photo associated to this id");
     }
 
     @GetMapping(SS_PHOTOS_PATH)
     public ResponseEntity<Object> getPhotosBySSAsId(@PathVariable(value = "uuid") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            //TODO: insert correct body
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no ss found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
         }
         List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
         if (photos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no photos found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photos not found");
         }
-        List<Integer> ids = photos.stream().map(PhotoData::getId).collect(Collectors.toList());
-        return ResponseEntity.ok(ids);
+        //List<Integer> ids = photos.stream().map(PhotoData::getId).collect(Collectors.toList());
+        return ResponseEntity.ok(photos);
     }
 }
