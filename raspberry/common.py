@@ -27,12 +27,12 @@ warning_active_uuid = base_uuid.format('ff80')
 
 #global dictionary failure_uuids
 failure_uuids = {
-    'air_pressure': air_pressure_failure_uuid,
+    'airPressure': air_pressure_failure_uuid,
     'temperature': temperature_failure_uuid,
     'humidity': humidity_failure_uuid,
-    'illuminance': illuminance_failure_uuid,
-    'air_quality_index': air_quality_index_failure_uuid,
-    'soil_moisture': soil_moisture_failure_uuid
+    'lightIntensity': illuminance_failure_uuid,
+    'airQualityIndex': air_quality_index_failure_uuid,
+    'soilMoisture': soil_moisture_failure_uuid
 }
 
 known_ss_filename = 'known_sensorstations.yaml'
