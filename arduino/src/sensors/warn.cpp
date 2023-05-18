@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include <beep.h>
 #include <ble/pairing.h>
 
 namespace sensors {
@@ -14,6 +15,7 @@ namespace sensors {
 
       Serial.println("Sensor warnings have changed!");
       led::clear_status_codes(led::CodePriority::LOW);
+      beep::stop();
 
       bool any_warnings = false;
       for (auto tup : std::vector<std::pair<bool, led::StatusCode* const>> {
@@ -36,6 +38,8 @@ namespace sensors {
       // return to the "all ok" status code if there are no active warnings
       if (!any_warnings) {
         led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
+      } else {
+        beep::start();
       }
     }
   }
