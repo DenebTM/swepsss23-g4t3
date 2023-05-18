@@ -91,6 +91,12 @@ export const AccessPointsTable: React.FC = () => {
       width: 130,
     },
     {
+      ...centerCell,
+      field: 'clientAddress',
+      headerName: 'Client Address',
+      width: 170,
+    },
+    {
       field: 'sensorStations',
       headerName: 'Greenhouses',
       description: 'Greenhouses which transmit data to this access point',
