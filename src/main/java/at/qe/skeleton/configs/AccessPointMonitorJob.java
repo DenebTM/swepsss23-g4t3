@@ -38,7 +38,7 @@ public class AccessPointMonitorJob {
             if (ap.getLastUpdate().plusSeconds(AP_TIMEOUT).isBefore(Instant.now())) {
                 for (SensorStation ss : ap.getSensorStations()) {
                     if (!ss.getStatus().equals(SensorStationStatus.OFFLINE)) {
-                        logger.info("Sensor station status changed to OFFLINE", LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+                        logger.warn("Sensor station status changed to OFFLINE", LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
                     }
 
                     ss.setStatus(SensorStationStatus.OFFLINE);
@@ -46,7 +46,7 @@ public class AccessPointMonitorJob {
                 }
 
                 if (!ap.getStatus().equals(AccessPointStatus.OFFLINE)) {
-                    logger.info("Access point status changed to OFFLINE", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                    logger.warn("Access point status changed to OFFLINE", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
                 }
                 ap.setStatus(AccessPointStatus.OFFLINE);
                 apRepository.save(ap);

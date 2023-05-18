@@ -142,8 +142,12 @@ public class AccessPointRestController implements BaseRestController {
                 ap.setStatus(newStatus);
 
                 if (!newStatus.equals(oldStatus)) {
-                    logger.info("Access point status changed to " + newStatus.name(),
-                        LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                    String message = "Access point status changed to " + newStatus.name();
+                    if (newStatus.equals(AccessPointStatus.OFFLINE)) {
+                        logger.warn(message, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                    } else {
+                        logger.info(message, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                    }
                 }
             } catch (IllegalArgumentException e){
                 throw new BadRequestException("Invalid status given");
