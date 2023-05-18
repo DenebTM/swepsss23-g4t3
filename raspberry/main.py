@@ -1,6 +1,7 @@
 import asyncio
 import aiohttp
 import time
+import logging_operations
 from bleak import BleakClient, BleakError
 import common
 import database_operations
@@ -116,9 +117,8 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            print(f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            logging_operations.log_to_file_and_list('Error', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
             time.sleep(RETRY_TIME)
-            #TODO:Log this
         except aiohttp.ClientResponseError as e:
             print(f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
             time.sleep(RETRY_TIME)
