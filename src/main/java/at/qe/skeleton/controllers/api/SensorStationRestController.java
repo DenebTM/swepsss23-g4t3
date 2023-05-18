@@ -3,6 +3,7 @@ package at.qe.skeleton.controllers.api;
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.*;
+import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
@@ -108,6 +109,10 @@ public class SensorStationRestController implements BaseRestController {
             throw new NotFoundInDatabaseException("Access point", String.valueOf(apName));
         }
 
+        if (!ap.getStatus().equals(AccessPointStatus.SEARCHING)) {
+            throw new BadRequestException("Access point " + ap.getName() + " is not in SEARCHING mode");
+        }
+
         List<SensorStation> retSSList = new ArrayList<>();
         for (SensorStation newSS : newSSList) {
             SensorStation existingSS = ssService.loadSSById(newSS.getSsID());
@@ -116,7 +121,8 @@ public class SensorStationRestController implements BaseRestController {
                 newSS.setAccessPoint(ap);
                 retSSList.add(ssService.saveSS(newSS));
 
-                logger.info("Registered available sensor station " + newSS.getSsID(), LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+                logger.info("Sensor station " + newSS.getSsID() + " found by access point",
+                    LogEntityType.ACCESS_POINT, ap.getName(), getClass());
             }
         }
         return ResponseEntity.ok(retSSList);
@@ -131,6 +137,8 @@ public class SensorStationRestController implements BaseRestController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
+        String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        
         SensorStation ss = ssService.loadSSById(id);
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
@@ -168,7 +176,7 @@ public class SensorStationRestController implements BaseRestController {
                 }
 
                 if (!newAggregationPeriod.equals(oldAggregationPeriod)) {
-                    logger.info("Changed aggregation period", LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+                    logger.info("Aggregation period changed by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
                 }
 
                 ss.setAggregationPeriod(newAggregationPeriod);
@@ -285,11 +293,11 @@ public class SensorStationRestController implements BaseRestController {
 
     /**
      * Route to DELete pictures from the gallery
-     * @param photoId
+     * @param photoId id of photo to be deleted
      * @return the picture if found
      */
     @DeleteMapping(value = SS_ID_PHOTOS_PATH + "/{photoId}")
-    ResponseEntity<String> deletePhoto(@PathVariable Integer photoId, @PathVariable(value = "id") Integer id) {
+    ResponseEntity<String> deletePhoto(@PathVariable(value = "photoId") Integer photoId, @PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
