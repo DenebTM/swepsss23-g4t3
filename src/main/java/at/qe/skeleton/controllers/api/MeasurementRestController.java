@@ -4,7 +4,9 @@ import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.Measurement;
 import at.qe.skeleton.models.SensorStation;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.*;
+import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorStationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,12 +24,16 @@ import java.util.Map;
 @RestController
 public class MeasurementRestController implements BaseRestController {
 
+    private static final String MEASUREMENTS_PATH = "/measurements";
+
     @Autowired
     private SensorStationService ssService;
+
     @Autowired
     private MeasurementService measurementService;
 
-    private static final String MEASUREMENTS_PATH = "/measurements";
+    @Autowired
+    private LoggingService logger;
 
     /**
      * Route to GET current or historic sensor station measurement values
@@ -114,12 +120,16 @@ public class MeasurementRestController implements BaseRestController {
             SensorValues newValues = mapper.convertValue(json, SensorValues.class);
             newMeasurement.setData(newValues);
         } catch (IllegalArgumentException e){
+            logger.warn("Rejected invalid measurements: " + e.getMessage(), LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
             throw new BadRequestException("Invalid sensor values");
         }
 
         try {
-            return ResponseEntity.ok(measurementService.saveMeasurement(newMeasurement));
+            newMeasurement = measurementService.saveMeasurement(newMeasurement);
+            logger.info("New measurements received", LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+            return ResponseEntity.ok(newMeasurement);
         } catch (Exception e) {
+            logger.warn("Unknown error receiving measurements: " + e.getMessage(), LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
             throw new BadRequestException(e.getMessage());
         }
     }

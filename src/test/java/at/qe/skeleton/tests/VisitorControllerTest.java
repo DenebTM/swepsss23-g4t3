@@ -6,8 +6,6 @@ import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,16 +13,14 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -51,11 +47,21 @@ public class VisitorControllerTest {
         photoDataRepository.save(testPhoto1);
         photoDataRepository.save(testPhoto2);
         photoDataRepository.save(testPhoto3);
+        List<Integer> expectedPhotoIds =
+            photoDataRepository.findAllBySensorStation(ss).stream()
+                .map(PhotoData::getId)
+                .collect(Collectors.toList());
 
-        List<PhotoData> response = (List<PhotoData>) visitorController.getPhotosBySSAsId(ss.getSsID()).getBody();
-        List<Integer> ids = photoDataRepository.findAll().stream().map(PhotoData::getId).collect(Collectors.toList());
-        Assertions.assertEquals(3, response.size());
-        Assertions.assertEquals(ids, response.stream().map(PhotoData::getId).collect(Collectors.toList()));
+        var response = visitorController.getSSPhotoList(ss.getSsID());
+        var ssPhotoList = response.getBody();
+
+        assertNotNull(ssPhotoList);
+        assertEquals(3, ssPhotoList.size());
+        assertEquals(expectedPhotoIds,
+            ssPhotoList.stream()
+                .map(PhotoData::getId)
+                .collect(Collectors.toList())
+        );
     }
 
     @Test
@@ -71,18 +77,22 @@ public class VisitorControllerTest {
             e.printStackTrace();
         }
         MultipartFile result = new MockMultipartFile(name, originalFileName, contentType, content);
-        Assertions.assertThrows(NotFoundInDatabaseException.class, () -> visitorController.uploadPhoto(result, 99));
+        assertThrows(NotFoundInDatabaseException.class, () -> visitorController.uploadPhoto(result, 99));
     }
 
     @Test
     void testNoPhotosToReturn() {
         if (!photoDataRepository.findAll().isEmpty()) {
             List<PhotoData> list = photoDataRepository.findAll();
-            for (PhotoData p :
-                    list) {
+            for (PhotoData p : list) {
                 photoDataRepository.delete(p);
             }
         }
-        Assertions.assertTrue(((List<PhotoData>) visitorController.getPhotosBySSAsId(1).getBody()).isEmpty());
+
+        var response = visitorController.getSSPhotoList(1);
+        var ssPhotoList = response.getBody();
+
+        assertNotNull(ssPhotoList);
+        assertTrue(ssPhotoList.isEmpty());
     }
 }
