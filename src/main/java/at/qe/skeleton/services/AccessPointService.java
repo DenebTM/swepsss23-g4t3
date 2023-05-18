@@ -5,7 +5,7 @@ import at.qe.skeleton.repositories.AccessPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 
 @Service
@@ -37,7 +37,7 @@ public class AccessPointService {
      * @return the saved access point
      */
     public AccessPoint saveAP(AccessPoint ap) {
-        ap.setLastUpdate(LocalDateTime.now());
+        ap.setLastUpdate(Instant.now());
         return apRepository.save(ap);
     }
 
@@ -54,7 +54,7 @@ public class AccessPointService {
      * @param ap to set lastUpdate value for
      */
     public void setLastUpdate(AccessPoint ap) {
-        ap.setLastUpdate(LocalDateTime.now());
+        ap.setLastUpdate(Instant.now());
         apRepository.save(ap);
     }
 
