@@ -3,9 +3,10 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 import MuiImageListItem from '@mui/material/ImageListItem'
 
 import { getPhotoByIdUrl } from '~/api/endpoints/sensorStations/photos'
-import { useUserRole } from '~/hooks/user'
+import { useUsername, useUserRole } from '~/hooks/user'
 import { Photo } from '~/models/photo'
-import { AuthUserRole, UserRole } from '~/models/user'
+import { SensorStation } from '~/models/sensorStation'
+import { AuthUserRole } from '~/models/user'
 
 import { DeleteImageBar } from './DeleteImageBar'
 
@@ -16,6 +17,7 @@ interface ImageListItemProps {
   photo: Photo
   /** Update photos in the state of the parent components */
   setPhotos: Dispatch<SetStateAction<Photo[] | undefined>>
+  sensorStation: SensorStation | undefined
 }
 
 /**
@@ -23,16 +25,24 @@ interface ImageListItemProps {
  */
 export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
   const userRole = useUserRole()
+  const username = useUsername()
+
   const [showItemBar, setShowItemBar] = useState(false)
 
-  /** Show the overlay with a button to delete images if the user is a gardener or admin */
+  /**
+   * Show the overlay with a button to delete images if the user is an admin
+   * or a gardener for this greenhouse
+   */
   const handleShowItemBar = () => {
-    const canDeleteImages: UserRole[] = [
-      AuthUserRole.ADMIN,
-      AuthUserRole.GARDENER,
-    ]
-    if (canDeleteImages.includes(userRole)) {
+    if (
+      userRole === AuthUserRole.ADMIN ||
+      (userRole === AuthUserRole.GARDENER &&
+        props.sensorStation &&
+        props.sensorStation.gardeners.includes(username))
+    ) {
       setShowItemBar(true)
+    } else {
+      setShowItemBar(false)
     }
   }
 
