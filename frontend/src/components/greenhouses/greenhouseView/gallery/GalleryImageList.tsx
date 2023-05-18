@@ -1,12 +1,13 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import ImageList from '@mui/material/ImageList'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
+import { useSensorStations } from '~/hooks/appContext'
 import { Photo } from '~/models/photo'
-import { SensorStationUuid } from '~/models/sensorStation'
+import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 import { ImageListItem } from './ImageListItem/ImageListItem'
@@ -23,6 +24,17 @@ interface GalleryImageListProps {
  * The number of columns is set dynamically according to the current screen width.
  */
 export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
+  const sensorStations = useSensorStations()
+
+  const [sensorStation, setSensorStation] = useState<SensorStation>()
+
+  useEffect(() => {
+    const foundSensorStation = sensorStations
+      ? sensorStations.find((s) => s.ssID === props.ssID)
+      : undefined
+    setSensorStation(foundSensorStation)
+  }, [sensorStations])
+
   const breakSm = useMediaQuery(theme.breakpoints.down('sm'))
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
@@ -47,6 +59,7 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
               alt={`Photograph of a plant for greenhouse ${props.ssID}`}
               photo={im}
               setPhotos={props.setPhotos}
+              sensorStation={sensorStation}
             />
           ))}
         </ImageList>
