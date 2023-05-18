@@ -103,15 +103,9 @@ async def main():
                 print('This should only be Printed at the start and when AP is offline')
                 ap_initialized = await rest_operations.initialize_accesspoint(session)
                 if ap_initialized:
-                    ap_status = await rest_operations.get_ap_status(session)
-                    if ap_status in ['ONLINE', 'SEARCHING']:
-                        polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
-                        sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
-                        await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-                    else:
-                        print('Access point is offline')
-                        connection_request = asyncio.Future()
-                        await asyncio.sleep(30)
+                    polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
+                    sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
+                    await asyncio.gather(polling_loop_task, sensor_station_manager_task)
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
