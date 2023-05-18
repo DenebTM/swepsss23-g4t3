@@ -1,7 +1,7 @@
 import logging
 import datetime
 
-#Configure logger
+# Configure logger
 logging.basicConfig(filename='audit.log', format='%(asctime)s %(levelname)s: %(message)s')
 
 log_data = []
@@ -10,17 +10,15 @@ async def log_to_file_and_list(level, message):
     timestamp = datetime.datetime.utcnow().isoformat()
 
     log_entry = {
-        'timestamp': timestamp+'Z', #For backend reasons
+        'timestamp': timestamp+'Z',  # For backend reasons
         'level': level,
         'message': message 
     }
 
-    logger = getattr(logging, level)
-    logger(message)
+    logging.log(getattr(logging, level), message)
 
     log_data.append(log_entry)
 
 async def clear_log_data():
     global log_data
     log_data.clear()
-   
