@@ -52,8 +52,9 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
     if (donutContainerRef.current) {
       const containerWidth = donutContainerRef.current.clientWidth
       const donutsPerRow = breakSm ? 1 : breakMd ? 2 : 4
+      const calculatedHeight = Math.floor(containerWidth / donutsPerRow)
 
-      setDonutHeight(Math.floor(containerWidth / donutsPerRow))
+      setDonutHeight(Math.min(calculatedHeight, 250))
     }
   }, [donutContainerRef, windowSize])
 
