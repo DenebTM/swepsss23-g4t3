@@ -30,7 +30,7 @@ public class AccessPointMonitorJob {
     @Scheduled(initialDelay = CHECK_INTERVAL_MS, fixedDelay = CHECK_INTERVAL_MS)
     public void checkAccessPoints() {
         for (AccessPoint ap : apRepository.findAll()) {
-            if (ap.getLastUpdate().plusSeconds(AP_TIMEOUT_MS).isBefore(Instant.now())) {
+            if (ap.getLastUpdate().plusMillis(AP_TIMEOUT_MS).isBefore(Instant.now())) {
                 for (SensorStation ss : ap.getSensorStations()) {
                     ss.setStatus(SensorStationStatus.OFFLINE);
                     ssRepository.save(ss);
