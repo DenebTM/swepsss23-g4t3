@@ -4,13 +4,16 @@ import at.qe.skeleton.configs.WebSecurityConfig;
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.ForbiddenException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.models.Userx;
+import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -21,6 +24,9 @@ public class UserxRestController implements BaseRestController {
 
     @Autowired
     private UserxService userService;
+
+    @Autowired
+    private LoggingService logger;
 
     private static final String PW = "password";
     private static final String FN = "firstName";
@@ -65,6 +71,8 @@ public class UserxRestController implements BaseRestController {
     @PostMapping(value = USER_PATH)
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Userx> createUser(@RequestBody Map<String, Object> json) {
+        String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
         // return a 400 error if the user gets created with empty username
         String username = (String)json.get("username");
         if (username == null || username.equals("")) {
@@ -93,6 +101,7 @@ public class UserxRestController implements BaseRestController {
         }
         newUser = userService.saveUser(newUser);
 
+        logger.info("New user added by " + authenticatedUser, LogEntityType.USER, newUser.getUsername(), getClass());
         return ResponseEntity.ok(userService.saveUser(newUser));
     }
 
@@ -104,6 +113,8 @@ public class UserxRestController implements BaseRestController {
     @PutMapping(value = USERNAME_PATH)
     @PreAuthorize("hasAuthority('ADMIN') or principal eq #username")
     public ResponseEntity<Userx> updateUser(@PathVariable(value = "username") String username, @RequestBody Map<String, Object> json) {
+        String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Userx user = userService.loadUserByUsername(username);
         // return a 404 error if the user to be updated does not exist
         if (user == null) {
@@ -136,6 +147,9 @@ public class UserxRestController implements BaseRestController {
                 throw new BadRequestException("User role does not exist.");
             }
         }
+
+        logger.info("User updated by " + authenticatedUser, LogEntityType.USER, user.getUsername(), getClass());
+
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
@@ -147,6 +161,8 @@ public class UserxRestController implements BaseRestController {
     @DeleteMapping(value = USERNAME_PATH)
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Userx> deleteUserByUsername(@PathVariable(value = "username") String username) {
+        String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Userx user = userService.loadUserByUsername(username);
         // return a 404 error if the user to be deleted does not exist
         if (user == null) {
@@ -156,7 +172,10 @@ public class UserxRestController implements BaseRestController {
         if (userService.getAuthenticatedUser().getUsername().equals(username)) {
             throw new ForbiddenException("Self-deletion is not permitted.");
         }
+
         userService.deleteUser(user);
+        logger.info("User deleted by " + authenticatedUser, LogEntityType.USER, user.getUsername(), getClass());
+
         return ResponseEntity.ok(user);
     }
 
