@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { theme } from '~/styles/theme'
 
 export type DateValue = Dayjs | null
@@ -32,11 +32,38 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = (props) => {
           label="From"
           value={props.from}
           onChange={(newValue) => props.setFrom(newValue)}
+          disableFuture
+          views={['year', 'month', 'day', 'hours', 'minutes']}
+          slotProps={{
+            textField: {
+              helperText: props.from?.isAfter(dayjs())
+                ? 'Select a date in the past'
+                : '',
+            },
+          }}
         />
         <DateTimePicker
           label="To"
           value={props.to}
           onChange={(newValue) => props.setTo(newValue)}
+          disableFuture
+          minDate={props.from /** Must be after the from value */}
+          minTime={
+            /** Check that `props.to` is later in time of day than `props.from` only if `props.from` and `props.to` are on same day */
+            props.from?.format('YYYYMMDD') === props.to?.format('YYYYMMDD')
+              ? props.from
+              : undefined
+          }
+          views={['year', 'month', 'day', 'hours', 'minutes']}
+          slotProps={{
+            textField: {
+              helperText: props.from?.isAfter(props.to)
+                ? 'Select a date after "From"'
+                : props.to?.isAfter(dayjs())
+                ? 'Select a date in the past'
+                : '',
+            },
+          }}
         />
       </Stack>
     </LocalizationProvider>
