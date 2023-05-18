@@ -19,8 +19,6 @@ public class LoggingService {
 
     @Autowired
     LoggingEventRepository loggingEventRepository;
-    
-    private Log logger = LogFactory.getLog(getClass());
 
     /**
      * Returns all available logs from the repository, ordered by timestamp (latest events are shown first)
@@ -92,33 +90,30 @@ public class LoggingService {
         return loggingEventRepository.save(log);
     }
 
-    public static boolean isValidLevel(String test) {
+    public void debug(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
 
-        for (LogLevel l : LogLevel.values()) {
-            if (l.name().equals(test)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void debug(String message, LogEntityType entityType, Object entityId) {
         MDC.put(entityType.name(), entityId.toString());
         logger.debug(message);
     }
 
-    public void info(String message, LogEntityType entityType, Object entityId) {
+    public void info(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
+
         MDC.put(entityType.name(), entityId.toString());
         logger.info(message);
     }
 
-    public void warn(String message, LogEntityType entityType, Object entityId) {
+    public void warn(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
+
         MDC.put(entityType.name(), entityId.toString());
         logger.warn(message);
     }
 
-    public void error(String message, LogEntityType entityType, Object entityId) {
+    public void error(String message, LogEntityType entityType, Object entityId, Class<?> loggingClass) {
+        Log logger = LogFactory.getLog(loggingClass);
+
         MDC.put(entityType.name(), entityId.toString());
         logger.error(message);
 
