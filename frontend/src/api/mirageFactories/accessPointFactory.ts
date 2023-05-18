@@ -13,6 +13,11 @@ export const accessPointFactory = Factory.extend<AccessPoint>({
   serverAddress() {
     return faker.internet.ipv4()
   },
+  clientAddress() {
+    return faker.datatype.number({ min: 0, max: 1 }) === 0
+      ? faker.internet.ipv4()
+      : faker.internet.ipv6()
+  },
   lastUpdate() {
     return faker.date
       .between('2023-03-29T00:00:00.000Z', '2023-03-30T00:00:00.000Z')
