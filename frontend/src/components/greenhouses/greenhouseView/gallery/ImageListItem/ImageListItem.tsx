@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import MuiImageListItem from '@mui/material/ImageListItem'
 
+import { getPhotoByIdUrl } from '~/api/endpoints/sensorStations/photos'
 import { useUserRole } from '~/hooks/user'
 import { Photo } from '~/models/photo'
 import { AuthUserRole, UserRole } from '~/models/user'
@@ -13,7 +14,7 @@ interface ImageListItemProps {
   alt: string
   /** URL to the images */
   photo: Photo
-  /** Update photos in the state of the parent compoentns */
+  /** Update photos in the state of the parent components */
   setPhotos: Dispatch<SetStateAction<Photo[] | undefined>>
 }
 
@@ -41,8 +42,7 @@ export const ImageListItem: React.FC<ImageListItemProps> = (props) => {
       onMouseOut={() => setShowItemBar(false)}
     >
       <img
-        src={`${props.photo.url}?w=248&fit=crop&auto=format`}
-        srcSet={`${props.photo.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+        src={getPhotoByIdUrl(props.photo.id)}
         alt={props.alt}
         loading="lazy"
       />

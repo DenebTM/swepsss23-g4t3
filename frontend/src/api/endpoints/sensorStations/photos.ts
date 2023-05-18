@@ -20,6 +20,12 @@ export const getSensorStationPhotos = async (
     false
   )
 
+/*
+ * Photo to get a single photo by id
+ */
+export const getPhotoByIdUrl = (photoId: PhotoId): string =>
+  `${API_DEV_URL}${API_URI.photos}/${photoId}`
+
 /** POST url to upload photos for a given sensor station */
 export const uploadPhotosUrl = (sensorStationId: SensorStationUuid) =>
   `${API_DEV_URL}${API_URI.sensorStations}/${sensorStationId}${API_URI.photos}`
@@ -32,6 +38,17 @@ const mockedSsPhotosRoute = `${mockedSensorStationRoute}${API_URI.photos}`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
+  /** Mock response from {@link getPhotoByIdUrl} */
+  server.get(`${API_URI.photos}/:photoId`, (schema: AppSchema, request) => {
+    const fakePhotoUrl = faker.image.nature(
+      faker.datatype.number({ min: 300, max: 900 }),
+      faker.datatype.number({ min: 200, max: 600 }),
+      true
+    )
+
+    return success(fakePhotoUrl)
+  })
+
   /** Mock {@link getSensorStationPhotos} */
   server.get(mockedSsPhotosRoute, (schema: AppSchema, request) => {
     const ssID: SensorStationUuid = Number(request.params.ssID)
