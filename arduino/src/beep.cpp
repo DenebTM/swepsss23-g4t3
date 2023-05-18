@@ -29,6 +29,7 @@ namespace beep {
   }
 
   void stop() {
+    noTone(BEEP_PIN);
     if (bg_thread) {
       bg_thread->terminate();
       delete bg_thread;
