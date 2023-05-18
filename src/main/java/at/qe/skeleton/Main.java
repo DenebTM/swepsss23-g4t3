@@ -29,7 +29,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 public class Main extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-            SpringApplication.run(Main.class, args);
+        SpringApplication.run(Main.class, args);
     }
 
 }

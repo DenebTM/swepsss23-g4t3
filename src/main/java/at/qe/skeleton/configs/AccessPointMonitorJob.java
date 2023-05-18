@@ -1,6 +1,6 @@
 package at.qe.skeleton.configs;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class AccessPointMonitorJob {
     @Scheduled(initialDelay = CHECK_INTERVAL, fixedDelay = CHECK_INTERVAL)
     public void checkAccessPoints() {
         for (AccessPoint ap : apRepository.findAll()) {
-            if (ap.getLastUpdate().plusSeconds(AP_TIMEOUT).isBefore(LocalDateTime.now())) {
+            if (ap.getLastUpdate().plusSeconds(AP_TIMEOUT).isBefore(Instant.now())) {
                 for (SensorStation ss : ap.getSensorStations()) {
                     ss.setStatus(SensorStationStatus.OFFLINE);
                     ssRepository.save(ss);
