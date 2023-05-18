@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -45,10 +46,13 @@ public class VisitorController {
         PhotoData dbPhoto = new PhotoData();
         dbPhoto.setUploaded(LocalDateTime.now());
         dbPhoto.setName(multipartImage.getName());
+
+        //limit file size to 8MB
+        if(multipartImage.getSize()/1000000 > 8) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
+        }
         try {
             dbPhoto.setContent(multipartImage.getBytes());
-        } catch (FileSizeLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
         } catch (IOException e) {
             throw new NotFoundInDatabaseException("Could not get bytes for photo", dbPhoto.getId());
         }
