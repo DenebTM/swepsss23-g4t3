@@ -53,6 +53,7 @@ public class AccessPointRestController implements BaseRestController {
         if (ap == null) {
             throw new NotFoundInDatabaseException(AP, name);
         }
+        apService.setLastUpdate(ap);
         return ResponseEntity.ok(ap);
     }
 
@@ -103,6 +104,7 @@ public class AccessPointRestController implements BaseRestController {
         }
 
         ap = apService.saveAP(ap);
+        apService.setLastUpdate(ap);
 
         String authToken = tokenManager.generateJwtToken("admin");
         return ResponseEntity.ok(new PostAccessPointResponse(ap, authToken));
@@ -136,12 +138,11 @@ public class AccessPointRestController implements BaseRestController {
         return ResponseEntity.ok(apService.saveAP(ap));
     }
 
-
-        /**
-         * DELETE route to delete a access point by its id, only allowed by ADMIN
-         * @param name
-         * @return the deleted ap
-         */
+    /**
+     * DELETE route to delete a access point by its id, only allowed by ADMIN
+     * @param name
+     * @return the deleted ap
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = AP_NAME_PATH)
     public ResponseEntity<AccessPoint> deleteAPById(@PathVariable(value = "name") String name) {

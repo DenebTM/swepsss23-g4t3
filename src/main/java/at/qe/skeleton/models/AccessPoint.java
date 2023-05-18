@@ -15,7 +15,7 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ public class AccessPoint {
     private String name;
 
     @Column(name = "LAST_UPDATE")
-    private LocalDateTime lastUpdate;
+    private Instant lastUpdate;
 
     @Column(name = "SERVER_ADDRESS")
     @NonNull
