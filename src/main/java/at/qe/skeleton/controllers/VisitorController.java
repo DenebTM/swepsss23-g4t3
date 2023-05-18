@@ -7,6 +7,7 @@ import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.jboss.weld.context.http.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,13 +53,15 @@ public class VisitorController {
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
         }
         try {
-            dbPhoto.setContent(multipartImage.getBytes());
+            if (multipartImage.getBytes().length == 0) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bytes have length 0");
+            }
         } catch (IOException e) {
-            throw new NotFoundInDatabaseException("Could not get bytes for photo", dbPhoto.getId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not get bytes for photo");
         }
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
-            throw new NotFoundInDatabaseException("Sensor Station", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sensor station not found");
         }
         dbPhoto.setSensorStation(ss);
         photoDataRepository.save(dbPhoto);
