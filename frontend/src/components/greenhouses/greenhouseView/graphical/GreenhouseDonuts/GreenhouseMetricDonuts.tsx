@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import ThermostatIcon from '@mui/icons-material/Thermostat'
@@ -10,6 +10,7 @@ import Box from '@mui/system/Box'
 
 import { Spinner } from '@component-lib/Spinner'
 import { GreenhouseMetricRange, NON_AIR_METRICS } from '~/common'
+import { useWindowSize } from '~/hooks/windowSize'
 import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
@@ -40,11 +41,26 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   props
 ) => {
   const { sensorStation, measurement } = { ...props }
+
+  const donutContainerRef = useRef<HTMLDivElement>()
+  const windowSize = useWindowSize()
+  const [donutHeight, setDonutHeight] = useState<number>(175) // Donut height and width in px
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
   const breakSm = useMediaQuery(theme.breakpoints.down('sm'))
 
-  /** Donut height in px. qqjf TODO make this responsive  */
-  const donutHeight = breakSm ? 250 : breakMd ? 175 : 200
+  useEffect(() => {
+    if (donutContainerRef.current) {
+      const containerWidth = donutContainerRef.current.clientWidth
+      const donutsPerRow = breakSm ? 1 : breakMd ? 2 : 4
+
+      console.log(
+        containerWidth,
+        Math.floor(containerWidth / donutsPerRow),
+        donutsPerRow
+      )
+      setDonutHeight(Math.floor(containerWidth / donutsPerRow))
+    }
+  }, [donutContainerRef, windowSize])
 
   if (sensorStation === null) {
     return <Spinner />
@@ -63,12 +79,14 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
 
     return (
       <Box
+        component="div"
         sx={{
           width: '100%',
         }}
+        ref={donutContainerRef}
       >
         {measurement !== null ? (
-          <Grid container spacing={1} padding={2}>
+          <Grid container spacing={1}>
             <Grid {...gridBreakpoints}>
               <GreenhouseDonut
                 {...donutProps(NON_AIR_METRICS['temperature'])}
