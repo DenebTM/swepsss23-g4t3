@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import Card from '@mui/material/Card'
 import Link, { LinkProps } from '@mui/material/Link'
 import List from '@mui/material/List'
+import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/system/Stack'
 
@@ -74,6 +75,12 @@ const GettingStartedLi = (props: { children: React.ReactNode }) => (
   </li>
 )
 
+/** Props for icons in the GettingStarted page */
+const iconProps: Partial<SvgIconTypeMap['props']> = {
+  fontSize: 'small',
+  sx: { verticalAlign: 'bottom' },
+}
+
 /** Props for links in the GettingStarted page */
 const linkProps: Partial<LinkProps> = {
   underline: 'always',
@@ -109,7 +116,7 @@ export const GettingStartedPageContents: React.FC = () => {
               {PAGE_URL.manageAccessPoints.pageTitle}
             </Link>{' '}
             page with a yellow highlight and status "unconfirmed". Press the{' '}
-            <CheckIcon fontSize="small" /> button to confirm and allow it to
+            <CheckIcon {...iconProps} /> button to confirm and allow it to
             communicate with the web server.
           </GettingStartedLi>
         </GettingStartedOl>
@@ -136,7 +143,7 @@ export const GettingStartedPageContents: React.FC = () => {
             </Link>
           </GettingStartedLi>
           <GettingStartedLi>
-            Click the <GreenhouseIcon fontSize="small" /> button on the right.
+            Click the <GreenhouseIcon {...iconProps} /> button on the right.
           </GettingStartedLi>
           <GettingStartedLi>
             Wait roughly 10 seconds, then open the Sensor Station dropdown menu.
