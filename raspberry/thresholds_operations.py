@@ -11,14 +11,14 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
         averages_dict = await get_sensor_data_averages(sensorstation_id)
 
         if thresholds_dict is None or averages_dict is None:
-            raise ValueError("Received None value for thresholds or averages.")
+            raise ValueError('Received None value for thresholds or averages.')
 
         for sensor, average_value in averages_dict.items():
             max_threshold = thresholds_dict.get(sensor+'_max')
             min_threshold = thresholds_dict.get(sensor+'_min')
 
             if max_threshold is None or min_threshold is None:
-                raise ValueError(f"Thresholds not found for sensor {sensor}.")
+                raise ValueError(f'Thresholds not found for sensor {sensor}.')
 
             if not min_threshold <= average_value <= max_threshold:
                 await send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session)
