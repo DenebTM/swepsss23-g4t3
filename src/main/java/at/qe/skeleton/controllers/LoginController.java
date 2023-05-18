@@ -56,8 +56,8 @@ public class LoginController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             logger.info("User authenticated successfully", LogEntityType.USER, request.getUsername(), getClass());
-        } catch (Throwable e) {
-            logger.info("User failed to authenticate", LogEntityType.USER, request.getUsername(), getClass());
+        } catch (Exception e) {
+            logger.info("Failed to authenticate user", LogEntityType.USER, request.getUsername(), getClass());
 
             throw e;
         }
