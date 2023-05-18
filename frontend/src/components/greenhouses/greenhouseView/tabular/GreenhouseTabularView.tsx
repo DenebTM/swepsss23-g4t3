@@ -39,14 +39,16 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
    * Columns for the greenhouse measurement table.
    */
   const columns: GridColDef<Measurement, any, Measurement>[] = [
-    ...GREENHOUSE_METRICS.map((metricRange: GreenhouseMetricRange) => ({
-      field: metricRange.valueKey,
-      headerName: greenhouseMetricWithUnit(metricRange),
-      description: metricRange.description,
-      valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
-        roundMetric(params.row.data[metricRange.valueKey]),
-      ...metricColumnParams,
-    })),
+    ...Object.values(GREENHOUSE_METRICS).map(
+      (metricRange: GreenhouseMetricRange) => ({
+        field: metricRange.valueKey,
+        headerName: greenhouseMetricWithUnit(metricRange),
+        description: metricRange.description,
+        valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
+          roundMetric(params.row.data[metricRange.valueKey]),
+        ...metricColumnParams,
+      })
+    ),
     {
       field: 'timestamp',
       headerName: 'Timestamp',

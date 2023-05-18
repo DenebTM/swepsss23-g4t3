@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
 import { _delete, _get, _put } from '~/api/intercepts'
 import { UPLOADED_PHOTO_KEY } from '~/common'
+import { SensorValues } from '~/models/measurement'
 import { Photo, PhotoId } from '~/models/photo'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
@@ -43,7 +44,14 @@ export const deleteSensorStation = async (
  */
 export const updateSensorStation = async (
   sensorStationUuid: SensorStationUuid,
-  newParams: Omit<Partial<SensorStation>, 'ssID'>
+  newParams: Omit<
+    Partial<SensorStation>,
+    'ssID' | 'upperBound' | 'lowerBound'
+  > &
+    Partial<{
+      lowerBound: Partial<SensorValues>
+      upperBound: Partial<SensorValues>
+    }>
 ): Promise<SensorStation> => {
   return _put(`${API_URI.sensorStations}/${sensorStationUuid}`, newParams)
 }
