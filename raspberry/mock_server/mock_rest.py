@@ -1,6 +1,5 @@
 from flask import Flask,jsonify, request
 import time
-import json
 
 app = Flask(__name__)
 status_called = False
@@ -18,7 +17,7 @@ def station_idx(id):
 def status():
     global status_called
     status_called = True
-    response = {'name': 'AP1', 'serverAddress': 'localhost'}
+    response = {'name': 'AP1', 'serverAddress': 'localhost', 'token': 'idfc'}
     return jsonify(response), 200
 
 # Route that polls for connection update
@@ -121,7 +120,7 @@ def send_found_ss():
     
 
 # Route to send sensor data
-@app.route('/api/sensor-station/<id>/measurements', methods=['POST'])
+@app.route('/api/sensor-stations/<id>/measurements', methods=['POST'])
 def send_sensor_data(id):
     if status_called:
         return jsonify('OK'), 200

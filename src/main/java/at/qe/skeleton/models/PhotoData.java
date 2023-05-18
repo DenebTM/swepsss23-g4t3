@@ -12,6 +12,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDateTime;
+
 /**
  * Taken from https://medium.com/shoutloudz/spring-boot-upload-and-download-images-using-jpa-b1c9ef174dc0
  */
@@ -32,8 +34,12 @@ public class PhotoData {
     private Integer id;
 
     // TODO: (in service or controller) allow saving a photo with a randomized name
+    @JsonIgnore
     @Column(name = "NAME", unique = true)
     private String name;
+
+    @Column(name = "UPLOADED")
+    private LocalDateTime uploaded;
 
     @JsonIgnore
     @ManyToOne
@@ -44,6 +50,14 @@ public class PhotoData {
     @JdbcTypeCode(SqlTypes.LONG32VARBINARY)
     @Column(name = "CONTENT", length = 1000)
     private byte[] content;
+
+    public LocalDateTime getUploaded() {
+        return uploaded;
+    }
+
+    public void setUploaded(LocalDateTime uploaded) {
+        this.uploaded = uploaded;
+    }
 
     public String getName() {
         return name;
@@ -81,5 +95,14 @@ public class PhotoData {
         this.name = name;
         this.sensorStation = sensorStation;
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "PhotoData{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sensorStation=" + sensorStation +
+                '}';
     }
 }
