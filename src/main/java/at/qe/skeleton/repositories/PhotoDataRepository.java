@@ -15,4 +15,7 @@ public interface PhotoDataRepository extends AbstractRepository<PhotoData, Integ
     List<PhotoData> findAllBySensorStation(SensorStation sensorStation);
 
     Optional<PhotoData> findByIdAndSensorStation(Integer id, SensorStation sensorStation);
+
+    PhotoData findFirstBySensorStation(SensorStation ss);
+
 }
