@@ -8,12 +8,8 @@ import Box from '@mui/system/Box'
 
 import GalleryIcon from '@component-lib/icons/GalleryIcon'
 import Uploady from '@rpldy/uploady'
-import {
-  API_DEV_URL,
-  PAGE_URL,
-  SensorStationView,
-  UPLOADED_PHOTO_KEY,
-} from '~/common'
+import { uploadPhotosUrl } from '~/api/endpoints/sensorStations/photos'
+import { PAGE_URL, SensorStationView, UPLOADED_PHOTO_KEY } from '~/common'
 import { SensorStation } from '~/models/sensorStation'
 
 import { ClickableUploadArea } from './ClickableUploadArea'
@@ -88,7 +84,7 @@ export const UploadPageBody: React.FC<UploadPageBodyProps> = (props) => {
         multiple={false}
         accept="image/*"
         destination={{
-          url: `${API_DEV_URL}/api/sensor-stations/${props.sensorStation.ssID}/photos`, // TODO qqjf remove /api
+          url: uploadPhotosUrl(props.sensorStation.ssID),
         }}
         method="POST"
         sendWithFormData

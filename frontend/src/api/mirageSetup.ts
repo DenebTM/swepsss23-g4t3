@@ -1,7 +1,7 @@
 import { createServer, Server } from 'miragejs'
 import { API_DEV_URL } from '~/common'
 
-import { createSeedData, endpoints, loginEndpoints } from './endpoints'
+import { createSeedData, endpoints, noPrefixEndpoints } from './endpoints'
 import { factories } from './mirageFactories'
 import { models } from './mirageModels'
 import { AppRegistry } from './mirageTypes'
@@ -22,6 +22,7 @@ export const mirageSetup = (
   if (!import.meta.env.DEV && environment !== MOCK_API) {
     return
   }
+  return
 
   const server = createServer({
     models,
@@ -38,7 +39,7 @@ export const mirageSetup = (
 
   // Register other routes
   server.namespace = ''
-  Object.values(loginEndpoints).forEach((route) => route(server))
+  Object.values(noPrefixEndpoints).forEach((route) => route(server))
 
   // Allow all other requests to pass through mirage
   server.passthrough()

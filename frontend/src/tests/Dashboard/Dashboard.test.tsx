@@ -11,13 +11,14 @@ test('render Dashboard without crashing', async () => {
   render(<Dashboard />)
 
   // Expect a column for every metric to be visible once the measurements are fetched from the API
-  GREENHOUSE_METRICS.forEach((metricRange: GreenhouseMetricRange) =>
-    waitFor(
-      () =>
-        expect(
-          screen.getByText(greenhouseMetricWithUnit(metricRange))
-        ).toBeInTheDocument(),
-      { timeout: 10000 }
-    )
+  Object.values(GREENHOUSE_METRICS).forEach(
+    (metricRange: GreenhouseMetricRange) =>
+      waitFor(
+        () =>
+          expect(
+            screen.getByText(greenhouseMetricWithUnit(metricRange))
+          ).toBeInTheDocument(),
+        { timeout: 10000 }
+      )
   )
 })
