@@ -143,7 +143,7 @@ public class SensorStationRestController implements BaseRestController {
                 ss.setStatus(newStatus);
 
                 if (!newStatus.equals(oldStatus)) {
-                    String message = "Access point status changed to " + newStatus.name();
+                    String message = "Sensor station status changed to " + newStatus.name();
                     if (Arrays.asList(
                         SensorStationStatus.OFFLINE,
                         SensorStationStatus.PAIRING_FAILED,
