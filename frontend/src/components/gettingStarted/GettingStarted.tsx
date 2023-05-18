@@ -86,8 +86,8 @@ export const GettingStarted: React.FC = () => {
                 {PAGE_URL.manageAccessPoints.pageTitle}
               </Link>{' '}
               page with a yellow highlight and status "unconfirmed". Press the{' '}
-              <CheckIcon /> button to confirm and allow it to communicate with
-              the web server.
+              <CheckIcon fontSize="small" /> button to confirm and allow it to
+              communicate with the web server.
             </li>
           </ol>
         </GettingStartedSection>
@@ -114,7 +114,7 @@ export const GettingStarted: React.FC = () => {
               </Link>
             </li>
             <li>
-              Click the <GreenhouseIcon /> button on the right.
+              Click the <GreenhouseIcon fontSize="small" /> button on the right.
             </li>
             <li>
               Wait roughly 10 seconds, then open the Sensor Station dropdown
@@ -122,9 +122,9 @@ export const GettingStarted: React.FC = () => {
               pair.
             </li>
             <li>
-              Press Confirm. After a few more seconds, the LED on the Greenhouse
-              should turn green, and you will be able to view measurements on
-              the corresponding page under "Dashboard".
+              Press "Confirm". After a few more seconds, the LED on the
+              Greenhouse should turn green, and you will be able to view
+              measurements on the corresponding page under "Dashboard".
             </li>
           </ol>
           <p>
