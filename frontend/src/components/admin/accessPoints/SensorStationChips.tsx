@@ -4,13 +4,29 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { GridRenderCellParams } from '@mui/x-data-grid'
 
-import { RemovableChip } from '@component-lib/RemovableChip'
+import { ChipVariant, RemovableChip } from '@component-lib/RemovableChip'
 import { Tooltip } from '@component-lib/Tooltip'
 import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { emDash } from '~/common'
 import { useLoadSensorStations, useSensorStations } from '~/hooks/appContext'
 import { AccessPoint } from '~/models/accessPoint'
 import { SensorStationUuid, StationStatus } from '~/models/sensorStation'
+
+const statusToVariant = (status: string): ChipVariant => {
+  switch (status.toUpperCase()) {
+    case StationStatus.OFFLINE:
+    case StationStatus.PAIRING_FAILED:
+      return ChipVariant.ERROR
+    case StationStatus.PAIRING:
+      return ChipVariant.INFO
+    case StationStatus.WARNING:
+      return ChipVariant.WARNING
+    case StationStatus.AVAILABLE.toLowerCase():
+    case StationStatus.OK.toLowerCase():
+    default:
+      return ChipVariant.OK
+  }
+}
 
 interface SensorStationChipsProps
   extends GridRenderCellParams<AccessPoint, any, AccessPoint> {
@@ -78,7 +94,7 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
               afterDelete={() => afterDelete(ssID)}
               label={
                 <Stack spacing={0}>
-                  <Typography variant="labelLarge" color="primary">
+                  <Typography variant="labelLarge" color="inherit">
                     Greenhouse {String(ssID)}
                   </Typography>
                   <Typography variant="labelSmall" color="onSurfaceVariant">
@@ -86,6 +102,7 @@ export const SensorStationChips: React.FC<SensorStationChipsProps> = (
                   </Typography>
                 </Stack>
               }
+              variant={statusToVariant(getSsStatus(ssID))}
             />
           ))
       ) : (
