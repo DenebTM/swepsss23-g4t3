@@ -43,7 +43,7 @@ const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
 }
 
 /**
- * Access point managment page for admins
+ * Access point management page for admins
  */
 export const AccessPointsTable: React.FC = () => {
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
