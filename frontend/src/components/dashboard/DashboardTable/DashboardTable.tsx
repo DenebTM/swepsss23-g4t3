@@ -1,8 +1,13 @@
 import React from 'react'
 
-import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
+import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
 import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import {
@@ -46,12 +51,34 @@ export const DashboardTable: React.FC = (props) => {
         field: metricRange.valueKey,
         headerName: greenhouseMetricWithUnit(metricRange),
         description: metricRange.description,
-        valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
-          params.row.currentMeasurement
-            ? roundMetric(
-                params.row.currentMeasurement.data[metricRange.valueKey]
-              )
-            : emDash,
+        renderCell: (
+          params: GridRenderCellParams<SensorStation, any, SensorStation>
+        ) => (
+          <StatusCell
+            justifyContent="center"
+            status={
+              params.row.currentMeasurement
+                ? roundMetric(
+                    params.row.currentMeasurement.data[metricRange.valueKey]
+                  )
+                : emDash
+            }
+            variant={
+              // Check whether values are out of bounds
+              (params.row.upperBound &&
+                params.row.currentMeasurement &&
+                params.row.currentMeasurement.data[metricRange.valueKey] >
+                  params.row.upperBound[metricRange.valueKey]) ||
+              (params.row.lowerBound &&
+                params.row.currentMeasurement &&
+                params.row.currentMeasurement.data[metricRange.valueKey] <
+                  params.row.lowerBound[metricRange.valueKey])
+                ? StatusVariant.WARNING
+                : StatusVariant.OK
+            }
+          />
+        ),
+
         ...metricColumnParams,
       })
     ),
