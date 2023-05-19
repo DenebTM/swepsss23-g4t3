@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include <beep.h>
 #include <ble/pairing.h>
 
 namespace sensors {
@@ -33,9 +34,12 @@ namespace sensors {
         }
       }
 
-      // return to the "all ok" status code if there are no active warnings
-      if (!any_warnings) {
+      if (any_warnings) {
+        beep::start();
+      } else {
+        // return to the "all ok" status code if there are no active warnings
         led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
+        beep::stop();
       }
     }
   }
