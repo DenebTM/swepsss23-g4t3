@@ -2,12 +2,16 @@ package at.qe.skeleton.models;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @EqualsAndHashCode
 @Table(name = "SENSOR_VALUES")
+@Getter
+@Setter
 public class SensorValues {
 
     @Id
@@ -41,27 +45,4 @@ public class SensorValues {
         return id;
     }
 
-    public Double getHumidity() {
-        return humidity;
-    }
-
-    public Double getAirPressure() {
-        return airPressure;
-    }
-
-    public Double getTemperature() {
-        return temperature;
-    }
-
-    public Double getAirQuality() {
-        return airQuality;
-    }
-
-    public Double getSoilMoisture() {
-        return soilMoisture;
-    }
-
-    public Double getLightIntensity() {
-        return lightIntensity;
-    }
 }
