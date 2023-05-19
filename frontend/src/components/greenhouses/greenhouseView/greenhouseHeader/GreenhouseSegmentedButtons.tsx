@@ -73,24 +73,22 @@ export const GreenhouseSegmentedButtons: React.FC<
   }
 
   return (
-    <div>
-      <StyledButtonGroup>
-        {views.map((btn, index: number) => (
-          <SegmentedButton
-            key={btn.key}
-            onClick={() => handleNavigate(btn.key)}
-            icon={btn.icon}
-            selected={props.view === btn.key}
-            aria-label={'Navigate to greenhouse ' + btn.key.toLowerCase()}
-            loggedInOnly={btn.loggedInOnly}
-            sx={{
-              borderRadius: getBtnBorderRadius(index, views.length),
-            }}
-          >
-            {btn.name}
-          </SegmentedButton>
-        ))}
-      </StyledButtonGroup>
-    </div>
+    <StyledButtonGroup>
+      {views.map((btn, index: number) => (
+        <SegmentedButton
+          key={btn.key}
+          onClick={() => handleNavigate(btn.key)}
+          icon={btn.icon}
+          selected={props.view === btn.key}
+          aria-label={'Navigate to greenhouse ' + btn.key.toLowerCase()}
+          loggedInOnly={btn.loggedInOnly}
+          sx={{
+            borderRadius: getBtnBorderRadius(index, views.length),
+          }}
+        >
+          {btn.name}
+        </SegmentedButton>
+      ))}
+    </StyledButtonGroup>
   )
 }

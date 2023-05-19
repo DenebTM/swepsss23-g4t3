@@ -43,7 +43,7 @@ export const RecentActivityList: React.FC<RecentActivityListProps> = (
 ) => {
   return (
     <List sx={{ width: '100%' }}>
-      {props.logEntries.slice(0, 3).map((entry: LogEntry) => (
+      {props.logEntries.slice(0, 4).map((entry: LogEntry) => (
         <Fragment key={entry.id}>
           <ListItem>
             <ListItemAvatar>

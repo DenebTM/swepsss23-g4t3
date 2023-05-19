@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
+import { useWindowSize } from '~/hooks/windowSize'
 import { AccessPoint, ApStatus } from '~/models/accessPoint'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
@@ -89,8 +90,22 @@ interface StatusDonutChartsProps {
  * Donut charts showing the statuses of access points and sensor stations in the dashboard
  */
 export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
-  const stackDonuts = useMediaQuery(theme.breakpoints.down('sm'))
-  const donutHeight = stackDonuts ? 150 : 200
+  const stackDonuts = useMediaQuery(theme.breakpoints.down('lg'))
+
+  const donutContainerRef = useRef<HTMLDivElement>(null)
+  const windowSize = useWindowSize()
+  const [donutHeight, setDonutHeight] = useState(150)
+
+  useEffect(() => {
+    if (donutContainerRef.current) {
+      const containerWidth = donutContainerRef.current.clientWidth
+      console.log(stackDonuts)
+      const calculatedDonutHeight = stackDonuts
+        ? containerWidth
+        : Math.floor(containerWidth / 2)
+      setDonutHeight(Math.min(calculatedDonutHeight, 200))
+    }
+  }, [donutContainerRef, windowSize])
 
   /** Generate access point chart data to display */
   const accessPointData: DonutValue[] | null =
@@ -173,12 +188,27 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
       : null
 
   return (
-    <Box component="div" sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Grid container spacing={1} sx={{ width: '100%', height: '100%' }}>
-        <Grid xs={12} sm={6} md={6} height={donutHeight}>
+    <Box
+      component="div"
+      sx={{
+        padding: theme.spacing(2, 2),
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Grid
+        container
+        spacing={1}
+        alignContent="center"
+        sx={{ width: '100%', height: '100%' }}
+        ref={donutContainerRef}
+      >
+        <Grid xs={12} lg={6} height={donutHeight}>
           <DonutChart data={accessPointData} label="Access Points" />
         </Grid>
-        <Grid xs={12} sm={6} md={6} height={donutHeight}>
+        <Grid xs={12} lg={6} height={donutHeight} marginBottom={2}>
           <DonutChart data={sensorStationData} label={'Greenhouses'} />
         </Grid>
       </Grid>

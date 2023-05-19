@@ -15,7 +15,10 @@ import {
   MEASUREMENT_PATH,
   mockedSensorStationMeasurementReqs,
 } from './sensorStations/measurements'
-import { mockedSensorStationPhotoReqs } from './sensorStations/photos'
+import {
+  MOCKED_SS_PHOTOS_PATH,
+  mockedSensorStationPhotoReqs,
+} from './sensorStations/photos'
 import { mockedSensorStationReqs } from './sensorStations/sensorStations'
 import { mockedUserReqs } from './user'
 
@@ -26,13 +29,13 @@ export const endpoints: Endpoints = {
   [API_URI.sensorStations]: mockedSensorStationReqs,
   [GARDENER_PATH]: mockedSensorStationGardenerReqs,
   [MEASUREMENT_PATH]: mockedSensorStationMeasurementReqs,
-  [API_URI.photos]: mockedPhotoReqs,
   [API_URI.logs]: mockedLogReqs,
 }
 
 /** Endpoints which do not use the /api prefix */
 export const noPrefixEndpoints: Endpoints = {
-  [`${API_URI.sensorStations}`]: mockedSensorStationPhotoReqs,
+  [MOCKED_SS_PHOTOS_PATH]: mockedSensorStationPhotoReqs,
+  [API_URI.photos]: mockedPhotoReqs,
   ...mockedLoginEndpoints,
 }
 
