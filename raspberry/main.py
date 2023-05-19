@@ -112,7 +112,7 @@ async def main():
             time.sleep(RETRY_TIME)
             
         except aiohttp.ClientResponseError as e:
-            await logging_operations.log_to_file_and_list('WARNING', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            await logging_operations.log_to_file_and_list('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
             time.sleep(RETRY_TIME)
 
         except Exception as e:

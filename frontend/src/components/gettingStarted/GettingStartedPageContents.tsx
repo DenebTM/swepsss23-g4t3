@@ -102,9 +102,9 @@ export const GettingStartedPageContents: React.FC = () => {
           </GettingStartedLi>
           <GettingStartedLi>
             Run the './configure' script to set up the correct web server
-            address. Make sure to check your firewall settings in order to allow
-            external devices to connect to the web server running on your
-            machine.
+            address for the Access Point to connect to. Make sure to check your
+            firewall settings, to ensure that other devices can connect to the
+            web server running on your machine.
           </GettingStartedLi>
           <GettingStartedLi>
             Run 'python3 main.py'. The Access Point will automatically register
@@ -174,8 +174,8 @@ export const GettingStartedPageContents: React.FC = () => {
           </Link>{' '}
           in order to configure thresholds for sensor readings. If the sensor
           values fall outside of those thresholds, the greenhouse will emit a
-          period beeping noise and display any combination of six different
-          codes, one for each sensor value.
+          periodic beeping noise and display in sequence any combination of six
+          different blink codes on the LED, one for each sensor.
           <br />
           The different LED codes are detailed on{' '}
           <Link href="https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/Sensor%20Station%20LED%20Status%20Codes#sensor-warnings">

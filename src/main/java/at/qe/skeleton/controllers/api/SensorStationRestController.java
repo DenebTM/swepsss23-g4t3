@@ -7,6 +7,7 @@ import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.services.SensorStationService;
@@ -18,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
 
@@ -34,6 +37,9 @@ public class SensorStationRestController implements BaseRestController {
     private PhotoDataRepository photoDataRepository;
 
     @Autowired
+    private SensorValuesRepository sensorValuesRepository;
+
+    @Autowired
     private UserxService userService;
 
     @Autowired
@@ -45,6 +51,37 @@ public class SensorStationRestController implements BaseRestController {
     public static final String SS_ID_PATH = SS_PATH + "/{id}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
+
+    private static SensorValues partialValuesUpdate(SensorValues vals, Object json) {
+        var mapper = new ObjectMapper();
+        @SuppressWarnings({"unchecked"})
+        SensorValues newVals = mapper.convertValue((Map<String, Object>)json, SensorValues.class);
+
+        if (vals == null) {
+            vals = new SensorValues();
+        }
+
+        if (newVals.getAirPressure() != null) {
+            vals.setAirPressure(newVals.getAirPressure());
+        }
+        if (newVals.getAirQuality() != null) {
+            vals.setAirQuality(newVals.getAirQuality());
+        }
+        if (newVals.getHumidity() != null) {
+            vals.setHumidity(newVals.getHumidity());
+        }
+        if (newVals.getLightIntensity() != null) {
+            vals.setLightIntensity(newVals.getLightIntensity());
+        }
+        if (newVals.getSoilMoisture() != null) {
+            vals.setSoilMoisture(newVals.getSoilMoisture());
+        }
+        if (newVals.getTemperature() != null) {
+            vals.setTemperature(newVals.getTemperature());
+        }
+
+        return vals;
+    }
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -144,6 +181,7 @@ public class SensorStationRestController implements BaseRestController {
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
         }
+
         if (json.containsKey("status")) {
             try {
                 SensorStationStatus oldStatus = ss.getStatus();
@@ -167,6 +205,7 @@ public class SensorStationRestController implements BaseRestController {
                 throw new BadRequestException("Invalid status");
             }
         }
+
         if (json.containsKey("aggregationPeriod")) {
             try {
                 Long oldAggregationPeriod = ss.getAggregationPeriod();
@@ -184,6 +223,28 @@ public class SensorStationRestController implements BaseRestController {
                 throw new BadRequestException("Invalid aggregation period");
             }
         }
+
+        if (json.containsKey("lowerBound")) {
+            try {
+                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), json.get("lowerBound"));
+                ss.setLowerBound(sensorValuesRepository.save(newLowerBound));
+
+                logger.info("Sensor thresholds (lower) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+            } catch (Exception e) {
+                throw new BadRequestException("Invalid sensor values for lowerBound");
+            }
+        }
+        if (json.containsKey("upperBound")) {
+            try {
+                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), json.get("upperBound"));
+                ss.setUpperBound(sensorValuesRepository.save(newUpperBound));
+
+                logger.info("Sensor thresholds (upper) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+            } catch (Exception e) {
+                throw new BadRequestException("Invalid sensor values for upperBound");
+            }
+        } 
+
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
 

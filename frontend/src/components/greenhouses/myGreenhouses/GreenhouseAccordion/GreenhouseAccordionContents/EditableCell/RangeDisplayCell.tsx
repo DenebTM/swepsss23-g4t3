@@ -12,6 +12,10 @@ interface RangeDisplayCellProps {
   unit: string
   /** The current values to display */
   value: ValueRange
+  /** Maximum supported value */
+  max: number
+  /** Minimum supported value */
+  min: number
 }
 
 /**
@@ -25,7 +29,7 @@ export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
         align="right"
         display="inline-block"
       >
-        {props.value.lower.toFixed(1)} {props.unit}
+        {(props.value.lower ?? props.min).toFixed(1)} {props.unit}
       </Typography>
       <Typography
         {...props.typographyProps}
@@ -38,7 +42,7 @@ export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
         align="left"
         display="inline-block"
       >
-        {props.value.upper.toFixed(1)} {props.unit}
+        {(props.value.upper ?? props.max).toFixed(1)} {props.unit}
       </Typography>
     </>
   )
