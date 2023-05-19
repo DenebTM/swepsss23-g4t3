@@ -22,6 +22,7 @@ export enum StatusVariant {
  */
 interface StatusCellProps<R extends GridValidRowModel, T = number> {
   status: string
+  justifyContent?: 'center' | 'space-between'
   variant: StatusVariant
 }
 
@@ -46,7 +47,7 @@ export const StatusCell = <R extends GridValidRowModel, T = string>(
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        justifyContent: 'space-between',
+        justifyContent: props.justifyContent ?? 'space-between',
       }}
     >
       <Typography
