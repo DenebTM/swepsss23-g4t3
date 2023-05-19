@@ -41,7 +41,7 @@ public class SensorStation {
     private Long aggregationPeriod = 30L;
 
 
-    @JsonBackReference
+    @JsonBackReference("ss-measurements")
     @OneToMany(mappedBy = "sensorStation",
             fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
@@ -57,7 +57,7 @@ public class SensorStation {
             inverseJoinColumns = @JoinColumn(name = "USERNAME"))
     private Set<Userx> gardeners;
 
-    @JsonBackReference
+    @JsonBackReference("ss-photos")
     @OneToMany(mappedBy = "sensorStation",
             fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,
