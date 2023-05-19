@@ -99,7 +99,7 @@ export const getSubFromJwt = (): Username | undefined => {
   const jwt: JWTPayload | null = isJwtValid()
 
   // Check that JWT contains a valid user role
-  if (jwt !== null && 'sub' in jwt && typeof jwt.sub === 'undefined') {
+  if (jwt !== null && typeof jwt.sub !== 'undefined') {
     return jwt.sub
   }
 
