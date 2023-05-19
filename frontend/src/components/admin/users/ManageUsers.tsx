@@ -9,7 +9,7 @@ import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
 import { UsersTable } from './UsersTable'
 
 /**
- * User managment page for admins
+ * User management page for admins
  */
 export const ManageUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>()

@@ -42,10 +42,10 @@ const centerCell: Partial<GridColDef<SensorStation, any, SensorStation>> = {
 }
 
 /**
- * Sensor station managment page for admins
+ * Sensor station management page for admins
  */
 export const SensorStationsTable: React.FC = () => {
-  const sensorStations = useSensorStations()
+  const sensorStations = useSensorStations(true)
   const { setSensorStations } = React.useContext(AppContext)
 
   // Store the largest number of gardeners for a single greenhouse as dynamic column width is not supported yet by DataGrid:

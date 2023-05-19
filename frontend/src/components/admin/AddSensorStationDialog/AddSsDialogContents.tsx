@@ -45,7 +45,7 @@ export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
       // When component is unmounted or `accessPoint` is changed, reset access point to not be SEARCHING
       updateAccessPointStatus(ApStatus.ONLINE, accessPoint)
     }
-  }, [accessPoint])
+  }, [accessPoint?.name])
 
   const updateAccessPointStatus = (
     newStatus: ApStatus,
