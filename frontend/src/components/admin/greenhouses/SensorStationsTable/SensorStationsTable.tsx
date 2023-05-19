@@ -42,7 +42,7 @@ const centerCell: Partial<GridColDef<SensorStation, any, SensorStation>> = {
 }
 
 /**
- * Sensor station managment page for admins
+ * Sensor station management page for admins
  */
 export const SensorStationsTable: React.FC = () => {
   const sensorStations = useSensorStations(true)

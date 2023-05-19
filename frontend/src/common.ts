@@ -117,21 +117,21 @@ export const PAGE_URL: {
     permittedRoles: _ALL_ROLES,
   },
 
-  /** Path for access point managment by admins */
+  /** Path for access point management by admins */
   manageAccessPoints: {
     pageTitle: 'Access Points',
     href: `/${ADMIN_ROOT}/access-points`,
     permittedRoles: [AuthUserRole.ADMIN],
   },
 
-  /** Path for sensor station managment by admins */
+  /** Path for sensor station management by admins */
   manageGreenhouses: {
     pageTitle: 'Greenhouses',
     href: `/${ADMIN_ROOT}/${GREENHOUSES_ROOT}`,
     permittedRoles: [AuthUserRole.ADMIN],
   },
 
-  /** Path for user managment by admins */
+  /** Path for user management by admins */
   manageUsers: {
     pageTitle: 'Users',
     href: `/${ADMIN_ROOT}/users`,
