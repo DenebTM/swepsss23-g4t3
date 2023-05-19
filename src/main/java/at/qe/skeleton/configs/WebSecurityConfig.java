@@ -55,6 +55,9 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/access-points")
                 .permitAll()
 
+                .requestMatchers(HttpMethod.GET, "/api/sensor-stations")
+                .permitAll()
+
                 // Allow authorized access to other API routes
                 .requestMatchers("/api/**")
                 .hasAnyAuthority("ADMIN", "GARDENER", "USER")
