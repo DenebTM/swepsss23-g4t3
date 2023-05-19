@@ -92,7 +92,12 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
             dayjs(isoTimestamp).format('YYYY-MM-DD')
           }
         />
-        <YAxis unit="%">
+        <YAxis
+          unit="%"
+          domain={[-25, 125]}
+          ticks={[-25, 0, 25, 50, 75, 100, 125]}
+          allowDataOverflow
+        >
           <Label angle={-90} position="left" fill={theme.outline}>
             Percentile
           </Label>
