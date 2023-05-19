@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
@@ -91,6 +91,11 @@ interface RemovableChipProps {
 export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const [deletePending, setDeletePending] = useState(false)
+  const [variant, setVariant] = useState(props.variant ?? ChipVariant.OK)
+
+  useEffect(() => {
+    setVariant(props.variant ?? ChipVariant.OK)
+  }, [props.variant])
 
   const handleDeleteClick: React.MouseEventHandler = (e) => {
     e.stopPropagation() // Prevent selecting table cell
@@ -121,7 +126,7 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
     props.onClick?.(e)
   }
 
-  const chipOutline = alpha(chipColour[props.variant ?? ChipVariant.OK], 0.6)
+  const chipOutline = alpha(chipColour[variant], 0.6)
 
   return (
     <Box
@@ -138,15 +143,12 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
           disabled={deletePending || typeof props.onClick === 'undefined'}
           size="small"
           sx={{
-            ...chipBodySx(
-              chipOutline,
-              chipText[props.variant ?? ChipVariant.OK]
-            ),
+            ...chipBodySx(chipOutline, chipText[variant]),
 
             '&:hover':
               typeof props.onClick !== 'undefined'
                 ? {
-                    background: chipBackground[props.variant ?? ChipVariant.OK],
+                    background: chipBackground[variant],
                     transition: theme.transitions.create('background'),
                   }
                 : {},
@@ -166,11 +168,11 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
           onClick={handleDeleteClick}
           size="small"
           sx={{
-            color: chipColour[props.variant ?? ChipVariant.OK],
+            color: chipColour[variant],
             margin: `0 ${chipMarginSides}px`,
             padding: chipPaddingTopBottom,
             '&:hover': {
-              background: chipBackground[props.variant ?? ChipVariant.OK],
+              background: chipBackground[variant],
               transition: theme.transitions.create('background'),
             },
           }}
