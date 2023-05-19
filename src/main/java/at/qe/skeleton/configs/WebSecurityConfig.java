@@ -55,7 +55,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/access-points")
                 .permitAll()
 
-                // Allow visitors to upload photos and view the gallery
+                // Allow visitors to new the gallery and upload photos
                 .requestMatchers(HttpMethod.GET, "/api/sensor-stations/**")
                 .permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/sensor-stations/*/photos")
