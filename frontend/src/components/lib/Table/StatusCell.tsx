@@ -4,6 +4,9 @@ import { GridValidRowModel } from '@mui/x-data-grid'
 
 import { theme } from '~/styles/theme'
 
+/** Minimum width in px (for setting column width in tables) */
+export const statusCellMinWidth = 127
+
 /** Possible variants for {@link StatusCell}. Used to set the colour of the status dot. */
 export enum StatusVariant {
   OK = 'OK',
@@ -19,6 +22,7 @@ export enum StatusVariant {
  */
 interface StatusCellProps<R extends GridValidRowModel, T = number> {
   status: string
+  justifyContent?: 'center' | 'space-between'
   variant: StatusVariant
 }
 
@@ -43,7 +47,7 @@ export const StatusCell = <R extends GridValidRowModel, T = string>(
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        justifyContent: 'space-between',
+        justifyContent: props.justifyContent ?? 'space-between',
       }}
     >
       <Typography

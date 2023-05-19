@@ -18,7 +18,7 @@ import {
   roundMetric,
 } from '~/common'
 import { Measurement, SensorValues } from '~/models/measurement'
-import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
+import { SensorStation } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 import {
@@ -31,8 +31,7 @@ import {
 
 interface GreenhouseGraphProps {
   measurements: Measurement[]
-  sensorStation: SensorStation | undefined
-  uuid: SensorStationUuid
+  sensorStation: SensorStation | null
 }
 
 /**
@@ -42,9 +41,9 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
   const [data, setData] = useState<DataValue[]>()
 
   useEffect(() => {
-    if (typeof props.sensorStation !== 'undefined') {
-      const lower: SensorValues = props.sensorStation.lowerBound
-      const upper: SensorValues = props.sensorStation.upperBound
+    if (props.sensorStation) {
+      const lower = props.sensorStation.lowerBound
+      const upper = props.sensorStation.upperBound
 
       const dataVals: DataValue[] = props.measurements.map((measurement) => ({
         [TIMESTAMP_KEY]: measurement.timestamp,
@@ -52,7 +51,11 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
         ...measurementToGraphValues(
           measurement,
           (value: number, valueKey: keyof SensorValues) =>
-            normalisePercentage(value, lower[valueKey], upper[valueKey])
+            normalisePercentage(
+              value,
+              lower ? lower[valueKey] : GREENHOUSE_METRICS[valueKey].min,
+              upper ? upper[valueKey] : GREENHOUSE_METRICS[valueKey].max
+            )
         ),
         // Save raw values
         [RAW_VALUES_KEY]: measurementToGraphValues(
@@ -69,10 +72,10 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
     } else {
       setData([])
     }
-  }, [props.measurements])
+  }, [props.measurements, props.sensorStation])
 
   return (
-    <ResponsiveContainer width="100%" aspect={2.5}>
+    <ResponsiveContainer width="100%">
       <LineChart
         data={data}
         margin={{
@@ -89,9 +92,14 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
             dayjs(isoTimestamp).format('YYYY-MM-DD')
           }
         />
-        <YAxis>
+        <YAxis
+          unit="%"
+          domain={[-25, 125]}
+          ticks={[-25, 0, 25, 50, 75, 100, 125]}
+          allowDataOverflow
+        >
           <Label angle={-90} position="left" fill={theme.outline}>
-            Percentile (%)
+            Percentile
           </Label>
         </YAxis>
         <Tooltip<number | string, string>
@@ -101,27 +109,26 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
           formatter={(value: number | string, name, payload, index) => {
             const key = String(payload.dataKey)
             const trueValue: number = payload.payload[RAW_VALUES_KEY][key]
-            return `${roundMetric(trueValue)}${
-              GREENHOUSE_METRICS.find((m) => m.valueKey === payload.dataKey)
-                ?.unit
-            }`
+            return `${roundMetric(trueValue)}${GREENHOUSE_METRICS[key].unit}`
           }}
         />
 
-        <Legend />
+        <Legend align="center" />
 
-        {GREENHOUSE_METRICS.map((metricRange: GreenhouseMetricRange) => (
-          <Line
-            key={metricRange.valueKey}
-            activeDot
-            dataKey={metricRange.valueKey}
-            dot={false}
-            name={metricRange.displayName}
-            stroke={metricRange.colour}
-            strokeWidth={2}
-            type="monotone"
-          />
-        ))}
+        {Object.values(GREENHOUSE_METRICS).map(
+          (metricRange: GreenhouseMetricRange) => (
+            <Line
+              key={metricRange.valueKey}
+              activeDot
+              dataKey={metricRange.valueKey}
+              dot={false}
+              name={metricRange.displayName}
+              stroke={metricRange.colour}
+              strokeWidth={2}
+              type="monotone"
+            />
+          )
+        )}
       </LineChart>
     </ResponsiveContainer>
   )

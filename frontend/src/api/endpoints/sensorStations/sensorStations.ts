@@ -1,8 +1,6 @@
-import { faker } from '@faker-js/faker'
 import { Server } from 'miragejs'
 import { _delete, _get, _put } from '~/api/intercepts'
-import { UPLOADED_PHOTO_KEY } from '~/common'
-import { Photo, PhotoId } from '~/models/photo'
+import { SensorValues } from '~/models/measurement'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
 import { AppSchema, EndpointReg } from '../../mirageTypes'
@@ -17,7 +15,7 @@ export const getSensorStations = async (): Promise<SensorStation[]> => {
 }
 
 /**
- * GET /api/sensor-stations/${uuid}
+ * GET /api/sensor-stations/${ssID}
  * Get a single sensor station by ID
  * @returns The fetched access point
  */
@@ -28,7 +26,7 @@ export const getSensorStation = async (
 }
 
 /**
- * DEL /api/sensor-stations/${uuid}
+ * DEL /api/sensor-stations/${ssID}
  * Delete a single sensor station  by ID
  */
 export const deleteSensorStation = async (
@@ -38,30 +36,25 @@ export const deleteSensorStation = async (
 }
 
 /**
- * PUT /api/sensor-stations/${uuid}
+ * PUT /api/sensor-stations/${ssID}
  * Update a single sensor station by ID
  */
 export const updateSensorStation = async (
   sensorStationUuid: SensorStationUuid,
-  newParams: Omit<Partial<SensorStation>, 'uuid'>
+  newParams: Omit<
+    Partial<SensorStation>,
+    'ssID' | 'upperBound' | 'lowerBound'
+  > &
+    Partial<{
+      lowerBound: Partial<SensorValues>
+      upperBound: Partial<SensorValues>
+    }>
 ): Promise<SensorStation> => {
   return _put(`${API_URI.sensorStations}/${sensorStationUuid}`, newParams)
 }
 
-/*
- * Get photos for a single sensor station
- */
-export const getSensorStationPhotos = async (
-  sensorStationUuid: SensorStationUuid
-): Promise<Photo[]> => {
-  return _get(`${API_URI.sensorStations}/${sensorStationUuid}${API_URI.photos}`)
-}
-
 /** Route for mocking calls to an individual sensor station */
-const mockedSensorStationRoute = `${API_URI.sensorStations}/:uuid`
-
-/** Route for mocking calls related to photos for an individual sensor station */
-const mockedSsPhotosRoute = `${mockedSensorStationRoute}${API_URI.photos}`
+const mockedSensorStationRoute = `${API_URI.sensorStations}/:ssID`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
@@ -73,79 +66,38 @@ export const mockedSensorStationReqs: EndpointReg = (server: Server) => {
 
   /** Mock {@link getSensorStation} */
   server.get(mockedSensorStationRoute, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const ssID: SensorStationUuid = Number(request.params.ssID)
+    const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
 
     return sensorStation
       ? sensorStation.attrs
-      : notFound(`sensor station ${uuid}`)
+      : notFound(`sensor station ${ssID}`)
   })
 
   /** Mock {@link deleteSensorStation} */
   server.delete(mockedSensorStationRoute, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const ssID: SensorStationUuid = Number(request.params.ssID)
+    const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
 
     if (sensorStation) {
       sensorStation.destroy()
       return success()
     } else {
-      return notFound(`sensor station ${uuid}`)
+      return notFound(`sensor station ${ssID}`)
     }
-  })
-
-  /** Mock {@link getSensorStationPhotos} */
-  server.get(mockedSsPhotosRoute, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
-
-    if (sensorStation === null) {
-      return notFound(`sensor station ${uuid}`)
-    }
-
-    // Generate a list of random URLs to example images
-    const fakePhotoIds = faker.helpers.arrayElements([...Array(20).keys()])
-    const fakePhotos: Photo[] = fakePhotoIds.map((photoId: PhotoId) => ({
-      id: photoId,
-      url: faker.image.nature(
-        faker.datatype.number({ min: 300, max: 900 }),
-        faker.datatype.number({ min: 200, max: 600 }),
-        true
-      ),
-      uploaded: faker.date
-        .between('2023-03-29T00:00:00.000Z', '2023-03-30T00:00:00.000Z')
-        .toISOString(),
-    }))
-
-    return success(fakePhotos)
   })
 
   /** Mock {@link updateSensorStation} */
   server.put(mockedSensorStationRoute, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
+    const ssID: SensorStationUuid = Number(request.params.ssID)
+    const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
     const newParams: Partial<SensorStation> = JSON.parse(request.requestBody)
 
     if (sensorStation) {
       sensorStation.update(newParams)
       return success(sensorStation.attrs)
     } else {
-      return notFound(`sensor station ${uuid}`)
-    }
-  })
-
-  /** Mock uploading a photo */
-  server.post(mockedSsPhotosRoute, (schema: AppSchema, request) => {
-    const uuid: SensorStationUuid = Number(request.params.uuid)
-    const sensorStation = schema.findBy('sensorStation', { uuid: uuid })
-    if (sensorStation) {
-      const formData: FormData = request.requestBody as unknown as FormData
-      const uploadFile: File = formData.get(UPLOADED_PHOTO_KEY) as File
-
-      // Return the file in the success for now. qqjf TODO update photo models
-      return success(uploadFile)
-    } else {
-      return notFound(`sensor station ${uuid}`)
+      return notFound(`sensor station ${ssID}`)
     }
   })
 }

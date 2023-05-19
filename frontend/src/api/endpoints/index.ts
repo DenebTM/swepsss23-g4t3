@@ -5,6 +5,7 @@ import { AppRegistry, Endpoints } from '~/api/mirageTypes'
 import { mockedAccessPointReqs } from './accessPoints'
 import { API_URI } from './consts'
 import { mockedLoginEndpoints } from './login'
+import { mockedLogReqs } from './logs'
 import { mockedPhotoReqs } from './photo'
 import {
   GARDENER_PATH,
@@ -14,17 +15,28 @@ import {
   MEASUREMENT_PATH,
   mockedSensorStationMeasurementReqs,
 } from './sensorStations/measurements'
+import {
+  MOCKED_SS_PHOTOS_PATH,
+  mockedSensorStationPhotoReqs,
+} from './sensorStations/photos'
 import { mockedSensorStationReqs } from './sensorStations/sensorStations'
 import { mockedUserReqs } from './user'
 
-/** All endpoints mocked by mirage */
+/** All endpoints eith /api prefix mocked by mirage */
 export const endpoints: Endpoints = {
   [API_URI.users]: mockedUserReqs,
   [API_URI.accessPoints]: mockedAccessPointReqs,
   [API_URI.sensorStations]: mockedSensorStationReqs,
   [GARDENER_PATH]: mockedSensorStationGardenerReqs,
   [MEASUREMENT_PATH]: mockedSensorStationMeasurementReqs,
+  [API_URI.logs]: mockedLogReqs,
+}
+
+/** Endpoints which do not use the /api prefix */
+export const noPrefixEndpoints: Endpoints = {
+  [MOCKED_SS_PHOTOS_PATH]: mockedSensorStationPhotoReqs,
   [API_URI.photos]: mockedPhotoReqs,
+  ...mockedLoginEndpoints,
 }
 
 /** Initialise all seed data used by mirage */
@@ -40,8 +52,8 @@ export const createSeedData = (
   // Create sensor stations (and the associated gardeners, access points, and measurements)
   server.createList('sensorStation', faker.datatype.number({ min: 1, max: 3 }))
 
+  // Createlog entries
+  server.createList('logEntry', faker.datatype.number({ min: 8, max: 40 }))
+
   return server
 }
-
-/** Endpoints for login and logout routes. Defined separately to other endpoints due to these routes not using the /api prefix. */
-export const loginEndpoints: Endpoints = mockedLoginEndpoints

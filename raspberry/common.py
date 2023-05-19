@@ -1,6 +1,5 @@
 import yaml
-
-log_filename = 'communication.log'
+import os
 
 sensor_station_name = 'PH SensorStation'
 
@@ -15,7 +14,7 @@ illuminance_uuid = base_uuid.format('2afb')
 air_quality_index_uuid = base_uuid.format('f105')
 soil_moisture_uuid = base_uuid.format('f106')
 
-# global constants for the error messages takne out of the ble communication Spec
+# global constants for the error messages taken out of the ble communication Spec
 error_service_uuid = base_uuid.format('ff00')
 air_pressure_failure_uuid = base_uuid.format('ff01')
 temperature_failure_uuid = base_uuid.format('ff02')
@@ -27,12 +26,12 @@ warning_active_uuid = base_uuid.format('ff80')
 
 #global dictionary failure_uuids
 failure_uuids = {
-    'air_pressure': air_pressure_failure_uuid,
+    'airPressure': air_pressure_failure_uuid,
     'temperature': temperature_failure_uuid,
     'humidity': humidity_failure_uuid,
-    'illuminance': illuminance_failure_uuid,
-    'air_quality_index': air_quality_index_failure_uuid,
-    'soil_moisture': soil_moisture_failure_uuid
+    'lightIntensity': illuminance_failure_uuid,
+    'airQuality': air_quality_index_failure_uuid,
+    'soilMoisture': soil_moisture_failure_uuid
 }
 
 known_ss_filename = 'known_sensorstations.yaml'
@@ -62,16 +61,17 @@ try:
     with open('conf.yaml', 'r') as f:
         config = yaml.safe_load(f)
         web_server_address = config['web_server_address']
-        web_server_address = 'http://' + web_server_address
         access_point_name = config['access_point_name']
-        default_transmission_interval = config['default_transmission_interval']
+        default_aggregation_period = config['default_transmission_interval']
 
 except:
     print('Caught Exception. Probably conf.yaml doesnt exist yet. Program will start with dev-config')
     with open('conf.example.yaml', 'r') as f:
         config = yaml.safe_load(f)
         web_server_address = config['web_server_address']
-        web_server_address = 'http://' + web_server_address
         access_point_name = config['access_point_name']
         access_point_address = web_server_address + '/' + access_point_name
-        default_transmission_interval = config['default_transmission_interval']
+        default_aggregation_period = config['default_transmission_interval']
+
+if not os.path.exists('audit.log'):
+    open('audit.log', 'w').close()

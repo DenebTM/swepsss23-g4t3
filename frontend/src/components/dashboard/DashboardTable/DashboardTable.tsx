@@ -1,9 +1,14 @@
 import React from 'react'
 
-import Paper from '@mui/material/Paper'
-import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
+import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import {
   emDash,
@@ -12,17 +17,15 @@ import {
   greenhouseMetricWithUnit,
   roundMetric,
 } from '~/common'
+import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
-
-interface DashboardTableProps {
-  /** The fetched sensor stations */
-  sensorStations: SensorStation[]
-}
 
 /**
  * Table showing the most recent sensor station data in the dashboard
  */
-export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
+export const DashboardTable: React.FC = (props) => {
+  const sensorStations = useSensorStations()
+
   /** Styles applied to all table columns containing metric */
   const metricColumnParams: Partial<
     GridColDef<SensorStation, any, SensorStation>
@@ -37,22 +40,48 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
    */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
     {
-      field: 'uuid',
+      field: 'ssID',
       headerName: 'Greenhouse',
       valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
         `Greenhouse ${params.value}`,
       width: 120,
     },
-    ...GREENHOUSE_METRICS.map((metricRange: GreenhouseMetricRange) => ({
-      field: metricRange.valueKey,
-      headerName: greenhouseMetricWithUnit(metricRange),
-      description: metricRange.description,
-      valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
-        params.row.measurements.length > 0
-          ? roundMetric(params.row.measurements[0].data[metricRange.valueKey])
-          : emDash,
-      ...metricColumnParams,
-    })),
+    ...Object.values(GREENHOUSE_METRICS).map(
+      (metricRange: GreenhouseMetricRange) => ({
+        field: metricRange.valueKey,
+        headerName: greenhouseMetricWithUnit(metricRange),
+        description: metricRange.description,
+        renderCell: (
+          params: GridRenderCellParams<SensorStation, any, SensorStation>
+        ) => (
+          <StatusCell
+            justifyContent="center"
+            status={
+              params.row.currentMeasurement
+                ? roundMetric(
+                    params.row.currentMeasurement.data[metricRange.valueKey]
+                  )
+                : emDash
+            }
+            variant={
+              // Check whether values are out of bounds
+              (params.row.upperBound &&
+                params.row.currentMeasurement &&
+                params.row.currentMeasurement.data[metricRange.valueKey] >
+                  params.row.upperBound[metricRange.valueKey]) ||
+              (params.row.lowerBound &&
+                params.row.currentMeasurement &&
+                params.row.currentMeasurement.data[metricRange.valueKey] <
+                  params.row.lowerBound[metricRange.valueKey])
+                ? StatusVariant.WARNING
+                : StatusVariant.OK
+            }
+          />
+        ),
+
+        ...metricColumnParams,
+      })
+    ),
     {
       field: 'timestamp',
       headerName: 'Last Updated',
@@ -61,20 +90,21 @@ export const DashboardTable: React.FC<DashboardTableProps> = (props) => {
       headerAlign: 'center',
       align: 'center',
       valueGetter: (params: GridValueGetterParams<SensorStation, string>) =>
-        params.row.measurements.length > 0
-          ? dayjs(params.row.measurements[0].timestamp).toDate()
+        params.row.currentMeasurement
+          ? dayjs(params.row.currentMeasurement.timestamp).toDate()
           : dayjs().toDate(), // Show the current time if no measurements have been logged yet
       width: 175,
     },
   ]
 
   return (
-    <Paper>
+    <TablePaper>
       <DataGrid<SensorStation, any, SensorStation>
         columns={columns}
-        getRowId={(row: SensorStation) => row.uuid}
-        rows={props.sensorStations}
+        getRowId={(row: SensorStation) => row.ssID}
+        rows={sensorStations ?? undefined}
+        noRowsMessage="No measurements to display. You will see current values here once you connect at least one greenhouse."
       />
-    </Paper>
+    </TablePaper>
   )
 }

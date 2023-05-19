@@ -7,10 +7,11 @@ import ImageListItemBar from '@mui/material/ImageListItemBar'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import dayjs from 'dayjs'
-import { deletePhoto } from '~/api/endpoints/photo'
+import { deletePhoto } from '~/api/endpoints/sensorStations/photos'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Photo } from '~/models/photo'
+import { SensorStationUuid } from '~/models/sensorStation'
 import { theme } from '~/styles/theme'
 
 interface DeleteImageBarProps {
@@ -20,6 +21,7 @@ interface DeleteImageBarProps {
   setPhotos: Dispatch<SetStateAction<Photo[] | undefined>>
   /** Display image bar only if `show` is true. */
   show: boolean
+  ssID: SensorStationUuid
 }
 
 /**
@@ -32,7 +34,7 @@ export const DeleteImageBar: React.FC<DeleteImageBarProps> = (props) => {
 
   const handleDeletePhoto = (): void => {
     setDeletePending(true)
-    deletePhoto(props.photo.id)
+    deletePhoto(props.ssID, props.photo.id)
       .then(() => {
         // Remove deleted photo from state
         props.setPhotos((oldPhotos) => {
@@ -46,7 +48,7 @@ export const DeleteImageBar: React.FC<DeleteImageBarProps> = (props) => {
         addSnackbarMessage({
           header: 'Success',
           body: 'Photo deleted',
-          type: MessageType.ERROR,
+          type: MessageType.CONFIRM,
         })
       })
       .catch((err: Error) => {

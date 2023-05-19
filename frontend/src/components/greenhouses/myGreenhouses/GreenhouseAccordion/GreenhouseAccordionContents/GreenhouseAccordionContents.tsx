@@ -13,8 +13,7 @@ import {
   ValueRange,
 } from '~/common'
 import { AppContext } from '~/contexts/AppContext/AppContext'
-import { MessageType } from '~/contexts/SnackbarContext/types'
-import { useAddSnackbarMessage } from '~/hooks/snackbar'
+import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
 
@@ -39,7 +38,7 @@ export const GreenhouseAccordionContents: React.FC<
   GreenhouseAccordionContentsProps
 > = (props) => {
   const { setSensorStations } = React.useContext(AppContext)
-  const addSnackbarMessage = useAddSnackbarMessage()
+  const addErrorSnackbar = useAddErrorSnackbar()
 
   /** Store the key of the row that is currently being edited in the state (otherwise `false`)*/
   const [editing, setEditing] = useState<
@@ -63,13 +62,13 @@ export const GreenhouseAccordionContents: React.FC<
     upper: number
   ): Promise<void> =>
     handleSaveRow(
-      updateSensorStation(props.sensorStation.uuid, {
+      updateSensorStation(props.sensorStation.ssID, {
         lowerBound: {
-          ...props.sensorStation.lowerBound,
+          ...(props.sensorStation.lowerBound ?? {}),
           [valueKey]: lower,
         },
         upperBound: {
-          ...props.sensorStation.upperBound,
+          ...(props.sensorStation.upperBound ?? {}),
           [valueKey]: upper,
         },
       })
@@ -87,57 +86,64 @@ export const GreenhouseAccordionContents: React.FC<
             return []
           } else {
             return oldValue.map((s) =>
-              s.uuid === props.sensorStation.uuid ? updatedSs : s
+              s.ssID === props.sensorStation.ssID ? updatedSs : s
             )
           }
         })
       })
       .catch((err: Error) => {
-        addSnackbarMessage({
-          header: 'Could not load save updated value',
-          body: err.message,
-          type: MessageType.ERROR,
-        })
+        addErrorSnackbar(err, 'Could not save updated value')
       })
       .finally(() => {
         setEditing(false)
         return Promise.resolve()
       })
 
+  const saveRow = (v: ValueRange, row: GreenhouseMetricRange) =>
+    typeof v.lower === 'undefined' || typeof v.upper === 'undefined'
+      ? Promise.reject({
+          message: 'Both upper and lower boundaries must be set',
+        })
+      : handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
+
   return (
     <TableContainer>
       <Table sx={{ width: '100%' }} aria-label="greenhouse settings table">
         <TableBody>
-          {GREENHOUSE_METRICS.map((row: GreenhouseMetricRange) => {
-            const ariaLabel = `title-${row.valueKey}`
-            return (
-              <EditableTableRow<ValueRange>
-                key={row.valueKey}
-                ariaLabel={ariaLabel}
-                editableCell={(
-                  editableCellProps: EditableCellProps<ValueRange>
-                ) => (
-                  <GreenhouseEditableRangeCell
-                    labelledBy={ariaLabel}
-                    sensorStation={props.sensorStation}
-                    {...row}
-                    {...editableCellProps}
-                  />
-                )}
-                editing={editing === row.valueKey}
-                saveRow={(v: ValueRange) =>
-                  handleSaveBoundaryValue(row.valueKey, v.lower, v.upper)
-                }
-                startEditing={() => setEditing(row.valueKey)}
-                title={row.displayName}
-                typographyProps={typographyProps}
-                value={{
-                  lower: props.sensorStation.lowerBound[row.valueKey],
-                  upper: props.sensorStation.upperBound[row.valueKey],
-                }}
-              />
-            )
-          })}
+          {Object.values(GREENHOUSE_METRICS).map(
+            (row: GreenhouseMetricRange) => {
+              const ariaLabel = `title-${row.valueKey}`
+              return (
+                <EditableTableRow<ValueRange>
+                  key={row.valueKey}
+                  ariaLabel={ariaLabel}
+                  editableCell={(
+                    editableCellProps: EditableCellProps<ValueRange>
+                  ) => (
+                    <GreenhouseEditableRangeCell
+                      labelledBy={ariaLabel}
+                      sensorStation={props.sensorStation}
+                      {...row}
+                      {...editableCellProps}
+                    />
+                  )}
+                  editing={editing === row.valueKey}
+                  saveRow={(v: ValueRange) => saveRow(v, row)}
+                  startEditing={() => setEditing(row.valueKey)}
+                  title={row.displayName}
+                  typographyProps={typographyProps}
+                  value={{
+                    lower: props.sensorStation.lowerBound
+                      ? props.sensorStation.lowerBound[row.valueKey]
+                      : row.min,
+                    upper: props.sensorStation.upperBound
+                      ? props.sensorStation.upperBound[row.valueKey]
+                      : row.max,
+                  }}
+                />
+              )
+            }
+          )}
           <EditableTableRow<number>
             ariaLabel={aggregationPeriodAriaLabel}
             editableCell={(editableCellProps: EditableCellProps<number>) => (
@@ -151,7 +157,7 @@ export const GreenhouseAccordionContents: React.FC<
             editing={editing === AGGREGATION_PERIOD}
             saveRow={(newValue: number) =>
               handleSaveRow(
-                updateSensorStation(props.sensorStation.uuid, {
+                updateSensorStation(props.sensorStation.ssID, {
                   aggregationPeriod: Math.max(minAggregationPeriod, newValue),
                 })
               )

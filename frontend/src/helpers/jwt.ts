@@ -1,7 +1,7 @@
 import { decodeJwt, JWTPayload } from 'jose'
 import Cookies from 'universal-cookie'
 import { AUTH_JWT } from '~/common'
-import { AuthUserRole } from '~/models/user'
+import { AuthUserRole, Username } from '~/models/user'
 
 /**
  * Load the saved JWT cookie with key {@link AUTH_JWT}
@@ -78,12 +78,30 @@ export const getUserRoleFromJwt = (): AuthUserRole | null => {
   if (jwt !== null && 'authorities' in jwt) {
     const role = jwt.authorities
     if (
-      typeof role === 'string' &&
-      Object.values(AuthUserRole).includes(role as AuthUserRole)
+      Array.isArray(role) &&
+      role.length > 0 &&
+      typeof role[0] === 'string' &&
+      Object.values(AuthUserRole).includes(role[0] as AuthUserRole)
     ) {
-      return role as AuthUserRole
+      return role[0] as AuthUserRole
     }
   }
 
   return null
+}
+
+/**
+ * Load the JWT from cookies and return the name of the logged-in user.
+ * @returns The username if found, otherwise null
+ */
+export const getSubFromJwt = (): Username | undefined => {
+  // Load JWT from cookies
+  const jwt: JWTPayload | null = isJwtValid()
+
+  // Check that JWT contains a valid user role
+  if (jwt !== null && typeof jwt.sub !== 'undefined') {
+    return jwt.sub
+  }
+
+  return undefined
 }

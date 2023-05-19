@@ -5,7 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.time.LocalDateTime;
 
 /**
  * Taken from https://medium.com/shoutloudz/spring-boot-upload-and-download-images-using-jpa-b1c9ef174dc0
@@ -17,15 +24,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class PhotoData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO , generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "UPLOADED")
+    private LocalDateTime uploaded;
 
     @JsonIgnore
     @ManyToOne
@@ -33,16 +42,16 @@ public class PhotoData {
     private SensorStation sensorStation;
 
     @JsonIgnore
-    @Lob
+    @JdbcTypeCode(SqlTypes.LONG32VARBINARY)
     @Column(name = "CONTENT", length = 1000)
     private byte[] content;
 
-    public String getName() {
-        return name;
+    public LocalDateTime getUploaded() {
+        return uploaded;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUploaded(LocalDateTime uploaded) {
+        this.uploaded = uploaded;
     }
 
     public byte[] getContent() {
@@ -69,8 +78,7 @@ public class PhotoData {
         this.sensorStation = sensorStation;
     }
 
-    public PhotoData(String name, SensorStation sensorStation, byte[] content) {
-        this.name = name;
+    public PhotoData(SensorStation sensorStation, byte[] content) {
         this.sensorStation = sensorStation;
         this.content = content;
     }

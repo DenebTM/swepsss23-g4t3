@@ -5,6 +5,7 @@ import java.util.Set;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.LogFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 
 /**
  * Custom OncePerRequestFilter filter to validate the JWT sent along with
@@ -48,10 +50,16 @@ public class JwtFilter extends OncePerRequestFilter {
             token = tokenHeader.substring(7);
             try {
                 username = tokenManager.getUsernameFromToken(token);
-            } catch (ExpiredJwtException e) {
+            } catch (ExpiredJwtException | SignatureException e) {
                 // This is an info message, not an error, as the user should be redirected to 
                 // log in again
-                logger.info("JWT has expired");
+                logger.debug("JWT has expired");
+
+                Cookie cookie = new Cookie("AUTH_JWT", null);
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                         "You are unauthorized. Please log in.");
                 return;
@@ -60,7 +68,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // If Authorization: Bearer [token] is not in the headers. This is a debug
             // message, not an error, as for the login route no authorization token should
             // be sent
-            logger.info("Bearer String not found in token");
+            logger.debug("Bearer String not found in token");
         }
 
         if (null != username && SecurityContextHolder.getContext().getAuthentication() == null) {

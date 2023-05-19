@@ -3,9 +3,11 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import { SxProps, Theme } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 import {
   gridClasses,
   GridColDef,
+  GridRowClassNameParams,
   GridValidRowModel,
   DataGrid as MuiDataGrid,
   DataGridProps as MuiDataGridProps,
@@ -80,8 +82,8 @@ const dataGridRowSx = (theme: Theme): SxProps<Theme> => {
 }
 
 /** Extend and limit {@link MuiDataGridProps} to provide additional type hints and safety. */
-interface DataGridProps<R extends GridValidRowModel, V, F>
-  extends Omit<MuiDataGridProps<R>, 'rows'> {
+interface DataGridProps<R extends GridValidRowModel, V, F, P>
+  extends Omit<MuiDataGridProps<R>, 'rows' | 'components'> {
   // DataGrid props
   /** The column definition for the table */
   columns: GridColDef<R, V, F>[]
@@ -91,14 +93,16 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
    */
   processRowUpdate?: RowUpdateFunction<R>
   /** Rows to display in the table. Pagination is handled internally. If undefined, then display a loading indicator. */
-  rows: readonly R[] | undefined | null
+  rows: readonly R[] | undefined
 
   // Additional props
   /**
    * Function to fetch row data. Error handling and state updates are then handled internally
    * using `props.setRows`. If `fetchRows` is undefined then only the initial value of `props.rows` will be displayed.
    */
-  fetchRows?: () => Promise<R[]>
+  fetchRows?: (params?: P) => Promise<R[]>
+  /** Message to show if the unfiltered data contains no elements. */
+  noRowsMessage?: string
   /**
    * Function to update row data in the state of the parent component.
    * If left undefined, then the table contents can not be updated or edited.
@@ -108,6 +112,10 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
   size?: 'medium' | 'small'
   /** If true, alter the colour of every second table row */
   zebraStripes?: boolean
+  /** Optionally override styles for each row */
+  getRowClassName?: (params: GridRowClassNameParams<R>) => string
+  /** Filter parameters to pass to the fetchRows function if needed */
+  params?: P
 }
 
 /**
@@ -115,9 +123,15 @@ interface DataGridProps<R extends GridValidRowModel, V, F>
  *
  * Handles fetching rows from the backend, state updates in the parent component, and loading states internally
  * and displays error snackbars if fetching or updating rows fails.
+ *
+ *
+ * @template R The data row type
+ * @template V Cell values, can usually be left unspecified
+ * @template F Used internally by DataGrid, it's safe to set this to V
+ * @template P Type of filter parameters when fetching rows, if applicable
  */
-export const DataGrid = <R extends GridValidRowModel, V, F = V>(
-  props: DataGridProps<R, V, F>
+export const DataGrid = <R extends GridValidRowModel, V, F = V, P = object>(
+  props: DataGridProps<R, V, F, P>
 ): React.ReactElement => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const { fetchRows, setRows, rows, initialState, ...gridProps } = props
@@ -127,13 +141,13 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
   /** Load rows from the API on component mount */
   useEffect(() => {
     if (typeof props.fetchRows !== 'undefined') {
-      const rowsPromise = cancelable(props.fetchRows())
+      const rowsPromise = cancelable(props.fetchRows(props.params))
       handleFetchRows(rowsPromise)
 
       // Cancel the promise callbacks on component unmount
       return rowsPromise.cancel
     }
-  }, [])
+  }, [JSON.stringify(props.params)])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
   useEffect(() => {
@@ -188,12 +202,36 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V>(
         }
         rowHeight={props.size === 'small' ? 36 : 56}
         getRowClassName={
-          props.zebraStripes
+          typeof props.getRowClassName !== 'undefined'
+            ? props.getRowClassName
+            : props.zebraStripes
             ? (params) =>
                 params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
             : undefined
         }
-        sx={{ ...dataGridRowSx(theme) }}
+        sx={
+          {
+            ...dataGridRowSx(theme),
+            ...(props.sx ? props.sx : {}),
+          } as SxProps<Theme>
+        }
+        components={{
+          NoRowsOverlay: () => (
+            <Typography
+              variant="bodyMedium"
+              color="onSurface"
+              sx={{
+                display: 'flex',
+                height: '100%',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {props.noRowsMessage ?? 'No rows'}
+            </Typography>
+          ),
+        }}
         {...gridProps}
       />
     </Box>

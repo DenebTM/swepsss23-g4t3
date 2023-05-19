@@ -117,21 +117,21 @@ export const PAGE_URL: {
     permittedRoles: _ALL_ROLES,
   },
 
-  /** Path for access point managment by admins */
+  /** Path for access point management by admins */
   manageAccessPoints: {
     pageTitle: 'Access Points',
     href: `/${ADMIN_ROOT}/access-points`,
     permittedRoles: [AuthUserRole.ADMIN],
   },
 
-  /** Path for sensor station managment by admins */
+  /** Path for sensor station management by admins */
   manageGreenhouses: {
     pageTitle: 'Greenhouses',
     href: `/${ADMIN_ROOT}/${GREENHOUSES_ROOT}`,
     permittedRoles: [AuthUserRole.ADMIN],
   },
 
-  /** Path for user managment by admins */
+  /** Path for user management by admins */
   manageUsers: {
     pageTitle: 'Users',
     href: `/${ADMIN_ROOT}/users`,
@@ -165,8 +165,8 @@ export const GreenhouseIcon = YardIcon
 const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
 
 /** Encrypt a sensor station UUID for photo upload */
-const encryptSensorStationUuid = (uuid: SensorStationUuid): string =>
-  encodeURIComponent(CryptoJS.AES.encrypt(String(uuid), SECRET).toString())
+const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
+  encodeURIComponent(CryptoJS.AES.encrypt(String(ssID), SECRET).toString())
 
 /** Decrypt a sensor station UUID for photo upload */
 export const decryptSensorStationUuid = (
@@ -239,8 +239,8 @@ export interface GreenhouseMetricRange {
   valueKey: keyof SensorValues
 }
 
-export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
-  {
+export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
+  temperature: {
     colour: theme.purple,
     displayName: 'Temperature',
     valueKey: 'temperature',
@@ -249,7 +249,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     max: 65,
     step: 5,
   },
-  {
+  soilMoisture: {
     colour: theme.tertiary,
     displayName: 'Soil Moisture',
     valueKey: 'soilMoisture',
@@ -258,16 +258,19 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     max: 100,
     step: 5,
   },
-  {
+  lightIntensity: {
     colour: theme.green,
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
-    min: 10,
-    max: 1000,
+    min: 0,
+    max: 1200,
     step: 20,
   },
-  {
+}
+
+export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
+  airPressure: {
     colour: theme.warn,
     displayName: 'Air Pressure',
     valueKey: 'airPressure',
@@ -276,7 +279,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     max: 1300,
     step: 50,
   },
-  {
+  humidity: {
     colour: theme.pink,
     displayName: 'Humidity',
     valueKey: 'humidity',
@@ -285,7 +288,7 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     max: 100,
     step: 5,
   },
-  {
+  airQuality: {
     colour: theme.blue,
     displayName: 'Air Quality',
     description: 'Index of Air Quality (IAQ)',
@@ -295,7 +298,12 @@ export const GREENHOUSE_METRICS: GreenhouseMetricRange[] = [
     max: 500,
     step: 25,
   },
-]
+}
+
+export const GREENHOUSE_METRICS: { [key: string]: GreenhouseMetricRange } = {
+  ...NON_AIR_METRICS,
+  ...AIR_METRICS,
+}
 
 export const greenhouseMetricWithUnit = (
   metricRange: GreenhouseMetricRange

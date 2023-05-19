@@ -10,9 +10,13 @@ Our task was to implement a system for remotely monitoring greenhouses. The four
 
 A sensor station is the combination of a mini greenhouse and an Arduino Nano equipped with sensors to monitor the greenhouse's various metrics such as air quality, soil moisture and light level. The Arduino is in possession of a Bluetooth® Low Energy radio receiver/transmitter which is used to communicate with an access point.
 
+**Setup**: See [arduino/README.md](arduino/README.md)
+
 ### Access point
 
 The access point is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is to read the sensor values transmitted by multiple sensor stations, average data over a configurable period, and pass the averaged values onto the ReST backend. Furthermore, it checks whether each sensor station's sensor values are within acceptable (configurable) bounds and instructs the corresponding sensor station to emit a warning otherwise.
+
+**Setup**: See [raspberry/README.md](raspberry/README.md)
 
 ### Backend
 
@@ -28,9 +32,71 @@ See [frontend/README.md](frontend/README.md) for additional information.
 
 ## Running the frontend and backend
 
-This project uses Java 17 and Node.js 18 (installed automatically as part of the build process).
+This project uses Java 17 and Node.js 18 (installed automatically as part of the build process). A MySQL database is used for persistent data storage, which must be set up before starting the application.
 
-Run `mvn spring-boot:run` on a command line shell to build and start the project. The React frontend will be compiled statically and available at `http://localhost:8080`.
+### Step 1: Install the database
+
+In order for the web server to start, you must be running either a MySQL or MariaDB on your system. For this you may either use Docker for this or set up the database manually.
+
+**(a) Docker** (recommended)
+
+Run the following command to start a container with persistent storage for the database:
+
+On Linux:
+
+```
+docker run --rm                         \
+  --name planthealth_dbsrv              \
+  -v planthealth_db:/var/lib/mysql      \
+  -p 3306:3306                          \
+  -e MYSQL_RANDOM_ROOT_PASSWORD="true"  \
+  -e MYSQL_DATABASE=swe                 \
+  -e MYSQL_USER=swe                     \
+  -e MYSQL_PASSWORD=password            \
+  mariadb:latest
+```
+
+On Windows, you might have to run the entire command on one line:
+`docker run --name planthealth_dbsrv --rm -v planthealth_db:/var/lib/mysql -p 3306:3306 -e MYSQL_RANDOM_ROOT_PASSWORD="true" -e MYSQL_DATABASE=swe -e MYSQL_USER=swe -e MYSQL_PASSWORD=password mariadb:latest`
+
+The database server can be stopped either externally or by pressing Ctrl+\ (backslash).
+
+To delete an existing database and start fresh, first stop the container, then run:
+
+```
+docker volume rm planthealth_db
+```
+
+After this, restart the container.
+
+**Note:** This method requires Docker to be installed and running locally.
+
+- Windows/macOS: Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- Linux: Install Docker using your distribution's package manager (e.g. `sudo apt install docker` on Ubuntu) and start it (usually by `sudo systemctl start docker.service`).
+
+**(b) Manual setup**
+
+Install and start either MySQL or MariaDB, open a MySQL CLI session as the `root` user, then run the following SQL statements to initialize the database and user:
+
+```
+CREATE USER 'swe'@'localhost' identified by 'password';
+CREATE DATABASE 'swe';
+GRANT ALL PRIVILEGES ON 'swe' TO 'swe'@'localhost';
+```
+
+To delete an existing database and start fresh, run the following SQL statement:
+
+```
+DROP DATABASE 'swe';
+```
+
+Afterwards, re-run the initialization statements above.
+
+All of the necessary tables will be created automatically in step 2.
+
+### Step 2: Build and run the web server
+
+Run `mvn spring-boot:run` on a command line shell to build and start the project. The React frontend will be compiled by `yarn` as part of the build process and made available at `http://localhost:8080`.
 
 ### Login
 
@@ -68,8 +134,9 @@ For additional information, see [frontend/README.md](frontend/README.md)
 
 #### Dependencies
 
-- Python 3.9
+- Python >=3.9
 - pip3
+- BlueZ 5.66 (see [this guide on OpenOLAT](https://lms.uibk.ac.at/auth/RepositoryEntry/5380538521/CourseNode/107744866999913))
 - ... (see [raspberry/README.md](raspberry/README.md))
 
 The Python code found in [raspberry](raspberry/) should run on most Linux computers equipped with Bluetooth® 4.0 or later, but Bleak may not be compatible with all Bluetooth® adapters.
