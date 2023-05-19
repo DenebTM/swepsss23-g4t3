@@ -10,9 +10,13 @@ Our task was to implement a system for remotely monitoring greenhouses. The four
 
 A sensor station is the combination of a mini greenhouse and an Arduino Nano equipped with sensors to monitor the greenhouse's various metrics such as air quality, soil moisture and light level. The Arduino is in possession of a Bluetooth® Low Energy radio receiver/transmitter which is used to communicate with an access point.
 
+**Setup**: See [arduino/README.md](arduino/README.md)
+
 ### Access point
 
 The access point is a Raspberry Pi, also equipped with Bluetooth® as well as Wi-Fi capabilities. Its main responsibility is to read the sensor values transmitted by multiple sensor stations, average data over a configurable period, and pass the averaged values onto the ReST backend. Furthermore, it checks whether each sensor station's sensor values are within acceptable (configurable) bounds and instructs the corresponding sensor station to emit a warning otherwise.
+
+**Setup**: See [raspberry/README.md](raspberry/README.md)
 
 ### Backend
 
@@ -130,8 +134,9 @@ For additional information, see [frontend/README.md](frontend/README.md)
 
 #### Dependencies
 
-- Python 3.9
+- Python >=3.9
 - pip3
+- BlueZ 5.66 (see [this guide on OpenOLAT](https://lms.uibk.ac.at/auth/RepositoryEntry/5380538521/CourseNode/107744866999913))
 - ... (see [raspberry/README.md](raspberry/README.md))
 
 The Python code found in [raspberry](raspberry/) should run on most Linux computers equipped with Bluetooth® 4.0 or later, but Bleak may not be compatible with all Bluetooth® adapters.
