@@ -4,20 +4,18 @@ import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import { DashboardCard } from '@component-lib/DashboardCard'
-import dayjs from 'dayjs'
 import { getSensorStationMeasurements } from '~/api/endpoints/sensorStations/measurements'
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useSensorStations } from '~/hooks/appContext'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Measurement } from '~/models/measurement'
-import { SensorStationUuid } from '~/models/sensorStation'
+import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
-import { GreenhouseAirMetrics } from './GreenhouseDonuts/GreenhouseAirMetrics'
 import { GreenhouseMetricDonuts } from './GreenhouseDonuts/GreenhouseMetricDonuts'
 import { GreenhouseGraph } from './GreenhouseGraph/GreenhouseGraph'
 
 interface GreenhouseGraphicalViewProps {
-  uuid: SensorStationUuid
+  ssID: SensorStationUuid
 }
 
 /**
@@ -28,23 +26,22 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
 ) => {
   const sensorStations = useSensorStations()
   const addSnackbarMessage = useAddSnackbarMessage()
+
+  const [sensorStation, setSensorStation] = useState<SensorStation | null>(null)
   const [measurements, setMeasurements] = useState<Measurement[]>()
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
   /** Load measurements from the API on component mount */
   useEffect(() => {
+    setMeasurements(undefined)
     const measurementPromise = cancelable(
-      getSensorStationMeasurements(
-        props.uuid,
-        dayjs().subtract(1, 'week').toISOString(),
-        dayjs().toISOString()
-      )
+      getSensorStationMeasurements(props.ssID)
     )
     loadMeasurements(measurementPromise)
 
     // Cancel the promise callbacks on component unmount
     return measurementPromise.cancel
-  }, [])
+  }, [props.ssID])
 
   /** Create a new snackbar if {@link snackbarMessage} has been updated */
   useEffect(() => {
@@ -68,39 +65,51 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
         setMeasurements([]) // Remove loading state
       })
 
+  /** Set the sensor station object in state when sensorStations are updated */
+  useEffect(() => {
+    const foundSs = sensorStations
+      ? sensorStations.find((s) => s.ssID === props.ssID)
+      : null
+    setSensorStation(foundSs ?? null)
+  }, [props.ssID, sensorStations])
+
   return (
     <Grid container spacing={2} padding={2}>
-      {measurements && ( // qqjf TODO add a loading state to each card
-        <>
-          <Grid xs={12} md={8}>
-            <DashboardCard>
-              <GreenhouseMetricDonuts
-                measurement={measurements.length > 0 ? measurements[0] : null}
-                uuid={props.uuid}
-              />
-            </DashboardCard>
-          </Grid>
-          <Grid xs={12} md={4}>
-            <DashboardCard>
-              <GreenhouseAirMetrics
-                measurement={measurements.length > 0 ? measurements[0] : null}
-                uuid={props.uuid}
-              />
-            </DashboardCard>
-          </Grid>
-          <Grid xs={12}>
-            <DashboardCard>
-              <GreenhouseGraph
-                measurements={measurements}
-                sensorStation={sensorStations?.find(
-                  (s) => s.uuid === props.uuid
-                )}
-                uuid={props.uuid}
-              />
-            </DashboardCard>
-          </Grid>
-        </>
-      )}
+      <Grid xs={12}>
+        <DashboardCard
+          loading={
+            typeof measurements === 'undefined' || sensorStation === null
+          }
+          empty={
+            sensorStation !== null && sensorStation.currentMeasurement === null
+          }
+          emptyText={`The current measurements for greenhouse ${sensorStation?.ssID} will appear here.`}
+        >
+          {measurements && (
+            <GreenhouseMetricDonuts
+              measurement={
+                sensorStation ? sensorStation.currentMeasurement : null
+              }
+              sensorStation={sensorStation}
+            />
+          )}
+        </DashboardCard>
+      </Grid>
+
+      <Grid xs={12} sx={{ height: 400 }}>
+        <DashboardCard
+          loading={typeof measurements === 'undefined'}
+          empty={measurements && measurements.length <= 1}
+          emptyText="A graph of measurements from the last week will appear here once there are at least two measurements from this greenhouse."
+        >
+          {measurements && (
+            <GreenhouseGraph
+              measurements={measurements}
+              sensorStation={sensorStation}
+            />
+          )}
+        </DashboardCard>
+      </Grid>
     </Grid>
   )
 }

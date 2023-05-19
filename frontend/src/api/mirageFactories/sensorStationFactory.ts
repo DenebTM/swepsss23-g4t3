@@ -47,11 +47,16 @@ const randomJitter = (sensorValues: SensorValues, percentage = 0.2) =>
 export const sensorStationFactory = Factory.extend<
   Omit<
     SensorStation,
-    'accessPoint' | 'gardeners' | 'lowerBound' | 'measurements' | 'upperBound'
+    | 'apName'
+    | 'gardeners'
+    | 'lowerBound'
+    | 'currentMeasurement'
+    | 'upperBound'
+    | 'measurements'
   > &
     AfterCreate<SensorStation>
 >({
-  uuid(i: number) {
+  ssID(i: number) {
     return i
   },
   aggregationPeriod() {
@@ -76,12 +81,15 @@ export const sensorStationFactory = Factory.extend<
     for (let i = 0; i <= nGardeners; i++) {
       const userId = faker.name.middleName().toLowerCase()
       gardenerIds.push(userId)
-      server.create('user', { username: userId, role: AuthUserRole.GARDENER })
+      server.create('user', {
+        username: userId,
+        userRole: AuthUserRole.GARDENER,
+      })
     }
 
     // Create access point
     const ap: ModelInstance<AccessPoint> = server.create('accessPoint')
-    ap.update('sensorStations', [sensorStation.attrs.uuid])
+    ap.update('sensorStations', [sensorStation.attrs.ssID])
 
     // Create measurements
     const measurements = server.createList(
@@ -89,34 +97,47 @@ export const sensorStationFactory = Factory.extend<
       faker.datatype.number({ min: 0, max: 30 })
     ) as ModelInstance<Measurement>[]
 
-    // Create bound objects
-    const lowerBound: ModelInstance<SensorValues> = server.create('sensorValue')
-    const upperBound: ModelInstance<SensorValues> = server.create('sensorValue')
-
     // Generate upper and lower bounds near the generated measurements
     const measurementVals: SensorValues[] = measurements.map(
       (m) => m.attrs.data
     )
-    const minSensorValues = measurementVals.reduce(
-      compareSensorVals(Math.min),
-      lowerBound.attrs
-    )
-    const maxSensorValues = measurementVals.reduce(
-      compareSensorVals(Math.max),
-      upperBound.attrs
-    )
 
-    // Randomly jitter max and min values
-    lowerBound.update(randomJitter(minSensorValues))
-    upperBound.update(randomJitter(maxSensorValues))
+    // Create bounds objects, returning null with a 25% probability
+    const boundIsNullDenom = 4
+
+    // Generate mocked lower bound
+    let lowerBound: ModelInstance<SensorValues> | null = null
+    if (faker.datatype.number({ min: 0, max: boundIsNullDenom - 1 }) === 0) {
+      lowerBound = server.create('sensorValue') as ModelInstance<SensorValues>
+      const minSensorValues = measurementVals.reduce(
+        compareSensorVals(Math.min),
+        lowerBound.attrs
+      )
+      // Randomly jitter min values
+      lowerBound.update(randomJitter(minSensorValues))
+    }
+
+    // Generate mocked upper bound
+    let upperBound: ModelInstance<SensorValues> | null = null
+    if (faker.datatype.number({ min: 0, max: boundIsNullDenom - 1 }) === 0) {
+      upperBound = server.create('sensorValue') as ModelInstance<SensorValues>
+      const maxSensorValues = measurementVals.reduce(
+        compareSensorVals(Math.max),
+        upperBound.attrs
+      )
+      // Randomly jitter min values
+      upperBound.update(randomJitter(maxSensorValues))
+    }
 
     // Update sensorStation object
     sensorStation.update({
+      currentMeasurement:
+        measurements.length > 0 ? measurements[0].attrs : null,
       gardeners: gardenerIds,
-      lowerBound: lowerBound.attrs,
+      lowerBound: lowerBound ? lowerBound.attrs : null,
       measurements: measurements.map((m) => m.attrs),
-      upperBound: upperBound.attrs,
-      accessPoint: ap.attrs.apId,
+      upperBound: upperBound ? upperBound.attrs : null,
+      apName: ap.attrs.name,
     })
   },
 })

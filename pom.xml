@@ -37,16 +37,19 @@
         <yarn.version>v1.22.19</yarn.version>
 
         <!-- Allow Sonarqube to scan frontend code -->
-        <sonar.sources>src/main,frontend/src</sonar.sources>
+        <sonar.sources>src/main,frontend/src,raspberry</sonar.sources>
         <sonar.tests>src/test,frontend/src/tests</sonar.tests>
         <sonar.test.inclusions>src/test/**/*.java,frontend/src/tests/**/*.test.ts*</sonar.test.inclusions>
         <sonar.testExecutionReportPaths>frontend/sonar-report.xml</sonar.testExecutionReportPaths>
 
-        <sonar.exclusions>frontend/src/tests</sonar.exclusions>
-        <sonar.coverage.exclusions>src/test,frontend/src/tests</sonar.coverage.exclusions>
+        <sonar.exclusions>frontend/src/tests,raspberry/tests</sonar.exclusions>
+        <sonar.coverage.exclusions>src/test,frontend/src/tests,raspberry/tests,raspberry/mock_server</sonar.coverage.exclusions>
 
         <sonar.typescript.tsconfigPath>frontend/tsconfig.json</sonar.typescript.tsconfigPath>
         <sonar.javascript.lcov.reportPaths>frontend/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+
+        <sonar.python.version>3.9</sonar.python.version>
+        <sonar.python.coverage.reportPaths>raspberry/coverage.xml</sonar.python.coverage.reportPaths>
     </properties>
 
     <dependencies>
@@ -58,11 +61,18 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
-        
+
+        <!-- persistent production database -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+        <!-- in-memory test database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -73,6 +83,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback.db</groupId>
+            <artifactId>logback-classic-db</artifactId>
+            <version>1.2.11.1</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.joinfaces</groupId>
@@ -130,6 +146,16 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>10.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version>
         </dependency>
     </dependencies>
 

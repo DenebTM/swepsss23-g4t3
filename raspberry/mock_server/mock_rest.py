@@ -1,6 +1,5 @@
 from flask import Flask,jsonify, request
 import time
-import json
 
 app = Flask(__name__)
 status_called = False
@@ -8,21 +7,21 @@ status_called = False
 stations = []
 def station_idx(id):
     try:
-        return [station['id'] == id for station in stations].index(True)
+        return [station['ssID'] == id for station in stations].index(True)
     except ValueError:
         return -1
 
 
 #Route that initiates connection
-@app.route('/access-points', methods=['POST'])
+@app.route('/api/access-points', methods=['POST'])
 def status():
     global status_called
     status_called = True
-    response = {'name': 'AP1', 'serverAddress': 'localhost'}
+    response = {'name': 'AP1', 'serverAddress': 'localhost', 'token': 'idfc'}
     return jsonify(response), 200
 
 # Route that polls for connection update
-@app.route('/access-points/AP1', methods=['GET'])
+@app.route('/api/access-points/AP1', methods=['GET'])
 def accesspoint_connection():
     if status_called:
         response = {'status': 'SEARCHING'}
@@ -37,18 +36,18 @@ def accesspoint_connection():
         return jsonify('Forbidden'), 401
 
 # Route to get new sensor station thresholds
-@app.route('/sensor-stations/<id>', methods=['GET'])
+@app.route('/api/sensor-stations/<id>', methods=['GET'])
 def threshold_update(id):
     if status_called:
         response = {
-            'id': id,
+            'ssID': id,
             'status': 'OK',
             'gardeners':[
                 'user1',
                 'user2'
             ],
-            'transmission_interval': 500,
-            'accessPoint': 'AccessPoint1',
+            'aggregationPeriod': 20,
+            'apName': 'AccessPoint1',
             'lowerBound': {
                 'airPressure': 0,
                 'airQuality': 0,
@@ -72,7 +71,7 @@ def threshold_update(id):
         return jsonify('Forbidden'), 401
 
 # Route that asks for instructions for each sensor station
-@app.route('/access-points/AP1/sensor-stations', methods=['GET'])
+@app.route('/api/access-points/AP1/sensor-stations', methods=['GET'])
 def get_all_ss():
     global stations
     if status_called:
@@ -81,7 +80,7 @@ def get_all_ss():
         return jsonify('Forbidden'), 401
 
 # Route to update connection status in backend
-@app.route('/sensor-stations/<id>', methods=['PUT'])
+@app.route('/api/sensor-stations/<id>', methods=['PUT'])
 def update_ss_status(id):
     global stations
     if status_called:
@@ -102,16 +101,16 @@ def update_ss_status(id):
         return jsonify('Forbidden'), 401
 
 # Route to send back the sensor stations
-@app.route('/access-points/AP1/sensor-stations', methods=['POST'])
+@app.route('/api/access-points/AP1/sensor-stations', methods=['POST'])
 def send_found_ss():
     global stations
     if status_called:
         new_ss = request.get_json()
         for ss in new_ss:
-            ss_id = ss['id']
+            ss_id = ss['ssID']
             idx = station_idx(ss_id)
             if idx == -1:
-                stations.append({ 'id': ss_id, 'status': 'PAIRING' })
+                stations.append({ 'ssID': ss_id, 'status': 'PAIRING' })
                 print('new station added; current stations: ', stations)
 
         return jsonify('OK'), 200
@@ -121,7 +120,7 @@ def send_found_ss():
     
 
 # Route to send sensor data
-@app.route('/sensor-station/<id>/measurements', methods=['POST'])
+@app.route('/api/sensor-stations/<id>/measurements', methods=['POST'])
 def send_sensor_data(id):
     if status_called:
         return jsonify('OK'), 200

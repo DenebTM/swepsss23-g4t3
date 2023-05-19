@@ -5,6 +5,7 @@ import at.qe.skeleton.repositories.AccessPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Collection;
 
 @Service
@@ -36,6 +37,7 @@ public class AccessPointService {
      * @return the saved access point
      */
     public AccessPoint saveAP(AccessPoint ap) {
+        ap.setLastUpdate(Instant.now());
         return apRepository.save(ap);
     }
 
@@ -45,6 +47,15 @@ public class AccessPointService {
      */
     public void deleteAP(AccessPoint ap) {
         apRepository.delete(ap);
+    }
+
+    /**
+     * set an AP's {@code lastUpdate} to the currrent system time
+     * @param ap to set lastUpdate value for
+     */
+    public void setLastUpdate(AccessPoint ap) {
+        ap.setLastUpdate(Instant.now());
+        apRepository.save(ap);
     }
 
 }

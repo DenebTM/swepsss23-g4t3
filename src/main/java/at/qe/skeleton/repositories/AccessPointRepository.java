@@ -1,10 +1,14 @@
 package at.qe.skeleton.repositories;
 
-import at.qe.skeleton.models.AccessPoint;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
+import at.qe.skeleton.models.AccessPoint;
+import at.qe.skeleton.models.enums.AccessPointStatus;
+
 public interface AccessPointRepository extends AbstractRepository<AccessPoint, Long> {
 
     AccessPoint findFirstByName(String name);
+
+    List<AccessPoint> findAllByStatusNot(AccessPointStatus status);
+
 }

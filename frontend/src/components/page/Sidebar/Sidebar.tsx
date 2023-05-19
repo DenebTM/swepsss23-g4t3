@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
-import { PlantIcon } from '@component-lib/PlantIcon'
+import { PlantIcon } from '@component-lib/icons/PlantIcon'
 import { Tooltip } from '@component-lib/Tooltip'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { theme } from '~/styles/theme'

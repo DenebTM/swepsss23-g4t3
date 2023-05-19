@@ -4,7 +4,12 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
 import { DeleteCell } from '@component-lib/Table/DeleteCell'
-import { StatusCell, StatusVariant } from '@component-lib/Table/StatusCell'
+import {
+  StatusCell,
+  statusCellMinWidth,
+  StatusVariant,
+} from '@component-lib/Table/StatusCell'
+import { TablePaper } from '@component-lib/Table/TablePaper'
 import { deleteSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { AppContext } from '~/contexts/AppContext/AppContext'
 import { useSensorStations } from '~/hooks/appContext'
@@ -21,8 +26,11 @@ import { GenerateQrCode } from './GenerateQrCode/GenerateQrCode'
 /** Map values from {@link StationStatus} to {@link StatusVariant} for display in {@link StatusCell} */
 const sensorStationToVariant: { [key in StationStatus]: StatusVariant } = {
   [StationStatus.OK]: StatusVariant.OK,
+  [StationStatus.AVAILABLE]: StatusVariant.OK,
   [StationStatus.WARNING]: StatusVariant.WARNING,
+  [StationStatus.PAIRING]: StatusVariant.INFO,
   [StationStatus.OFFLINE]: StatusVariant.ERROR,
+  [StationStatus.PAIRING_FAILED]: StatusVariant.ERROR,
 }
 
 /** Type of a `DataGrid` row */
@@ -34,10 +42,10 @@ const centerCell: Partial<GridColDef<SensorStation, any, SensorStation>> = {
 }
 
 /**
- * Sensor station managment page for admins
+ * Sensor station management page for admins
  */
 export const SensorStationsTable: React.FC = () => {
-  const sensorStations = useSensorStations()
+  const sensorStations = useSensorStations(true)
   const { setSensorStations } = React.useContext(AppContext)
 
   // Store the largest number of gardeners for a single greenhouse as dynamic column width is not supported yet by DataGrid:
@@ -75,12 +83,12 @@ export const SensorStationsTable: React.FC = () => {
 
   /** Columns for the access point management table */
   const columns: GridColDef<SensorStation, any, SensorStation>[] = [
-    { ...centerCell, flex: 1, field: 'uuid', headerName: 'UUID' },
+    { ...centerCell, width: 60, field: 'ssID', headerName: 'UUID' },
     {
       ...centerCell,
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      width: statusCellMinWidth,
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => (
@@ -92,15 +100,15 @@ export const SensorStationsTable: React.FC = () => {
     },
     {
       ...centerCell,
-      flex: 1,
+      width: 175,
       field: 'aggregationPeriod',
       headerName: 'Aggregation Period (s)',
     },
     {
       ...centerCell,
-      flex: 1,
-      field: 'accessPoint',
-      headerName: 'Access Point ID',
+      width: 135,
+      field: 'apName',
+      headerName: 'Access Point',
       renderCell: (
         params: GridRenderCellParams<SensorStation, any, SensorStation>
       ) => params.value,
@@ -117,7 +125,7 @@ export const SensorStationsTable: React.FC = () => {
       ) => <GardenerChips {...params} setRows={handleUpdateSensorStations} />,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 130 * maxGardenersPerGreenhouse,
+      width: Math.max(130 * maxGardenersPerGreenhouse, 100),
     },
     {
       ...centerCell,
@@ -131,26 +139,29 @@ export const SensorStationsTable: React.FC = () => {
       ) => (
         <DeleteCell<SensorStation, SensorStationUuid>
           deleteEntity={deleteSensorStation}
-          entityId={params.row.uuid}
+          entityId={params.row.ssID}
           entityName="sensor station"
-          getEntityId={(r) => r.uuid}
+          getEntityId={(r) => r.ssID}
           setRows={handleUpdateSensorStations}
         >
           <AddGardenerDropdown
             sensorStation={params.row}
             setSensorStations={handleUpdateSensorStations}
           />
-          <GenerateQrCode uuid={params.row.uuid} />
+          <GenerateQrCode ssID={params.row.ssID} />
         </DeleteCell>
       ),
     },
   ]
 
   return (
-    <DataGrid<SensorStation, any, SensorStation>
-      columns={columns}
-      getRowId={(row: SensorStation) => row.uuid}
-      rows={sensorStations}
-    />
+    <TablePaper>
+      <DataGrid<SensorStation, any, SensorStation>
+        columns={columns}
+        getRowId={(row: SensorStation) => row.ssID}
+        rows={sensorStations ?? undefined}
+        noRowsMessage="No greenhouses to display"
+      />
+    </TablePaper>
   )
 }

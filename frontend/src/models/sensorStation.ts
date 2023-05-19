@@ -7,14 +7,15 @@ export type SensorStationUuid = number
 
 /** Information about a single sensor station */
 export interface SensorStation {
-  uuid: SensorStationUuid
-  accessPoint: AccessPointId
+  ssID: SensorStationUuid
+  apName: AccessPointId
   aggregationPeriod: number // Transmission interval in seconds
   gardeners: Username[]
-  lowerBound: SensorValues
+  lowerBound: SensorValues | null
+  currentMeasurement: Measurement | null
   measurements: Measurement[]
   status: StationStatus
-  upperBound: SensorValues
+  upperBound: SensorValues | null
 }
 
 /** Possible status values for a {@link SensorStation} */
@@ -22,4 +23,7 @@ export enum StationStatus {
   OK = 'OK',
   WARNING = 'WARNING',
   OFFLINE = 'OFFLINE',
+  AVAILABLE = 'AVAILABLE',
+  PAIRING = 'PAIRING',
+  PAIRING_FAILED = 'PAIRING_FAILED',
 }

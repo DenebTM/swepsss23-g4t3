@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { Cell, Label, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
+import Typography from '@mui/material/Typography'
+
 import { theme } from '~/styles/theme'
 
 import { DonutFloatingLegend, DonutValue } from './DonutFloatingLegend'
 
 interface DonutChartProps {
-  data: DonutValue[]
+  /** If `props.data` is `null` then an empty state will be displayed */
+  data: DonutValue[] | null
   label: string
 }
 
@@ -30,7 +33,23 @@ export const DonutChart: React.FC<DonutChartProps> = (props) => {
     setLegend(undefined)
   }
 
-  return (
+  return props.data === null ? (
+    <Typography
+      variant="bodySmall"
+      color="onSurfaceVariant"
+      align="center"
+      sx={{
+        display: 'flex',
+        height: '100%',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: theme.spacing(1, 2),
+      }}
+    >
+      Statuses for {props.label.toLowerCase()} will be displayed here.
+    </Typography>
+  ) : (
     <>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
