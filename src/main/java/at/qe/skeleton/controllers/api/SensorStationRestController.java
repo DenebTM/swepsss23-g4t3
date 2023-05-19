@@ -174,12 +174,21 @@ public class SensorStationRestController implements BaseRestController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
-        String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
         
         SensorStation ss = ssService.loadSSById(id);
+
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
+        }
+
+        List<String> gardeners = ssService.getGardenersBySS(ss);
+        if (!gardeners.contains(authenticatedUser) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            logger.info("Attempt to update sensor station by unauthorized user " + authenticatedUser,
+                LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+            throw new AccessDeniedException("Gardener is not assigned to sensor station");
         }
 
         if (json.containsKey("status")) {
