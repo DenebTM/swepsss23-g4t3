@@ -99,7 +99,6 @@ export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
   useEffect(() => {
     if (donutContainerRef.current) {
       const containerWidth = donutContainerRef.current.clientWidth
-      console.log(stackDonuts)
       const calculatedDonutHeight = stackDonuts
         ? containerWidth
         : Math.floor(containerWidth / 2)
