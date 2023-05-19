@@ -75,7 +75,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
   }, [props.measurements])
 
   return (
-    <ResponsiveContainer width="100%" aspect={2.5}>
+    <ResponsiveContainer width="100%">
       <LineChart
         data={data}
         margin={{
@@ -108,7 +108,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
           }}
         />
 
-        <Legend />
+        <Legend align="center" />
 
         {Object.values(GREENHOUSE_METRICS).map(
           (metricRange: GreenhouseMetricRange) => (

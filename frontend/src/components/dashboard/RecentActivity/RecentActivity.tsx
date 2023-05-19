@@ -40,7 +40,7 @@ export const RecentActivity: React.FC = () => {
       empty={typeof logEntries !== 'undefined' && logEntries.length === 0}
       emptyText="Recent notifications will appear here"
     >
-      <Stack sx={{ width: '100%' }}>
+      <Stack sx={{ width: '100%', alignSelf: 'flex-start' }}>
         <Typography color="onSurfaceVariant" variant="titleSmall">
           Recent activity
         </Typography>

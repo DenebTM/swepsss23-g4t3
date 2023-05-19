@@ -96,7 +96,7 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
         </DashboardCard>
       </Grid>
 
-      <Grid xs={12}>
+      <Grid xs={12} sx={{ height: 400 }}>
         <DashboardCard
           loading={typeof measurements === 'undefined'}
           empty={measurements && measurements.length <= 1}
