@@ -46,6 +46,8 @@ export const GreenhouseEditableRangeCell: React.FC<
       typographyProps={props.typographyProps}
       unit={props.unit}
       value={props.rowValue}
+      max={props.max}
+      min={props.min}
     />
   )
 }
