@@ -69,7 +69,7 @@ interface SidebarContentsProps {
  */
 export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
   const navigate = useNavigate()
-  const sensorStations = useSensorStations()
+  const sensorStations = useSensorStations(true)
 
   const handleLogout = (): Promise<void> =>
     logout()

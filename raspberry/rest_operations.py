@@ -88,7 +88,7 @@ async def send_sensorstation_connection_status(session, sensorstation, status):
 async def send_warning_to_backend(sensorstation_id, session):
     data = {'ssID': sensorstation_id, 'status': 'WARNING'}
     async with session.put('/api/sensor-stations/' + str(sensorstation_id), json=data) as response:
-        await logging_operations.log_to_file_and_list('WARNING', f'Updatet sensorstation status for station: {sensorstation_id} to WARNING', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        await logging_operations.log_to_file_and_list('WARN', f'Updated sensorstation status for station: {sensorstation_id} to WARNING', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
 
 @retry_connection_error(retries = 3, interval = 5)
 async def clear_warning_on_backend(sensorstation_id, session, data):
