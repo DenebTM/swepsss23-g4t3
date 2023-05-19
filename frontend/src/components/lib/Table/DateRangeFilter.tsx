@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 
 import Stack from '@mui/material/Stack'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import {
   DateTimePicker,
@@ -25,6 +26,7 @@ const pickerStyleProps: Partial<DateTimePickerSlotsComponentsProps<DateValue>> =
   }
 
 interface DateRangeFilterProps {
+  children?: React.ReactNode
   from: DateValue
   to: DateValue
   setFrom: Dispatch<SetStateAction<DateValue>>
@@ -35,12 +37,17 @@ interface DateRangeFilterProps {
  * Two side-by-side {@link DateTimePicker}s to set the values of `props.from` and `props.to` with a Dayjs date and time
  */
 export const DateRangeFilter: React.FC<DateRangeFilterProps> = (props) => {
+  const breakMd = useMediaQuery(theme.breakpoints.down('md'))
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack
-        direction="row"
+        direction={breakMd ? 'column' : 'row'}
         spacing={2}
-        sx={{ padding: theme.spacing(3, 1, 0) }}
+        sx={{
+          padding: theme.spacing(3, 1, 2),
+          placeItems: 'flex-start',
+        }}
       >
         <DateTimePicker
           label="From"
@@ -81,6 +88,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = (props) => {
             ...pickerStyleProps,
           }}
         />
+        {props.children}
       </Stack>
     </LocalizationProvider>
   )

@@ -39,6 +39,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
       headerAlign: 'center',
       align: 'center',
       width: 135,
+      filterable: false,
     }
 
   /**
