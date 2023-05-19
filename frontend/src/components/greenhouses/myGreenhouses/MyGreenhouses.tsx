@@ -16,7 +16,7 @@ import { GreenhouseAccordion } from './GreenhouseAccordion/GreenhouseAccordion'
  * Page for a gardener to see all greenhouses assigned to them
  */
 export const MyGreenhouses: React.FC = () => {
-  const sensorStations = useSensorStations() // qqjf TODO reload periodically?
+  const sensorStations = useSensorStations(true) // qqjf TODO reload periodically?
 
   // Store the currently expanded ssID in the state if an accordion is expanded, otherwise `null`
   const [expanded, setExpanded] = useState<SensorStationUuid | null>(null)
