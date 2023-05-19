@@ -11,7 +11,7 @@ import { useAddErrorSnackbar } from './snackbar'
  * If the values have not been set yet, then fetches and saves these.
  */
 export const useSensorStations = (
-  onlyPaired?: boolean
+  hideAvailable?: boolean
 ): SensorStation[] | null => {
   const { appState } = React.useContext(AppContext)
   const sensorStations: SensorStation[] | null = appState.sensorStations.data
@@ -22,7 +22,7 @@ export const useSensorStations = (
     loadSensorStations()
   }
 
-  return onlyPaired
+  return hideAvailable
     ? sensorStations?.filter((s) => s.status !== StationStatus.AVAILABLE) ??
         null
     : sensorStations

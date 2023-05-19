@@ -52,7 +52,11 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
 
-    private static SensorValues partialValuesUpdate(SensorValues vals, SensorValues newVals) {
+    private static SensorValues partialValuesUpdate(SensorValues vals, Object json) {
+        var mapper = new ObjectMapper();
+        @SuppressWarnings({"unchecked"})
+        SensorValues newVals = mapper.convertValue((Map<String, Object>)json, SensorValues.class);
+
         if (vals == null) {
             vals = new SensorValues();
         }
@@ -222,13 +226,7 @@ public class SensorStationRestController implements BaseRestController {
 
         if (json.containsKey("lowerBound")) {
             try {
-                @SuppressWarnings({"unchecked"})
-                Map<String, Object> jsonMap = (Map<String, Object>)json.get("lowerBound");
-
-                var mapper = new ObjectMapper();
-                SensorValues jsonVals = mapper.convertValue(jsonMap, SensorValues.class);
-
-                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), jsonVals);
+                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), json.get("lowerBound"));
                 ss.setLowerBound(sensorValuesRepository.save(newLowerBound));
 
                 logger.info("Sensor thresholds (lower) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
@@ -238,13 +236,7 @@ public class SensorStationRestController implements BaseRestController {
         }
         if (json.containsKey("upperBound")) {
             try {
-                @SuppressWarnings({"unchecked"})
-                Map<String, Object> jsonMap = (Map<String, Object>)json.get("upperBound");
-
-                var mapper = new ObjectMapper();
-                SensorValues jsonVals = mapper.convertValue(jsonMap, SensorValues.class);
-
-                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), jsonVals);
+                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), json.get("upperBound"));
                 ss.setUpperBound(sensorValuesRepository.save(newUpperBound));
 
                 logger.info("Sensor thresholds (upper) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
