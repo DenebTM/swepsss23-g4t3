@@ -263,8 +263,8 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
-    min: 10,
-    max: 1000,
+    min: 0,
+    max: 1200,
     step: 20,
   },
 }
