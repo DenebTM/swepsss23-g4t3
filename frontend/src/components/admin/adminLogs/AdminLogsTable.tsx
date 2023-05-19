@@ -90,7 +90,7 @@ export const AdminLogsTable: React.FC = () => {
         setRows={setLogEntries}
         fetchRows={(params) => getLogs(params)}
         noRowsMessage="No logs to display"
-        params={{ from: from, to: to }}
+        params={{ from: from?.toISOString(), to: to?.toISOString() }}
       />
     </TablePaper>
   )
