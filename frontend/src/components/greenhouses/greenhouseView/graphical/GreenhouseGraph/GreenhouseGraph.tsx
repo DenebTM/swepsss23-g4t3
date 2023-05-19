@@ -72,7 +72,7 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
     } else {
       setData([])
     }
-  }, [props.measurements])
+  }, [props.measurements, props.sensorStation])
 
   return (
     <ResponsiveContainer width="100%">
@@ -92,9 +92,14 @@ export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
             dayjs(isoTimestamp).format('YYYY-MM-DD')
           }
         />
-        <YAxis>
+        <YAxis
+          unit="%"
+          domain={[-25, 125]}
+          ticks={[-25, 0, 25, 50, 75, 100, 125]}
+          allowDataOverflow
+        >
           <Label angle={-90} position="left" fill={theme.outline}>
-            Percentile (%)
+            Percentile
           </Label>
         </YAxis>
         <Tooltip<number | string, string>
