@@ -239,7 +239,7 @@ public class SensorStationRestController implements BaseRestController {
         if (json.containsKey("upperBound")) {
             try {
                 @SuppressWarnings({"unchecked"})
-                Map<String, Object> jsonMap = (Map<String, Object>)json.get("lowerBound");
+                Map<String, Object> jsonMap = (Map<String, Object>)json.get("upperBound");
 
                 var mapper = new ObjectMapper();
                 SensorValues jsonVals = mapper.convertValue(jsonMap, SensorValues.class);
