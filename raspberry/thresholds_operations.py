@@ -17,14 +17,17 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
             max_threshold = thresholds_dict.get(sensor+'_max')
             min_threshold = thresholds_dict.get(sensor+'_min')
 
-            if max_threshold is None or min_threshold is None:
-                raise ValueError(f'Thresholds not found for sensor {sensor}.')
+            should_warn = False
+            if min_threshold is not None and average_value < min_threshold:
+                should_warn = True
+            if max_threshold is not None and average_value > max_threshold:
+                should_warn = True
 
-            if not min_threshold <= average_value <= max_threshold:
+            if should_warn:
                 await send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session)
                 await send_warning_to_backend(sensorstation_id, session)
     except Exception as e:
-        await logging_operations.log_to_file_and_list('WARN', f'Error in threshold check: {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        await logging_operations.log_to_file_and_list('WARN', f'Error in threshold check for station {sensorstation_id}: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
         
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
