@@ -81,7 +81,7 @@ public class VisitorControllerTest {
     }
 
     @Test
-    void testNoPhotosToReturn() {
+    void testNoPhotosToreturn() {
         if (!photoDataRepository.findAll().isEmpty()) {
             List<PhotoData> list = photoDataRepository.findAll();
             for (PhotoData p : list) {

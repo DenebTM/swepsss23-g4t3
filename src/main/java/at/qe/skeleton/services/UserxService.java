@@ -32,7 +32,7 @@ public class UserxService {
     private SensorStationService ssService;
 
     /**
-     * Returns a collection of all users.
+     * returns a collection of all users.
      *
      * @return
      */

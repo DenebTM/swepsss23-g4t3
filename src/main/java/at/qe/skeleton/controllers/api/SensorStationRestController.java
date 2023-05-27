@@ -99,7 +99,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @GetMapping(value = SS_AP_PATH)
     public ResponseEntity<Collection<SensorStation>> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
-        // Return a 404 error if the access point is not found
+        // return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
             throw new NotFoundInDatabaseException("Access point", apName);
@@ -117,7 +117,7 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<SensorStation> getSSById(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
-        // Return a 404 error if the sensor-station is not found
+        // return a 404 error if the sensor-station is not found
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
         }
@@ -140,7 +140,7 @@ public class SensorStationRestController implements BaseRestController {
         @PathVariable(value = "name") String apName,
         @RequestBody Collection<SensorStation> newSSList
     ) {
-        // Return a 404 error if the access point is not found
+        // return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
             throw new NotFoundInDatabaseException("Access point", apName);

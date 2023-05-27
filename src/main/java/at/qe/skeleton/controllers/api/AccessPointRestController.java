@@ -54,7 +54,7 @@ public class AccessPointRestController implements BaseRestController {
     @GetMapping(value = AP_NAME_PATH)
     public ResponseEntity<AccessPoint> getAPByName(@PathVariable(value = "name") String name) {
         AccessPoint ap = apService.loadAPByName(name);
-        // Return a 404 error if the access point is not found
+        // return a 404 error if the access point is not found
         if (ap == null) {
             throw new NotFoundInDatabaseException(AP, name);
         }

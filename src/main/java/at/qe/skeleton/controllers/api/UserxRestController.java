@@ -55,9 +55,8 @@ public class UserxRestController implements BaseRestController {
     @GetMapping(value = USERNAME_PATH)
     @PreAuthorize("hasAuthority('ADMIN') or principal eq #username")
     public ResponseEntity<Userx> getUserByUsername(@PathVariable(value = "username") String username) {
+        // return a 404 error if the User is not found
         Userx userx = userService.loadUserByUsername(username);
-
-        // Return a 404 error if the User is not found
         if (userx == null) {
             throw new NotFoundInDatabaseException("User", username);
         }
@@ -75,16 +74,16 @@ public class UserxRestController implements BaseRestController {
     public ResponseEntity<Userx> createUser(@RequestBody Map<String, Object> json) {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // return a 400 error if the user gets created with empty username
-        String username = String.valueOf(json.get("username"));
+        // return a 400 error if an empty username is given
+        String username = String.valueOf(json.get(UN));
         if (username.equals("null") || username.equals("")) {
             throw new BadRequestException("Username cannot be blank.");
         }
-        // return a 400 error if the user gets created with an username already in use
-        if (userService.loadUserByUsername(username)!=null) {
+        // return a 400 error if a user with the same name already exists
+        if (userService.loadUserByUsername(username) != null) {
             throw new BadRequestException("Username is already in use. It must be unique.");
         }
-        // return a 400 error if the user gets created with empty password
+        // return a 400 error if an empty password is given
         String password = String.valueOf(json.get(PW));
         if (userService.isNotValidPassword(password)) {
             throw new BadRequestException("Password is not valid.");
@@ -92,7 +91,7 @@ public class UserxRestController implements BaseRestController {
 
         Userx newUser = new Userx();
         newUser.setUsername(username);
-        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode(String.valueOf(json.get("password")));
+        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode(String.valueOf(json.get(PW)));
         newUser.setPassword(bcryptPassword);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
         if (json.containsKey(FN)) {
@@ -108,7 +107,7 @@ public class UserxRestController implements BaseRestController {
     }
 
     /**
-     * PUT route to update an existing user
+     * PUT route to update an existing user by name
      * @param username + json
      * @return updated user
      */
@@ -164,7 +163,7 @@ public class UserxRestController implements BaseRestController {
     }
 
     /**
-     * DELETE route to delete a user by its username, only allowed by ADMIN
+     * DELETE route to delete a user by name, only allowed by ADMIN
      * @param username
      * @return the deleted user
      */
@@ -173,8 +172,8 @@ public class UserxRestController implements BaseRestController {
     public ResponseEntity<Userx> deleteUserByUsername(@PathVariable(value = "username") String username) {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Userx user = userService.loadUserByUsername(username);
         // return a 404 error if the user to be deleted does not exist
+        Userx user = userService.loadUserByUsername(username);
         if (user == null) {
             throw new NotFoundInDatabaseException("User", username);
         }
@@ -197,12 +196,13 @@ public class UserxRestController implements BaseRestController {
     @GetMapping(value = USERNAME_PATH +"/sensor-stations")
     @PreAuthorize("hasAuthority('ADMIN') or (hasAuthority('GARDENER') and principal eq #username)")
     public ResponseEntity<Collection<SensorStation>> getAssignedSS(@PathVariable(value = "username") String username) {
+        // return a 404 error if the user is not found
         Userx gardener = userService.loadUserByUsername(username);
-        // Return a 404 error if the user is not found
         if (gardener == null) {
             throw new NotFoundInDatabaseException("User", username);
         }
-        // Will return [] when trying to get assigned SS for normal users
+
+        // will return [] when trying to get assigned SS for normal users
         return ResponseEntity.ok(userService.getAssignedSS(gardener));
     }
 }
