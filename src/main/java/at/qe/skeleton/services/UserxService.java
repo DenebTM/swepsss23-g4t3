@@ -143,6 +143,6 @@ public class UserxService {
      * @return True if password is invalid, false if not
      */
     public Boolean isNotValidPassword(String password) {
-        return (password == null || password.equals(""));
+        return (password == null || password.equals("null") || password.equals(""));
     }
 }

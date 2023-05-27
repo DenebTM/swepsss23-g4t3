@@ -86,7 +86,7 @@ class AccessPointRestControllerTest {
 
         // response status for a newly created AP should be 401
         HttpServletRequest request = mock(HttpServletRequest.class);
-        var response = apRestController.createAP(jsonCreateAP, request);
+        var response = apRestController.advertiseAP(jsonCreateAP, request);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         
         var responseBody = response.getBody();
@@ -115,7 +115,7 @@ class AccessPointRestControllerTest {
 
         // response status should be 200 after confirmation
         HttpServletRequest request = mock(HttpServletRequest.class);
-        var response = apRestController.createAP(jsonCreateAP, request);
+        var response = apRestController.advertiseAP(jsonCreateAP, request);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
