@@ -143,11 +143,11 @@ public class SensorStationRestController implements BaseRestController {
         // Return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
-            throw new NotFoundInDatabaseException("Access point", String.valueOf(apName));
+            throw new NotFoundInDatabaseException("Access point", apName);
         }
 
         if (!AccessPointStatus.SEARCHING.equals(ap.getStatus())) {
-            throw new BadRequestException("Access point " + ap.getName() + " is not in SEARCHING mode");
+            throw new BadRequestException("Access point " + apName + " is not in SEARCHING mode");
         }
 
         List<SensorStation> retSSList = new ArrayList<>();
@@ -194,7 +194,7 @@ public class SensorStationRestController implements BaseRestController {
         if (json.containsKey("status")) {
             try {
                 SensorStationStatus oldStatus = ss.getStatus();
-                SensorStationStatus newStatus = SensorStationStatus.valueOf((String)json.get("status"));
+                SensorStationStatus newStatus = SensorStationStatus.valueOf(String.valueOf(json.get("status")));
                 ss.setStatus(newStatus);
 
                 if (!newStatus.equals(oldStatus)) {
@@ -209,7 +209,7 @@ public class SensorStationRestController implements BaseRestController {
                         logger.info(message, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
                     }
                 }
-                ss.setStatus(SensorStationStatus.valueOf((String)json.get("status")));
+                ss.setStatus(SensorStationStatus.valueOf(String.valueOf(json.get("status"))));
             } catch (IllegalArgumentException e) {
                 throw new BadRequestException("Invalid status");
             }
