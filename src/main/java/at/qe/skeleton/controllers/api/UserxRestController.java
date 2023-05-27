@@ -148,7 +148,7 @@ public class UserxRestController implements BaseRestController {
                 UserRole newUserRole = UserRole.valueOf((String)json.get(UR));
 
                 // prevent users from promoting or demoting themselves
-                if (user.getUsername().equals(authenticatedUser)) {
+                if (user.getUsername().equals(authenticatedUser) && !newUserRole.equals(user.getUserRole())) {
                     throw new ForbiddenException("Cannot change own role");
                 }
 
