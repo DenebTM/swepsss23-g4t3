@@ -165,23 +165,40 @@ class UserxRestControllerTest {
         assertEquals(UserRole.valueOf((String)jsonUpdateUser.get("userRole")), user.getUserRole());
         assertTrue(WebSecurityConfig.passwordEncoder().matches((String)jsonUpdateUser.get("password"), user.getPassword()));
 
-        // if username is part of json body, 400 bad request error
+        // if different username is part of json body, 400 bad request error
+        jsonUpdateUser.put("username", testUsername + "asdf");
         assertThrows(
             BadRequestException.class,
-            () -> userxRestController.updateUser(testUsername, jsonCreateUser)
+            () -> userxRestController.updateUser(testUsername, jsonUpdateUser)
+        );
+
+        // if same username is part of json body, ok
+        jsonUpdateUser.replace("username", testUsername);
+        assertDoesNotThrow(
+            () -> userxRestController.updateUser(testUsername, jsonUpdateUser)
         );
 
         // if password is empty, 400 bad request error
         jsonUpdateUser.replace("password", "");
         assertThrows(
             BadRequestException.class,
-            () -> userxRestController.updateUser(testUsername, jsonCreateUser)
+            () -> userxRestController.updateUser(testUsername, jsonUpdateUser)
         );
 
         // if username does not exist in database, 404 not found error
         assertThrows(
             NotFoundInDatabaseException.class,
-            () -> userxRestController.updateUser("notExistingUsername", jsonCreateUser)
+            () -> userxRestController.updateUser("notExistingUsername", jsonUpdateUser)
+        );
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testForbiddenChangeOwnRole() {
+        jsonUpdateUser.put("userRole", "GARDENER");
+        assertThrows(
+            ForbiddenException.class,
+            () -> userxRestController.updateUser("admin", jsonUpdateUser)
         );
     }
 
