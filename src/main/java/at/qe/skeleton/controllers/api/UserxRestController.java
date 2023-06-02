@@ -28,11 +28,13 @@ public class UserxRestController implements BaseRestController {
     @Autowired
     private LoggingService logger;
 
-    private static final String PW = "password";
-    private static final String FN = "firstName";
-    private static final String LN = "lastName";
-    private static final String USER_PATH = "/users";
-    private static final String USERNAME_PATH = USER_PATH + "/{username}";
+    private static final String PW = "password",
+                                FN = "firstName",
+                                LN = "lastName",
+                                UN = "username",
+                                UR = "userRole";
+    private static final String USER_PATH = "/users",
+                                USERNAME_PATH = USER_PATH + "/{username}";
 
     /**
      * Route to GET all users
@@ -106,7 +108,7 @@ public class UserxRestController implements BaseRestController {
     }
 
     /**
-     * PUT route to update an already existing user, only allowed by ADMIN
+     * PUT route to update an existing user
      * @param username + json
      * @return updated user
      */
@@ -115,17 +117,18 @@ public class UserxRestController implements BaseRestController {
     public ResponseEntity<Userx> updateUser(@PathVariable(value = "username") String username, @RequestBody Map<String, Object> json) {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Userx user = userService.loadUserByUsername(username);
         // return a 404 error if the user to be updated does not exist
+        Userx user = userService.loadUserByUsername(username);
         if (user == null) {
             throw new NotFoundInDatabaseException("User", username);
         }
-        // return a 400 error if the username is part of the json body, because it cannot be updated
-        if (json.containsKey("username")) {
+
+        // return a 400 error if a username change is attempted
+        if (json.containsKey(UN) && !((String)json.get(UN)).equals(user.getUsername())) {
             throw new BadRequestException("Usernames are final and cannot be updated.");
         }
 
-        // updating all fields mentioned in the json body
+        // update all fields contained in the json body
         if (json.containsKey(FN)) {
             user.setFirstName((String)json.get(FN));
         }
@@ -133,16 +136,23 @@ public class UserxRestController implements BaseRestController {
             user.setLastName((String)json.get(LN));
         }
         if (json.containsKey(PW)) {
-            String password = (String)json.get(PW);
-            if (userService.isNotValidPassword(password)) {
+            String newPassword = (String)json.get(PW);
+            if (userService.isNotValidPassword(newPassword)) {
                 throw new BadRequestException("Password is not valid.");
             }
-            String bcryptPassword = WebSecurityConfig.passwordEncoder().encode((String)json.get("password"));
+            String bcryptPassword = WebSecurityConfig.passwordEncoder().encode(newPassword);
             user.setPassword(bcryptPassword);
         }
-        if (json.containsKey("userRole")) {
+        if (json.containsKey(UR)) {
             try {
-                user.setUserRole(UserRole.valueOf((String)json.get("userRole")));
+                UserRole newUserRole = UserRole.valueOf((String)json.get(UR));
+
+                // prevent users from promoting or demoting themselves
+                if (user.getUsername().equals(authenticatedUser) && !newUserRole.equals(user.getUserRole())) {
+                    throw new ForbiddenException("Cannot change own role");
+                }
+
+                user.setUserRole(newUserRole);
             } catch (IllegalArgumentException e){
                 throw new BadRequestException("User role does not exist.");
             }
