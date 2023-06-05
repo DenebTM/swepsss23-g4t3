@@ -20,7 +20,7 @@ void setup() {
   sensors::light::setup();
 
   if (!sensors::bme::setup()) {
-    led::add_status_code(LEDC_BLE_SETUP_FAILED, led::CodePriority::HIGH);
+    led::add_status_code(LEDC_BME_SETUP_FAILED, led::CodePriority::HIGH);
   }
 
   if (!ble::setup()) {
