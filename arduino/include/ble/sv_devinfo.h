@@ -2,6 +2,7 @@
 #define _BLE_SV_DEVINFO_H
 
 #include "ble.h"
+#include <led.h>
 
 using namespace std::chrono_literals;
 
@@ -12,6 +13,12 @@ using namespace std::chrono_literals;
 
 // how often the station ID is checked for changes
 #define STATION_ID_CHECK_INTERVAL 1s
+
+static led::StatusCode* const LEDC_STATION_ID_CHANGED = new led::StatusCode {
+  { led::Color::YELLOW, LED_BLINK_LONG_DURATION },
+  { led::Color::RED, LED_BLINK_LONG_DURATION },
+  { led::Color::OFF, 2 * LED_BLINK_LONG_DURATION },
+};
 
 namespace ble {
   extern BLEService sv_devinfo;
