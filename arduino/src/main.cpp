@@ -14,14 +14,18 @@ void setup() {
   // Serial.begin(9600);
   // while (!Serial) {}
 
-  sensors::bme::setup();
+  led::setup();
+
   sensors::hygro::setup();
   sensors::light::setup();
 
-  led::setup();
+  if (!sensors::bme::setup()) {
+    led::add_status_code(LEDC_BLE_SETUP_FAILED, led::CodePriority::HIGH);
+  }
 
-  // TODO: Show LED error code if this fails
-  ble::setup();
+  if (!ble::setup()) {
+    led::add_status_code(LEDC_BLE_SETUP_FAILED, led::CodePriority::HIGH);
+  }
 }
 
 void loop() {
