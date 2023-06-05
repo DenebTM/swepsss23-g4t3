@@ -187,7 +187,7 @@ export const decryptSensorStationUuid = (
 export const AUTH_JWT = 'AUTH_JWT'
 
 /** URL of the backend */
-export const API_DEV_URL = 'http://localhost:8080'
+export const API_DEV_URL = import.meta.env.VITE_DEV_BACKEND ?? ''
 
 /** Key value for greenhouse settings related to the aggregation period */
 export const AGGREGATION_PERIOD = 'aggregationPeriod'
