@@ -3,9 +3,14 @@
 #include <iterator>
 #include <rtos.h>
 
+#include <buttons.h>
+#include <common.h>
+
 namespace led {
   using namespace std::chrono_literals;
   void restart_bg_thread();
+
+  timestamp_t last_update = millis();
 
   /**
    * iterable list of active status codes
@@ -63,6 +68,13 @@ namespace led {
                              ? CodePriority::HIGH
                              : CodePriority::LOW;
 
+      if (active_list == CodePriority::LOW &&
+          millis() >= last_update + LED_STANDBY_TIMEOUT_MS) {
+        set_color(Color::OFF);
+        rtos::ThisThread::sleep_for(100ms);
+        continue;
+      }
+
       for (auto code : active_status_codes[active_list]) {
         for (auto tup : *code) {
           const auto duration = std::get<ColorDuration>(tup);
@@ -81,6 +93,9 @@ namespace led {
     pinMode(LED_RED_PIN, OUTPUT);
     pinMode(LED_GREEN_PIN, OUTPUT);
     pinMode(LED_BLUE_PIN, OUTPUT);
+
+    // set button 2 (leftmost) to wake up the LED
+    buttons::setup(2, []() { last_update = millis(); });
   }
 
   void set_color(Color color) {
@@ -123,6 +138,7 @@ namespace led {
     }
   }
   void start_bg_thread() {
+    last_update = millis();
     if (!bg_thread) {
       bg_thread = new rtos::Thread();
       bg_thread->start(bg_thread_func);
