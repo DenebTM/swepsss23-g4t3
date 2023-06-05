@@ -69,6 +69,8 @@ namespace led {
                              : CodePriority::LOW;
 
       if (active_list == CodePriority::LOW &&
+          // prevent LED standby while there are active sensor warnings
+          active_status_codes[active_list].count < 2 &&
           millis() >= last_update + LED_STANDBY_TIMEOUT_MS) {
         set_color(Color::OFF);
         rtos::ThisThread::sleep_for(100ms);
