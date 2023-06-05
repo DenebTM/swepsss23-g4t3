@@ -21,10 +21,16 @@ void setup() {
 
   if (!sensors::bme::setup()) {
     led::add_status_code(LEDC_BME_SETUP_FAILED, led::CodePriority::HIGH);
+
+    // failure state
+    for (;;) { rtos::ThisThread::sleep_for(1ms); }
   }
 
   if (!ble::setup()) {
     led::add_status_code(LEDC_BLE_SETUP_FAILED, led::CodePriority::HIGH);
+
+    // failure state
+    for (;;) { rtos::ThisThread::sleep_for(1ms); }
   }
 }
 
