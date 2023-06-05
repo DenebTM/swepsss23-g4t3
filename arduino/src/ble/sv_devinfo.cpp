@@ -1,6 +1,7 @@
 #include <ble/sv_devinfo.h>
 
 #include <hwtimer.h>
+#include <sensors/warn.h>
 #include <station_id.h>
 
 namespace ble {
@@ -46,6 +47,8 @@ namespace ble {
   }
 
   void update_station_id() {
+    static bool was_invalid = false;
+
     uint8_t id = station_id();
 
     if (id != val_stationID) {
@@ -57,10 +60,19 @@ namespace ble {
       }
 
       // not ok, show visual warning if currently paired
-      else {
-        led::set_status_code(LEDC_STATION_ID_CHANGED, led::CodePriority::HIGH);
+      else if (!was_invalid) {
+        led::add_status_code(LEDC_STATION_ID_CHANGED, led::CodePriority::HIGH);
+        was_invalid = true;
         return;
       }
+    }
+
+    // station ID changed back to expected value; restore status codes without
+    // LED_STATION_ID_CHANGED
+    else if (was_invalid) {
+      was_invalid = false;
+      led::clear_status_codes(led::CodePriority::HIGH);
+      sensors::warn_update(/* force = */ true);
     }
 
     // include current station ID in BLE service and advertising data

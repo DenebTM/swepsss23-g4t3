@@ -151,6 +151,7 @@ namespace led {
   }
 
   void clear_status_codes(CodePriority prio) {
+    last_update = millis();
     active_status_codes[prio].clear();
   }
 
