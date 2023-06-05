@@ -13,8 +13,9 @@ import { ThemeProvider } from '@mui/material/styles'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
-import { mirageSetup } from '~/api/mirageSetup'
+import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import {
+  API_DEV_URL,
   GREENHOUSE_VIEW_QUERY,
   GREENHOUSES_ROOT,
   PAGE_URL,
@@ -143,4 +144,6 @@ root.render(
     </ThemeProvider>
   </React.StrictMode>
 )
-mirageSetup()
+
+// enable the mock API only when run with `yarn mock`
+mirageSetup(import.meta.env.DEV && API_DEV_URL === '' ? MOCK_API : '')
