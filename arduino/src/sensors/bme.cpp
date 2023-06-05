@@ -11,36 +11,40 @@ namespace sensors::bme {
   void
   sensorCallback(const bme68xData data, const bsecOutputs outputs, Bsec2 bsec) {
     if (!outputs.nOutputs) {
-      Serial.println("BME688 - Received callback but no data");
+      // Serial.println("BME688 - Received callback but no data");
     }
 
-    Serial.println("BME688 - Sensor data:");
+    // Serial.println("BME688 - Sensor data:");
     for (uint8_t i = 0; i < outputs.nOutputs; i++) {
       const bsecData output = outputs.output[i];
       switch (output.sensor_id) {
       case BSEC_OUTPUT_IAQ:
         sensors::current_data.air_quality = round(output.signal);
-        Serial.println("  IAQ: " + String(output.signal));
-        Serial.println("    (Accuracy status: " + String((int)output.accuracy) +
+        // Serial.println("  IAQ: " + String(output.signal));
+        // Serial.println("    (Accuracy status: " +
+        // String((int)output.accuracy) +
                        ")");
-        break;
+                       break;
       case BSEC_OUTPUT_RAW_TEMPERATURE:
-        sensors::current_data.temperature = output.signal * 100;
-        Serial.println("  Temperature: " + String(output.signal) + "°C");
-        break;
+                       sensors::current_data.temperature = output.signal * 100;
+                       // Serial.println("  Temperature: " +
+                       // String(output.signal) + "°C");
+                       break;
       case BSEC_OUTPUT_RAW_PRESSURE:
-        sensors::current_data.air_pressure = output.signal * 10;
-        Serial.println("  Air Pressure: " + String(output.signal / 100) +
+                       sensors::current_data.air_pressure = output.signal * 10;
+                       // Serial.println("  Air Pressure: " +
+                       // String(output.signal / 100) +
                        " hPa");
-        break;
+                       break;
       case BSEC_OUTPUT_RAW_HUMIDITY:
-        sensors::current_data.humidity = output.signal * 100;
-        Serial.println("  Humidity: " + String(output.signal) + "%");
-        break;
+                       sensors::current_data.humidity = output.signal * 100;
+                       // Serial.println("  Humidity: " + String(output.signal)
+                       // + "%");
+                       break;
       default:
-        Serial.print("Other signal (");
-        Serial.print(output.sensor_id, HEX);
-        Serial.println("): " + String(output.signal));
+                       // Serial.print("Other signal (");
+                       // Serial.print(output.sensor_id, HEX);
+                       // Serial.println("): " + String(output.signal));
       }
     }
   }
@@ -57,16 +61,17 @@ bool sensors::bme::setup() {
 
   Wire.begin();
   if (!bsec.begin(BME68X_I2C_ADDR_HIGH, Wire)) {
-    Serial.println("BME688 - Error initializing sensor: " +
+    // Serial.println("BME688 - Error initializing sensor: " +
                    String(bsec.sensor.status));
-    return false;
+                   return false;
   }
 
   if (!bsec.updateSubscription(
           sensorList, ARRAY_LEN(sensorList), BSEC_SAMPLE_RATE_LP)) {
-    Serial.println("BME688 - Error updating sensor data subscription: " +
+                   // Serial.println("BME688 - Error updating sensor data
+                   // subscription: " +
                    String(bsec.status));
-    return false;
+                   return false;
   }
 
   bsec.attachCallback(sensorCallback);
@@ -76,8 +81,9 @@ bool sensors::bme::setup() {
 
 bool sensors::bme::update() {
   if (!bsec.run()) {
-    Serial.println("BME688 - Sensor error: " + String(bsec.status));
-    return false;
+                   // Serial.println("BME688 - Sensor error: " +
+                   // String(bsec.status));
+                   return false;
   }
 
   return true;
