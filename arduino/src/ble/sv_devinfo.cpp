@@ -50,14 +50,22 @@ namespace ble {
 
     if (id != val_stationID) {
       // Serial.println("Station ID changed to " + String(id));
-      val_stationID = id;
+
+      // ok if not currently paired
+      if (ble::paired_mac == BLE_NO_PAIRED_DEVICE) {
+        val_stationID = id;
+      }
+
+      // not ok, show visual warning if currently paired
+      else {
+        led::set_status_code(LEDC_STATION_ID_CHANGED, led::CodePriority::HIGH);
+        return;
+      }
     }
 
     // include current station ID in BLE service and advertising data
     ch_stationID.writeValue(val_stationID);
     BLE.setAdvertisedServiceData(
         strtol(BLE_UUID_DEVINFO, NULL, 16), &ble::val_stationID, 1);
-
-    // TODO: disallow changing station ID while paired, blink warning LED
   }
 } // namespace ble
