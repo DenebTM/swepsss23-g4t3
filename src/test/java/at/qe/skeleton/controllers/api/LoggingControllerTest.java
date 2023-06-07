@@ -1,7 +1,13 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
+import at.qe.skeleton.models.LoggingEvent;
+import at.qe.skeleton.models.LoggingEventJson;
+import at.qe.skeleton.models.LoggingEventProperty;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.services.LoggingService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -119,5 +125,11 @@ public class LoggingControllerTest {
         }
 
         assertTrue(totalFilteredLogCount <= loggingService.getAllLogs().size());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testSendLogs() {
+        Assertions.assertThrows(NotFoundInDatabaseException.class, () -> loggingController.sendLogs("someRandomNameThatDoesntExist", List.of()));
     }
 }
