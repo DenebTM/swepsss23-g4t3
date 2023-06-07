@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.models.LoggingEvent;
+import at.qe.skeleton.models.LoggingEventJson;
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.repositories.LoggingEventRepository;
@@ -71,8 +72,8 @@ public class LoggingService {
     /**
      * returns all logs at a specific level, or all levels if level==null
      * 
-     * @param level logging level
-     * @return all logs that have the set level
+     * @param levels logging levels
+     * @return all logs that have one of the set levels
      */
     public List<LoggingEvent> getLogsByLevelIn(List<LogLevel> levels) {
         return loggingEventRepository.findAllByLevelInOrderByTimestmpDesc(levels);
