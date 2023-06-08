@@ -109,4 +109,14 @@ public class VisitorControllerTest {
                 FileUtils.readFileToByteArray(new File("src/test/resources/large_file.jpg")));
         assertThrows(MaxUploadSizeExceededException.class, () -> visitorController.uploadPhoto(mock, 1));
     }
+
+    @Test
+    void uploadNoBytes() {
+        MultipartFile mock = new MockMultipartFile(
+                "something",
+                "something",
+                "image/jpeg",
+                (byte[]) null);
+        assertThrows(BadRequestException.class, () -> visitorController.uploadPhoto(mock, 1));
+    }
 }
