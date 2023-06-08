@@ -3,7 +3,6 @@ package at.qe.skeleton.controllers.api;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.LoggingEvent;
 import at.qe.skeleton.models.LoggingEventJson;
-import at.qe.skeleton.models.LoggingEventProperty;
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.services.LoggingService;
@@ -12,16 +11,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -131,5 +129,26 @@ public class LoggingControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testSendLogs() {
         Assertions.assertThrows(NotFoundInDatabaseException.class, () -> loggingController.sendLogs("someRandomNameThatDoesntExist", List.of()));
+
+        List<LoggingEvent> repoLogs = loggingService.getAllLogs();
+        List<LoggingEventJson> jsonLogs = new ArrayList<>(repoLogs.size());
+
+        for (LoggingEvent l :
+                repoLogs) {
+            jsonLogs.add(new LoggingEventJson(
+                    l.getEventId(),
+                    LocalDateTime.now().toInstant(ZoneOffset.UTC),
+                    LogLevel.INFO,
+                    "Some test message",
+                    new LoggingEventJson.LogEntity(LogEntityType.USER, 1)));
+        }
+
+        ResponseEntity<List<LoggingEventJson>> foundLogs = loggingController.sendLogs("AP 1", jsonLogs);
+
+        List<Long> repoIds = repoLogs.stream().map(LoggingEvent::getEventId).sorted().toList();
+        List<Long> foundIds = Objects.requireNonNull(foundLogs.getBody()).stream().map(LoggingEventJson::getId).sorted().toList();
+
+        Assertions.assertEquals(repoIds, foundIds);
+
     }
 }
