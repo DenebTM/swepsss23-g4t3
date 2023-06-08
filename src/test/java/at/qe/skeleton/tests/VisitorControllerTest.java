@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -21,7 +22,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,5 +122,31 @@ public class VisitorControllerTest {
                 "image/jpeg",
                 (byte[]) null);
         assertThrows(BadRequestException.class, () -> visitorController.uploadPhoto(mock, 1));
+    }
+
+    @Test
+    void uploadPhotoCorrectly() throws IOException {
+        SensorStation ss = new SensorStation();
+        ss.setSsID(1);
+        List<PhotoData> repoImages = photoDataRepository.findAllBySensorStation(ss);
+        int initialSize = repoImages.size();
+        byte[] bytes = FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg"));
+        MultipartFile mock = new MockMultipartFile(
+                "example2.jpg",
+                "example2.jpg",
+                "image/jpeg",
+                bytes);
+        ResponseEntity<PhotoData> res = visitorController.uploadPhoto(mock, 1);
+        repoImages = photoDataRepository.findAllBySensorStation(ss);
+        int finalSize = repoImages.size();
+        boolean contains = false;
+        for (PhotoData p :
+                repoImages) {
+            if (Arrays.equals(p.getContent(), Objects.requireNonNull(res.getBody()).getContent())) {
+                contains = true;
+            }
+        }
+        assertTrue(contains);
+        assertTrue(initialSize < finalSize);
     }
 }
