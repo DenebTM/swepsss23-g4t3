@@ -1,18 +1,22 @@
 package at.qe.skeleton.tests;
 
 import at.qe.skeleton.controllers.VisitorController;
+import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -81,7 +85,7 @@ public class VisitorControllerTest {
     }
 
     @Test
-    void testNoPhotosToreturn() {
+    void testNoPhotosToReturn() {
         if (!photoDataRepository.findAll().isEmpty()) {
             List<PhotoData> list = photoDataRepository.findAll();
             for (PhotoData p : list) {
@@ -94,5 +98,15 @@ public class VisitorControllerTest {
 
         assertNotNull(ssPhotoList);
         assertTrue(ssPhotoList.isEmpty());
+    }
+
+    @Test
+    void uploadTooLargeImage() throws IOException {
+        MultipartFile mock = new MockMultipartFile(
+                "large_file.jpg",
+                "large_file.jpg",
+                "image/jpeg",
+                FileUtils.readFileToByteArray(new File("src/test/resources/large_file.jpg")));
+        assertThrows(MaxUploadSizeExceededException.class, () -> visitorController.uploadPhoto(mock, 1));
     }
 }
