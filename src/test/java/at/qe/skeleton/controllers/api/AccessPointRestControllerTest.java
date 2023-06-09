@@ -118,6 +118,14 @@ class AccessPointRestControllerTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         var response = apRestController.advertiseAP(jsonCreateAP, request);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // checking if apStatus is being changed to online after being advertised
+        ap.setStatus(AccessPointStatus.OFFLINE);
+        ap = apService.saveAP(ap);
+        var response2 = apRestController.advertiseAP(jsonCreateAP, request);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        ap = apService.loadAPByName(ap.getName());
+        assertEquals(AccessPointStatus.ONLINE,ap.getStatus());
     }
 
     @DirtiesContext
