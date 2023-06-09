@@ -103,4 +103,10 @@ class MeasurementRestControllerTest {
         Instant from = parseInstant("2023-05-20T10:40:00Z");
         assertThrows(BadRequestException.class, () -> mmRestController.getMeasurementsBySS(1, from, to));
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testInvalidSSSendMeasurement() {
+        assertThrows(NotFoundInDatabaseException.class, () -> mmRestController.sendMeasurement(99, null));
+    }
 }
