@@ -1,5 +1,7 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.BadRequestException;
+import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.services.MeasurementService;
 
 import org.junit.jupiter.api.Test;
@@ -93,4 +95,12 @@ class MeasurementRestControllerTest {
         assertEquals(mmTimestamp, measurement.getTimestamp());
     }
 
+    @Test
+    void invalidDataGetMeasurementBySS() {
+        assertThrows(NotFoundInDatabaseException.class, () -> mmRestController.getMeasurementsBySS(99, null, null));
+
+        Instant to = parseInstant("2023-03-01T20:10:40Z");
+        Instant from = parseInstant("2023-05-20T10:40:00Z");
+        assertThrows(BadRequestException.class, () -> mmRestController.getMeasurementsBySS(1, from, to));
+    }
 }
