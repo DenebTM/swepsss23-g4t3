@@ -222,4 +222,11 @@ public class UserxServiceTest {
         assertTrue(userService.authRoleIsUser());
     }
 
+    @Test
+    public void testIsNotValidPassword() {
+        assertTrue(userService.isNotValidPassword(""));
+        assertTrue(userService.isNotValidPassword("null"));
+        assertTrue(userService.isNotValidPassword(null));
+        assertFalse(userService.isNotValidPassword("validPassword"));
+    }
 }
