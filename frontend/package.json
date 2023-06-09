@@ -40,9 +40,8 @@
     },
     "scripts": {
         "setup-husky": "cd .. && husky install frontend/.husky && cd frontend && npx husky add .husky/pre-commit \"cd frontend && npx lint-staged --config config/.lintstagedrc.json\"",
-        "start": "vite serve",
+        "start": "cross-env VITE_DEV_BACKEND=http://localhost:8080 vite serve",
         "mock": "vite serve",
-        "mock-windows": "vite serve",
         "lint-code": "npx eslint ./src --cache --fix --ignore-path .gitignore --ext .ts,.tsx",
         "check-types": "tsc --project tsconfig.json",
         "build": "vite build",

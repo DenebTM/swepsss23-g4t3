@@ -11,7 +11,8 @@ export const MOCK_API = 'MOCK_API'
 
 /**
  * Function to set up a mocked REST API server using Mirage.
- * Only works if environment variable NODE_ENV is true or if the argument enviroment is set to {@link MOCK_API}.
+ * Only works if the argument `environment` is set to {@link MOCK_API}.
+ *
  * Source: https://stephencharlesweiss.com/miragejs-typescript-setup
  * Reads the desired environment
  */
@@ -19,10 +20,9 @@ export const mirageSetup = (
   environment = '',
   logging = true
 ): Server<AppRegistry> | undefined => {
-  if (!import.meta.env.DEV && environment !== MOCK_API) {
+  if (environment !== MOCK_API) {
     return
   }
-  // return
 
   const server = createServer({
     models,
