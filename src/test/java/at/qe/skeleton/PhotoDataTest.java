@@ -1,4 +1,4 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton;
 
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.repositories.PhotoDataRepository;
