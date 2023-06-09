@@ -137,8 +137,7 @@ class AccessPointRestControllerTest {
                 BadRequestException.class,
                 () -> apRestController.advertiseAP(jsonCreateAP, request)
         );
-
-        jsonCreateAP.put("name", "APname");
+        jsonCreateAP.put("name", "APName");
         jsonCreateAP.put("serverAddress", null);
         assertThrows(
                 BadRequestException.class,
@@ -166,6 +165,20 @@ class AccessPointRestControllerTest {
             NotFoundInDatabaseException.class,
             () -> apRestController.updateAP("notExistingAPName", jsonUpdateAP)
         );
+        // 400 error if you try to update ap name
+        jsonUpdateAP.put("name", "newName");
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.updateAP(name, jsonUpdateAP)
+        );
+        // 400 error if status is invalid
+        jsonUpdateAP.remove("name");
+        jsonUpdateAP.put("status", "NOTAVALIDSTATUS");
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.updateAP(name, jsonUpdateAP)
+        );
+
     }
 
     @DirtiesContext
