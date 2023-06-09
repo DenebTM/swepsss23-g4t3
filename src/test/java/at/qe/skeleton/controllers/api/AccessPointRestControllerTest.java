@@ -191,11 +191,16 @@ class AccessPointRestControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(originalSize-1, apService.getAllAP().size());
 
-        // if ap id does not exist in database, 404 not found error
+        // if ap id should not exist anymore in database, 404 not found error
         assertThrows(
             NotFoundInDatabaseException.class,
             () -> apRestController.getAPByName(name),
             "AccessPoint is still found in database after being deleted."
+        );
+        // if id of access point to delete does nor exist, 404 not found error
+        assertThrows(
+                NotFoundInDatabaseException.class,
+                () -> apRestController.deleteAPById("notExistingName")
         );
     }
 
