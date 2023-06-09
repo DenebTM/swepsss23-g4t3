@@ -1,4 +1,4 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.controllers.VisitorController;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
