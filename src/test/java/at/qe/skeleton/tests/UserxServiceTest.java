@@ -197,4 +197,22 @@ public class UserxServiceTest {
         });
     }
 
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void testRoleIsUser() {
+        assertTrue(userService.roleIsUser(userService.loadUserByUsername("max")));
+        assertFalse(userService.roleIsUser(userService.loadUserByUsername("admin")));
+    }
+    @Test
+    @WithMockUser(username = "max", authorities = {"USER"})
+    public void testAuthRoleIsUser() {
+        assertTrue(userService.authRoleIsUser());
+    }
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void testAuthRoleIsUserFalse() {
+        assertFalse(userService.authRoleIsUser());
+    }
+
+
 }
