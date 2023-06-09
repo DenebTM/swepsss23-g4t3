@@ -130,8 +130,12 @@ class AccessPointRestControllerTest {
                 () -> apRestController.advertiseAP(jsonCreateAP, request)
         );
 
+        jsonCreateAP.put("name", "APname");
         jsonCreateAP.put("serverAddress", null);
-
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.advertiseAP(jsonCreateAP, request)
+        );
     }
 
     @DirtiesContext
