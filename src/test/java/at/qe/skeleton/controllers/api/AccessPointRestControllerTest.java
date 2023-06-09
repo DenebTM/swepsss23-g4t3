@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.enums.AccessPointStatus;
@@ -117,6 +118,20 @@ class AccessPointRestControllerTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         var response = apRestController.advertiseAP(jsonCreateAP, request);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @DirtiesContext
+    @Test
+    void testAdvertiseThrowsErrors() {
+        jsonCreateAP.put("name", null);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.advertiseAP(jsonCreateAP, request)
+        );
+
+        jsonCreateAP.put("serverAddress", null);
+
     }
 
     @DirtiesContext
