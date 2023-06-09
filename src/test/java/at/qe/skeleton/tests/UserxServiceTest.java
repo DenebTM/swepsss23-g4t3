@@ -201,18 +201,25 @@ public class UserxServiceTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testRoleIsUser() {
         assertTrue(userService.roleIsUser(userService.loadUserByUsername("max")));
-        assertFalse(userService.roleIsUser(userService.loadUserByUsername("admin")));
+        assertFalse(userService.roleIsUser(userService.loadUserByUsername("susi")));
+    }
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void testAuthRoleIsAdmin() {
+        assertTrue(userService.authRoleIsAdmin());
+        assertFalse(userService.authRoleIsUser());
+        assertFalse(userService.authRoleIsGardener());
+    }
+    @Test
+    @WithMockUser(username = "susi", authorities = {"GARDENER"})
+    public void testAuthRoleIsGardener() {
+        assertTrue(userService.authRoleIsGardener());
+        assertFalse(userService.authRoleIsAdmin());
     }
     @Test
     @WithMockUser(username = "max", authorities = {"USER"})
     public void testAuthRoleIsUser() {
         assertTrue(userService.authRoleIsUser());
     }
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void testAuthRoleIsUserFalse() {
-        assertFalse(userService.authRoleIsUser());
-    }
-
 
 }
