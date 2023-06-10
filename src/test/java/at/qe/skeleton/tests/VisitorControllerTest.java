@@ -1,23 +1,31 @@
 package at.qe.skeleton.tests;
 
 import at.qe.skeleton.controllers.VisitorController;
+import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
 import at.qe.skeleton.repositories.PhotoDataRepository;
 import at.qe.skeleton.services.SensorStationService;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,7 +89,7 @@ public class VisitorControllerTest {
     }
 
     @Test
-    void testNoPhotosToreturn() {
+    void testNoPhotosToReturn() {
         if (!photoDataRepository.findAll().isEmpty()) {
             List<PhotoData> list = photoDataRepository.findAll();
             for (PhotoData p : list) {
@@ -94,5 +102,51 @@ public class VisitorControllerTest {
 
         assertNotNull(ssPhotoList);
         assertTrue(ssPhotoList.isEmpty());
+    }
+
+    @Test
+    void uploadTooLargeImage() throws IOException {
+        MultipartFile mock = new MockMultipartFile(
+                "large_file.jpg",
+                "large_file.jpg",
+                "image/jpeg",
+                FileUtils.readFileToByteArray(new File("src/test/resources/large_file.jpg")));
+        assertThrows(MaxUploadSizeExceededException.class, () -> visitorController.uploadPhoto(mock, 1));
+    }
+
+    @Test
+    void uploadNoBytes() {
+        MultipartFile mock = new MockMultipartFile(
+                "something",
+                "something",
+                "image/jpeg",
+                (byte[]) null);
+        assertThrows(BadRequestException.class, () -> visitorController.uploadPhoto(mock, 1));
+    }
+
+    @Test
+    void uploadPhotoCorrectly() throws IOException {
+        SensorStation ss = new SensorStation();
+        ss.setSsID(1);
+        List<PhotoData> repoImages = photoDataRepository.findAllBySensorStation(ss);
+        int initialSize = repoImages.size();
+        byte[] bytes = FileUtils.readFileToByteArray(new File("src/test/resources/example2.jpg"));
+        MultipartFile mock = new MockMultipartFile(
+                "example2.jpg",
+                "example2.jpg",
+                "image/jpeg",
+                bytes);
+        ResponseEntity<PhotoData> res = visitorController.uploadPhoto(mock, 1);
+        repoImages = photoDataRepository.findAllBySensorStation(ss);
+        int finalSize = repoImages.size();
+        boolean contains = false;
+        for (PhotoData p :
+                repoImages) {
+            if (Arrays.equals(p.getContent(), Objects.requireNonNull(res.getBody()).getContent())) {
+                contains = true;
+            }
+        }
+        assertTrue(contains);
+        assertTrue(initialSize < finalSize);
     }
 }
