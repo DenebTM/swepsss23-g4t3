@@ -21,7 +21,7 @@ public class LoggingService {
     LoggingEventRepository loggingEventRepository;
 
     /**
-     * Returns all available logs from the repository, ordered by timestamp (latest events are shown first)
+     * returns all available logs from the repository, ordered by timestamp (latest events are shown first)
      * @return list of logs
      */
     public List<LoggingEvent> getAllLogs() {
@@ -29,7 +29,7 @@ public class LoggingService {
     }
 
     /**
-     * Returns all available logs starting from the beginning and ending at parameter 'to'
+     * returns all available logs starting from the beginning and ending at parameter 'to'
      * @param endDate end date
      * @return list of logs in time period beginning - 'to'
      */
@@ -38,7 +38,7 @@ public class LoggingService {
     }
 
     /**
-     * Returns all available logs starting at parameter 'from' and ending with the latest event
+     * returns all available logs starting at parameter 'from' and ending with the latest event
      * @param beginDate begin date
      * @return list of logs in time period 'from' - ending
      */
@@ -47,7 +47,7 @@ public class LoggingService {
     }
 
     /**
-     * Returns all available logs starting at parameter 'from' and ending at parameter 'to'
+     * returns all available logs starting at parameter 'from' and ending at parameter 'to'
      * 
      * @param beginDate
      * @param endDate
@@ -69,10 +69,10 @@ public class LoggingService {
     }
 
     /**
-     * Returns all logs at a specific level, or all levels if level==null
+     * returns all logs at a specific level, or all levels if level==null
      * 
-     * @param level logging level
-     * @return all logs that have the set level
+     * @param levels logging levels
+     * @return all logs that have one of the set levels
      */
     public List<LoggingEvent> getLogsByLevelIn(List<LogLevel> levels) {
         return loggingEventRepository.findAllByLevelInOrderByTimestmpDesc(levels);

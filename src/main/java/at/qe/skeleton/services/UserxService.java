@@ -32,7 +32,7 @@ public class UserxService {
     private SensorStationService ssService;
 
     /**
-     * Returns a collection of all users.
+     * returns a collection of all users.
      *
      * @return
      */
@@ -143,6 +143,6 @@ public class UserxService {
      * @return True if password is invalid, false if not
      */
     public Boolean isNotValidPassword(String password) {
-        return (password == null || password.equals(""));
+        return (password == null || password.equals("null") || password.equals(""));
     }
 }
