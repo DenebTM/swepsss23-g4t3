@@ -1,5 +1,6 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.enums.AccessPointStatus;
@@ -117,6 +118,31 @@ class AccessPointRestControllerTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         var response = apRestController.advertiseAP(jsonCreateAP, request);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // checking if apStatus is being changed to online after being advertised
+        ap.setStatus(AccessPointStatus.OFFLINE);
+        ap = apService.saveAP(ap);
+        var response2 = apRestController.advertiseAP(jsonCreateAP, request);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        ap = apService.loadAPByName(ap.getName());
+        assertEquals(AccessPointStatus.ONLINE,ap.getStatus());
+    }
+
+    @DirtiesContext
+    @Test
+    void testAdvertiseThrowsErrors() {
+        jsonCreateAP.put("name", null);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.advertiseAP(jsonCreateAP, request)
+        );
+        jsonCreateAP.put("name", "APName");
+        jsonCreateAP.put("serverAddress", null);
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.advertiseAP(jsonCreateAP, request)
+        );
     }
 
     @DirtiesContext
@@ -139,6 +165,20 @@ class AccessPointRestControllerTest {
             NotFoundInDatabaseException.class,
             () -> apRestController.updateAP("notExistingAPName", jsonUpdateAP)
         );
+        // 400 error if you try to update ap name
+        jsonUpdateAP.put("name", "newName");
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.updateAP(name, jsonUpdateAP)
+        );
+        // 400 error if status is invalid
+        jsonUpdateAP.remove("name");
+        jsonUpdateAP.put("status", "NOTAVALIDSTATUS");
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.updateAP(name, jsonUpdateAP)
+        );
+
     }
 
     @DirtiesContext
@@ -151,11 +191,16 @@ class AccessPointRestControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(originalSize-1, apService.getAllAP().size());
 
-        // if ap id does not exist in database, 404 not found error
+        // if ap id should not exist anymore in database, 404 not found error
         assertThrows(
             NotFoundInDatabaseException.class,
             () -> apRestController.getAPByName(name),
             "AccessPoint is still found in database after being deleted."
+        );
+        // if id of access point to delete does nor exist, 404 not found error
+        assertThrows(
+                NotFoundInDatabaseException.class,
+                () -> apRestController.deleteAPById("notExistingName")
         );
     }
 

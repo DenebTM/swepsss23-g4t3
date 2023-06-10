@@ -71,8 +71,8 @@ public class LoggingService {
     /**
      * returns all logs at a specific level, or all levels if level==null
      * 
-     * @param level logging level
-     * @return all logs that have the set level
+     * @param levels logging levels
+     * @return all logs that have one of the set levels
      */
     public List<LoggingEvent> getLogsByLevelIn(List<LogLevel> levels) {
         return loggingEventRepository.findAllByLevelInOrderByTimestmpDesc(levels);
