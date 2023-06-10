@@ -1,7 +1,6 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.models.LoggingEvent;
-import at.qe.skeleton.models.LoggingEventJson;
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
 import at.qe.skeleton.repositories.LoggingEventRepository;
