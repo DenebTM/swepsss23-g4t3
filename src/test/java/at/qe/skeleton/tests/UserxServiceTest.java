@@ -72,7 +72,6 @@ public class UserxServiceTest {
         assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
         Userx toBeDeletedUserx = userService.loadUserByUsername(username);
         assertNotNull(toBeDeletedUserx, "User \"" + username + "\" could not be loaded from test data source");
-
         userService.deleteUser(toBeDeletedUserx);
 
         assertEquals(initialUserCount - 1, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
@@ -197,4 +196,36 @@ public class UserxServiceTest {
         });
     }
 
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void testRoleIsUser() {
+        assertTrue(userService.roleIsUser(userService.loadUserByUsername("max")));
+        assertFalse(userService.roleIsUser(userService.loadUserByUsername("susi")));
+    }
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void testAuthRoleIsAdmin() {
+        assertTrue(userService.authRoleIsAdmin());
+        assertFalse(userService.authRoleIsUser());
+        assertFalse(userService.authRoleIsGardener());
+    }
+    @Test
+    @WithMockUser(username = "susi", authorities = {"GARDENER"})
+    public void testAuthRoleIsGardener() {
+        assertTrue(userService.authRoleIsGardener());
+        assertFalse(userService.authRoleIsAdmin());
+    }
+    @Test
+    @WithMockUser(username = "max", authorities = {"USER"})
+    public void testAuthRoleIsUser() {
+        assertTrue(userService.authRoleIsUser());
+    }
+
+    @Test
+    public void testIsNotValidPassword() {
+        assertTrue(userService.isNotValidPassword(""));
+        assertTrue(userService.isNotValidPassword("null"));
+        assertTrue(userService.isNotValidPassword(null));
+        assertFalse(userService.isNotValidPassword("validPassword"));
+    }
 }
