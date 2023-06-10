@@ -6,7 +6,6 @@ import at.qe.skeleton.configs.jwtutils.models.LoginResponseModel;
 import at.qe.skeleton.controllers.LoginController;
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.models.Userx;
-import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.repositories.UserxRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
