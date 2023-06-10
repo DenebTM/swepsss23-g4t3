@@ -54,7 +54,7 @@ public class AccessPointRestController implements BaseRestController {
     @GetMapping(value = AP_NAME_PATH)
     public ResponseEntity<AccessPoint> getAPByName(@PathVariable(value = "name") String name) {
         AccessPoint ap = apService.loadAPByName(name);
-        // Return a 404 error if the access point is not found
+        // return a 404 error if the access point is not found
         if (ap == null) {
             throw new NotFoundInDatabaseException(AP, name);
         }
@@ -68,17 +68,17 @@ public class AccessPointRestController implements BaseRestController {
      * @return newly created ap
      */
     @PostMapping(value = AP_PATH)
-    public ResponseEntity<PostAccessPointResponse> createAP(
+    public ResponseEntity<PostAccessPointResponse> advertiseAP(
         @RequestBody Map<String, Object> json,
         HttpServletRequest request
     ) {
-        String name = (String)json.get("name");
-        if (name == null || name.equals("")) {
+        String name = String.valueOf(json.get("name"));
+        if (name.equals("null") || name.equals("")) {
             throw new BadRequestException("No name given");
         }
 
-        String serverAddress = (String)json.get("serverAddress");
-        if (serverAddress == null || serverAddress.equals("")) {
+        String serverAddress = String.valueOf(json.get("serverAddress"));
+        if (serverAddress.equals("null") || serverAddress.equals("")) {
             throw new BadRequestException("No server address given");
         }
 
@@ -139,7 +139,7 @@ public class AccessPointRestController implements BaseRestController {
         if (json.containsKey("status")) {
             try {
                 AccessPointStatus oldStatus = ap.getStatus();
-                AccessPointStatus newStatus = AccessPointStatus.valueOf((String)json.get("status"));
+                AccessPointStatus newStatus = AccessPointStatus.valueOf(String.valueOf(json.get("status")));
                 ap.setStatus(newStatus);
 
                 if (!newStatus.equals(oldStatus)) {

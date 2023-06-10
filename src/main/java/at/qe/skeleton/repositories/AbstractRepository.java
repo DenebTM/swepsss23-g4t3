@@ -30,7 +30,7 @@ public interface AbstractRepository<T, ID extends Serializable> extends Reposito
     void delete(T entity);
 
     /**
-     * Returns all instances of the type.
+     * returns all instances of the type.
      *
      * @return All entities.
      */
