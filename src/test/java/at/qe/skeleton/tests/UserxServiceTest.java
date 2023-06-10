@@ -72,7 +72,6 @@ public class UserxServiceTest {
         assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
         Userx toBeDeletedUserx = userService.loadUserByUsername(username);
         assertNotNull(toBeDeletedUserx, "User \"" + username + "\" could not be loaded from test data source");
-
         userService.deleteUser(toBeDeletedUserx);
 
         assertEquals(initialUserCount - 1, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
