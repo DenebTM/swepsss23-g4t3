@@ -29,5 +29,4 @@ public class PhotoDataTest {
         assertEquals(photoDataRepository.findById(id).get(), img);
         assertTrue(photoDataRepository.findById(id).get().getContent().length > 0);
     }
-
 }
