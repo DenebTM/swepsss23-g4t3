@@ -49,7 +49,7 @@ namespace ble {
     uint8_t id = station_id();
 
     if (id != val_stationID) {
-      Serial.println("Station ID changed to " + String(id));
+      // Serial.println("Station ID changed to " + String(id));
       val_stationID = id;
     }
 
