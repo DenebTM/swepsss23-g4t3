@@ -11,7 +11,7 @@ namespace buttons {
   /**
    * Sets up an interrupt to be called when a button is pressed
    *
-   * Valid button IDs are 0 through 2 (TODO: probably change to 0/1)
+   * Valid button IDs are 0 through 2
    *
    * Returns true on success, and false if an invalid button ID was given
    */
