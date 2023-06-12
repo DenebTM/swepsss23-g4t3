@@ -21,8 +21,8 @@ namespace ble {
     if (pairing::mode::active) {
       paired_mac = new_mac;
 
-      Serial.print("Paired with access point: ");
-      Serial.println(paired_mac);
+      // Serial.print("Paired with access point: ");
+      // Serial.println(paired_mac);
 
       // clear all currently active warnings
       memset(&sensors::current_warnings, 0, sizeof sensors::current_warnings);
@@ -35,14 +35,14 @@ namespace ble {
     // currently trying to reconnect to paired AP; reject unauthorized devices
     else {
       if (new_mac.equals(paired_mac)) {
-        Serial.print("Reconnected to access point: ");
-        Serial.println(paired_mac);
+        // Serial.print("Reconnected to access point: ");
+        // Serial.println(paired_mac);
 
         is_advertising = false;
         led::clear_status_codes(led::CodePriority::HIGH);
       } else {
-        Serial.print("Rejecting connection attempt from ");
-        Serial.println(new_mac);
+        // Serial.print("Rejecting connection attempt from ");
+        // Serial.println(new_mac);
 
         central.disconnect();
       }
@@ -54,8 +54,8 @@ namespace ble {
     BLE.advertise();
 
     if (central.address().equals(paired_mac)) {
-      Serial.print("Lost connection with access point ");
-      Serial.println(paired_mac);
+      // Serial.print("Lost connection with access point ");
+      // Serial.println(paired_mac);
 
       led::set_status_code(LEDC_BLE_DISCONNECTED, led::CodePriority::HIGH);
     }
@@ -63,7 +63,7 @@ namespace ble {
 
   bool setup() {
     if (!BLE.begin()) {
-      Serial.println("Error initializing BLE!");
+      // Serial.println("Error initializing BLE!");
       return false;
     }
 

@@ -30,7 +30,7 @@ namespace sensors::light {
     }
 
     current_data.illuminance = lx_val;
-    Serial.println("Illuminance: " + String(lx_val) + " lx");
+    // Serial.println("Illuminance: " + String(lx_val) + " lx");
   }
 } // namespace sensors::light
 
