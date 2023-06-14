@@ -18,7 +18,7 @@ read web_server_address
 # Add "http://" or "https://" to the web server address
 if [ "$connection_type" = "http" ]; then
     web_server_address="http://$web_server_address"
-elif [ "$connection_type" = "https"]; then
+elif [ "$connection_type" = "https" ]; then
     web_server_address="https://$web_server_address"
 fi
 
