@@ -1,0 +1,15 @@
+#E.g. usr/bin/conf.yaml
+echo "Enter path to conf.yaml file"
+read confyaml_path
+
+#E.g. usr/bin/configure
+echo "Enter path to configure file"
+read conf_path
+
+#E.g. usr/bin/main.py
+echo "Enter the path to your python script:"
+read script_path
+
+# Add command to rc.local
+sudo sed -i -e '$i \if [ -f '$confyaml_path' ]; then /usr/bin/python3 '$script_path'; else /usr/bin/python3 '$conf_path'; fi\n' /etc/rc.local
+echo "Task finished."
