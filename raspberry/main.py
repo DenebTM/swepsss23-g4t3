@@ -98,7 +98,7 @@ async def polling_loop(connection_request, session):
 async def main():
     while True:
         try:
-            async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
+            async with aiohttp.ClientSession(base_url=common.web_server_address, raise_for_status=True) as session:
                 connection_request = asyncio.Future()
                 await rest_operations.initialize_accesspoint(session)
 
