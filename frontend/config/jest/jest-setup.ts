@@ -5,6 +5,8 @@ import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import { AppRegistry } from '~/api/mirageTypes'
 import { AuthUserRole } from '~/models/user'
 
+import { mockedSensorStations } from './mock-data'
+
 let server: Server<AppRegistry> | undefined
 
 /** Start mirage server to mock the backend before each test */
@@ -22,19 +24,19 @@ afterEach(() => {
 })
 
 /** Mock for react-router-dom `useNavigate` function as this can not be run during tests. */
-export const NAVIGATE_MOCK = vi.fn()
+const NAVIGATE_MOCK = vi.fn()
 
 /** Mock for react-router-dom `useParams` function as this can not be run during tests. */
-export const PARAMS_MOCK = vi.fn()
+const PARAMS_MOCK = vi.fn()
 
 /** Mock for react-router-dom `useSearchParams` function as this can not be run during tests. */
-export const SEARCH_PARAMS = vi.fn()
+const SEARCH_PARAMS = vi.fn()
 
 /** Mock for react-router-dom `useRouteError` function as this can not be run during tests. */
-export const USE_ROUTE_ERROR = vi.fn()
+const USE_ROUTE_ERROR = vi.fn()
 
 /** Mock for react-router-dom `useLocation` function as this can not be run during tests. */
-export const LOCATION_MOCK = vi.fn()
+const LOCATION_MOCK = vi.fn()
 
 /**
  * Functions like `useNavigate` and `useParams` are  incompatible with testing individual components,
@@ -68,4 +70,15 @@ vi.mock('react-router-dom', () => ({
 vi.mock('~/hooks/user', () => ({
   useUserRole: vi.fn().mockImplementation(() => AuthUserRole.ADMIN),
   useUsername: vi.fn().mockImplementation(() => 'test_username'),
+}))
+
+/**
+ * Mock the `useSensorStations` hook so that components render correctly in tests.
+ * Otherwise, components would mostly display loading states and require extra logic to wait for this.
+ */
+vi.mock('~/hooks/appContext', () => ({
+  useSensorStations: vi
+    .fn()
+    .mockImplementation((hideAvailable?: boolean) => mockedSensorStations),
+  useLoadSensorStations: () => vi.fn(),
 }))
