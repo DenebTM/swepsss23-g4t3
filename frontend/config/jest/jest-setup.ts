@@ -5,7 +5,7 @@ import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import { AppRegistry } from '~/api/mirageTypes'
 import { AuthUserRole } from '~/models/user'
 
-import { mockedSensorStations } from './mock-data'
+import { mockedSensorStations, testUsername } from './mock-data'
 
 let server: Server<AppRegistry> | undefined
 
@@ -69,7 +69,7 @@ vi.mock('react-router-dom', () => ({
  */
 vi.mock('~/hooks/user', () => ({
   useUserRole: vi.fn().mockImplementation(() => AuthUserRole.ADMIN),
-  useUsername: vi.fn().mockImplementation(() => 'test_username'),
+  useUsername: vi.fn().mockImplementation(() => testUsername),
 }))
 
 /**
