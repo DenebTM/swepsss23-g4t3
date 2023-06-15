@@ -6,15 +6,7 @@
 - bleak
 - pyyaml
 
-
-
-
 ## Getting Started
-
-## Enable autorun
-1. using raspi-config setup startup type to 
-2. Copy the whole content of the raspberry folder into /srv/planthealth
-3. Follow the instructions given in planthealth.service file 
 
 ## 1. Install all dependencies
 
@@ -29,6 +21,17 @@ This includes updating BlueZ to v5.66 -- see [this page](https://lms.uibk.ac.at/
 ## 3. Run the main script
 
 **Command:** `python3 main.py`
+
+## 4. Automatically run on startup of the Raspberry Pi
+1. Using `raspi-config`, set the startup type to "Console Autologin".
+
+![raspi-config - 1 (System Options)](images/boot-tty-1.png)
+![raspi-config - S5 (Boot / Auto Login)](images/boot-tty-2.png)
+![raspi-config - B2 (Console Autologin)](images/boot-tty-3.png)
+
+2. Copy the contents of the [raspberry](raspberry) directory into `/srv/planthealth` on the Raspberry Pi.
+
+3. Follow the instructions given in [planthealth.service](planthealth.service).
 
 ## Development
 
