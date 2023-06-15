@@ -3,6 +3,7 @@ import { Server } from 'miragejs'
 import { vi } from 'vitest'
 import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import { AppRegistry } from '~/api/mirageTypes'
+import { AuthUserRole } from '~/models/user'
 
 let server: Server<AppRegistry> | undefined
 
@@ -59,4 +60,12 @@ vi.mock('react-router-dom', () => ({
   },
   useRouteError: () => USE_ROUTE_ERROR,
   useLocation: () => LOCATION_MOCK,
+}))
+
+/**
+ * Mock the user being logged as an admin for tests
+ */
+vi.mock('~/hooks/user', () => ({
+  useUserRole: vi.fn().mockImplementation(() => AuthUserRole.ADMIN),
+  useUsername: vi.fn().mockImplementation(() => 'test_username'),
 }))
