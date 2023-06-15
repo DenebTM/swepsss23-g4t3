@@ -22,6 +22,7 @@ import {
   getAccessPoints,
   updateAccessPoint,
 } from '~/api/endpoints/accessPoints'
+import { useLoadSensorStations } from '~/hooks/appContext'
 import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 import { theme } from '~/styles/theme'
 
@@ -46,6 +47,7 @@ const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
  * Access point management page for admins
  */
 export const AccessPointsTable: React.FC = () => {
+  const loadSensorStations = useLoadSensorStations()
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
 
   /** Update a single access point */
@@ -129,6 +131,10 @@ export const AccessPointsTable: React.FC = () => {
         params: GridRenderCellParams<AccessPoint, any, AccessPoint>
       ) => (
         <DeleteCell<AccessPoint, AccessPointId>
+          afterDelete={
+            // Reload sensor stations after deleting an access point (due to cascading delete)
+            loadSensorStations
+          }
           deleteEntity={deleteAccessPoint}
           entityId={params.row.name}
           entityName="access point"
