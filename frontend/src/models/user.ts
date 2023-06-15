@@ -17,7 +17,7 @@ export interface User {
 
 /**
  * Possible roles that a logged-in {@link User} can have.
- * Taken from the ypes used in the backend.
+ * Taken from the types used in the backend.
  */
 export enum AuthUserRole {
   USER = 'USER',
