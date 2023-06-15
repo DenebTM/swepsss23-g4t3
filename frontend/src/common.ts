@@ -315,3 +315,9 @@ export const emDash = '—'
 
 /** FormData key for uploaded sensor station photos */
 export const UPLOADED_PHOTO_KEY = 'multipartImage'
+
+/** Title text to display on buttons for pairing with a new sensor station */
+export const ADD_GREENHOUSE_TEXT = 'Add Greenhouse'
+
+/** Helper text to display on buttons for pairing with a new sensor station */
+export const ADD_GREENHOUSE_DESCRIPTION = 'Connect a new greenhouse'
