@@ -7,9 +7,10 @@ export type Username = string
  * A single user
  */
 export interface User {
-  created: Timestamp
+  createDate: Timestamp
   firstName: string
   lastName: string
+  updateDate: Timestamp
   username: Username
   userRole: AuthUserRole
 }

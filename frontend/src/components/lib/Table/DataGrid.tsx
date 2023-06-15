@@ -167,6 +167,7 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V, P = object>(
   const handleFetchRows = (promise: Promise<R[]>) =>
     promise
       .then((data) => {
+        console.log(data)
         props.setRows?.(data)
       })
       .catch((err: Error) => {
