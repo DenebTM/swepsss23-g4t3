@@ -1,6 +1,8 @@
 import { Measurement } from '~/models/measurement'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
 
+export const testUsername = 'testUsername'
+
 /** Mocked measurements to return from the mocked `useSensorStations` hook */
 const mockedMeasurements: Measurement[] = [
   {
@@ -34,7 +36,7 @@ export const mockedSensorStations: SensorStation[] = [
     ssID: 1,
     apName: 'ap1',
     aggregationPeriod: 15,
-    gardeners: ['susi'],
+    gardeners: ['susi', testUsername],
     lowerBound: mockedMeasurements[0].data,
     currentMeasurement: mockedMeasurements[1],
     measurements: mockedMeasurements,
