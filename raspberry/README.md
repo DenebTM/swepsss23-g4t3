@@ -6,7 +6,15 @@
 - bleak
 - pyyaml
 
+
+
+
 ## Getting Started
+
+## Enable autorun
+1. using raspi-config setup startup type to 
+2. Copy the whole content of the raspberry folder into /srv/planthealth
+3. Follow the instructions given in planthealth.service file 
 
 ## 1. Install all dependencies
 
