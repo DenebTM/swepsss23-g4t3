@@ -15,12 +15,8 @@ fi
 echo "Enter web_server_address: "
 read web_server_address
 
-# Add "http://" or "https://" to the web server address
-if [ "$connection_type" = "http" ]; then
-    web_server_address="http://$web_server_address"
-elif [ "$connection_type" = "https" ]; then
-    web_server_address="https://$web_server_address"
-fi
+#Add connection type to webserver adress
+web_server_address="${connection_type}://${web_server_address}"
 
 echo "Enter default_transmission_interval in seconds: "
 read default_transmission_interval
