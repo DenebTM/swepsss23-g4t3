@@ -7,16 +7,17 @@ export type Username = string
  * A single user
  */
 export interface User {
-  created: Timestamp
+  createDate: Timestamp
   firstName: string
   lastName: string
+  updateDate: Timestamp
   username: Username
   userRole: AuthUserRole
 }
 
 /**
  * Possible roles that a logged-in {@link User} can have.
- * Taken from the ypes used in the backend.
+ * Taken from the types used in the backend.
  */
 export enum AuthUserRole {
   USER = 'USER',
