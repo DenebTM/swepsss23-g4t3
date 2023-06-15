@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vitest/config'
+import { configDefaults } from 'vitest/config'
 
 import { baseViteConfig } from './vite.config'
 
@@ -13,7 +14,13 @@ export default defineConfig({
     outputFile: 'sonar-report.xml',
     coverage: {
       reporter: ['text', 'text-summary', 'html', 'lcovonly'],
-      exclude: ['node_modules/', 'config/', 'src/tests', 'src/api/testData.ts'],
+      exclude: [
+        'node_modules/',
+        'config/',
+        'src/tests',
+        'src/api/testData.ts',
+        ...configDefaults.exclude,
+      ],
     },
   },
 })
