@@ -13,12 +13,7 @@ export default defineConfig({
     outputFile: 'sonar-report.xml',
     coverage: {
       reporter: ['text', 'text-summary', 'html', 'lcovonly'],
-      exclude: [
-        'node_modules/',
-        'config/jest/jest-setup.ts',
-        'src/tests',
-        'src/api/testData.ts',
-      ],
+      exclude: ['node_modules/', 'config/', 'src/tests', 'src/api/testData.ts'],
     },
   },
 })
