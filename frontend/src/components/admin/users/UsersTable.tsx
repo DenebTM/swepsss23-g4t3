@@ -61,9 +61,20 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       width: 100,
     },
     {
-      field: 'created',
+      field: 'createDate',
       headerName: 'Created',
       description: 'When the user was created',
+      type: 'dateTime',
+      headerAlign: 'center',
+      align: 'center',
+      valueGetter: (params: GridValueGetterParams<User, string>) =>
+        dayjs(params.value).toDate(),
+      width: 170,
+    },
+    {
+      field: 'updateDate',
+      headerName: 'Updated',
+      description: 'When the user was last updated',
       type: 'dateTime',
       headerAlign: 'center',
       align: 'center',
