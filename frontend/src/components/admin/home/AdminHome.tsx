@@ -9,7 +9,11 @@ import WifiOutlinedIcon from '@mui/icons-material/WifiOutlined'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import Grid from '@mui/material/Unstable_Grid2'
 
-import { PAGE_URL } from '~/common'
+import {
+  ADD_GREENHOUSE_DESCRIPTION,
+  ADD_GREENHOUSE_TEXT,
+  PAGE_URL,
+} from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageTitle } from '~/components/page/PageTitle'
 import { PageWrapper } from '~/components/page/PageWrapper'
@@ -52,8 +56,8 @@ export const AdminHome: React.FC = () => {
       onClick: () => navigate(PAGE_URL.adminLogs.href),
     },
     {
-      title: 'Add Greenhouses',
-      description: 'Connect a new greenhouse',
+      title: ADD_GREENHOUSE_TEXT,
+      description: ADD_GREENHOUSE_DESCRIPTION,
       icon: <AddIcon fontSize={iconFontSize} />,
       onClick: () => setAddSsDialogOpen(true),
     },
