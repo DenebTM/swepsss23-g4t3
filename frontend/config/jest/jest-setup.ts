@@ -30,10 +30,10 @@ const NAVIGATE_MOCK = vi.fn()
 const PARAMS_MOCK = vi.fn()
 
 /** Mock for react-router-dom `useSearchParams` function as this can not be run during tests. */
-const SEARCH_PARAMS = vi.fn()
+const SEARCH_PARAMS_MOCK = vi.fn()
 
 /** Mock for react-router-dom `useRouteError` function as this can not be run during tests. */
-const USE_ROUTE_ERROR = vi.fn()
+const USE_ROUTE_ERROR_MOCK = vi.fn()
 
 /** Mock for react-router-dom `useLocation` function as this can not be run during tests. */
 const LOCATION_MOCK = vi.fn()
@@ -52,7 +52,7 @@ vi.mock('react-router-dom', () => ({
   useNavigate: () => NAVIGATE_MOCK,
   useParams: () => PARAMS_MOCK,
   useSearchParams: (): [URLSearchParams, (p: URLSearchParams) => void] => {
-    SEARCH_PARAMS()
+    SEARCH_PARAMS_MOCK()
     return [
       new URLSearchParams(),
       () => {
@@ -60,7 +60,7 @@ vi.mock('react-router-dom', () => ({
       },
     ]
   },
-  useRouteError: () => USE_ROUTE_ERROR,
+  useRouteError: () => USE_ROUTE_ERROR_MOCK,
   useLocation: () => LOCATION_MOCK,
 }))
 
