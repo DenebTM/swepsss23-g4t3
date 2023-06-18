@@ -9,8 +9,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { Spinner } from '@component-lib/Spinner'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
-import { AccessPoint, AccessPointId } from '~/models/accessPoint'
-import { ApStatus } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 
 const apLabelId = 'select-access-point'
 
