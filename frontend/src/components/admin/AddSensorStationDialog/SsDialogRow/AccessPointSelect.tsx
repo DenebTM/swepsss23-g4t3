@@ -59,7 +59,7 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
   }, [snackbarError])
 
   const handleChange = (event: SelectChangeEvent) => {
-    const selectedApName = event.target.value as string
+    const selectedApName: string = event.target.value
     const selectedAp = accessPoints?.find((ap) => ap.name === selectedApName)
     props.setAccessPoint(selectedAp)
   }
