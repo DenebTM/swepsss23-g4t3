@@ -137,13 +137,13 @@ public class AccessPointRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(AP, name);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
-        if (json.containsKey(JSON_KEY_NAME) && !((String)json.get(JSON_KEY_NAME)).equals(ap.getName())) {
+        if (json.containsKey(JSON_KEY_NAME) && !(String.valueOf(json.get(JSON_KEY_NAME))).equals(ap.getName())) {
             throw new BadRequestException("AP names are final and cannot be changed");
         }
         if (json.containsKey(JSON_KEY_STATUS)) {
             try {
                 AccessPointStatus oldStatus = ap.getStatus();
-                AccessPointStatus newStatus = AccessPointStatus.valueOf(String.valueOf(json.get("status")));
+                AccessPointStatus newStatus = AccessPointStatus.valueOf(String.valueOf(json.get(JSON_KEY_STATUS)));
 
                 if (!newStatus.equals(oldStatus)) {
                     ap.setStatus(newStatus);
