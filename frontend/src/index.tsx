@@ -43,6 +43,11 @@ import { generateTheme } from '~/styles/theme'
 
 import { PhotoUpload } from './components/photoUpload/PhotoUpload'
 import { AppProvider } from './contexts/AppContext/AppProvider'
+import {
+  ColorMode,
+  ColorModeContext,
+  IColorModeContext,
+} from './contexts/ColorModeContext/ColorModeContext'
 
 /**
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
@@ -132,28 +137,62 @@ const router = createBrowserRouter([
   authRoute(PAGE_URL.myGreenhouses.href, <MyGreenhouses />),
 ])
 
+// Create app as a React component so that hooks can be used to determine the theme
 const App: React.FC = () => {
+  // automatic dark theme
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
-  const theme = React.useMemo(
-    () => generateTheme(prefersDarkMode ? 'dark' : 'light'),
-    [prefersDarkMode]
+  // manual theme override
+  const [activeMode, setActiveMode] = React.useState<ColorMode>('auto')
+  const colorMode = React.useMemo<IColorModeContext>(
+    () => ({
+      activeMode,
+      changeColorMode: () => {
+        const nextColorMode = prefersDarkMode
+          ? // browser prefers dark mode: auto->light->dark->auto
+            activeMode === 'auto'
+            ? 'light'
+            : activeMode === 'light'
+            ? 'dark'
+            : 'auto'
+          : // browser prefers light mode: auto->dark->light->auto
+          activeMode === 'auto'
+          ? 'dark'
+          : activeMode === 'dark'
+          ? 'light'
+          : 'auto'
+
+        setActiveMode(nextColorMode)
+      },
+    }),
+    [activeMode]
   )
+
+  // generate theme based on active mode
+  const theme = React.useMemo(() => {
+    if (activeMode == 'auto')
+      return generateTheme(prefersDarkMode ? 'dark' : 'light')
+
+    return generateTheme(activeMode)
+  }, [activeMode, prefersDarkMode])
 
   return (
     <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider>
-          <AppProvider>
-            <MessageSnackbars />
-            <RouterProvider router={router} />
-          </AppProvider>
-        </SnackbarProvider>
-      </ThemeProvider>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <AppProvider>
+              <MessageSnackbars />
+              <RouterProvider router={router} />
+            </AppProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
     </React.StrictMode>
   )
 }
 
+// Render the app in the browser
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(<App />)
 
