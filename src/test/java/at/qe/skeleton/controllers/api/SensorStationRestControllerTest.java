@@ -287,7 +287,7 @@ class SensorStationRestControllerTest {
 
         var sensorStation = response.getBody();
         assertNotNull(sensorStation);
-        if (!originalNames.contains(username)){
+        if (!originalNames.contains(username)) {
             assertEquals(originalSize+1, sensorStation.getGardeners().size());
         } else {
             assertEquals(originalSize, sensorStation.getGardeners().size());
@@ -315,7 +315,7 @@ class SensorStationRestControllerTest {
 
         var sensorStation = response.getBody();
         assertNotNull(sensorStation);
-        if (originalNames.contains(username)){
+        if (originalNames.contains(username)) {
             assertEquals(originalSize-1, sensorStation.getGardeners().size());
         }
 
@@ -347,7 +347,7 @@ class SensorStationRestControllerTest {
     }
 
     @Test
-    void testGetAllCurrentMeasurements(){
+    void testGetAllCurrentMeasurements() {
         Integer number = measurementService.getAllCurrentMeasurements().size();
 
         var response = measurementRestController.getAllCurrentMeasurements();

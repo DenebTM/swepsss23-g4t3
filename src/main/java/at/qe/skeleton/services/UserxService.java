@@ -78,7 +78,7 @@ public class UserxService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(Userx userx) {
         Set<SensorStation> assignedSS = userx.getAssignedSS();
-        for (SensorStation ss : assignedSS){
+        for (SensorStation ss : assignedSS) {
             ss.getGardeners().remove(userx);
             ssService.saveSS(ss);
         }
@@ -114,10 +114,10 @@ public class UserxService {
      * Function to use in controllers if statement to check authenticated users permissions
      * @return TRUE if auth. user has only role user, if gardener or admin return FALSE
      */
-    public boolean authRoleIsUser(){
+    public boolean authRoleIsUser() {
         return getAuthenticatedUser().getUserRole() == UserRole.USER;
     }
-    public boolean roleIsUser(Userx user){
+    public boolean roleIsUser(Userx user) {
         return user.getUserRole() == UserRole.USER;
     }
 
@@ -125,7 +125,7 @@ public class UserxService {
      * Function to use in controllers if statement to check authenticated users permissions
      * @return TRUE if auth. user has only role gardener, if admin return FALSE
      */
-    public boolean authRoleIsGardener(){
+    public boolean authRoleIsGardener() {
         return getAuthenticatedUser().getUserRole() == UserRole.GARDENER;
     }
 
@@ -133,7 +133,7 @@ public class UserxService {
      * Function to use in controllers if statement to check authenticated users permissions
      * @return TRUE if auth. user has role admin, if not return FALSE
      */
-    public boolean authRoleIsAdmin(){
+    public boolean authRoleIsAdmin() {
         return getAuthenticatedUser().getUserRole() == UserRole.ADMIN;
     }
 

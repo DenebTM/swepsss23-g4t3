@@ -154,7 +154,7 @@ public class UserxRestController implements BaseRestController {
                 }
 
                 user.setUserRole(newUserRole);
-            } catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 throw new BadRequestException("User role does not exist.");
             }
         }
