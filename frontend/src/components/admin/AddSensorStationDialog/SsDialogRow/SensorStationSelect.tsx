@@ -55,9 +55,8 @@ export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
   }
 
   if (sensorStations === null) {
-    return <Spinner />
+    return <Spinner center />
   } else {
-    // qqjf TODO handle no sensor stations available
     return (
       <Tooltip
         arrow
