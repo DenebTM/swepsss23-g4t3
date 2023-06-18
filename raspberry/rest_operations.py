@@ -18,8 +18,7 @@ def retry_connection_error(retries=5, interval=3):
                     return await func(*args, **kwargs)
                 except aiohttp.ClientConnectionError:
                     await asyncio.sleep(interval)
-                    log_local('WARN', f'Retrying in {func.__name__}. Attempt {i+1} out of {retries}', file=stderr)
-            log_local_and_remote('ERROR', f'At {func.__name__}: Could not reach server after {retries} attempts')
+                    log_local('WARN', f'Retrying in {func.__name__}. Attempt {i+1} out of {retries}')
             raise aiohttp.ClientConnectionError(f'ClientConnectionError in function \'{func.__name__}\'')
         return wrapper  # Moved outside the for loop
     return decorator
