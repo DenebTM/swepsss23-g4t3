@@ -79,7 +79,7 @@ class MeasurementRestControllerTest {
     void testSendMeasurement() {
         Map<String, Object> json = new HashMap<>();
         Instant mmTimestamp = Instant.now();
-        json.put("timestamp", mmTimestamp.toString());
+        json.put(MeasurementRestController.JSON_KEY_TIMESTAMP, mmTimestamp.toString());
         json.put("temperature", 2456);
         json.put("humidity", 30);
         json.put("airPressure", 90000);
