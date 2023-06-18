@@ -14,6 +14,8 @@ import { theme } from '~/styles/theme'
  * @param T The type of the id of objects of type R
  */
 interface DeleteCellProps<R extends GridValidRowModel, T = number> {
+  /** Callback to run after successful entity deletion */
+  afterDelete?: () => void
   /** Children will be displayed before the delete icon */
   children?: React.ReactNode
   /** Function to delete a table row by entityId */
@@ -62,6 +64,7 @@ export const DeleteCell = <R extends GridValidRowModel, T = string>(
               )
             }
           })
+          props.afterDelete?.()
         }}
         open={deleteDialogOpen}
         setOpen={setDeleteDialogOpen}
