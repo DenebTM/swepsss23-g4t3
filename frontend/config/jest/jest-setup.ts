@@ -4,6 +4,7 @@ import { vi } from 'vitest'
 import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import { AppRegistry } from '~/api/mirageTypes'
 import { AuthUserRole } from '~/models/user'
+import { generateTheme } from '~/styles/theme'
 
 import { mockedSensorStations, testUsername } from './mock-data'
 
@@ -62,6 +63,19 @@ vi.mock('react-router-dom', () => ({
   },
   useRouteError: () => USE_ROUTE_ERROR_MOCK,
   useLocation: () => LOCATION_MOCK,
+}))
+
+/**
+ * Several components call `useTheme` to determine _how_ to render things.
+ * As the default theme is missing several properties used by some components,
+ * `useTheme` needs to be mocked in order for those components to render
+ * without crashing.
+ */
+vi.mock('@mui/material/styles', async () => ({
+  ...(await vi.importActual<typeof import('@mui/material/styles')>(
+    '@mui/material/styles'
+  )),
+  useTheme: () => generateTheme('light'),
 }))
 
 /**

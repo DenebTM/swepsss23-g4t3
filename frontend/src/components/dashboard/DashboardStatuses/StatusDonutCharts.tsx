@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -8,7 +9,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useWindowSize } from '~/hooks/windowSize'
 import { AccessPoint, ApStatus } from '~/models/accessPoint'
 import { SensorStation, StationStatus } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { DonutChart } from './DonutChart'
 import { DonutValue } from './DonutFloatingLegend'
@@ -30,57 +30,6 @@ const UPDATING = 'Updating'
 /** Text display value if an entity is in a warning state */
 const WARN = 'Warning'
 
-/** Initial values for an online entity */
-const initialOnlineEntity = {
-  displayName: ONLINE,
-  fill: theme.primary,
-  legendFill: theme.primaryContainer,
-  legendText: theme.onPrimaryContainer,
-  ...initialEntityData,
-}
-
-/** Initial values for an entity in a warning state */
-const initialWarnEntity = {
-  displayName: WARN,
-  fill: theme.warn,
-  legendFill: theme.warnContainer,
-  legendText: theme.onWarnContainer,
-  ...initialEntityData,
-}
-
-/** Initial values for an online entity */
-const initialOfflineEntity = {
-  displayName: OFFLINE,
-  fill: theme.error,
-  legendFill: theme.errorContainer,
-  legendText: theme.onErrorContainer,
-  ...initialEntityData,
-}
-
-/** Initial values for an updating entity */
-const initialUpdatingEntity = {
-  displayName: UPDATING,
-  fill: theme.tertiary,
-  legendFill: theme.tertiaryContainer,
-  legendText: theme.onTertiaryContainer,
-  ...initialEntityData,
-}
-
-/** Empty state for access point donut chart */
-const initialAccessPointData: DonutValue[] = [
-  initialOnlineEntity,
-  initialUpdatingEntity,
-  initialOfflineEntity,
-]
-
-/** Empty state for sensor station donut chart */
-const initialSensorStationData: DonutValue[] = [
-  initialOnlineEntity,
-  initialUpdatingEntity,
-  initialWarnEntity,
-  initialOfflineEntity,
-]
-
 interface StatusDonutChartsProps {
   accessPoints: AccessPoint[]
   sensorStations: SensorStation[]
@@ -90,6 +39,59 @@ interface StatusDonutChartsProps {
  * Donut charts showing the statuses of access points and sensor stations in the dashboard
  */
 export const StatusDonutCharts: React.FC<StatusDonutChartsProps> = (props) => {
+  const theme = useTheme()
+
+  /** Initial values for an online entity */
+  const initialOnlineEntity = {
+    displayName: ONLINE,
+    fill: theme.primary,
+    legendFill: theme.primaryContainer,
+    legendText: theme.onPrimaryContainer,
+    ...initialEntityData,
+  }
+
+  /** Initial values for an entity in a warning state */
+  const initialWarnEntity = {
+    displayName: WARN,
+    fill: theme.warn,
+    legendFill: theme.warnContainer,
+    legendText: theme.onWarnContainer,
+    ...initialEntityData,
+  }
+
+  /** Initial values for an online entity */
+  const initialOfflineEntity = {
+    displayName: OFFLINE,
+    fill: theme.error,
+    legendFill: theme.errorContainer,
+    legendText: theme.onErrorContainer,
+    ...initialEntityData,
+  }
+
+  /** Initial values for an updating entity */
+  const initialUpdatingEntity = {
+    displayName: UPDATING,
+    fill: theme.tertiary,
+    legendFill: theme.tertiaryContainer,
+    legendText: theme.onTertiaryContainer,
+    ...initialEntityData,
+  }
+
+  /** Empty state for access point donut chart */
+  const initialAccessPointData: DonutValue[] = [
+    initialOnlineEntity,
+    initialUpdatingEntity,
+    initialOfflineEntity,
+  ]
+
+  /** Empty state for sensor station donut chart */
+  const initialSensorStationData: DonutValue[] = [
+    initialOnlineEntity,
+    initialUpdatingEntity,
+    initialWarnEntity,
+    initialOfflineEntity,
+  ]
+
   const stackDonuts = useMediaQuery(theme.breakpoints.down('lg'))
 
   const donutContainerRef = useRef<HTMLDivElement>(null)
