@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
@@ -132,7 +133,12 @@ const router = createBrowserRouter([
 ])
 
 const App: React.FC = () => {
-  const theme = React.useMemo(() => generateTheme('light'), [])
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+
+  const theme = React.useMemo(
+    () => generateTheme(prefersDarkMode ? 'dark' : 'light'),
+    [prefersDarkMode]
+  )
 
   return (
     <React.StrictMode>
