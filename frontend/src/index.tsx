@@ -174,7 +174,7 @@ const App: React.FC = () => {
         cookies.set(THEME_MODE, nextColourMode, { sameSite: 'strict' })
       },
     }),
-    [activeMode]
+    [activeMode, prefersDarkMode]
   )
 
   // generate theme based on active mode
