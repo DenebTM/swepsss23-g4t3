@@ -4,7 +4,6 @@ import common
 
 from sensorstation_operations import search_for_sensorstations
 
-
 class TestSearchForSensorstations(unittest.IsolatedAsyncioTestCase):
 
     @patch('sensorstation_operations.BleakScanner')
