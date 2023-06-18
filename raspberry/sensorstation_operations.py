@@ -19,11 +19,11 @@ async def search_for_sensorstations():
                     common.save_known_ss()
             await scanner.stop()
             if len(sensorstations) > 0:
-                await logging_operations.log_to_file_and_list('INFO', f'Sensorstations found are : {sensorstations}')
+                await logging_operations.log_local_and_remote('INFO', f'Sensorstations found are : {sensorstations}')
             else:
-                await logging_operations.log_to_file_and_list('INFO', 'No sensorstations were found')       
+                await logging_operations.log_local_and_remote('INFO', 'No sensorstations were found')       
         return sensorstations   
     
     except BleakError as e:
-        await logging_operations.log_to_file_and_list('ERROR', f'BleakError occured while searching for sensorstations. Error: {e}')
+        await logging_operations.log_local_and_remote('ERROR', f'BleakError occured while searching for sensorstations. Error: {e}')
         return sensorstations

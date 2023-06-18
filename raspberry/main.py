@@ -8,6 +8,7 @@ import database_operations
 from thresholds_operations import check_values_for_thresholds
 from sensorvalues_operations import read_sensorvalues
 from sensorstation_operations import search_for_sensorstations
+from logging_operations import log_local, log_local_and_remote
 import rest_operations
 
 RETRY_TIME = 10
@@ -62,17 +63,18 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     except BleakError as e:
         print('Could not connect to sensorstation') 
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
+        if error_status == 'PAIRING_FAILED':
+            log_local_and_remote('ERROR', f'Failed to pair with sensor station {sensorstation_id}', 'SENSOR_STATION', sensorstation_id)
         await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
         await cancel_ss_task(sensorstation_id)
-        #TODO: log and send to backend
+
     except asyncio.CancelledError as e:
         await database_operations.clear_sensor_data(sensorstation_id)
         await database_operations.delete_sensorstation(sensorstation_id)
-        print(f'task {sensorstation_id} canceled and cleaned up')
-        #TODO: log this 
+        log_local('INFO', f'Task {sensorstation_id} cancelled and cleaned up')
+
     except Exception as e:
-        #TODO: log and send to backend
-        print('Unexpected error occured in sensor_station_task', e)
+        log_local_and_remote('ERROR', f'Unexpected error occured in sensor_station_task: {e}')
 
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
@@ -109,15 +111,15 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            await logging_operations.log_to_console('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            await logging_operations.log_local('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
             time.sleep(RETRY_TIME)
             
         except aiohttp.ClientResponseError as e:
-            await logging_operations.log_to_console('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            await logging_operations.log_local('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
             time.sleep(RETRY_TIME)
 
         except Exception as e:
-            await logging_operations.log_to_file_and_list('ERROR', f'Unexpected error occured: {e}')
+            await logging_operations.log_local_and_remote('ERROR', f'Unexpected error occured: {e}')
 
 if __name__ == '__main__':
     asyncio.run(main())
