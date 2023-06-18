@@ -36,6 +36,10 @@ public class AccessPointRestController implements BaseRestController {
     private static final String AP_PATH = "/access-points";
     public static final String AP_NAME_PATH = AP_PATH + "/{name}";
 
+    // JSON keys used by PUT route
+    public static final String JSON_KEY_NAME = "name";
+    public static final String JSON_KEY_STATUS = "status";
+    public static final String JSON_KEY_SERVERADDR = "serverAddress";
 
     /**
      * Route to GET all access points, available for all users
@@ -72,12 +76,12 @@ public class AccessPointRestController implements BaseRestController {
         @RequestBody Map<String, Object> json,
         HttpServletRequest request
     ) {
-        String name = String.valueOf(json.get("name"));
+        String name = String.valueOf(json.get(JSON_KEY_NAME));
         if (name.equals("null") || name.equals("")) {
             throw new BadRequestException("No name given");
         }
 
-        String serverAddress = String.valueOf(json.get("serverAddress"));
+        String serverAddress = String.valueOf(json.get(JSON_KEY_SERVERADDR));
         if (serverAddress.equals("null") || serverAddress.equals("")) {
             throw new BadRequestException("No server address given");
         }
@@ -133,16 +137,17 @@ public class AccessPointRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(AP, name);
         }
         // return a 400 error if the username is part of the json body, because it cannot be updated
-        if (json.containsKey("name")) {
+        if (json.containsKey(JSON_KEY_NAME) && !((String)json.get(JSON_KEY_NAME)).equals(ap.getName())) {
             throw new BadRequestException("AP names are final and cannot be changed");
         }
-        if (json.containsKey("status")) {
+        if (json.containsKey(JSON_KEY_STATUS)) {
             try {
                 AccessPointStatus oldStatus = ap.getStatus();
                 AccessPointStatus newStatus = AccessPointStatus.valueOf(String.valueOf(json.get("status")));
-                ap.setStatus(newStatus);
 
                 if (!newStatus.equals(oldStatus)) {
+                    ap.setStatus(newStatus);
+
                     String message = "Access point status changed to " + newStatus.name();
                     if (newStatus.equals(AccessPointStatus.OFFLINE)) {
                         logger.warn(message, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
