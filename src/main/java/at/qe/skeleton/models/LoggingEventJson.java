@@ -17,10 +17,10 @@ import lombok.Setter;
  * JSON representation of a {@link LoggingEvent} and optionally an associated
  * {@link LoggingEventProperty} record associating the event with a particular
  * user, access point or sensor station. (latter takes priority)
- * 
+ *
  * Received by the {@link LoggingRestController} for database storage on POST,
  * and created for transmission on GET.
- * 
+ *
  * These are NOT themselves stored in the database.
  */
 @JsonSerialize
