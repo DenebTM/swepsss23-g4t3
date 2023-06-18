@@ -44,5 +44,5 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
             )
         )
     except BleakError as e:
-        await logging_operations.log_to_file_and_list('ERROR', f'Couldnt write to gatt characteristic for sensorstation {sensorstation_id}. Error: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        await logging_operations.log_to_file_and_list('ERROR', f'Could not write to gatt characteristic for sensorstation {sensorstation_id}. Error: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
            

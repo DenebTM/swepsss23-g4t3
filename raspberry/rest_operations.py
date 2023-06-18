@@ -6,6 +6,7 @@ import database_operations
 import functools
 from datetime import datetime
 import logging_operations
+from sys import stderr
 
 # This function makes it so that each rest call retries 5 times before raising an ClientConnectionError
 def retry_connection_error(retries=5, interval=3):
@@ -17,7 +18,8 @@ def retry_connection_error(retries=5, interval=3):
                     return await func(*args, **kwargs)
                 except aiohttp.ClientConnectionError:
                     await asyncio.sleep(interval)
-                    await logging_operations.log_to_file_and_list('ERROR', f'Retrying in {func.__name__}. Attempt {i+1} out of {retries}')
+                    logging_operations.log_to_console('WARN', f'Retrying in {func.__name__}. Attempt {i+1} out of {retries}', file=stderr)
+            await logging_operations.log_to_file_and_list('ERROR', f'At {func.__name__}: Could not reach server after {retries} attempts')
             raise aiohttp.ClientConnectionError(f'ClientConnectionError in function \'{func.__name__}\'')
         return wrapper  # Moved outside the for loop
     return decorator
@@ -45,7 +47,7 @@ async def get_ap_status(session):
             await logging_operations.log_to_file_and_list('INFO', f'Retrieved access point status: {status}')
             return status
         except json.decoder.JSONDecodeError as e:
-            await logging_operations.log_to_file_and_list('ERROR', f'Couldnt parse json in get_ap_status. Error: {e}')
+            await logging_operations.log_to_file_and_list('ERROR', f'Could not parse json in get_ap_status. Error: {e}')
             return None
 
 @retry_connection_error(retries = 3, interval = 5)
@@ -61,7 +63,7 @@ async def get_sensorstation_instructions(session):
                     paired_stations[ss_id] = ss_status
 
         except json.decoder.JSONDecodeError as e:
-            await logging_operations.log_to_file_and_list('ERROR', f'Couldnt parse json in get_sensorstation_instructions. Error: {e}')
+            await logging_operations.log_to_file_and_list('ERROR', f'Could not parse json in get_sensorstation_instructions. Error: {e}')
             return paired_stations
         except KeyError as e:
             await logging_operations.log_to_file_and_list('ERROR', f'KeyError in get_sensorstation_instructions. Error: {e}')
@@ -111,12 +113,12 @@ async def send_sensorvalues_to_backend(sensorstation_id, session):
         averages_dict['timestamp'] = datetime.utcnow().isoformat() + 'Z'
         async with session.post('/api/sensor-stations/' + str(sensorstation_id) + '/measurements', json=averages_dict) as response:
             await database_operations.clear_sensor_data(sensorstation_id)
-            await logging_operations.log_to_file_and_list('INFO', f'Sent sensorvalues to web server for sensorstation: {sensorstation_id}. Values: {averages_dict}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+            await logging_operations.log_to_file_and_list('INFO', f'Sent sensor values to web server for sensorstation: {sensorstation_id}. Values: {averages_dict}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
     else:
-        await logging_operations.log_to_file_and_list('ERROR', f'Couldnt accumulate sensor values for sensorstation: {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        await logging_operations.log_to_file_and_list('ERROR', f'Could not accumulate sensor values for sensorstation: {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
 
 @retry_connection_error(retries = 3, interval = 5)
 async def send_logs(session, logging_data):
     async with session.post('/api/access-points/' + common.access_point_name + '/logs', json=logging_data) as response:
         await logging_operations.clear_log_data()
-        await logging_operations.log_to_file_and_list('INFO', f'Sent logs to web server.')
+        await logging_operations.log_to_console('INFO', f'Sent logs to web server.')
