@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.models.Userx;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,6 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import at.qe.skeleton.models.enums.UserRole;
-import at.qe.skeleton.services.UserxService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
