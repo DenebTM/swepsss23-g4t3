@@ -48,7 +48,7 @@ export const AdminLogsTable: React.FC = () => {
       width: 150,
       valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
         ({
-          ACCESS_POINT: `AP '${params.row.origin?.id}`,
+          ACCESS_POINT: `AP '${params.row.origin?.id}'`,
           SENSOR_STATION: `Sensor Station ${params.row.origin?.id}`,
           USER: `User '${params.row.origin?.id}'`,
           NULL: '-',
