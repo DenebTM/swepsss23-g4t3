@@ -127,19 +127,22 @@ public class LoggingControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testSendLogs() {
-        Assertions.assertThrows(NotFoundInDatabaseException.class, () -> loggingController.sendLogs("someRandomNameThatDoesntExist", List.of()));
+        Assertions.assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> loggingController.sendLogs("someRandomNameThatDoesntExist", List.of())
+        );
 
         List<LoggingEvent> repoLogs = loggingService.getAllLogs();
         List<LoggingEventJson> jsonLogs = new ArrayList<>(repoLogs.size());
 
-        for (LoggingEvent l :
-                repoLogs) {
+        for (LoggingEvent l : repoLogs) {
             jsonLogs.add(new LoggingEventJson(
-                    l.getEventId(),
-                    LocalDateTime.now().toInstant(ZoneOffset.UTC),
-                    LogLevel.INFO,
-                    "Some test message",
-                    new LoggingEventJson.LogEntity(LogEntityType.USER, 1)));
+                l.getEventId(),
+                LocalDateTime.now().toInstant(ZoneOffset.UTC),
+                LogLevel.INFO,
+                "Some test message",
+                new LoggingEventJson.LogEntity(LogEntityType.USER, 1))
+            );
         }
 
         ResponseEntity<List<LoggingEventJson>> foundLogs = loggingController.sendLogs("AP 1", jsonLogs);
