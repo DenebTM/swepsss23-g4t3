@@ -1,7 +1,7 @@
 from bleak import BleakScanner
 from bleak.exc import BleakError
 import common
-import logging_operations
+from logging_operations import log_local, log_local_and_remote
 
 
 #Should return a dictionary of all found sensorstations with key = name, value = ID
@@ -19,11 +19,11 @@ async def search_for_sensorstations():
                     common.save_known_ss()
             await scanner.stop()
             if len(sensorstations) > 0:
-                await logging_operations.log_local_and_remote('INFO', f'Sensorstations found are : {sensorstations}')
+                log_local_and_remote('INFO', f'Sensorstations found are : {sensorstations}')
             else:
-                await logging_operations.log_local_and_remote('INFO', 'No sensorstations were found')       
+                log_local_and_remote('INFO', 'No sensorstations were found')       
         return sensorstations   
     
     except BleakError as e:
-        await logging_operations.log_local_and_remote('ERROR', f'BleakError occured while searching for sensorstations. Error: {e}')
+        log_local_and_remote('ERROR', f'BleakError occured while searching for sensorstations. Error: {e}')
         return sensorstations
