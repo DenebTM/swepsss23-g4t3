@@ -48,7 +48,6 @@ export const AdminLogsTable: React.FC = () => {
       width: 120,
       valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
         params.row.origin ? params.row.origin.type.toLowerCase() : 'null',
-      filterable: false,
     },
     {
       ...centerCell,
@@ -61,14 +60,12 @@ export const AdminLogsTable: React.FC = () => {
           variant={logLevelToStatusVariant[params.row.level]}
         />
       ),
-      filterable: false,
     },
     {
       field: 'message',
       headerName: 'Message',
       minWidth: 170,
       flex: 1,
-      filterable: false,
     },
     {
       ...centerCell,
@@ -78,7 +75,6 @@ export const AdminLogsTable: React.FC = () => {
       width: 175,
       valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
         dayjs(params.value).toDate(),
-      filterable: false,
     },
   ]
 
