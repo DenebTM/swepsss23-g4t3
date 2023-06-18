@@ -1,6 +1,6 @@
 import { createTheme, Theme } from '@mui/material/styles'
 
-import { customColors, getM3Tokens } from './colours/themeColours'
+import { customColours, getM3Tokens } from './colours/themeColours'
 import { CustomColours, M3Theme, PaletteMode } from './colours/types'
 import { typographyTheme } from './typography/themeTypography'
 import { TypographyVariant } from './typography/types'
@@ -51,14 +51,14 @@ export const generateTheme = (mode: PaletteMode): Theme => {
 
   return createTheme({
     ...tokens,
-    ...customColors,
+    ...customColours,
 
     // Add M3 theme to default MUI palette
     palette: {
       primary: { main: tokens.primary },
       secondary: { main: tokens.secondary },
       error: { main: tokens.error },
-      warning: { main: customColors.warn },
+      warning: { main: customColours.warn },
       info: { main: tokens.onSurface },
       success: { main: tokens.primary },
       text: {
