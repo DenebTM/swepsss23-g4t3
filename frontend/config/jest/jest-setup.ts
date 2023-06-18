@@ -4,6 +4,7 @@ import { vi } from 'vitest'
 import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import { AppRegistry } from '~/api/mirageTypes'
 import { AuthUserRole } from '~/models/user'
+import { theme } from '~/styles/theme'
 
 import { mockedSensorStations, testUsername } from './mock-data'
 
@@ -63,6 +64,17 @@ vi.mock('react-router-dom', () => ({
   useRouteError: () => USE_ROUTE_ERROR_MOCK,
   useLocation: () => LOCATION_MOCK,
 }))
+
+vi.mock('@mui/material/styles', async () => {
+  const mod = await vi.importActual<typeof import('@mui/material/styles')>(
+    '@mui/material/styles'
+  )
+
+  return {
+    ...mod,
+    useTheme: () => theme,
+  }
+})
 
 /**
  * Mock the user being logged as an admin for tests
