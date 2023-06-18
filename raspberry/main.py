@@ -73,7 +73,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
         log_local('INFO', f'Task {sensorstation_id} cancelled and cleaned up')
 
     except Exception as e:
-        log_local_and_remote('ERROR', f'Unexpected error occured in sensor_station_task: {e}')
+        log_local_and_remote('ERROR', f'Unexpected error occured in sensor station task {sensorstation_id}: {e}')
 
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
@@ -100,7 +100,6 @@ async def main():
     while True:
         try:
             async with aiohttp.ClientSession(base_url=common.web_server_address, raise_for_status=True) as session:
-
                 connection_request = asyncio.Future()
                 await rest_operations.initialize_accesspoint(session)
 
@@ -111,14 +110,15 @@ async def main():
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
             log_local('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
-            time.sleep(RETRY_TIME)
+            await asyncio.sleep(RETRY_TIME)
             
         except aiohttp.ClientResponseError as e:
-            log_local('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
-            time.sleep(RETRY_TIME)
+            log_local('WARN', f'Unauthorized to talk to PlantHealth server. Retrying in {RETRY_TIME} seconds.')
+            await asyncio.sleep(RETRY_TIME)
 
         except Exception as e:
-            log_local_and_remote('ERROR', f'Unexpected error occured: {e}')
+            log_local_and_remote('ERROR', f'Unexpected {e.__class__.__name__} occured in main: {e}')
+            await asyncio.sleep(RETRY_TIME)
 
 if __name__ == '__main__':
     asyncio.run(main())
