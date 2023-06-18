@@ -112,7 +112,7 @@ public class AccessPointRestController implements BaseRestController {
         // furthermore, update AP status to ONLINE
         if (ap.getStatus().equals(AccessPointStatus.OFFLINE)) {
             ap.setStatus(AccessPointStatus.ONLINE);
-            logger.warn("Access point status changed to " + AccessPointStatus.ONLINE, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+            logger.info("Access point status changed to " + AccessPointStatus.ONLINE, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
         }
 
         ap = apService.saveAP(ap);
