@@ -22,10 +22,10 @@ root_logger.addHandler(console_handler)
 
 log_data = []
 
-async def log_to_console(level, message):
+async def log_local(level, message):
     logging.log(getattr(logging, level), message)
 
-async def log_to_file_and_list(level, message, entity_type='ACCESS_POINT', entity_id=access_point_name):
+async def log_local_and_remote(level, message, entity_type='ACCESS_POINT', entity_id=access_point_name):
     timestamp = datetime.datetime.utcnow().isoformat()
 
     log_entry = {
@@ -38,7 +38,7 @@ async def log_to_file_and_list(level, message, entity_type='ACCESS_POINT', entit
         }
     }
 
-    log_to_console(level, message)
+    log_local(level, message)
 
     log_data.append(log_entry)
 
