@@ -35,6 +35,9 @@ public class MeasurementRestController implements BaseRestController {
     @Autowired
     private LoggingService logger;
 
+    // JSON keys used by PUT route
+    public static final String JSON_KEY_TIMESTAMP = "timestamp";
+
     /**
      * Route to GET current or historic sensor station measurement values
      * @param id
@@ -101,7 +104,6 @@ public class MeasurementRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
         }
 
-        final String JSON_KEY_TIMESTAMP = "timestamp";
         Instant timestamp = Instant.now();
         if (json.containsKey(JSON_KEY_TIMESTAMP)) {
             try {
