@@ -165,7 +165,7 @@ export const GreenhouseIcon = YardIcon
 const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
 
 /** Encrypt a sensor station UUID for photo upload */
-const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
+export const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
   encodeURIComponent(CryptoJS.AES.encrypt(String(ssID), SECRET).toString())
 
 /** Decrypt a sensor station UUID for photo upload */
@@ -321,3 +321,7 @@ export const ADD_GREENHOUSE_TEXT = 'Add Greenhouse'
 
 /** Helper text to display on buttons for pairing with a new sensor station */
 export const ADD_GREENHOUSE_DESCRIPTION = 'Connect a new greenhouse'
+
+/** Subtitle text for dialog to pair with a new sensor station */
+export const ADD_GREENHOUSE_DIALOG_SUBTITLE =
+  'Pair with a new sensor station via BLE to start monitoring your plants'
