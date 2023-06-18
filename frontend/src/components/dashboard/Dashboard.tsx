@@ -7,7 +7,6 @@ import { PageWrapper } from '~/components/page/PageWrapper'
 import { useLoadSensorStations } from '~/hooks/appContext'
 
 import { PageHeader } from '../page/PageHeader'
-import { DashboardFilters } from './DashboardFilters'
 import { DashboardStatuses } from './DashboardStatuses/DashboardStatuses'
 import { DashboardTable } from './DashboardTable/DashboardTable'
 import { RecentActivity } from './RecentActivity/RecentActivity'
@@ -25,7 +24,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <PageWrapper permittedRoles={PAGE_URL.dashboard.permittedRoles}>
-      <PageHeader right={<DashboardFilters />} />
+      <PageHeader />
 
       <Grid container spacing={3} padding={2}>
         <Grid xs={12} md={6}>

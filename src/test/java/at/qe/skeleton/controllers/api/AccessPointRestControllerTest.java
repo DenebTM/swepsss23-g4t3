@@ -1,14 +1,19 @@
 package at.qe.skeleton.controllers.api;
 
+import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.AccessPoint;
 import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.services.AccessPointService;
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -18,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @WebAppConfiguration
@@ -31,6 +37,7 @@ class AccessPointRestControllerTest {
 
     String name;
     AccessPoint ap;
+    Map<String, Object> jsonCreateAP;
     Map<String, Object> jsonUpdateAP;
 
     @BeforeEach
@@ -40,13 +47,16 @@ class AccessPointRestControllerTest {
 
         jsonUpdateAP = new HashMap<>();
         jsonUpdateAP.put("status", "ONLINE");
+
+        jsonCreateAP = new HashMap<>();
+        jsonCreateAP.put("serverAddress", "192.168.0.101");
     }
 
     @Test
     void testGetAllAccessPoints() {
         int number = apService.getAllAP().size();
         var response = apRestController.getAllAccessPoints();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var accessPoints = response.getBody();
         assertNotNull(accessPoints);
@@ -56,7 +66,7 @@ class AccessPointRestControllerTest {
     @Test
     void testGetAPById() {
         var response = apRestController.getAPByName(name);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var accessPoint = response.getBody();
         assertNotNull(accessPoint);
@@ -70,11 +80,77 @@ class AccessPointRestControllerTest {
     }
 
     @DirtiesContext
+    @ParameterizedTest
+    @ValueSource(strings = {"a", "ap123", "aP_134", "1092", "ALKJD*(&£)", "$$$$$$$$$"})
+    void testAdvertiseUnconfirmedAP(Object newApName) {
+        jsonCreateAP.put("name", newApName);
+
+        // response status for a newly created AP should be 401
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        var response = apRestController.advertiseAP(jsonCreateAP, request);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        
+        var responseBody = response.getBody();
+        assertNotNull(responseBody);
+        
+        // newly created AP should have status UNCONFIRMED
+        var ap = responseBody.getAp();
+        assertEquals(newApName.toString(), ap.getName());
+        assertEquals(AccessPointStatus.UNCONFIRMED, ap.getStatus());
+    }
+
+    @DirtiesContext
+    @Test
+    void testAdvertiseAPNumericName() {
+        testAdvertiseUnconfirmedAP(10101);
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    void testAdvertiseConfirmedAP() {
+        jsonCreateAP.put("name", name);
+
+        AccessPoint ap = new AccessPoint(name, "192.168.0.101", AccessPointStatus.ONLINE);
+        ap = apService.saveAP(ap);
+
+        // response status should be 200 after confirmation
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        var response = apRestController.advertiseAP(jsonCreateAP, request);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // checking if apStatus is being changed to online after being advertised
+        ap.setStatus(AccessPointStatus.OFFLINE);
+        ap = apService.saveAP(ap);
+        var response2 = apRestController.advertiseAP(jsonCreateAP, request);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        ap = apService.loadAPByName(ap.getName());
+        assertEquals(AccessPointStatus.ONLINE,ap.getStatus());
+    }
+
+    @DirtiesContext
+    @Test
+    void testAdvertiseThrowsErrors() {
+        jsonCreateAP.put("name", null);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.advertiseAP(jsonCreateAP, request)
+        );
+        jsonCreateAP.put("name", "APName");
+        jsonCreateAP.put("serverAddress", null);
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.advertiseAP(jsonCreateAP, request)
+        );
+    }
+
+    @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateAP() {
         var response = apRestController.updateAP(name, jsonUpdateAP);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var accessPoint = response.getBody();
         assertNotNull(accessPoint);
@@ -89,6 +165,20 @@ class AccessPointRestControllerTest {
             NotFoundInDatabaseException.class,
             () -> apRestController.updateAP("notExistingAPName", jsonUpdateAP)
         );
+        // 400 error if you try to update ap name
+        jsonUpdateAP.put("name", "newName");
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.updateAP(name, jsonUpdateAP)
+        );
+        // 400 error if status is invalid
+        jsonUpdateAP.remove("name");
+        jsonUpdateAP.put("status", "NOTAVALIDSTATUS");
+        assertThrows(
+                BadRequestException.class,
+                () -> apRestController.updateAP(name, jsonUpdateAP)
+        );
+
     }
 
     @DirtiesContext
@@ -98,14 +188,19 @@ class AccessPointRestControllerTest {
         int originalSize = apService.getAllAP().size();
 
         var response = apRestController.deleteAPById(name);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(originalSize-1, apService.getAllAP().size());
 
-        // if ap id does not exist in database, 404 not found error
+        // if ap id should not exist anymore in database, 404 not found error
         assertThrows(
             NotFoundInDatabaseException.class,
             () -> apRestController.getAPByName(name),
             "AccessPoint is still found in database after being deleted."
+        );
+        // if id of access point to delete does nor exist, 404 not found error
+        assertThrows(
+                NotFoundInDatabaseException.class,
+                () -> apRestController.deleteAPById("notExistingName")
         );
     }
 

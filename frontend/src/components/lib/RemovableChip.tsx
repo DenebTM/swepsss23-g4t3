@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
@@ -13,17 +13,20 @@ import { theme } from '~/styles/theme'
 import { Tooltip } from './Tooltip'
 
 const chipMarginSides = 2
-const chipOutline = alpha(theme.primary, 0.5)
 const chipPaddingTopBottom = '3px'
 
 /**
  * Styles for the main body of the chip
  */
-const chipBodySx: SxProps<Theme> = {
+const chipBodySx = (
+  chipOutline: string,
+  textColour: string
+): SxProps<Theme> => ({
   margin: `0 ${chipMarginSides}px`,
   padding: `${chipPaddingTopBottom} ${theme.spacing(1.5)}`,
   minWidth: theme.spacing(6),
-  '&.Mui-disabled': { color: theme.primary },
+  color: textColour,
+  '&.Mui-disabled': { color: textColour },
   '&::after': {
     content: '""',
     width: '1px',
@@ -33,6 +36,35 @@ const chipBodySx: SxProps<Theme> = {
     top: 0,
     position: 'absolute',
   },
+})
+
+/** Possible variants for {@link RemovableChip}. Used to set the colour of the border and text. */
+export enum ChipVariant {
+  OK = 'OK',
+  WARNING = 'WARNING',
+  ERROR = 'ERROR',
+  INFO = 'INFO',
+}
+
+const chipColour: { [key in ChipVariant]: string } = {
+  [ChipVariant.OK]: theme.primary,
+  [ChipVariant.WARNING]: theme.warn,
+  [ChipVariant.ERROR]: theme.error,
+  [ChipVariant.INFO]: theme.tertiary,
+}
+
+const chipBackground: { [key in ChipVariant]: string } = {
+  [ChipVariant.OK]: theme.primaryContainer,
+  [ChipVariant.WARNING]: theme.warnContainer,
+  [ChipVariant.ERROR]: theme.errorContainer,
+  [ChipVariant.INFO]: theme.tertiaryContainer,
+}
+
+const chipText: { [key in ChipVariant]: string } = {
+  [ChipVariant.OK]: theme.onPrimaryContainer,
+  [ChipVariant.WARNING]: theme.onWarnContainer,
+  [ChipVariant.ERROR]: theme.onErrorContainer,
+  [ChipVariant.INFO]: theme.onTertiaryContainer,
 }
 
 interface RemovableChipProps {
@@ -48,6 +80,8 @@ interface RemovableChipProps {
   onClick?: React.MouseEventHandler
   /** Tooltip title for the main body of the chip */
   tooltipTitle?: string
+  /** Variant corresponding to border and text colour. Fedaults to  `ChipVariant.OK`. */
+  variant?: ChipVariant
 }
 
 /**
@@ -57,6 +91,11 @@ interface RemovableChipProps {
 export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const [deletePending, setDeletePending] = useState(false)
+  const [variant, setVariant] = useState(props.variant ?? ChipVariant.OK)
+
+  useEffect(() => {
+    setVariant(props.variant ?? ChipVariant.OK)
+  }, [props.variant])
 
   const handleDeleteClick: React.MouseEventHandler = (e) => {
     e.stopPropagation() // Prevent selecting table cell
@@ -87,6 +126,8 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
     props.onClick?.(e)
   }
 
+  const chipOutline = alpha(chipColour[variant], 0.6)
+
   return (
     <Box
       sx={{
@@ -99,15 +140,15 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
         <Button
           aria-label={props.tooltipTitle}
           variant="text"
-          color="primary"
           disabled={deletePending || typeof props.onClick === 'undefined'}
           size="small"
           sx={{
-            ...chipBodySx,
+            ...chipBodySx(chipOutline, chipText[variant]),
+
             '&:hover':
               typeof props.onClick !== 'undefined'
                 ? {
-                    background: theme.primaryContainer,
+                    background: chipBackground[variant],
                     transition: theme.transitions.create('background'),
                   }
                 : {},
@@ -127,11 +168,11 @@ export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
           onClick={handleDeleteClick}
           size="small"
           sx={{
-            color: theme.primary,
+            color: chipColour[variant],
             margin: `0 ${chipMarginSides}px`,
             padding: chipPaddingTopBottom,
             '&:hover': {
-              background: theme.primaryContainer,
+              background: chipBackground[variant],
               transition: theme.transitions.create('background'),
             },
           }}

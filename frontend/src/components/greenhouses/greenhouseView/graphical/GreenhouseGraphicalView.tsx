@@ -76,7 +76,15 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
   return (
     <Grid container spacing={2} padding={2}>
       <Grid xs={12}>
-        <DashboardCard loading={typeof measurements === 'undefined'}>
+        <DashboardCard
+          loading={
+            typeof measurements === 'undefined' || sensorStation === null
+          }
+          empty={
+            sensorStation !== null && sensorStation.currentMeasurement === null
+          }
+          emptyText={`The current measurements for greenhouse ${sensorStation?.ssID} will appear here.`}
+        >
           {measurements && (
             <GreenhouseMetricDonuts
               measurement={
@@ -88,8 +96,12 @@ export const GreenhouseGraphicalView: React.FC<GreenhouseGraphicalViewProps> = (
         </DashboardCard>
       </Grid>
 
-      <Grid xs={12}>
-        <DashboardCard loading={typeof measurements === 'undefined'}>
+      <Grid xs={12} sx={{ height: 400 }}>
+        <DashboardCard
+          loading={typeof measurements === 'undefined'}
+          empty={measurements && measurements.length <= 1}
+          emptyText="A graph of measurements from the last week will appear here once there are at least two measurements from this greenhouse."
+        >
           {measurements && (
             <GreenhouseGraph
               measurements={measurements}

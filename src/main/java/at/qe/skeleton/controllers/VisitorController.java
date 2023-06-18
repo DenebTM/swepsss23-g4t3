@@ -5,12 +5,11 @@ import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
 import at.qe.skeleton.models.SensorStation;
+import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.services.SensorStationService;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
-import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,44 +27,49 @@ import java.util.List;
 @RestController
 public class VisitorController {
 
+    private static final String PHOTOS_PATH = "/photos";
+    private static final String PHOTOS_ID_PATH = PHOTOS_PATH + "/{photoId}";
+    private static final String SS_PHOTOS_PATH = SensorStationRestController.SS_ID_PATH + PHOTOS_PATH;
+
+    private static final Long MAX_IMAGE_SIZE = 8 * 1024 * 1024L;
+
+    @Autowired
+    private LoggingService logger;
+
     @Autowired
     private SensorStationService ssService;
     @Autowired
     private PhotoDataRepository photoDataRepository;
 
-    private static final String SS_PHOTOS_PATH = SensorStationRestController.SS_ID_PATH + "/photos";
-
     /**
      * Route to POST images to the photo gallery
      * @param multipartImage image file
-     * @param id id of sensor station to upload to
+     * @param ssId id of sensor station to upload to
      * @return id and name of Photo
      */
     @PostMapping(value = SS_PHOTOS_PATH)
-    ResponseEntity<Object> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer id) {
+    public ResponseEntity<PhotoData> uploadPhoto(@RequestParam MultipartFile multipartImage, @PathVariable(value = "id") Integer ssId) {
         PhotoData dbPhoto = new PhotoData();
         try {
-            if (multipartImage.getSize() > 8000000) {
-                throw new SizeLimitExceededException("", multipartImage.getSize(), 8);
+            if (multipartImage.getSize() > MAX_IMAGE_SIZE) {
+                throw new MaxUploadSizeExceededException(MAX_IMAGE_SIZE);
             }
             if (multipartImage.getBytes().length == 0) {
-                throw new BadRequestException("Could not get bytes for photo");
+                throw new BadRequestException("Could not get bytes for uploaded photo");
             }
             dbPhoto.setUploaded(LocalDateTime.now());
             dbPhoto.setContent(multipartImage.getBytes());
-            SensorStation ss = ssService.loadSSById(id);
+            SensorStation ss = ssService.loadSSById(ssId);
             if (ss == null) {
-                throw new NotFoundInDatabaseException("Sensor station", id);
+                throw new NotFoundInDatabaseException(SensorStationRestController.SS, ssId);
             }
             dbPhoto.setSensorStation(ss);
             photoDataRepository.save(dbPhoto);
-        } catch (SizeLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Size limit for photo exceeded");
-        } catch (FileSizeLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File size limit for photo exceeded");
-        }  catch (MaxUploadSizeExceededException e) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Photo too large for upload");
+
+            logger.info("New photo added", LogEntityType.SENSOR_STATION, ssId, getClass());
         } catch (IOException e) {
+            logger.warn("Photo upload failed", LogEntityType.SENSOR_STATION, ssId, getClass());
+
             throw new NotFoundInDatabaseException("Bytes for photo", dbPhoto.getId());
         }
         return ResponseEntity.ok(dbPhoto);
@@ -73,30 +77,30 @@ public class VisitorController {
 
     /**
      * Route to GET a single photo as jpeg image by its ID
-     * @param id id of the photo
+     * @param photoId id of the photo
      * @return jpeg image
      */
-    @GetMapping(value = "photos/{photoId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer id){
-        if (photoDataRepository.findById(id).isPresent()) {
-            if (photoDataRepository.findById(id).get().getContent().length == 0) {
-                throw new NotFoundInDatabaseException("Bytes for photo", id);
+    @GetMapping(value = PHOTOS_ID_PATH, produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer photoId) {
+        if (photoDataRepository.findById(photoId).isPresent()) {
+            if (photoDataRepository.findById(photoId).get().getContent().length == 0) {
+                throw new NotFoundInDatabaseException("Bytes for photo", photoId);
             }
-            return ResponseEntity.ok(photoDataRepository.findById(id).get().getContent());
+            return ResponseEntity.ok(photoDataRepository.findById(photoId).get().getContent());
         }
-        throw new NotFoundInDatabaseException("Photo", id);
+        throw new NotFoundInDatabaseException("Photo", photoId);
     }
 
     /**
      * Route to get a list of all photos from a specific sensor station as json
-     * @param id id of the sensor station
+     * @param ssId id of the sensor station
      * @return list of PhotoData objects
      */
     @GetMapping(value = SS_PHOTOS_PATH)
-    public ResponseEntity<Object> getPhotosBySSAsId(@PathVariable(value = "id") Integer id) {
-        SensorStation ss = ssService.loadSSById(id);
+    public ResponseEntity<List<PhotoData>> getSSPhotoList(@PathVariable(value = "id") Integer ssId) {
+        SensorStation ss = ssService.loadSSById(ssId);
         if (ss == null) {
-            throw new NotFoundInDatabaseException("Sensor station", id);
+            throw new NotFoundInDatabaseException(SensorStationRestController.SS, ssId);
         }
         List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
         return ResponseEntity.ok(photos);

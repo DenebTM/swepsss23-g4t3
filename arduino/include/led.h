@@ -22,18 +22,26 @@ using namespace std::chrono_literals;
 #define LED_BLINK_SHORT_DURATION 200ms
 #define LED_BLINK_LONG_DURATION  500ms
 
+// duration after which LED will turn off in order to save power if there
+// are no active high-priority codes
+#define LED_STANDBY_TIMEOUT_MS 10000
+
 #define LED_SOLID(color) \
   { color, 100ms }
 
 #define LED_BLINK_ONCE(color, duration) \
-  { color, duration }, { led::Color::OFF, duration }
+  { color, duration }, {                \
+    led::Color::OFF, duration           \
+  }
 #define LED_BLINK_ONCE_SHORT(color) \
   LED_BLINK_ONCE(color, LED_BLINK_SHORT_DURATION)
 #define LED_BLINK_ONCE_LONG(color) \
   LED_BLINK_ONCE(color, LED_BLINK_LONG_DURATION)
 
-#define LED_BLINK_LAST(color, duration) \
-  { color, duration }, { led::Color::OFF, LED_CYCLE_PAUSE_DURATION }
+#define LED_BLINK_LAST(color, duration)       \
+  { color, duration }, {                      \
+    led::Color::OFF, LED_CYCLE_PAUSE_DURATION \
+  }
 #define LED_BLINK_LAST_SHORT(color) \
   LED_BLINK_LAST(color, LED_BLINK_SHORT_DURATION)
 #define LED_BLINK_LAST_LONG(color) \

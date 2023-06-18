@@ -10,14 +10,14 @@ public interface LoggingEventRepository extends AbstractRepository<LoggingEvent,
     @Override
     List<LoggingEvent> findAll();
 
-    List<LoggingEvent> findAllByOrderByTimestmpAsc();
+    List<LoggingEvent> findAllByOrderByTimestmpDesc();
 
-    List<LoggingEvent> findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(Long from, Long to);
+    List<LoggingEvent> findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpDesc(Long from, Long to);
 
-    List<LoggingEvent> findAllByLevelInOrderByTimestmpAsc(List<LogLevel> levels);
+    List<LoggingEvent> findAllByLevelInOrderByTimestmpDesc(List<LogLevel> levels);
 
-    List<LoggingEvent> findAllByTimestmpGreaterThanEqualOrderByTimestmpAsc(Long from);
+    List<LoggingEvent> findAllByTimestmpGreaterThanEqualOrderByTimestmpDesc(Long from);
 
-    List<LoggingEvent> findAllByTimestmpLessThanEqualOrderByTimestmpAsc(Long to);
+    List<LoggingEvent> findAllByTimestmpLessThanEqualOrderByTimestmpDesc(Long to);
 
 }

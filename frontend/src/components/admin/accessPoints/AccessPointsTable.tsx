@@ -43,7 +43,7 @@ const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
 }
 
 /**
- * Access point managment page for admins
+ * Access point management page for admins
  */
 export const AccessPointsTable: React.FC = () => {
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
@@ -91,6 +91,12 @@ export const AccessPointsTable: React.FC = () => {
       width: 130,
     },
     {
+      ...centerCell,
+      field: 'clientAddress',
+      headerName: 'Client Address',
+      width: 170,
+    },
+    {
       field: 'sensorStations',
       headerName: 'Greenhouses',
       description: 'Greenhouses which transmit data to this access point',
@@ -100,7 +106,7 @@ export const AccessPointsTable: React.FC = () => {
       ...centerCell,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 190 * getMaxGreenhousesPerAp(),
+      width: Math.max(190 * getMaxGreenhousesPerAp(), 100),
     },
     {
       ...centerCell,
@@ -164,6 +170,7 @@ export const AccessPointsTable: React.FC = () => {
             background: alpha(theme.errorContainer, 0.15),
           },
         }}
+        noRowsMessage="No access points to display"
       />
     </TablePaper>
   )

@@ -21,33 +21,33 @@ public class LoggingService {
     LoggingEventRepository loggingEventRepository;
 
     /**
-     * Returns all available logs from the repository, ordered by timestamp (latest events are shown first)
+     * returns all available logs from the repository, ordered by timestamp (latest events are shown first)
      * @return list of logs
      */
     public List<LoggingEvent> getAllLogs() {
-        return loggingEventRepository.findAllByOrderByTimestmpAsc();
+        return loggingEventRepository.findAllByOrderByTimestmpDesc();
     }
 
     /**
-     * Returns all available logs starting from the beginning and ending at parameter 'to'
+     * returns all available logs starting from the beginning and ending at parameter 'to'
      * @param endDate end date
      * @return list of logs in time period beginning - 'to'
      */
     public List<LoggingEvent> getAllLogsTo(Instant endDate) {
-        return loggingEventRepository.findAllByTimestmpLessThanEqualOrderByTimestmpAsc(endDate.toEpochMilli());
+        return loggingEventRepository.findAllByTimestmpLessThanEqualOrderByTimestmpDesc(endDate.toEpochMilli());
     }
 
     /**
-     * Returns all available logs starting at parameter 'from' and ending with the latest event
+     * returns all available logs starting at parameter 'from' and ending with the latest event
      * @param beginDate begin date
      * @return list of logs in time period 'from' - ending
      */
     public List<LoggingEvent> getAllLogsFrom(Instant beginDate) {
-        return loggingEventRepository.findAllByTimestmpGreaterThanEqualOrderByTimestmpAsc(beginDate.toEpochMilli());
+        return loggingEventRepository.findAllByTimestmpGreaterThanEqualOrderByTimestmpDesc(beginDate.toEpochMilli());
     }
 
     /**
-     * Returns all available logs starting at parameter 'from' and ending at parameter 'to'
+     * returns all available logs starting at parameter 'from' and ending at parameter 'to'
      * 
      * @param beginDate
      * @param endDate
@@ -61,7 +61,7 @@ public class LoggingService {
         } else if (beginDate == null) {
             return getAllLogsTo(endDate);
         } else {
-            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpAsc(
+            return loggingEventRepository.findAllByTimestmpGreaterThanEqualAndTimestmpLessThanEqualOrderByTimestmpDesc(
                 beginDate.toEpochMilli(),
                 endDate.toEpochMilli()
             );
@@ -69,13 +69,13 @@ public class LoggingService {
     }
 
     /**
-     * Returns all logs at a specific level, or all levels if level==null
+     * returns all logs at a specific level, or all levels if level==null
      * 
-     * @param level logging level
-     * @return all logs that have the set level
+     * @param levels logging levels
+     * @return all logs that have one of the set levels
      */
     public List<LoggingEvent> getLogsByLevelIn(List<LogLevel> levels) {
-        return loggingEventRepository.findAllByLevelInOrderByTimestmpAsc(levels);
+        return loggingEventRepository.findAllByLevelInOrderByTimestmpDesc(levels);
     }
 
     public List<LoggingEvent> filterLogsByLevelIn(List<LoggingEvent> logs, List<LogLevel> levels) {

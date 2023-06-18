@@ -1,6 +1,7 @@
 import asyncio
 import aiohttp
 import time
+import logging_operations
 from bleak import BleakClient, BleakError
 import common
 import database_operations
@@ -38,7 +39,7 @@ async def sensor_station_manager(connection_request, session):
                         ss_tasks[ss_id].cancel()
                         del ss_tasks[ss_id]
                     except:
-                        print(f"error canceling task for", ss_id)
+                        print(f'error canceling task for', ss_id)
 
         print('Finished SS Manager Loop')
         await asyncio.sleep(10)
@@ -80,6 +81,7 @@ async def cancel_ss_task(sensorstation_id):
 
 
 async def polling_loop(connection_request, session):
+    asyncio.create_task(logging_operations.log_sending_loop(session, connection_request))
     while not connection_request.done():
         print('Inside AP Loop')
         new_status = await rest_operations.get_ap_status(session)
@@ -93,39 +95,29 @@ async def polling_loop(connection_request, session):
             await rest_operations.send_sensorstations_to_backend(session, sensorstations)
         await asyncio.sleep(10)
 
-#Füg header mit authorization hinzu
 async def main():
     while True:
         try:
-            async with aiohttp.ClientSession(base_url='http://'+common.web_server_address, raise_for_status=True) as session:
+            async with aiohttp.ClientSession(base_url=common.web_server_address, raise_for_status=True) as session:
+
                 connection_request = asyncio.Future()
-                print('This should only be Printed at the start and when AP is offline')
-                ap_initialized = await rest_operations.initialize_accesspoint(session)
-                if ap_initialized:
-                    ap_status = await rest_operations.get_ap_status(session)
-                    if ap_status in ['ONLINE', 'SEARCHING']:
-                        polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
-                        sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
-                        await asyncio.gather(polling_loop_task, sensor_station_manager_task)
-                    else:
-                        print('Access point is offline')
-                        connection_request = asyncio.Future()
-                        await asyncio.sleep(30)
-                else:
-                    raise aiohttp.ClientResponseError('Temporary message for status code above 2xx')
+                await rest_operations.initialize_accesspoint(session)
+
+                polling_loop_task = asyncio.create_task(polling_loop(connection_request, session))
+                sensor_station_manager_task = asyncio.create_task(sensor_station_manager(connection_request, session))
+                await asyncio.gather(polling_loop_task, sensor_station_manager_task)
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            print(f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            await logging_operations.log_to_file_and_list('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
             time.sleep(RETRY_TIME)
-            #TODO:Log this
+            
         except aiohttp.ClientResponseError as e:
-            print(f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            await logging_operations.log_to_file_and_list('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
             time.sleep(RETRY_TIME)
-            #TODO:Log this
+
         except Exception as e:
-            print(f'Unexpected error occured: {e}')
-            #TODO:Log this
+            await logging_operations.log_to_file_and_list('ERROR', f'Unexpected error occured: {e}')
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -17,7 +17,6 @@ export interface LogEntry {
  * Severity warnings for an {@link LogEntry}
  */
 export enum LogLevel {
-  DEBUG = 'DEBUG',
   INFO = 'INFO',
   WARN = 'WARN',
   ERROR = 'ERROR',

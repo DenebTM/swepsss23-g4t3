@@ -11,7 +11,17 @@ import { DeleteCell } from '@component-lib/Table/DeleteCell'
 import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import { deleteUser, getUsers, updateUser } from '~/api/endpoints/user'
+import { useUsername } from '~/hooks/user'
 import { AuthUserRole, User, Username } from '~/models/user'
+
+/** Table column field containing first name of user */
+const FIRSTNAME = 'firstName'
+
+/** Table column field containing last name of user */
+const LASTNAME = 'lastName'
+
+/** Table column field containing user role */
+const USER_ROLE = 'userRole'
 
 interface UsersTableProps {
   setUsers: Dispatch<SetStateAction<User[] | undefined>>
@@ -22,6 +32,8 @@ interface UsersTableProps {
  * Display users in an editable, filterable table
  */
 export const UsersTable: React.FC<UsersTableProps> = (props) => {
+  const username = useUsername()
+
   /** Update a single user */
   const handleUpdateUser: RowUpdateFunction<User> = (
     newUser: User,
@@ -31,23 +43,26 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
   /** Width of name fields in px */
   const nameFieldWidth = 110
 
-  /** Columns for the user management table */
+  /**
+   * Columns for the user management table.
+   * Whether cells are editable or not is further controlled dynamically via `isCellEditable` prop.
+   */
   const columns: GridColDef<User, any, User>[] = [
     { field: 'username', headerName: 'Username', width: nameFieldWidth },
     {
-      field: 'firstName',
+      field: FIRSTNAME,
       headerName: 'First name',
-      editable: true,
       width: nameFieldWidth,
+      editable: true,
     },
     {
-      field: 'lastName',
+      field: LASTNAME,
       headerName: 'Last name',
-      editable: true,
       width: nameFieldWidth,
+      editable: true,
     },
     {
-      field: 'userRole',
+      field: USER_ROLE,
       headerName: 'Role',
       type: 'singleSelect',
       valueOptions: [
@@ -57,13 +72,24 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       ],
       headerAlign: 'center',
       align: 'center',
-      editable: true,
       width: 100,
+      editable: true,
     },
     {
-      field: 'created',
+      field: 'createDate',
       headerName: 'Created',
       description: 'When the user was created',
+      type: 'dateTime',
+      headerAlign: 'center',
+      align: 'center',
+      valueGetter: (params: GridValueGetterParams<User, string>) =>
+        dayjs(params.value).toDate(),
+      width: 170,
+    },
+    {
+      field: 'updateDate',
+      headerName: 'Updated',
+      description: 'When the user was last updated',
       type: 'dateTime',
       headerAlign: 'center',
       align: 'center',
@@ -97,6 +123,13 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
       <DataGrid<User, any, User>
         columns={columns}
         getRowId={(row: User) => row.username}
+        isCellEditable={
+          (params) =>
+            params.field === FIRSTNAME ||
+            params.field === LASTNAME ||
+            (params.field === USER_ROLE &&
+              params.row.username !== username) /** Prevent editing own role */
+        }
         processRowUpdate={handleUpdateUser}
         rows={props.users}
         setRows={props.setUsers}

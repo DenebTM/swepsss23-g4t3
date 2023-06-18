@@ -2,8 +2,8 @@
 #define _BLE_PAIR_H
 
 #include "ble.h"
-
 #include <led.h>
+
 using namespace std::chrono_literals;
 
 #define BLE_PAIRING_MODE_TIMEOUT_MS 5 * 60 * 1000

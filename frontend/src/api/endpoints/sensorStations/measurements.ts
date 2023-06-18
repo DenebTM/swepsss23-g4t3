@@ -14,12 +14,11 @@ import { API_URI, notFound, success } from '../consts'
  */
 export const getSensorStationMeasurements = async (
   sensorStationUuid: SensorStationUuid,
-  from?: Timestamp,
-  to?: Timestamp
+  params?: { from?: Timestamp; to?: Timestamp }
 ): Promise<Measurement[]> =>
   _get(
     `${API_URI.sensorStations}/${sensorStationUuid}${API_URI.measurements}`,
-    { params: { from: from, to: to } }
+    { params }
   )
 
 /** Path to get sensor station measurements for mocked routes */
@@ -42,8 +41,8 @@ export const mockedSensorStationMeasurementReqs: EndpointReg = (
       const ssMeasurements: Measurement[] = sensorStation.attrs.measurements
 
       if (typeof body.from === 'undefined' && typeof body.to === 'undefined') {
-        // Return the first measurement if there is one
-        return success(ssMeasurements.length > 0 ? [ssMeasurements[0]] : [])
+        // Return all measurements for now
+        return success(ssMeasurements.length > 0 ? ssMeasurements : [])
       } else {
         return success(
           ssMeasurements.filter(
