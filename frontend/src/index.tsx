@@ -14,6 +14,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
+import Cookies from 'universal-cookie'
 import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import {
   API_DEV_URL,
@@ -142,8 +143,15 @@ const App: React.FC = () => {
   // automatic dark theme
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
+  // remember theme mode using cookie
+  const THEME_MODE = 'THEME_MODE'
+  const cookies = new Cookies()
+
+  const [activeMode, setActiveMode] = React.useState<ColorMode>(
+    cookies.get<ColorMode>(THEME_MODE) ?? 'auto'
+  )
+
   // manual theme override
-  const [activeMode, setActiveMode] = React.useState<ColorMode>('auto')
   const colorMode = React.useMemo<IColorModeContext>(
     () => ({
       activeMode,
@@ -163,6 +171,7 @@ const App: React.FC = () => {
           : 'auto'
 
         setActiveMode(nextColorMode)
+        cookies.set(THEME_MODE, nextColorMode, { sameSite: 'strict' })
       },
     }),
     [activeMode]
