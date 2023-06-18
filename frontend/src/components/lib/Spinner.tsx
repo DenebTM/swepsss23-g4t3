@@ -15,9 +15,7 @@ interface SpinnerProps extends CircularProgressProps {
 export const Spinner: React.FC<SpinnerProps> = (props) => {
   const { center, sx, color, ...spinnerProps } = { ...props }
 
-  const spinnerStyles = props.center
-    ? { alignSelf: 'center', marginTop: 8 }
-    : {}
+  const spinnerStyles = center ? { alignSelf: 'center', marginTop: 8 } : {}
 
   return (
     <CircularProgress
