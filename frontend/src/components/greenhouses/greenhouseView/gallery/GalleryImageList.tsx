@@ -57,7 +57,7 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
         <ImageList variant="masonry" cols={numImageColumns()} gap={4}>
           {props.photos.map((im, idx) => (
             <ImageListItem
-              key={`${im.uploaded}-${idx}`}
+              key={`${im.id}-${im.uploaded}`}
               alt={`Photograph of a plant for greenhouse ${props.ssID}`}
               photo={im}
               setPhotos={props.setPhotos}
