@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import HomeIcon from '@mui/icons-material/Home'
-import ColorModeIcon from '@mui/icons-material/LightMode'
+import ColourModeIcon from '@mui/icons-material/LightMode'
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -13,7 +13,7 @@ import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
 import { GreenhouseIcon, PAGE_URL, SensorStationView } from '~/common'
-import { ColorModeContext } from '~/contexts/ColorModeContext/ColorModeContext'
+import { ColourModeContext } from '~/contexts/ColourModeContext/ColourModeContext'
 import { deleteJwt, isUserLoggedIn } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
@@ -85,9 +85,9 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
         throw err
       })
 
-  const colorModeContext = useContext(ColorModeContext)
-  const handleChangeColorMode = (): void => {
-    colorModeContext.changeColorMode()
+  const colourModeContext = useContext(ColourModeContext)
+  const handleChangeColourMode = (): void => {
+    colourModeContext.changeColourMode()
   }
 
   return (
@@ -110,11 +110,11 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
 
       {/* Color mode button */}
       <SidebarListItem
-        label={'Theme: ' + colorModeContext.activeMode.toUpperCase()}
+        label={'Theme: ' + colourModeContext.activeMode.toUpperCase()}
         open={props.open}
-        onClick={handleChangeColorMode}
+        onClick={handleChangeColourMode}
       >
-        <ColorModeIcon />
+        <ColourModeIcon />
       </SidebarListItem>
 
       {/* Logout button */}

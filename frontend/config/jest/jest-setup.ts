@@ -65,16 +65,18 @@ vi.mock('react-router-dom', () => ({
   useLocation: () => LOCATION_MOCK,
 }))
 
-vi.mock('@mui/material/styles', async () => {
-  const mod = await vi.importActual<typeof import('@mui/material/styles')>(
+/**
+ * Several components call `useTheme` to determine _how_ to render things.
+ * As the default theme is missing several properties used by some components,
+ * `useTheme` needs to be mocked in order for those components to render
+ * without crashing.
+ */
+vi.mock('@mui/material/styles', async () => ({
+  ...(await vi.importActual<typeof import('@mui/material/styles')>(
     '@mui/material/styles'
-  )
-
-  return {
-    ...mod,
-    useTheme: () => generateTheme('light'),
-  }
-})
+  )),
+  useTheme: () => generateTheme('light'),
+}))
 
 /**
  * Mock the user being logged as an admin for tests

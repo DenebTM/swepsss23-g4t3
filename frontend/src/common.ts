@@ -10,7 +10,7 @@ import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
-import { customColors } from './styles/colours/themeColours'
+import { customColours } from './styles/colours/themeColours'
 
 /** Enum for the URL parameters controlling the view of a single sensor station.
  */
@@ -245,7 +245,7 @@ export interface GreenhouseMetricRange {
 
 export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   temperature: {
-    colour: customColors.purple,
+    colour: customColours.purple,
     displayName: 'Temperature',
     valueKey: 'temperature',
     unit: '°C',
@@ -254,7 +254,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   soilMoisture: {
-    colour: customColors.tertiary,
+    colour: customColours.tertiary,
     displayName: 'Soil Moisture',
     valueKey: 'soilMoisture',
     unit: '%',
@@ -263,7 +263,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   lightIntensity: {
-    colour: customColors.green,
+    colour: customColours.green,
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
@@ -275,7 +275,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
 
 export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   airPressure: {
-    colour: customColors.warn,
+    colour: customColours.warn,
     displayName: 'Air Pressure',
     valueKey: 'airPressure',
     unit: 'hPa',
@@ -284,7 +284,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 50,
   },
   humidity: {
-    colour: customColors.pink,
+    colour: customColours.pink,
     displayName: 'Humidity',
     valueKey: 'humidity',
     unit: '%',
@@ -293,7 +293,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   airQuality: {
-    colour: customColors.blue,
+    colour: customColours.blue,
     displayName: 'Air Quality',
     description: 'Index of Air Quality (IAQ)',
     valueKey: 'airQuality',

@@ -45,10 +45,10 @@ import { generateTheme } from '~/styles/theme'
 import { PhotoUpload } from './components/photoUpload/PhotoUpload'
 import { AppProvider } from './contexts/AppContext/AppProvider'
 import {
-  ColorMode,
-  ColorModeContext,
-  IColorModeContext,
-} from './contexts/ColorModeContext/ColorModeContext'
+  ColourMode,
+  ColourModeContext,
+  IColourModeContext,
+} from './contexts/ColourModeContext/ColourModeContext'
 
 /**
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
@@ -147,16 +147,16 @@ const App: React.FC = () => {
   const THEME_MODE = 'THEME_MODE'
   const cookies = new Cookies()
 
-  const [activeMode, setActiveMode] = React.useState<ColorMode>(
-    cookies.get<ColorMode>(THEME_MODE) ?? 'auto'
+  const [activeMode, setActiveMode] = React.useState<ColourMode>(
+    cookies.get<ColourMode>(THEME_MODE) ?? 'auto'
   )
 
   // manual theme override
-  const colorMode = React.useMemo<IColorModeContext>(
+  const colourMode = React.useMemo<IColourModeContext>(
     () => ({
       activeMode,
-      changeColorMode: () => {
-        const nextColorMode = prefersDarkMode
+      changeColourMode: () => {
+        const nextColourMode = prefersDarkMode
           ? // browser prefers dark mode: auto->light->dark->auto
             activeMode === 'auto'
             ? 'light'
@@ -170,11 +170,11 @@ const App: React.FC = () => {
           ? 'light'
           : 'auto'
 
-        setActiveMode(nextColorMode)
-        cookies.set(THEME_MODE, nextColorMode, { sameSite: 'strict' })
+        setActiveMode(nextColourMode)
+        cookies.set(THEME_MODE, nextColourMode, { sameSite: 'strict' })
       },
     }),
-    [activeMode]
+    [activeMode, prefersDarkMode]
   )
 
   // generate theme based on active mode
@@ -187,7 +187,7 @@ const App: React.FC = () => {
 
   return (
     <React.StrictMode>
-      <ColorModeContext.Provider value={colorMode}>
+      <ColourModeContext.Provider value={colourMode}>
         <ThemeProvider theme={theme}>
           <SnackbarProvider>
             <AppProvider>
@@ -196,7 +196,7 @@ const App: React.FC = () => {
             </AppProvider>
           </SnackbarProvider>
         </ThemeProvider>
-      </ColorModeContext.Provider>
+      </ColourModeContext.Provider>
     </React.StrictMode>
   )
 }
