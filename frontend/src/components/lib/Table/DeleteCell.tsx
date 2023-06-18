@@ -36,7 +36,7 @@ interface DeleteCellProps<R extends GridValidRowModel, T = number> {
  */
 export const DeleteCell = <R extends GridValidRowModel, T = string>(
   props: DeleteCellProps<R, T>
-): JSX.Element => {
+): React.ReactElement => {
   const theme = useTheme()
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
