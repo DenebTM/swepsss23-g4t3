@@ -1,7 +1,7 @@
 package at.qe.skeleton.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class FrontendController {
 
-    @RequestMapping(value = { "/", "/{x:[\\w\\-]+}", "/{x:^(?!api$).*$}/**/{y:[\\w\\-]+}" })
+    @GetMapping(value = { "/", "/{x:[\\w\\-]+}", "/{x:^(?!api$).*$}/**/{y:[\\w\\-]+}" })
     public String getIndex(HttpServletRequest request) {
         return "/index.html";
     }

@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Rest controller to enable access to uploading a photo or viewing all photos of a specific
@@ -81,14 +82,19 @@ public class VisitorController {
      * @return jpeg image
      */
     @GetMapping(value = PHOTOS_ID_PATH, produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody ResponseEntity<Object> getPhotoById(@PathVariable(value = "photoId") Integer photoId) {
-        if (photoDataRepository.findById(photoId).isPresent()) {
-            if (photoDataRepository.findById(photoId).get().getContent().length == 0) {
-                throw new NotFoundInDatabaseException("Bytes for photo", photoId);
-            }
-            return ResponseEntity.ok(photoDataRepository.findById(photoId).get().getContent());
+    public @ResponseBody ResponseEntity<byte[]> getPhotoById(@PathVariable(value = "photoId") Integer photoId) {
+        Optional<PhotoData> maybePhoto = photoDataRepository.findById(photoId);
+
+        if (maybePhoto.isEmpty()) {
+            throw new NotFoundInDatabaseException("Photo", photoId);
         }
-        throw new NotFoundInDatabaseException("Photo", photoId);
+
+        PhotoData photo = maybePhoto.get();
+        if (photo.getContent().length == 0) {
+            throw new NotFoundInDatabaseException("Bytes for photo", photoId);
+        }
+
+        return ResponseEntity.ok(photo.getContent());
     }
 
     /**

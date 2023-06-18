@@ -221,9 +221,9 @@ public class UserxServiceTest {
 
     @Test
     public void testIsNotValidPassword() {
-        assertTrue(userService.isNotValidPassword(""));
-        assertTrue(userService.isNotValidPassword("null"));
-        assertTrue(userService.isNotValidPassword(null));
-        assertFalse(userService.isNotValidPassword("validPassword"));
+        assertTrue(UserxService.isNotValidPassword(""));
+        assertTrue(UserxService.isNotValidPassword("null"));
+        assertTrue(UserxService.isNotValidPassword(null));
+        assertFalse(UserxService.isNotValidPassword("validPassword"));
     }
 }
