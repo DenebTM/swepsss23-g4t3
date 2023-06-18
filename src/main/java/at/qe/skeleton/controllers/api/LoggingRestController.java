@@ -45,7 +45,7 @@ public class LoggingRestController implements BaseRestController {
      * GET route to filter logs according to a time interval, the logging level or not at all.
      * A JSON is requested that can contain the parameters "from", "to", and "level".
      * If all of these parameters are set to null, all logs are returned ordered by their timestamp.
-     * 
+     *
      * @param from Earliest date to include (UTC timestamp)
      * @param to Last date to include (UTC timestamp)
      * @param levels {@link LogLevel}s to include (INFO, WARNING, DEBUG)
