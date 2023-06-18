@@ -2,8 +2,7 @@ import { cancelable } from 'cancelable-promise'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
-import { SxProps, Theme } from '@mui/material/styles'
-import { useTheme } from '@mui/material/styles'
+import { SxProps, Theme, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import {
   gridClasses,

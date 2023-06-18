@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { alpha } from '@mui/material/styles'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import Box from '@mui/system/Box'
 
 import { PlantIcon } from '@component-lib/icons/PlantIcon'
