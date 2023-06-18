@@ -3,7 +3,6 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.controllers.api.LoggingControllerTest;
 import at.qe.skeleton.models.LoggingEvent;
 import at.qe.skeleton.models.enums.LogLevel;
-import at.qe.skeleton.services.LoggingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
