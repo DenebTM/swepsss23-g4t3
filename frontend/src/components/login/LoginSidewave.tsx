@@ -1,23 +1,24 @@
 import React from 'react'
 
 import { alpha } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import Box from '@mui/system/Box'
 
 import { PlantIcon } from '@component-lib/icons/PlantIcon'
-import { theme } from '~/styles/theme'
-
-/** PLan icon height in units of theme.spacing */
-const plantIconHeight = 36
-
-const plantIconSize = {
-  height: theme.spacing(plantIconHeight),
-  width: theme.spacing(plantIconHeight),
-}
 
 /**
  * Sidebar wave component to display next to the login form on wider screens
  */
 export const LoginSidewave: React.FC = () => {
+  const theme = useTheme()
+
+  /** Plant icon height in units of theme.spacing */
+  const plantIconHeight = 36
+  const plantIconSize = {
+    height: theme.spacing(plantIconHeight),
+    width: theme.spacing(plantIconHeight),
+  }
+
   return (
     <>
       <Box

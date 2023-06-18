@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import LoadingButton from '@mui/lab/LoadingButton'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Box from '@mui/system/Box'
 
@@ -12,13 +13,14 @@ import { onEnterKeypress, PAGE_URL } from '~/common'
 import { setJwt } from '~/helpers/jwt'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { LoginResponse } from '~/models/login'
-import { theme } from '~/styles/theme'
 
 /**
  * Login form component
  * Takes username and password inputs and displays an error if the login fails
  */
 export const LoginForm: React.FC = () => {
+  const theme = useTheme()
+
   const navigate = useNavigate()
   const addErrorSnackbar = useAddErrorSnackbar()
   const usernameRef = useRef<HTMLInputElement>(null)

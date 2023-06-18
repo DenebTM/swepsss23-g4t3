@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import { SxProps, Theme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import {
   gridClasses,
@@ -15,7 +16,6 @@ import {
 
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { theme } from '~/styles/theme'
 
 /**
  * Handle changes to editable cells. Note that this function does not need to update rows as this is handled inside MUI's DataGrid component
@@ -133,6 +133,8 @@ interface DataGridProps<R extends GridValidRowModel, V, F, P>
 export const DataGrid = <R extends GridValidRowModel, V, F = V, P = object>(
   props: DataGridProps<R, V, F, P>
 ): React.ReactElement => {
+  const theme = useTheme()
+
   const addSnackbarMessage = useAddSnackbarMessage()
   const {
     fetchRows,

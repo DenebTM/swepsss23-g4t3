@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Cell, Label, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-
-import { theme } from '~/styles/theme'
 
 import { DonutFloatingLegend, DonutValue } from './DonutFloatingLegend'
 
@@ -18,6 +17,8 @@ interface DonutChartProps {
  * Shows a floating legend component on segment hover.
  */
 export const DonutChart: React.FC<DonutChartProps> = (props) => {
+  const theme = useTheme()
+
   const [legend, setLegend] = useState<
     { index: number; clientX: number; clientY: number } | undefined
   >()

@@ -2,9 +2,8 @@ import React from 'react'
 
 import Box from '@mui/material/Box'
 import Fade from '@mui/material/Fade'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-
-import { theme } from '~/styles/theme'
 
 export interface DonutValue {
   /** The display name of this value */
@@ -36,6 +35,8 @@ interface DonutFloatingLegendProps {
 export const DonutFloatingLegend: React.FC<DonutFloatingLegendProps> = (
   props
 ) => {
+  const theme = useTheme()
+
   return (
     <Fade in mountOnEnter unmountOnExit>
       <Box

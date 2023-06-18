@@ -1,11 +1,11 @@
 import React from 'react'
 
 import Link from '@mui/material/Link'
+import { useTheme } from '@mui/material/styles'
 import Typography, { TypographyProps } from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
 import { PAGE_URL } from '~/common'
-import { theme } from '~/styles/theme'
 
 const ctaTypographyProps: Partial<TypographyProps> = {
   variant: 'bodyMedium',
@@ -16,6 +16,8 @@ const ctaTypographyProps: Partial<TypographyProps> = {
  * CTA to preview gallery pages
  */
 export const GalleryCta: React.FC = () => {
+  const theme = useTheme()
+
   return (
     <Box
       component="div"
