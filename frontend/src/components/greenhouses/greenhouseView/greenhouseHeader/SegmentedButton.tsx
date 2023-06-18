@@ -1,8 +1,7 @@
 import React from 'react'
 
 import Button, { ButtonProps } from '@mui/material/Button'
-import { Theme } from '@mui/material/styles'
-import { useTheme } from '@mui/material/styles'
+import { Theme, useTheme } from '@mui/material/styles'
 import { SystemStyleObject } from '@mui/system/styleFunctionSx'
 
 import { Tooltip } from '@component-lib/Tooltip'

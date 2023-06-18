@@ -1,8 +1,7 @@
 import React from 'react'
 import { PolarAngleAxis, RadialBar, RadialBarChart, Tooltip } from 'recharts'
 
-import { alpha } from '@mui/material/styles'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import { emDash, GreenhouseMetricRange, roundMetric } from '~/common'
 

@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { SxProps, Theme } from '@mui/material/styles'
-import { useTheme } from '@mui/material/styles'
+import { SxProps, Theme, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
