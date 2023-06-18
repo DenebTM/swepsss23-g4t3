@@ -89,7 +89,7 @@ const greenhousePagesLoader: LoaderFunction = async (
 }
 
 /** Wrapper for routes that require the user to be logged in to view */
-const authRoute = (path: string, element: JSX.Element) => ({
+const authRoute = (path: string, element: React.ReactElement) => ({
   path: path,
   element: element,
   errorElement: <Error />,

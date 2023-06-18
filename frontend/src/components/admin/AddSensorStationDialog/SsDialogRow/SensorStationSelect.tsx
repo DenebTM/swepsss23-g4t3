@@ -25,7 +25,7 @@ interface SensorStationSelectProps {
  */
 export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const theme = useTheme()
 
   const sensorStations = useSensorStations()

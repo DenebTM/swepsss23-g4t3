@@ -18,7 +18,7 @@ interface QrDialogActionsProps {
  */
 export const QrDialogActions: React.FC<QrDialogActionsProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const iframeRef = React.useRef<HTMLIFrameElement>(null)
 

@@ -25,7 +25,7 @@ interface AddSsDialogContentsProps {
  */
 export const AddSsDialogContents: React.FC<AddSsDialogContentsProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const addErrorSnackbar = useAddErrorSnackbar()
   const loadSensorStations = useLoadSensorStations()
 

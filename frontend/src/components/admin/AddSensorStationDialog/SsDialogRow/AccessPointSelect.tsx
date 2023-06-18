@@ -23,7 +23,7 @@ interface AccessPointSelectProps {
  */
 export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const addErrorSnackbar = useAddErrorSnackbar()
   const [accessPoints, setAccessPoints] = useState<AccessPoint[] | undefined>()
   const [value, setValue] = useState<AccessPointId>(

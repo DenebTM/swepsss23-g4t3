@@ -23,7 +23,7 @@ interface AddSensorStationDialogProps {
  */
 export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const theme = useTheme()
 
   return (
