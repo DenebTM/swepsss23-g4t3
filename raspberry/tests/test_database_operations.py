@@ -1,6 +1,4 @@
 import unittest
-import sqlite3
-import json
 from unittest.mock import MagicMock, patch
 import time
 
