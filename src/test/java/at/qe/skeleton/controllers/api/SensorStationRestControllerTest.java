@@ -44,8 +44,10 @@ class SensorStationRestControllerTest {
 
     @Autowired
     private AccessPointRepository apRepository;
+
     @Autowired
     private MeasurementService measurementService;
+
     @Autowired
     private MeasurementRestController measurementRestController;
 
@@ -66,8 +68,8 @@ class SensorStationRestControllerTest {
         username = "susi";
         susi = userService.loadUserByUsername(username);
 
-        jsonUpdateSS.put("status", "OFFLINE");
-        jsonUpdateSS.put("aggregationPeriod", 50);
+        jsonUpdateSS.put(SensorStationRestController.JSON_KEY_STATUS, "OFFLINE");
+        jsonUpdateSS.put(SensorStationRestController.JSON_KEY_AGGPERIOD, 50);
     }
 
     @Test

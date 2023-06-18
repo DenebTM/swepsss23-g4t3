@@ -28,13 +28,15 @@ public class UserxRestController implements BaseRestController {
     @Autowired
     private LoggingService logger;
 
-    private static final String PW = "password",
-                                FN = "firstName",
-                                LN = "lastName",
-                                UN = "username",
-                                UR = "userRole";
-    private static final String USER_PATH = "/users",
-                                USERNAME_PATH = USER_PATH + "/{username}";
+    private static final String USER_PATH = "/users";
+    private static final String USERNAME_PATH = USER_PATH + "/{username}";
+
+    // JSON keys used by PUT route
+    public static final String JSON_KEY_PASSWORD = "password";
+    public static final String JSON_KEY_FIRSTNAME = "firstName";
+    public static final String JSON_KEY_LASTNAME = "lastName";
+    public static final String JSON_KEY_USERNAME = "username";
+    public static final String JSON_KEY_USERROLE = "userRole";
 
     /**
      * Route to GET all users
@@ -75,7 +77,7 @@ public class UserxRestController implements BaseRestController {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // return a 400 error if an empty username is given
-        String username = String.valueOf(json.get(UN));
+        String username = String.valueOf(json.get(JSON_KEY_USERNAME));
         if (username.equals("null") || username.equals("")) {
             throw new BadRequestException("Username cannot be blank.");
         }
@@ -84,21 +86,21 @@ public class UserxRestController implements BaseRestController {
             throw new BadRequestException("Username is already in use. It must be unique.");
         }
         // return a 400 error if an empty password is given
-        String password = String.valueOf(json.get(PW));
+        String password = String.valueOf(json.get(JSON_KEY_PASSWORD));
         if (userService.isNotValidPassword(password)) {
             throw new BadRequestException("Password is not valid.");
         }
 
         Userx newUser = new Userx();
         newUser.setUsername(username);
-        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode(String.valueOf(json.get(PW)));
+        String bcryptPassword = WebSecurityConfig.passwordEncoder().encode(String.valueOf(json.get(JSON_KEY_PASSWORD)));
         newUser.setPassword(bcryptPassword);
         newUser.setUserRole(UserRole.USER); // role of new users is USER by default
-        if (json.containsKey(FN)) {
-            newUser.setFirstName(String.valueOf(json.get(FN)));
+        if (json.containsKey(JSON_KEY_FIRSTNAME)) {
+            newUser.setFirstName(String.valueOf(json.get(JSON_KEY_FIRSTNAME)));
         }
-        if (json.containsKey(LN)) {
-            newUser.setLastName(String.valueOf(json.get(LN)));
+        if (json.containsKey(JSON_KEY_LASTNAME)) {
+            newUser.setLastName(String.valueOf(json.get(JSON_KEY_LASTNAME)));
         }
         newUser = userService.saveUser(newUser);
 
@@ -123,28 +125,28 @@ public class UserxRestController implements BaseRestController {
         }
 
         // return a 400 error if a username change is attempted
-        if (json.containsKey(UN) && !(String.valueOf(json.get(UN))).equals(user.getUsername())) {
+        if (json.containsKey(JSON_KEY_USERNAME) && !(String.valueOf(json.get(JSON_KEY_USERNAME))).equals(user.getUsername())) {
             throw new BadRequestException("Usernames are final and cannot be updated.");
         }
 
         // update all fields contained in the json body
-        if (json.containsKey(FN)) {
-            user.setFirstName(String.valueOf(json.get(FN)));
+        if (json.containsKey(JSON_KEY_FIRSTNAME)) {
+            user.setFirstName(String.valueOf(json.get(JSON_KEY_FIRSTNAME)));
         }
-        if (json.containsKey(LN)) {
-            user.setLastName(String.valueOf(json.get(LN)));
+        if (json.containsKey(JSON_KEY_LASTNAME)) {
+            user.setLastName(String.valueOf(json.get(JSON_KEY_LASTNAME)));
         }
-        if (json.containsKey(PW)) {
-            String newPassword = String.valueOf(json.get(PW));
+        if (json.containsKey(JSON_KEY_PASSWORD)) {
+            String newPassword = String.valueOf(json.get(JSON_KEY_PASSWORD));
             if (userService.isNotValidPassword(newPassword)) {
                 throw new BadRequestException("Password is not valid.");
             }
             String bcryptPassword = WebSecurityConfig.passwordEncoder().encode(newPassword);
             user.setPassword(bcryptPassword);
         }
-        if (json.containsKey(UR)) {
+        if (json.containsKey(JSON_KEY_USERROLE)) {
             try {
-                UserRole newUserRole = UserRole.valueOf(String.valueOf(json.get(UR)));
+                UserRole newUserRole = UserRole.valueOf(String.valueOf(json.get(JSON_KEY_USERROLE)));
 
                 // prevent users from promoting or demoting themselves
                 if (user.getUsername().equals(authenticatedUser) && !newUserRole.equals(user.getUserRole())) {

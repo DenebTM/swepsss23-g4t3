@@ -54,9 +54,9 @@ public class SensorStationRestController implements BaseRestController {
 
     // JSON keys used by PUT route
     public static final String JSON_KEY_STATUS = "status";
-    public static final String JSON_KEY_AGGPERIOD = "status";
-    public static final String JSON_KEY_LOWERBOUND = "status";
-    public static final String JSON_KEY_UPPERBOUND = "status";
+    public static final String JSON_KEY_AGGPERIOD = "aggregationPeriod";
+    public static final String JSON_KEY_LOWERBOUND = "lowerBound";
+    public static final String JSON_KEY_UPPERBOUND = "upperBound";
 
     private static SensorValues partialValuesUpdate(SensorValues vals, Object json) {
         var mapper = new ObjectMapper();
