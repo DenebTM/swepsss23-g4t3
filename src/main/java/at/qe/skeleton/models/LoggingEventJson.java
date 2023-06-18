@@ -8,12 +8,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.LogLevel;
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * JSON representation of a {@link LoggingEvent} and optionally an associated
+ * {@link LoggingEventProperty} record associating the event with a particular
+ * user, access point or sensor station. (latter takes priority)
+ * 
+ * Received by the {@link LoggingRestController} for database storage on POST,
+ * and created for transmission on GET.
+ * 
+ * These are NOT themselves stored in the database.
+ */
 @JsonSerialize
 @JsonDeserialize
 @NoArgsConstructor
@@ -30,13 +39,9 @@ public class LoggingEventJson {
     }
 
     Long id;
-
     Instant timestamp;
-
     LogLevel level;
-
     String message;
-
     LogEntity origin;
 
 
@@ -48,8 +53,8 @@ public class LoggingEventJson {
 
         if (props == null) return;
         LoggingEventProperty originProp = null;
-        for (String type : new String[]{"USER", "ACCESS_POINT", "SENSOR_STATION"}) {
-            var maybeProp = props.stream().filter(p -> p.getMappedKey().equals(type)).findFirst();
+        for (LogEntityType type : LogEntityType.values()) {
+            var maybeProp = props.stream().filter(p -> p.getMappedKey().equals(type.name())).findFirst();
             if (maybeProp.isPresent()) {
                 originProp = maybeProp.get();
             }
