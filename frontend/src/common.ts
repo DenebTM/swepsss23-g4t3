@@ -321,3 +321,7 @@ export const ADD_GREENHOUSE_TEXT = 'Add Greenhouse'
 
 /** Helper text to display on buttons for pairing with a new sensor station */
 export const ADD_GREENHOUSE_DESCRIPTION = 'Connect a new greenhouse'
+
+/** Subtitle text for dialog to pair with a new sensor station */
+export const ADD_GREENHOUSE_DIALOG_SUBTITLE =
+  'Pair with a new sensor station via BLE to start monitoring your plants'
