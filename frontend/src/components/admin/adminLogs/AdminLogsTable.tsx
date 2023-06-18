@@ -45,9 +45,17 @@ export const AdminLogsTable: React.FC = () => {
     {
       field: 'origin',
       headerName: 'Origin',
-      width: 120,
-      valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
-        params.row.origin ? params.row.origin.type.toLowerCase() : 'null',
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<LogEntry, string>) => {
+        const originType = {
+          ACCESS_POINT: 'Access Point',
+          SENSOR_STATION: 'Sensor Station',
+          USER: 'User',
+          NULL: 'null',
+        }[params.row.origin?.type ?? 'NULL']
+
+        return params.row.origin ? `${originType} ${params.row.origin.id}` : '-'
+      },
       filterable: false,
     },
     {

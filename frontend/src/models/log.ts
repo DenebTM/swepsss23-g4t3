@@ -23,7 +23,7 @@ export enum LogLevel {
 }
 
 interface LogEntity {
-  id: number
+  id: number | string
   type: EntityType
 }
 
