@@ -47,8 +47,6 @@ public class AccessPointMonitorJob {
         for (AccessPoint ap : apRepository.findAllByStatusNot(AccessPointStatus.UNCONFIRMED)) {
             if (ap.getLastUpdate().plusMillis(AP_TIMEOUT_MS).isBefore(Instant.now())) {
                 for (SensorStation ss : ap.getSensorStations()) {
-                    // TODO: Remove AVAILABLE stations
-
                     SensorStationStatus oldSsStatus = ss.getStatus();
                     SensorStationStatus newSsStatus = SensorStationStatus.OFFLINE;
 

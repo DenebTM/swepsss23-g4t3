@@ -8,7 +8,7 @@ import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
 import { AccessPointsTable } from './AccessPointsTable'
 
 /**
- * Access point managment page for admins
+ * Access point management page for admins
  */
 export const ManageAccessPoints: React.FC = () => {
   return (

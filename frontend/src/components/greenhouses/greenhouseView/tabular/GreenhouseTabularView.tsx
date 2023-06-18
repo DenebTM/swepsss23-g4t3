@@ -3,6 +3,10 @@ import React, { useState } from 'react'
 import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
 import { DataGrid } from '@component-lib/Table/DataGrid'
+import {
+  DateRangeFilter,
+  DateValue,
+} from '@component-lib/Table/DateRangeFilter'
 import { TablePaper } from '@component-lib/Table/TablePaper'
 import dayjs from 'dayjs'
 import { getSensorStationMeasurements } from '~/api/endpoints/sensorStations/measurements'
@@ -26,6 +30,8 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
   props
 ) => {
   const [measurements, setMeasurements] = useState<Measurement[]>()
+  const [from, setFrom] = useState<DateValue>(dayjs().subtract(1, 'week'))
+  const [to, setTo] = useState<DateValue>(dayjs())
 
   /** Styles applied to all table columns containing metric */
   const metricColumnParams: Partial<GridColDef<Measurement, any, Measurement>> =
@@ -33,6 +39,7 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
       headerAlign: 'center',
       align: 'center',
       width: 135,
+      filterable: false,
     }
 
   /**
@@ -59,14 +66,17 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         dayjs(params.value).toDate(),
       width: 180,
+      filterable: false,
     },
   ]
 
   return (
     <TablePaper>
+      <DateRangeFilter from={from} to={to} setFrom={setFrom} setTo={setTo} />
+
       <DataGrid<Measurement, any, Measurement>
         columns={columns}
-        fetchRows={() => getSensorStationMeasurements(props.ssID)}
+        fetchRows={(params) => getSensorStationMeasurements(props.ssID, params)}
         getRowId={(row: Measurement) => row.id}
         initialState={{
           sorting: {
@@ -77,6 +87,8 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
         setRows={setMeasurements}
         size="small"
         zebraStripes
+        noRowsMessage="No measurements to display"
+        params={{ from: from?.toISOString(), to: to?.toISOString() }}
       />
     </TablePaper>
   )

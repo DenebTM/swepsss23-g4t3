@@ -4,6 +4,11 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <bsec2.h>
+#include <led.h>
+
+static led::StatusCode* const LEDC_BME_SETUP_FAILED =
+    new led::StatusCode { { led::Color::RED, LED_BLINK_SHORT_DURATION },
+                          LED_BLINK_ONCE_SHORT(led::Color::CYAN) };
 
 namespace sensors::bme {
   extern Bme68x sensor;

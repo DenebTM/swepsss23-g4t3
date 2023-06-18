@@ -38,12 +38,12 @@ export const uploadPhotosUrl = (sensorStationId: SensorStationUuid) =>
 const mockedSensorStationRoute = `${API_URI.sensorStations}/:ssID`
 
 /** Route for mocking calls related to photos for an individual sensor station */
-const mockedSsPhotosRoute = `${mockedSensorStationRoute}${API_URI.photos}`
+export const MOCKED_SS_PHOTOS_PATH = `${mockedSensorStationRoute}${API_URI.photos}`
 
 /** Mocked sensor station functions */
 export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getSensorStationPhotos} */
-  server.get(mockedSsPhotosRoute, (schema: AppSchema, request) => {
+  server.get(MOCKED_SS_PHOTOS_PATH, (schema: AppSchema, request) => {
     const ssID: SensorStationUuid = Number(request.params.ssID)
     const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
 
@@ -64,7 +64,7 @@ export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
   })
 
   /** Mock uploading a photo */
-  server.post(mockedSsPhotosRoute, (schema: AppSchema, request) => {
+  server.post(MOCKED_SS_PHOTOS_PATH, (schema: AppSchema, request) => {
     const ssID: SensorStationUuid = Number(request.params.ssID)
     const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
     if (sensorStation) {
@@ -79,7 +79,7 @@ export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
   })
 
   /** Mock {@link deletePhoto} */
-  server.delete(mockedSsPhotosRoute, (schema: AppSchema, request) => {
+  server.delete(MOCKED_SS_PHOTOS_PATH, (schema: AppSchema, request) => {
     // Hard-code a success for now
     return success('Photo deleted')
   })

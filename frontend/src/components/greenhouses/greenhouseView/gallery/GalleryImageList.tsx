@@ -64,7 +64,12 @@ export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
           ))}
         </ImageList>
       ) : (
-        <Typography variant="bodyLarge" color="onSurface" component="p">
+        <Typography
+          variant="bodyLarge"
+          color="onSurface"
+          component="p"
+          marginTop={2}
+        >
           No photos to display.
         </Typography>
       )}

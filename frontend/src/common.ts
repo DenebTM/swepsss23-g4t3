@@ -117,21 +117,21 @@ export const PAGE_URL: {
     permittedRoles: _ALL_ROLES,
   },
 
-  /** Path for access point managment by admins */
+  /** Path for access point management by admins */
   manageAccessPoints: {
     pageTitle: 'Access Points',
     href: `/${ADMIN_ROOT}/access-points`,
     permittedRoles: [AuthUserRole.ADMIN],
   },
 
-  /** Path for sensor station managment by admins */
+  /** Path for sensor station management by admins */
   manageGreenhouses: {
     pageTitle: 'Greenhouses',
     href: `/${ADMIN_ROOT}/${GREENHOUSES_ROOT}`,
     permittedRoles: [AuthUserRole.ADMIN],
   },
 
-  /** Path for user managment by admins */
+  /** Path for user management by admins */
   manageUsers: {
     pageTitle: 'Users',
     href: `/${ADMIN_ROOT}/users`,
@@ -187,7 +187,7 @@ export const decryptSensorStationUuid = (
 export const AUTH_JWT = 'AUTH_JWT'
 
 /** URL of the backend */
-export const API_DEV_URL = 'http://localhost:8080'
+export const API_DEV_URL = import.meta.env.VITE_DEV_BACKEND ?? ''
 
 /** Key value for greenhouse settings related to the aggregation period */
 export const AGGREGATION_PERIOD = 'aggregationPeriod'
@@ -263,8 +263,8 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
-    min: 10,
-    max: 1000,
+    min: 0,
+    max: 1200,
     step: 20,
   },
 }
@@ -315,3 +315,9 @@ export const emDash = '—'
 
 /** FormData key for uploaded sensor station photos */
 export const UPLOADED_PHOTO_KEY = 'multipartImage'
+
+/** Title text to display on buttons for pairing with a new sensor station */
+export const ADD_GREENHOUSE_TEXT = 'Add Greenhouse'
+
+/** Helper text to display on buttons for pairing with a new sensor station */
+export const ADD_GREENHOUSE_DESCRIPTION = 'Connect a new greenhouse'

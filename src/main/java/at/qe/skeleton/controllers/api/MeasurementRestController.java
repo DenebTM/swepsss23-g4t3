@@ -105,7 +105,7 @@ public class MeasurementRestController implements BaseRestController {
         Instant timestamp = Instant.now();
         if (json.containsKey(JSON_TIMESTAMP_KEY)) {
             try {
-                timestamp = Instant.parse((String)json.get(JSON_TIMESTAMP_KEY));
+                timestamp = Instant.parse(String.valueOf(json.get(JSON_TIMESTAMP_KEY)));
             } catch (DateTimeException e){
                 throw new BadRequestException("Invalid timestamp");
             }

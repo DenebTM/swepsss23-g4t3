@@ -100,7 +100,7 @@ public class LoggingRestController implements BaseRestController {
         @RequestBody List<LoggingEventJson> logs
     ) {
         AccessPoint ap = apService.loadAPByName(name);
-        // Return a 404 error if the access point is not found
+        // return a 404 error if the access point is not found
         if (ap == null) {
             throw new NotFoundInDatabaseException(AccessPointRestController.AP, name);
         }
@@ -110,7 +110,7 @@ public class LoggingRestController implements BaseRestController {
         for (LoggingEventJson log : logs) {
             // save the log entry
             var savedLog = logger.saveLog(new LoggingEvent(
-                "From AP " + ap.getName() + ": " + log.getMessage(),
+                "From AP '" + ap.getName() + "': " + log.getMessage(),
                 log.getLevel(),
                 log.getTimestamp().toEpochMilli()
             ));

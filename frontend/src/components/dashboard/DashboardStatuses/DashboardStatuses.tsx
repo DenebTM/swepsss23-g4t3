@@ -42,6 +42,13 @@ export const DashboardStatuses: React.FC = (props) => {
   return (
     <DashboardCard
       loading={sensorStations === null || typeof accessPoints === 'undefined'}
+      empty={
+        accessPoints &&
+        accessPoints.length === 0 &&
+        sensorStations !== null &&
+        sensorStations.length === 0
+      }
+      emptyText="Current status information for access points and sensor stations will be displayed here."
     >
       {accessPoints && sensorStations && (
         <StatusDonutCharts

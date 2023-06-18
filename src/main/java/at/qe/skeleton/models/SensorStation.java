@@ -27,25 +27,6 @@ public class SensorStation {
     @Column(name = "SS_STATUS")
     private SensorStationStatus status;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "sensorStation",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true)
-    @OrderBy("timestamp asc")
-    private List<Measurement> measurements;
-
-    @Column(name = "AGGREGATION_PERIOD", nullable = false)
-    private Long aggregationPeriod = 30L;
-
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
-    @JsonIdentityReference(alwaysAsId = true)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "GARDENER_SS",
-            joinColumns = @JoinColumn(name = "SS_ID"),
-            inverseJoinColumns = @JoinColumn(name = "USERNAME"))
-    private Set<Userx> gardeners;
-
     @OneToOne
     @JoinColumn(name = "UPPER_VALUES_ID")
     @JsonIgnoreProperties("id")
@@ -55,6 +36,34 @@ public class SensorStation {
     @JoinColumn(name = "LOWER_VALUES_ID")
     @JsonIgnoreProperties("id")
     private SensorValues lowerBound;
+
+    @Column(name = "AGGREGATION_PERIOD", nullable = false)
+    private Long aggregationPeriod = 30L;
+
+
+    @JsonBackReference("ss-measurements")
+    @OneToMany(mappedBy = "sensorStation",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    @OrderBy("timestamp asc")
+    private List<Measurement> measurements;
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "GARDENER_SS",
+            joinColumns = @JoinColumn(name = "SS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "USERNAME"))
+    private Set<Userx> gardeners;
+
+    @JsonBackReference("ss-photos")
+    @OneToMany(mappedBy = "sensorStation",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    private List<PhotoData> photos;
+
 
     public SensorStation() {
         this.measurements = new ArrayList<>();

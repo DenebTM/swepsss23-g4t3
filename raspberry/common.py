@@ -1,6 +1,5 @@
 import yaml
-
-log_filename = 'communication.log'
+import os
 
 sensor_station_name = 'PH SensorStation'
 
@@ -15,7 +14,7 @@ illuminance_uuid = base_uuid.format('2afb')
 air_quality_index_uuid = base_uuid.format('f105')
 soil_moisture_uuid = base_uuid.format('f106')
 
-# global constants for the error messages takne out of the ble communication Spec
+# global constants for the error messages taken out of the ble communication Spec
 error_service_uuid = base_uuid.format('ff00')
 air_pressure_failure_uuid = base_uuid.format('ff01')
 temperature_failure_uuid = base_uuid.format('ff02')
@@ -73,3 +72,6 @@ except:
         access_point_name = config['access_point_name']
         access_point_address = web_server_address + '/' + access_point_name
         default_aggregation_period = config['default_transmission_interval']
+
+if not os.path.exists('audit.log'):
+    open('audit.log', 'w').close()

@@ -42,10 +42,10 @@ const centerCell: Partial<GridColDef<SensorStation, any, SensorStation>> = {
 }
 
 /**
- * Sensor station managment page for admins
+ * Sensor station management page for admins
  */
 export const SensorStationsTable: React.FC = () => {
-  const sensorStations = useSensorStations()
+  const sensorStations = useSensorStations(true)
   const { setSensorStations } = React.useContext(AppContext)
 
   // Store the largest number of gardeners for a single greenhouse as dynamic column width is not supported yet by DataGrid:
@@ -125,7 +125,7 @@ export const SensorStationsTable: React.FC = () => {
       ) => <GardenerChips {...params} setRows={handleUpdateSensorStations} />,
       // Dynamic column width is not supported yet, so hard code a width for each chip:
       // https://github.com/mui/mui-x/issues/1241
-      width: 130 * maxGardenersPerGreenhouse,
+      width: Math.max(130 * maxGardenersPerGreenhouse, 100),
     },
     {
       ...centerCell,
@@ -159,7 +159,8 @@ export const SensorStationsTable: React.FC = () => {
       <DataGrid<SensorStation, any, SensorStation>
         columns={columns}
         getRowId={(row: SensorStation) => row.ssID}
-        rows={sensorStations}
+        rows={sensorStations ?? undefined}
+        noRowsMessage="No greenhouses to display"
       />
     </TablePaper>
   )

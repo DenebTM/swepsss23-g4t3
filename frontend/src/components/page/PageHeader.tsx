@@ -28,6 +28,7 @@ export const PageHeader: React.FC<PageHeaderProps> = (props) => {
         background: theme.background,
         paddingTop: 2,
         paddingBottom: 1,
+        maxHeight: theme.spacing(8),
         // Keep the header the same size as the sidebar header
         ...theme.mixins.toolbar,
       }}

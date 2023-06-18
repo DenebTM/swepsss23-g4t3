@@ -7,6 +7,7 @@ import at.qe.skeleton.models.enums.AccessPointStatus;
 import at.qe.skeleton.models.enums.LogEntityType;
 import at.qe.skeleton.models.enums.SensorStationStatus;
 import at.qe.skeleton.repositories.PhotoDataRepository;
+import at.qe.skeleton.repositories.SensorValuesRepository;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.LoggingService;
 import at.qe.skeleton.services.SensorStationService;
@@ -18,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
 
@@ -34,6 +37,9 @@ public class SensorStationRestController implements BaseRestController {
     private PhotoDataRepository photoDataRepository;
 
     @Autowired
+    private SensorValuesRepository sensorValuesRepository;
+
+    @Autowired
     private UserxService userService;
 
     @Autowired
@@ -45,6 +51,37 @@ public class SensorStationRestController implements BaseRestController {
     public static final String SS_ID_PATH = SS_PATH + "/{id}";
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
+
+    private static SensorValues partialValuesUpdate(SensorValues vals, Object json) {
+        var mapper = new ObjectMapper();
+        @SuppressWarnings({"unchecked"})
+        SensorValues newVals = mapper.convertValue((Map<String, Object>)json, SensorValues.class);
+
+        if (vals == null) {
+            vals = new SensorValues();
+        }
+
+        if (newVals.getAirPressure() != null) {
+            vals.setAirPressure(newVals.getAirPressure());
+        }
+        if (newVals.getAirQuality() != null) {
+            vals.setAirQuality(newVals.getAirQuality());
+        }
+        if (newVals.getHumidity() != null) {
+            vals.setHumidity(newVals.getHumidity());
+        }
+        if (newVals.getLightIntensity() != null) {
+            vals.setLightIntensity(newVals.getLightIntensity());
+        }
+        if (newVals.getSoilMoisture() != null) {
+            vals.setSoilMoisture(newVals.getSoilMoisture());
+        }
+        if (newVals.getTemperature() != null) {
+            vals.setTemperature(newVals.getTemperature());
+        }
+
+        return vals;
+    }
 
     /**
      * Route to GET all sensor stations, available for all users
@@ -62,7 +99,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @GetMapping(value = SS_AP_PATH)
     public ResponseEntity<Collection<SensorStation>> getSSForAccessPoint(@PathVariable(value = "name") String apName) {
-        // Return a 404 error if the access point is not found
+        // return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
             throw new NotFoundInDatabaseException("Access point", apName);
@@ -80,7 +117,7 @@ public class SensorStationRestController implements BaseRestController {
     public ResponseEntity<SensorStation> getSSById(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
 
-        // Return a 404 error if the sensor-station is not found
+        // return a 404 error if the sensor-station is not found
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
         }
@@ -103,14 +140,14 @@ public class SensorStationRestController implements BaseRestController {
         @PathVariable(value = "name") String apName,
         @RequestBody Collection<SensorStation> newSSList
     ) {
-        // Return a 404 error if the access point is not found
+        // return a 404 error if the access point is not found
         AccessPoint ap = apService.loadAPByName(apName);
         if (ap == null) {
-            throw new NotFoundInDatabaseException("Access point", String.valueOf(apName));
+            throw new NotFoundInDatabaseException("Access point", apName);
         }
 
-        if (!ap.getStatus().equals(AccessPointStatus.SEARCHING)) {
-            throw new BadRequestException("Access point " + ap.getName() + " is not in SEARCHING mode");
+        if (!AccessPointStatus.SEARCHING.equals(ap.getStatus())) {
+            throw new BadRequestException("Access point " + apName + " is not in SEARCHING mode");
         }
 
         List<SensorStation> retSSList = new ArrayList<>();
@@ -137,17 +174,27 @@ public class SensorStationRestController implements BaseRestController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER')")
     @PutMapping(value = SS_ID_PATH)
     public ResponseEntity<SensorStation> updateSS(@PathVariable(value = "id") Integer id,  @RequestBody Map<String, Object> json) {
-        String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
         
         SensorStation ss = ssService.loadSSById(id);
+
         // return a 404 error if the sensor station to be updated does not exist
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
         }
+
+        List<String> gardeners = ssService.getGardenersBySS(ss);
+        if (!gardeners.contains(authenticatedUser) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            logger.info("Attempt to update sensor station by unauthorized user " + authenticatedUser,
+                LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+            throw new AccessDeniedException("Gardener is not assigned to sensor station");
+        }
+
         if (json.containsKey("status")) {
             try {
                 SensorStationStatus oldStatus = ss.getStatus();
-                SensorStationStatus newStatus = SensorStationStatus.valueOf((String)json.get("status"));
+                SensorStationStatus newStatus = SensorStationStatus.valueOf(String.valueOf(json.get("status")));
                 ss.setStatus(newStatus);
 
                 if (!newStatus.equals(oldStatus)) {
@@ -162,11 +209,12 @@ public class SensorStationRestController implements BaseRestController {
                         logger.info(message, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
                     }
                 }
-                ss.setStatus(SensorStationStatus.valueOf((String)json.get("status")));
+                ss.setStatus(SensorStationStatus.valueOf(String.valueOf(json.get("status"))));
             } catch (IllegalArgumentException e) {
                 throw new BadRequestException("Invalid status");
             }
         }
+
         if (json.containsKey("aggregationPeriod")) {
             try {
                 Long oldAggregationPeriod = ss.getAggregationPeriod();
@@ -184,6 +232,28 @@ public class SensorStationRestController implements BaseRestController {
                 throw new BadRequestException("Invalid aggregation period");
             }
         }
+
+        if (json.containsKey("lowerBound")) {
+            try {
+                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), json.get("lowerBound"));
+                ss.setLowerBound(sensorValuesRepository.save(newLowerBound));
+
+                logger.info("Sensor thresholds (lower) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+            } catch (Exception e) {
+                throw new BadRequestException("Invalid sensor values for lowerBound");
+            }
+        }
+        if (json.containsKey("upperBound")) {
+            try {
+                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), json.get("upperBound"));
+                ss.setUpperBound(sensorValuesRepository.save(newUpperBound));
+
+                logger.info("Sensor thresholds (upper) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+            } catch (Exception e) {
+                throw new BadRequestException("Invalid sensor values for upperBound");
+            }
+        } 
+
         return ResponseEntity.ok(ssService.saveSS(ss));
     }
 

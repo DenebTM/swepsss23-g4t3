@@ -31,15 +31,15 @@ namespace ble::pairing {
         mode::active   = true;
         led::set_status_code(LEDC_BLE_PAIRING, led::CodePriority::HIGH);
 
-        Serial.print("Ready to pair! Station address: ");
-        Serial.println(BLE.address());
+        // Serial.print("Ready to pair! Station address: ");
+        // Serial.println(BLE.address());
       } else {
-        Serial.println("BLE advertising failed!");
+        // Serial.println("BLE advertising failed!");
       }
     }
 
     void exit() {
-      Serial.println("Pairing timed out.");
+      // Serial.println("Pairing timed out.");
       BLE.stopAdvertise();
       is_advertising = false;
 
@@ -62,7 +62,7 @@ namespace ble::pairing {
     // this code is only shown while paired and no warnings are active
     led::set_status_code(LEDC_BLE_CONNECTED, led::CodePriority::LOW);
 
-    Serial.println("Press button 0 (rightmost) to begin pairing");
+    // Serial.println("Press button 0 (rightmost) to begin pairing");
     led::set_status_code(LEDC_BLE_UNPAIRED, led::CodePriority::HIGH);
   }
 

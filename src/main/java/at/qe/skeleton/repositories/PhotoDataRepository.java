@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface PhotoDataRepository extends AbstractRepository<PhotoData, Integer> {
 
-    Optional<PhotoData> findByName(String name);
-
     Optional<PhotoData> findById(Integer id);
 
     List<PhotoData> findAllBySensorStation(SensorStation sensorStation);
@@ -17,5 +15,4 @@ public interface PhotoDataRepository extends AbstractRepository<PhotoData, Integ
     Optional<PhotoData> findByIdAndSensorStation(Integer id, SensorStation sensorStation);
 
     PhotoData findFirstBySensorStation(SensorStation ss);
-
 }

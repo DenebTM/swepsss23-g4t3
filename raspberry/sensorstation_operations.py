@@ -1,6 +1,7 @@
 from bleak import BleakScanner
 from bleak.exc import BleakError
 import common
+import logging_operations
 
 
 #Should return a dictionary of all found sensorstations with key = name, value = ID
@@ -14,20 +15,15 @@ async def search_for_sensorstations():
                 if common.sensor_station_name in d.name:
                     ss_uuid = int.from_bytes(d.details['props']['ServiceData'][common.device_information_uuid], byteorder='little', signed=False)
                     sensorstations.append(ss_uuid)
-
                     common.known_ss[ss_uuid] = d.address
                     common.save_known_ss()
             await scanner.stop()
             if len(sensorstations) > 0:
-                #TODO: Implement logging info with which sensorstations are found
-                print('Found sensor stations:', sensorstations)
+                await logging_operations.log_to_file_and_list('INFO', f'Sensorstations found are : {sensorstations}')
             else:
-                #TODO: Implement logging warning that no sensorstations are found
-                print('No sensor stations found...')
-            
+                await logging_operations.log_to_file_and_list('INFO', 'No sensorstations were found')       
         return sensorstations   
     
     except BleakError as e:
-        # write error to audit log
-        print(f'Error: {e}')
+        await logging_operations.log_to_file_and_list('ERROR', f'BleakError occured while searching for sensorstations. Error: {e}')
         return sensorstations
