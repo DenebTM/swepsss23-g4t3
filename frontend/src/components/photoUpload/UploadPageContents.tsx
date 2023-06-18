@@ -1,13 +1,13 @@
 import { cancelable } from 'cancelable-promise'
 import React, { useEffect, useState } from 'react'
 
+import { useTheme } from '@mui/material/styles'
 import Box from '@mui/system/Box'
 
 import { Spinner } from '@component-lib/Spinner'
 import { getSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { UploadHeader } from './UploadHeader'
 import { UploadPageBody } from './UploadPageBody/UploadPageBody'
@@ -23,6 +23,8 @@ interface UploadPageContentsProps {
 export const UploadPageContents: React.FC<UploadPageContentsProps> = (
   props
 ) => {
+  const theme = useTheme()
+
   const addErrorSnackbar = useAddErrorSnackbar()
 
   const [sensorStation, setSensorStation] = useState<SensorStation>()

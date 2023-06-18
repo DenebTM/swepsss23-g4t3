@@ -4,15 +4,9 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import { useTheme } from '@mui/material/styles'
 
 import { Tooltip } from '@component-lib/Tooltip'
-import { theme } from '~/styles/theme'
-
-// Style constants
-const iconMarginSides = 10
-const sidebarListItemBorderRadius = 8
-const selectedColor = theme.onSecondaryContainer
-const unselectedColor = theme.onSurfaceVariant
 
 interface SidebarListItemProps {
   children?: React.ReactNode
@@ -30,6 +24,14 @@ interface SidebarListItemProps {
  * Shows only icon if `props.open` is false, otherwise shows the icon and `props.label`
  */
 export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
+  const theme = useTheme()
+
+  // Style constants
+  const iconMarginSides = 10
+  const sidebarListItemBorderRadius = 8
+  const selectedColor = theme.onSecondaryContainer
+  const unselectedColor = theme.onSurfaceVariant
+
   const [buttonDisabled, setButtonDisabled] = useState(props.selected)
 
   useEffect(() => setButtonDisabled(props.selected), [props.selected])

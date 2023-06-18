@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import ImageList from '@mui/material/ImageList'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { useSensorStations } from '~/hooks/appContext'
 import { Photo } from '~/models/photo'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { ImageListItem } from './ImageListItem/ImageListItem'
 
@@ -24,6 +24,8 @@ interface GalleryImageListProps {
  * The number of columns is set dynamically according to the current screen width.
  */
 export const GalleryImageList: React.FC<GalleryImageListProps> = (props) => {
+  const theme = useTheme()
+
   const sensorStations = useSensorStations()
 
   const [sensorStation, setSensorStation] = useState<SensorStation>()

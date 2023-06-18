@@ -1,11 +1,13 @@
-import LoadingButton from '@mui/lab/LoadingButton'
 import React, { useState } from 'react'
+
+import LoadingButton from '@mui/lab/LoadingButton'
+import { useTheme } from '@mui/material/styles'
+
 import { updateSensorStation } from '~/api/endpoints/sensorStations/sensorStations'
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useLoadSensorStations } from '~/hooks/appContext'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { SensorStationUuid, StationStatus } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 interface ConfirmPairingButtonProps {
   closeDialog: () => void
@@ -18,6 +20,8 @@ interface ConfirmPairingButtonProps {
 export const ConfirmPairingButton: React.FC<ConfirmPairingButtonProps> = (
   props
 ): JSX.Element => {
+  const theme = useTheme()
+
   const addSnackbarMessage = useAddSnackbarMessage()
   const loadSensorStations = useLoadSensorStations()
   const [confirming, setConfirming] = useState(false) // Loading indicator after user clicks "confirm"
@@ -55,13 +59,13 @@ export const ConfirmPairingButton: React.FC<ConfirmPairingButtonProps> = (
   return (
     <LoadingButton
       disabled={typeof props.sensorStationId === 'undefined'}
-      variant='contained'
+      variant="contained"
       onClick={handlePairWithSs}
       fullWidth
-      size='large'
+      size="large"
       loading={confirming}
-      loadingPosition='center'
-      color='primary'
+      loadingPosition="center"
+      color="primary"
       sx={{
         '&.MuiLoadingButton-loading': {
           background: theme.primary,

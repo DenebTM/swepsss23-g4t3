@@ -1,9 +1,9 @@
 import { forwardRef, useEffect } from 'react'
 
 import MuiDrawer from '@mui/material/Drawer'
-import { CSSObject, styled, Theme } from '@mui/material/styles'
+import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles'
 
-import { sidebarWidth, theme } from '~/styles/theme'
+import { sidebarWidth } from '~/styles/theme'
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: sidebarWidth,
@@ -54,6 +54,8 @@ interface CustomDrawerProps {
  */
 export const CustomDrawer: React.FC<CustomDrawerProps> = forwardRef(
   (props, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const theme = useTheme()
+
     useEffect(() => {
       // Trigger rerender on props.open change
     }, [props.open])

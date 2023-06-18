@@ -4,9 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-
-import { theme } from '~/styles/theme'
 
 import { Tooltip } from './Tooltip'
 
@@ -31,6 +30,8 @@ interface BreadcrumbsProps {
  * Custom breadcrumbs component to show the user where they are in the page hierarchy
  */
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = (props) => {
+  const theme = useTheme()
+
   const navigate = useNavigate()
 
   return (

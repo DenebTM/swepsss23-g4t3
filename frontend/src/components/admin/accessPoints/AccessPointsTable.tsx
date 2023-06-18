@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { alpha } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import { gridClasses } from '@mui/x-data-grid'
 import {
   GridColDef,
@@ -24,7 +24,6 @@ import {
 } from '~/api/endpoints/accessPoints'
 import { useLoadSensorStations } from '~/hooks/appContext'
 import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
-import { theme } from '~/styles/theme'
 
 import { AddSensorStation } from './RowActions/AddSensorStation'
 import { ConfirmAccessPoint } from './RowActions/ConfirmAccessPoint'
@@ -47,6 +46,8 @@ const centerCell: Partial<GridColDef<AccessPoint, any, AccessPoint>> = {
  * Access point management page for admins
  */
 export const AccessPointsTable: React.FC = () => {
+  const theme = useTheme()
+
   const loadSensorStations = useLoadSensorStations()
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>()
 

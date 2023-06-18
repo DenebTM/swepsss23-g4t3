@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { SxProps, Theme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
 import { MessageState, MessageType } from '~/contexts/SnackbarContext/types'
-import { theme } from '~/styles/theme'
 
 const messageTypographyProps: SxProps<Theme> = {
   color: 'inherit',
@@ -23,6 +23,8 @@ interface SnackbarMessageProps {
  * and deletes messages from the snackbar state once the snackbar is dismissed.
  */
 export const SnackbarMessage: React.FC<SnackbarMessageProps> = (props) => {
+  const theme = useTheme()
+
   const snackbarAccents: { [key in MessageType]: string } = {
     [MessageType.CONFIRM]: theme.primary,
     [MessageType.INFO]: theme.tertiary,

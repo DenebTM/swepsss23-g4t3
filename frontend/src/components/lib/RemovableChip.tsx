@@ -4,39 +4,16 @@ import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { alpha, SxProps, Theme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import Box from '@mui/system/Box'
 
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { theme } from '~/styles/theme'
 
 import { Tooltip } from './Tooltip'
 
 const chipMarginSides = 2
 const chipPaddingTopBottom = '3px'
-
-/**
- * Styles for the main body of the chip
- */
-const chipBodySx = (
-  chipOutline: string,
-  textColour: string
-): SxProps<Theme> => ({
-  margin: `0 ${chipMarginSides}px`,
-  padding: `${chipPaddingTopBottom} ${theme.spacing(1.5)}`,
-  minWidth: theme.spacing(6),
-  color: textColour,
-  '&.Mui-disabled': { color: textColour },
-  '&::after': {
-    content: '""',
-    width: '1px',
-    height: '100%',
-    background: chipOutline,
-    right: `-${chipMarginSides}px`,
-    top: 0,
-    position: 'absolute',
-  },
-})
 
 /** Possible variants for {@link RemovableChip}. Used to set the colour of the border and text. */
 export enum ChipVariant {
@@ -44,27 +21,6 @@ export enum ChipVariant {
   WARNING = 'WARNING',
   ERROR = 'ERROR',
   INFO = 'INFO',
-}
-
-const chipColour: { [key in ChipVariant]: string } = {
-  [ChipVariant.OK]: theme.primary,
-  [ChipVariant.WARNING]: theme.warn,
-  [ChipVariant.ERROR]: theme.error,
-  [ChipVariant.INFO]: theme.tertiary,
-}
-
-const chipBackground: { [key in ChipVariant]: string } = {
-  [ChipVariant.OK]: theme.primaryContainer,
-  [ChipVariant.WARNING]: theme.warnContainer,
-  [ChipVariant.ERROR]: theme.errorContainer,
-  [ChipVariant.INFO]: theme.tertiaryContainer,
-}
-
-const chipText: { [key in ChipVariant]: string } = {
-  [ChipVariant.OK]: theme.onPrimaryContainer,
-  [ChipVariant.WARNING]: theme.onWarnContainer,
-  [ChipVariant.ERROR]: theme.onErrorContainer,
-  [ChipVariant.INFO]: theme.onTertiaryContainer,
 }
 
 interface RemovableChipProps {
@@ -89,9 +45,55 @@ interface RemovableChipProps {
  * Has a main button and a delete icon at the end.
  */
 export const RemovableChip: React.FC<RemovableChipProps> = (props) => {
+  const theme = useTheme()
+
   const addSnackbarMessage = useAddSnackbarMessage()
   const [deletePending, setDeletePending] = useState(false)
   const [variant, setVariant] = useState(props.variant ?? ChipVariant.OK)
+
+  /**
+   * Styles for the main body of the chip
+   */
+  const chipBodySx = (
+    chipOutline: string,
+    textColour: string
+  ): SxProps<Theme> => ({
+    margin: `0 ${chipMarginSides}px`,
+    padding: `${chipPaddingTopBottom} ${theme.spacing(1.5)}`,
+    minWidth: theme.spacing(6),
+    color: textColour,
+    '&.Mui-disabled': { color: textColour },
+    '&::after': {
+      content: '""',
+      width: '1px',
+      height: '100%',
+      background: chipOutline,
+      right: `-${chipMarginSides}px`,
+      top: 0,
+      position: 'absolute',
+    },
+  })
+
+  const chipColour: { [key in ChipVariant]: string } = {
+    [ChipVariant.OK]: theme.primary,
+    [ChipVariant.WARNING]: theme.warn,
+    [ChipVariant.ERROR]: theme.error,
+    [ChipVariant.INFO]: theme.tertiary,
+  }
+
+  const chipBackground: { [key in ChipVariant]: string } = {
+    [ChipVariant.OK]: theme.primaryContainer,
+    [ChipVariant.WARNING]: theme.warnContainer,
+    [ChipVariant.ERROR]: theme.errorContainer,
+    [ChipVariant.INFO]: theme.tertiaryContainer,
+  }
+
+  const chipText: { [key in ChipVariant]: string } = {
+    [ChipVariant.OK]: theme.onPrimaryContainer,
+    [ChipVariant.WARNING]: theme.onWarnContainer,
+    [ChipVariant.ERROR]: theme.onErrorContainer,
+    [ChipVariant.INFO]: theme.onTertiaryContainer,
+  }
 
   useEffect(() => {
     setVariant(props.variant ?? ChipVariant.OK)

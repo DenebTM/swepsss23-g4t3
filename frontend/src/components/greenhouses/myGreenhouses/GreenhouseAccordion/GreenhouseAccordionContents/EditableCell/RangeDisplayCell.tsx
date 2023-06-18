@@ -1,9 +1,9 @@
 import React from 'react'
 
+import { useTheme } from '@mui/material/styles'
 import Typography, { TypographyTypeMap } from '@mui/material/Typography'
 
 import { emDash, ValueRange } from '~/common'
-import { theme } from '~/styles/theme'
 
 interface RangeDisplayCellProps {
   /** Display props applied to all child typography components */
@@ -22,6 +22,8 @@ interface RangeDisplayCellProps {
  * Display the current range of an editable greenhouse metric range.
  */
 export const RangeDisplayCell: React.FC<RangeDisplayCellProps> = (props) => {
+  const theme = useTheme()
+
   return (
     <>
       <Typography

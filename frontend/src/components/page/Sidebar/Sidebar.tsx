@@ -3,13 +3,13 @@ import { useContext } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
 import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
 import { PlantIcon } from '@component-lib/icons/PlantIcon'
 import { Tooltip } from '@component-lib/Tooltip'
 import { AppContext } from '~/contexts/AppContext/AppContext'
-import { theme } from '~/styles/theme'
 
 import { CustomDrawer } from './CustomDrawer'
 import { SidebarContents } from './SidebarContents/SidebarContents'
@@ -27,6 +27,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
  * Collapsible sidebar component. Renders {@link CustomDrawer} and manages open state.
  */
 export const Sidebar: React.FC = () => {
+  const theme = useTheme()
+
   const { appState, setSidebarOpen } = useContext(AppContext)
 
   const toggleDrawerOpen = (): void => {
