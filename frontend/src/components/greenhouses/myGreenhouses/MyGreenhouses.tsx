@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Typography from '@mui/material/Typography'
 
@@ -7,7 +7,7 @@ import { PAGE_URL } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageTitle } from '~/components/page/PageTitle'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { useSensorStations } from '~/hooks/appContext'
+import { useLoadSensorStations, useSensorStations } from '~/hooks/appContext'
 import { useUsername } from '~/hooks/user'
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
 
@@ -17,11 +17,21 @@ import { GreenhouseAccordion } from './GreenhouseAccordion/GreenhouseAccordion'
  * Page for a gardener to see all greenhouses assigned to them
  */
 export const MyGreenhouses: React.FC = () => {
-  const sensorStations = useSensorStations(true) // qqjf TODO reload periodically?
+  const sensorStations = useSensorStations(true)
+  const loadSensorStations = useLoadSensorStations()
   const username = useUsername()
 
   // Store the currently expanded ssID in the state if an accordion is expanded, otherwise `null`
   const [expanded, setExpanded] = useState<SensorStationUuid | null>(null)
+
+  /** Reload sensor stations periodically */
+  useEffect(() => {
+    const ssLoadInterval = setInterval(() => {
+      loadSensorStations()
+    }, 5000)
+
+    return () => clearInterval(ssLoadInterval)
+  }, [loadSensorStations])
 
   const filterSensorStations = (ss: SensorStation[]) =>
     ss.filter((s) => s.gardeners.includes(username))

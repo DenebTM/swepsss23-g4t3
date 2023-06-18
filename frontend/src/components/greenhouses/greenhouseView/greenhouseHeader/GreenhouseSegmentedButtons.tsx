@@ -1,13 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import { styled } from '@mui/material/styles'
 
-import GalleryIcon from '@component-lib/icons/GalleryIcon'
-import { PAGE_URL, SensorStationView } from '~/common'
+import { GREENHOUSE_VIEWS, PAGE_URL, SensorStationView } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 import { SegmentedButton } from './SegmentedButton'
@@ -35,28 +32,6 @@ export const GreenhouseSegmentedButtons: React.FC<
 > = (props) => {
   const navigate = useNavigate()
 
-  /** Define buttons for all views */
-  const views = [
-    {
-      name: 'Overview',
-      key: SensorStationView.GRAPHICAL,
-      icon: <DashboardIcon />,
-      loggedInOnly: true,
-    },
-    {
-      name: 'Gallery',
-      key: SensorStationView.GALLERY,
-      icon: <GalleryIcon />,
-      loggedInOnly: false,
-    },
-    {
-      name: 'Table',
-      key: SensorStationView.TABLE,
-      icon: <StorageOutlinedIcon />,
-      loggedInOnly: true,
-    },
-  ]
-
   /** Handle navigate to targetView on button click */
   const handleNavigate = (targetView: SensorStationView): void => {
     navigate(PAGE_URL.greenhouseView.href(props.ssID, targetView))
@@ -74,19 +49,19 @@ export const GreenhouseSegmentedButtons: React.FC<
 
   return (
     <StyledButtonGroup>
-      {views.map((btn, index: number) => (
+      {GREENHOUSE_VIEWS.map((btn, index: number) => (
         <SegmentedButton
           key={btn.key}
           onClick={() => handleNavigate(btn.key)}
-          icon={btn.icon}
+          icon={<btn.Icon />}
           selected={props.view === btn.key}
           aria-label={'Navigate to greenhouse ' + btn.key.toLowerCase()}
           loggedInOnly={btn.loggedInOnly}
           sx={{
-            borderRadius: getBtnBorderRadius(index, views.length),
+            borderRadius: getBtnBorderRadius(index, GREENHOUSE_VIEWS.length),
           }}
         >
-          {btn.name}
+          {btn.title}
         </SegmentedButton>
       ))}
     </StyledButtonGroup>
