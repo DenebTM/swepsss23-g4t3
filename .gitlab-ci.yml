@@ -93,4 +93,4 @@ sonarqube-check:
   only:
     - main
     - dev
-    - backend/sonarqube-v3
+    - /sonarqube/
