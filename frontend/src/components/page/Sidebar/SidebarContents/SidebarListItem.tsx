@@ -38,12 +38,12 @@ export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
 
   const handleButtonClick = (): void => {
     if (typeof props.onClick !== 'undefined') {
-      setButtonDisabled(true)
-
       const clickReturn = props.onClick()
 
+      // Disable clicked button during asynchronous event handling
       if (typeof clickReturn !== 'undefined') {
-        // Disable clicked button during asynchronous event handling
+        setButtonDisabled(true)
+
         clickReturn
           .catch((err: Error) => {
             // For now if logout fails, then log the error to the console and allow users to retry

@@ -222,7 +222,7 @@ export const getM3Tokens = (mode: PaletteMode): M3Theme => ({
   ...(mode === 'light' ? lightTheme : darkTheme),
 })
 
-export const customColors: CustomColours = {
+export const customColours: CustomColours = {
   warnContainer: '#fbd588',
   warn: '#ec9f07',
   onWarnContainer: '#140D01',

@@ -1,7 +1,9 @@
+import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import HomeIcon from '@mui/icons-material/Home'
+import ColourModeIcon from '@mui/icons-material/LightMode'
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -11,6 +13,7 @@ import List from '@mui/material/List'
 
 import { logout } from '~/api/endpoints/login'
 import { GreenhouseIcon, PAGE_URL, SensorStationView } from '~/common'
+import { ColourModeContext } from '~/contexts/ColourModeContext/ColourModeContext'
 import { deleteJwt, isUserLoggedIn } from '~/helpers/jwt'
 import { useSensorStations } from '~/hooks/appContext'
 import { SensorStation } from '~/models/sensorStation'
@@ -82,6 +85,11 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
         throw err
       })
 
+  const colourModeContext = useContext(ColourModeContext)
+  const handleChangeColourMode = (): void => {
+    colourModeContext.changeColourMode()
+  }
+
   return (
     <>
       <Divider sx={{ borderColor: 'transparent' }} />
@@ -100,6 +108,16 @@ export const SidebarContents: React.FC<SidebarContentsProps> = (props) => {
         }}
       />
 
+      {/* Color mode button */}
+      <SidebarListItem
+        label={'Theme: ' + colourModeContext.activeMode.toUpperCase()}
+        open={props.open}
+        onClick={handleChangeColourMode}
+      >
+        <ColourModeIcon />
+      </SidebarListItem>
+
+      {/* Logout button */}
       <SidebarListItem
         label={isUserLoggedIn() ? 'Logout' : PAGE_URL.login.pageTitle}
         open={props.open}
