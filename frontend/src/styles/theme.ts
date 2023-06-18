@@ -65,15 +65,9 @@ export const generateTheme = (mode: PaletteMode): Theme => {
         primary: tokens.onSurface,
         secondary: tokens.onSurfaceVariant,
         disabled: tokens.onSurfaceVariant,
-        // hint: tokens.onSurfaceVariant,
-        // outline: tokens.outline,
       },
       divider: tokens.outlineVariant,
       background: { default: tokens.background, paper: tokens.surfaceBright },
-      // Add custom colour options
-      // onSurface: tokens.onSurface,
-      // onSurfaceVariant: tokens.onSurfaceVariant,
-      // outline: tokens.outline,
     },
 
     // Component overrides
