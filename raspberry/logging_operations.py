@@ -3,7 +3,6 @@ import datetime
 import asyncio
 from common import access_point_name
 import rest_operations
-import sys
 
 SENDING_INTERVAL = 60
 
@@ -15,17 +14,17 @@ log_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 file_handler = logging.FileHandler('audit.log')
 file_handler.setFormatter(log_formatter)
 root_logger.addHandler(file_handler)
-# log to stdout
+# log to stderr
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(log_formatter)
 root_logger.addHandler(console_handler)
 
 log_data = []
 
-async def log_local(level, message):
+def log_local(level, message):
     logging.log(getattr(logging, level), message)
 
-async def log_local_and_remote(level, message, entity_type='ACCESS_POINT', entity_id=access_point_name):
+def log_local_and_remote(level, message, entity_type='ACCESS_POINT', entity_id=access_point_name):
     timestamp = datetime.datetime.utcnow().isoformat()
 
     log_entry = {
@@ -42,7 +41,7 @@ async def log_local_and_remote(level, message, entity_type='ACCESS_POINT', entit
 
     log_data.append(log_entry)
 
-async def clear_log_data():
+def clear_log_data():
     global log_data
     log_data.clear()
 

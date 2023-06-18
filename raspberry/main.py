@@ -1,14 +1,13 @@
 import asyncio
 import aiohttp
 import time
-import logging_operations
 from bleak import BleakClient, BleakError
 import common
 import database_operations
 from thresholds_operations import check_values_for_thresholds
 from sensorvalues_operations import read_sensorvalues
 from sensorstation_operations import search_for_sensorstations
-from logging_operations import log_local, log_local_and_remote
+from logging_operations import log_local, log_local_and_remote, log_sending_loop
 import rest_operations
 
 RETRY_TIME = 10
@@ -83,7 +82,7 @@ async def cancel_ss_task(sensorstation_id):
 
 
 async def polling_loop(connection_request, session):
-    asyncio.create_task(logging_operations.log_sending_loop(session, connection_request))
+    asyncio.create_task(log_sending_loop(session, connection_request))
     while not connection_request.done():
         print('Inside AP Loop')
         new_status = await rest_operations.get_ap_status(session)
@@ -111,15 +110,15 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            await logging_operations.log_local('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            log_local('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
             time.sleep(RETRY_TIME)
             
         except aiohttp.ClientResponseError as e:
-            await logging_operations.log_local('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            log_local('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
             time.sleep(RETRY_TIME)
 
         except Exception as e:
-            await logging_operations.log_local_and_remote('ERROR', f'Unexpected error occured: {e}')
+            log_local_and_remote('ERROR', f'Unexpected error occured: {e}')
 
 if __name__ == '__main__':
     asyncio.run(main())
