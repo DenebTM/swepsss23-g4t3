@@ -101,15 +101,15 @@ public class MeasurementRestController implements BaseRestController {
             throw new NotFoundInDatabaseException(SensorStationRestController.SS, id);
         }
 
-        final String JSON_TIMESTAMP_KEY = "timestamp";
+        final String JSON_KEY_TIMESTAMP = "timestamp";
         Instant timestamp = Instant.now();
-        if (json.containsKey(JSON_TIMESTAMP_KEY)) {
+        if (json.containsKey(JSON_KEY_TIMESTAMP)) {
             try {
-                timestamp = Instant.parse(String.valueOf(json.get(JSON_TIMESTAMP_KEY)));
+                timestamp = Instant.parse(String.valueOf(json.get(JSON_KEY_TIMESTAMP)));
             } catch (DateTimeException e){
                 throw new BadRequestException("Invalid timestamp");
             }
-            json.remove(JSON_TIMESTAMP_KEY);
+            json.remove(JSON_KEY_TIMESTAMP);
         }
 
         Measurement newMeasurement = new Measurement();
