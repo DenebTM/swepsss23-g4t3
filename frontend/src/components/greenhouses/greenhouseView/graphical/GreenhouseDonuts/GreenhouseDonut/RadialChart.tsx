@@ -1,10 +1,9 @@
 import React from 'react'
 import { PolarAngleAxis, RadialBar, RadialBarChart, Tooltip } from 'recharts'
 
-import { alpha } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 
 import { emDash, GreenhouseMetricRange, roundMetric } from '~/common'
-import { theme } from '~/styles/theme'
 
 import { normalisePercentage } from '../../GreenhouseGraph/helpers'
 
@@ -32,6 +31,8 @@ interface RadialChartProps {
  * Radial chart component showing a single greenhouse metric
  */
 export const RadialChart: React.FC<RadialChartProps> = (props) => {
+  const theme = useTheme()
+
   const caculatePercentage = (d: ChartData): number => {
     const normalisedVal = normalisePercentage(
       d.value,

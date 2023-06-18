@@ -1,8 +1,7 @@
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/system/Box'
-
-import { theme } from '~/styles/theme'
 
 export interface AdminHomeButtonProps {
   icon: React.ReactNode
@@ -14,6 +13,8 @@ export interface AdminHomeButtonProps {
  * Button component for the admin home. Displays an icon, title, and description.
  */
 export const AdminHomeButton: React.FC<AdminHomeButtonProps> = (props) => {
+  const theme = useTheme()
+
   return (
     <Grid
       container

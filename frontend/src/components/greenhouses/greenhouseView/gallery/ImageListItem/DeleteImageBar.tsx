@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Fade from '@mui/material/Fade'
 import IconButton from '@mui/material/IconButton'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
+import { useTheme } from '@mui/material/styles'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import dayjs from 'dayjs'
@@ -12,7 +13,6 @@ import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
 import { Photo } from '~/models/photo'
 import { SensorStationUuid } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 interface DeleteImageBarProps {
   /** The photo to show */
@@ -28,6 +28,8 @@ interface DeleteImageBarProps {
  * Overlay bar with option to delete gallery photos.
  */
 export const DeleteImageBar: React.FC<DeleteImageBarProps> = (props) => {
+  const theme = useTheme()
+
   const addSnackbarMessage = useAddSnackbarMessage()
 
   const [deletePending, setDeletePending] = useState(false)

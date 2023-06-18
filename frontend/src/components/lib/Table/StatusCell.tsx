@@ -1,8 +1,7 @@
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 import { GridValidRowModel } from '@mui/x-data-grid'
-
-import { theme } from '~/styles/theme'
 
 /** Minimum width in px (for setting column width in tables) */
 export const statusCellMinWidth = 127
@@ -33,6 +32,8 @@ interface StatusCellProps<R extends GridValidRowModel, T = number> {
 export const StatusCell = <R extends GridValidRowModel, T = string>(
   props: StatusCellProps<R, T>
 ): JSX.Element => {
+  const theme = useTheme()
+
   const statusDotColours: { [key in StatusVariant]: string } = {
     [StatusVariant.OK]: theme.primary,
     [StatusVariant.WARNING]: theme.warn,

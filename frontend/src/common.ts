@@ -6,7 +6,7 @@ import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
-import { theme } from './styles/theme'
+import { customColors } from './styles/colours/themeColours'
 
 /** Enum for the URL parameters controlling the view of a single sensor station.
  */
@@ -241,7 +241,7 @@ export interface GreenhouseMetricRange {
 
 export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   temperature: {
-    colour: theme.purple,
+    colour: customColors.purple,
     displayName: 'Temperature',
     valueKey: 'temperature',
     unit: '°C',
@@ -250,7 +250,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   soilMoisture: {
-    colour: theme.tertiary,
+    colour: customColors.tertiary,
     displayName: 'Soil Moisture',
     valueKey: 'soilMoisture',
     unit: '%',
@@ -259,7 +259,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   lightIntensity: {
-    colour: theme.green,
+    colour: customColors.green,
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
@@ -271,7 +271,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
 
 export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   airPressure: {
-    colour: theme.warn,
+    colour: customColors.warn,
     displayName: 'Air Pressure',
     valueKey: 'airPressure',
     unit: 'hPa',
@@ -280,7 +280,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 50,
   },
   humidity: {
-    colour: theme.pink,
+    colour: customColors.pink,
     displayName: 'Humidity',
     valueKey: 'humidity',
     unit: '%',
@@ -289,7 +289,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   airQuality: {
-    colour: theme.blue,
+    colour: customColors.blue,
     displayName: 'Air Quality',
     description: 'Index of Air Quality (IAQ)',
     valueKey: 'airQuality',

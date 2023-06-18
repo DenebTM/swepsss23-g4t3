@@ -1,12 +1,12 @@
 import { Property } from 'csstype'
 import React from 'react'
 
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 import { ResponsiveStyleValue } from '@mui/system/styleFunctionSx'
 
 import { PlantIcon } from '@component-lib/icons/PlantIcon'
-import { theme } from '~/styles/theme'
 
 interface LoginHeaderProps {
   padding?: ResponsiveStyleValue<Property.Padding<string>>
@@ -16,6 +16,8 @@ interface LoginHeaderProps {
  * Header component for login page
  */
 export const LoginHeader: React.FC<LoginHeaderProps> = (props) => {
+  const theme = useTheme()
+
   return (
     <Box
       component="div"

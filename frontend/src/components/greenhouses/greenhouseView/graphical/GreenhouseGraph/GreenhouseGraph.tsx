@@ -11,6 +11,8 @@ import {
   YAxis,
 } from 'recharts'
 
+import { useTheme } from '@mui/material/styles'
+
 import dayjs from 'dayjs'
 import {
   GREENHOUSE_METRICS,
@@ -19,7 +21,6 @@ import {
 } from '~/common'
 import { Measurement, SensorValues } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import {
   DataValue,
@@ -38,6 +39,8 @@ interface GreenhouseGraphProps {
  * Graph showing recent greenhouse sensor data
  */
 export const GreenhouseGraph: React.FC<GreenhouseGraphProps> = (props) => {
+  const theme = useTheme()
+
   const [data, setData] = useState<DataValue[]>()
 
   useEffect(() => {

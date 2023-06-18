@@ -3,6 +3,7 @@ import { ResponsiveContainer } from 'recharts'
 
 import AirIcon from '@mui/icons-material/Air'
 import ReportProblemIcon from '@mui/icons-material/ReportProblem'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
@@ -11,7 +12,6 @@ import { Spinner } from '@component-lib/Spinner'
 import { AIR_METRICS, GreenhouseMetricRange } from '~/common'
 import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { DonutLabel } from './DonutLabel'
 import { RadialChart } from './RadialChart'
@@ -28,6 +28,8 @@ interface GreenhouseAirMetricsProps {
 export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
   props
 ) => {
+  const theme = useTheme()
+
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
   const { sensorStation, measurement } = { ...props }
 

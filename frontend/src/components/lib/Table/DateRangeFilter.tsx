@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import {
@@ -10,20 +11,8 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
 import dayjs, { Dayjs } from 'dayjs'
-import { theme } from '~/styles/theme'
 
 export type DateValue = Dayjs | null
-
-const pickerStyleProps: Partial<DateTimePickerSlotsComponentsProps<DateValue>> =
-  {
-    day: {
-      sx: {
-        '&.Mui-disabled': {
-          background: theme.ref.neutral[95],
-        },
-      },
-    },
-  }
 
 interface DateRangeFilterProps {
   children?: React.ReactNode
@@ -37,6 +26,20 @@ interface DateRangeFilterProps {
  * Two side-by-side {@link DateTimePicker}s to set the values of `props.from` and `props.to` with a Dayjs date and time
  */
 export const DateRangeFilter: React.FC<DateRangeFilterProps> = (props) => {
+  const theme = useTheme()
+
+  const pickerStyleProps: Partial<
+    DateTimePickerSlotsComponentsProps<DateValue>
+  > = {
+    day: {
+      sx: {
+        '&.Mui-disabled': {
+          background: theme.ref.neutral[95],
+        },
+      },
+    },
+  }
+
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
   return (

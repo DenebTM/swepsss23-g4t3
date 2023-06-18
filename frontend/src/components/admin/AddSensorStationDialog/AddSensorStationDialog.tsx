@@ -1,11 +1,11 @@
 import React from 'react'
 
 import Dialog from '@mui/material/Dialog'
+import { useTheme } from '@mui/material/styles'
 
 import { DialogHeader } from '@component-lib/DialogHeader'
 import { ADD_GREENHOUSE_DIALOG_SUBTITLE, ADD_GREENHOUSE_TEXT } from '~/common'
 import { AccessPoint, AccessPointId } from '~/models/accessPoint'
-import { theme } from '~/styles/theme'
 
 import { AddSsDialogContents } from './AddSsDialogContents'
 
@@ -24,6 +24,8 @@ interface AddSensorStationDialogProps {
 export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
   props
 ): JSX.Element => {
+  const theme = useTheme()
+
   return (
     <Dialog
       open={props.open}

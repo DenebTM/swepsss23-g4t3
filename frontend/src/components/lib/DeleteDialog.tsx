@@ -7,10 +7,10 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+import { useTheme } from '@mui/material/styles'
 
 import { MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { theme } from '~/styles/theme'
 
 interface DeleteDialogProps {
   /** Function to run after successful deletion. */
@@ -29,6 +29,8 @@ interface DeleteDialogProps {
  * Controlled dialog to confim deleting an object. Shows options to cancel or confirm deletion.
  */
 export const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
+  const theme = useTheme()
+
   const [deletePending, setDeletePending] = useState(false)
 
   const addSnackbarMessage = useAddSnackbarMessage()

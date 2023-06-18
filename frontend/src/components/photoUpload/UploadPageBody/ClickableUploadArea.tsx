@@ -1,15 +1,16 @@
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
-
-import { theme } from '~/styles/theme'
 
 import { UploadComponentProps } from './getUploadArea'
 
 /** Clcikable upload area with hover effects. Opens file manager to upload photos on click. */
 export const ClickableUploadArea: React.FC<UploadComponentProps> = (props) => {
+  const theme = useTheme()
+
   const { uploading, ...uploadyProps } = props
 
   return (
