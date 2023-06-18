@@ -74,7 +74,7 @@ public class MeasurementRestController implements BaseRestController {
         }
 
         // return 400 error if "from"-date is after "to"-date
-        if (from.isAfter(to)){
+        if (from.isAfter(to)) {
             throw new BadRequestException("End date must not be before start date");
         }
 
@@ -86,7 +86,7 @@ public class MeasurementRestController implements BaseRestController {
      * @return An object containing the returned measurements indexed by sensor station
      */
     @GetMapping(value = MEASUREMENTS_PATH)
-    public ResponseEntity<Map<Integer, Measurement>> getAllCurrentMeasurements(){
+    public ResponseEntity<Map<Integer, Measurement>> getAllCurrentMeasurements() {
         return ResponseEntity.ok(measurementService.getAllCurrentMeasurements());
     }
 
@@ -108,7 +108,7 @@ public class MeasurementRestController implements BaseRestController {
         if (json.containsKey(JSON_KEY_TIMESTAMP)) {
             try {
                 timestamp = Instant.parse(String.valueOf(json.get(JSON_KEY_TIMESTAMP)));
-            } catch (DateTimeException e){
+            } catch (DateTimeException e) {
                 throw new BadRequestException("Invalid timestamp");
             }
             json.remove(JSON_KEY_TIMESTAMP);
@@ -122,7 +122,7 @@ public class MeasurementRestController implements BaseRestController {
         try {
             SensorValues newValues = mapper.convertValue(json, SensorValues.class);
             newMeasurement.setData(newValues);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.warn("Rejected invalid measurements: " + e.getMessage(), LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
             throw new BadRequestException("Invalid sensor values");
         }

@@ -56,7 +56,7 @@ public class LoggingControllerTest {
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    void testGetLogsFrom(){
+    void testGetLogsFrom() {
         Instant from = parseInstant("2023-05-09");
 
         var response = loggingController.getLogs(from, null, null, null);

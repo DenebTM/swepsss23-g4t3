@@ -295,7 +295,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = SS_ID_GARDENER_PATH)
-    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "id") Integer id){
+    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
@@ -312,7 +312,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username) {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
         
         SensorStation ss = ssService.loadSSById(id);
@@ -343,7 +343,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username) {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
         
         SensorStation ss = ssService.loadSSById(id);

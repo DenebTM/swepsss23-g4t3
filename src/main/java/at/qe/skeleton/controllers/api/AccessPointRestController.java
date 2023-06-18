@@ -155,7 +155,7 @@ public class AccessPointRestController implements BaseRestController {
                         logger.info(message, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
                     }
                 }
-            } catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 throw new BadRequestException("Invalid status given");
             }
         }
