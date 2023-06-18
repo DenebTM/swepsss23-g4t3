@@ -50,7 +50,7 @@ export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
   }, [sensorStations])
 
   const handleChange = (event: SelectChangeEvent<number>) => {
-    const selectedSsId = Number(event.target.value) as SensorStationUuid
+    const selectedSsId: SensorStationUuid = Number(event.target.value)
     props.setSensorStationId(selectedSsId)
   }
 

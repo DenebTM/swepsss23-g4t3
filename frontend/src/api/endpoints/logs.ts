@@ -1,7 +1,6 @@
 import { Server } from 'miragejs'
 import { _get } from '~/api/intercepts'
-import { LogEntry, LogLevel } from '~/models/log'
-import { EntityType } from '~/models/log'
+import { EntityType, LogEntry, LogLevel } from '~/models/log'
 import { Timestamp } from '~/models/timestamp'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
