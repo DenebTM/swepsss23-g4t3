@@ -3,6 +3,7 @@ import React from 'react'
 import Dialog from '@mui/material/Dialog'
 
 import { DialogHeader } from '@component-lib/DialogHeader'
+import { ADD_GREENHOUSE_TEXT } from '~/common'
 import { AccessPoint, AccessPointId } from '~/models/accessPoint'
 import { theme } from '~/styles/theme'
 
@@ -40,7 +41,7 @@ export const AddSensorStationDialog: React.FC<AddSensorStationDialogProps> = (
         handleClose={props.onClose}
         subtitle="Pair with a new sensor station via BLE to start monitoring your plants"
         titleId={dialogTitleId}
-        title="Add Greenhouse"
+        title={ADD_GREENHOUSE_TEXT}
       />
       <AddSsDialogContents
         accessPointId={props.accessPointId}
