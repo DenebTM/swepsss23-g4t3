@@ -87,7 +87,7 @@ public class UserxRestController implements BaseRestController {
         }
         // return a 400 error if an empty password is given
         String password = String.valueOf(json.get(JSON_KEY_PASSWORD));
-        if (userService.isNotValidPassword(password)) {
+        if (UserxService.isNotValidPassword(password)) {
             throw new BadRequestException("Password is not valid.");
         }
 
@@ -138,7 +138,7 @@ public class UserxRestController implements BaseRestController {
         }
         if (json.containsKey(JSON_KEY_PASSWORD)) {
             String newPassword = String.valueOf(json.get(JSON_KEY_PASSWORD));
-            if (userService.isNotValidPassword(newPassword)) {
+            if (UserxService.isNotValidPassword(newPassword)) {
                 throw new BadRequestException("Password is not valid.");
             }
             String bcryptPassword = WebSecurityConfig.passwordEncoder().encode(newPassword);
