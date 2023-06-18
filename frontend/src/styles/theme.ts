@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles'
+import { createTheme, Theme } from '@mui/material/styles'
 
 import { customColors, getM3Tokens } from './colours/themeColours'
 import { CustomColours, M3Theme, PaletteMode } from './colours/types'
@@ -42,11 +42,14 @@ export const sidebarWidth = '200px'
 const medChipPadding = '14px 16px'
 const smallChipPadding = '8px 12px'
 
+/** Label style for buttons and chips */
+const chipTypography = typographyTheme.labelLarge
+
 /** Generate MUI theme according to palette mode */
-const generateTheme = (mode: PaletteMode) => {
+export const generateTheme = (mode: PaletteMode): Theme => {
   const tokens = getM3Tokens(mode)
 
-  return {
+  return createTheme({
     ...tokens,
     ...customColors,
 
@@ -62,15 +65,15 @@ const generateTheme = (mode: PaletteMode) => {
         primary: tokens.onSurface,
         secondary: tokens.onSurfaceVariant,
         disabled: tokens.onSurfaceVariant,
-        hint: tokens.onSurfaceVariant,
-        outline: tokens.outline,
+        // hint: tokens.onSurfaceVariant,
+        // outline: tokens.outline,
       },
       divider: tokens.outlineVariant,
       background: { default: tokens.background, paper: tokens.surfaceBright },
       // Add custom colour options
-      onSurface: tokens.onSurface,
-      onSurfaceVariant: tokens.onSurfaceVariant,
-      outline: tokens.outline,
+      // onSurface: tokens.onSurface,
+      // onSurfaceVariant: tokens.onSurfaceVariant,
+      // outline: tokens.outline,
     },
 
     // Component overrides
@@ -138,31 +141,25 @@ const generateTheme = (mode: PaletteMode) => {
         },
       },
     },
-  }
+
+    // Typography overrides
+    typography: {
+      // Add M3 typography variants
+      ...typographyTheme,
+      // Override default typography variants with M3 styles
+      h1: { ...typographyTheme.displayLarge },
+      h2: { ...typographyTheme.displayMedium },
+      h3: { ...typographyTheme.displaySmall },
+      h4: { ...typographyTheme.headlineLarge },
+      h5: { ...typographyTheme.headlineMedium },
+      h6: { ...typographyTheme.headlineSmall },
+      subtitle1: { ...typographyTheme.titleLarge },
+      subtitle2: { ...typographyTheme.titleMedium },
+      body1: { ...typographyTheme.bodyLarge },
+      body2: { ...typographyTheme.bodyMedium },
+      caption: { ...typographyTheme.labelSmall },
+      button: { ...chipTypography },
+      overline: { ...typographyTheme.labelSmall },
+    },
+  })
 }
-
-/** Label style for buttons and chips */
-const chipTypography = typographyTheme.labelLarge
-
-/** Custom MUI theme */
-export const theme = createTheme({
-  ...generateTheme('light'),
-  typography: {
-    // Add M3 typography variants
-    ...typographyTheme,
-    // Override default typography variants with M3 styles
-    h1: { ...typographyTheme.displayLarge },
-    h2: { ...typographyTheme.displayMedium },
-    h3: { ...typographyTheme.displaySmall },
-    h4: { ...typographyTheme.headlineLarge },
-    h5: { ...typographyTheme.headlineMedium },
-    h6: { ...typographyTheme.headlineSmall },
-    subtitle1: { ...typographyTheme.titleLarge },
-    subtitle2: { ...typographyTheme.titleMedium },
-    body1: { ...typographyTheme.bodyLarge },
-    body2: { ...typographyTheme.bodyMedium },
-    caption: { ...typographyTheme.labelSmall },
-    button: { ...chipTypography },
-    overline: { ...typographyTheme.labelSmall },
-  },
-})
