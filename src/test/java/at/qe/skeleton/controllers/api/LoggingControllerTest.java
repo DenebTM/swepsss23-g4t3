@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -46,7 +46,7 @@ public class LoggingControllerTest {
         int numberOfLogs = loggingService.getAllLogs().size();
 
         var response = loggingController.getLogs(null, null, null, null);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -61,7 +61,7 @@ public class LoggingControllerTest {
 
         var response = loggingController.getLogs(from, null, null, null);
         int numberOfLogs = loggingService.getAllLogsFrom(from).size();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -76,7 +76,7 @@ public class LoggingControllerTest {
 
         var response = loggingController.getLogs(null, to, null, null);
         int numberOfLogs = loggingService.getAllLogsTo(to).size();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -92,7 +92,7 @@ public class LoggingControllerTest {
 
         var response = loggingController.getLogs(from, to, null, null);
         int numberOfLogs = loggingService.getAllLogsInTimeInterval(from, to).size();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -113,7 +113,7 @@ public class LoggingControllerTest {
 
             var response = loggingController.getLogs(null, null, Arrays.asList(level), null);
             int numberOfLogs = serviceLogs.size();
-            assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
 
             var logs = response.getBody();
             assertNotNull(logs);

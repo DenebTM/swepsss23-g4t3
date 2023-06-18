@@ -7,7 +7,7 @@ import at.qe.skeleton.services.MeasurementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -55,7 +55,7 @@ class MeasurementRestControllerTest {
         int measurementCount = measurementService.getMeasurements(testSsId, from, to).size();
 
         var response = mmRestController.getMeasurementsBySS(testSsId, from, to);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var measurements = response.getBody();
         assertNotNull(measurements);
@@ -67,7 +67,7 @@ class MeasurementRestControllerTest {
         Integer number = measurementService.getAllCurrentMeasurements().size();
 
         var response = mmRestController.getAllCurrentMeasurements();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var measurements = response.getBody();
         assertNotNull(measurements);
@@ -88,7 +88,7 @@ class MeasurementRestControllerTest {
         json.put("soilMoisture", 50);
 
         var response = mmRestController.sendMeasurement(testSsId, json);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var measurement = response.getBody();
         assertNotNull(measurement);

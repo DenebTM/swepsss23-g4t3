@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -61,7 +61,7 @@ class UserxRestControllerTest {
     void testGetUsers() {
         int number = userService.getAllUsers().size();
         var response = userxRestController.getUsers();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var users = response.getBody();
         assertNotNull(users);
@@ -81,7 +81,7 @@ class UserxRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetUserByUsername() {
         var response = userxRestController.getUserByUsername(testUsername);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var user = response.getBody();
         assertNotNull(user);
@@ -102,7 +102,7 @@ class UserxRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testCreateUser() {
         var response = userxRestController.createUser(jsonCreateUser);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var user = response.getBody();
         assertNotNull(user);
@@ -145,7 +145,7 @@ class UserxRestControllerTest {
     void testUnauthorizedCreateUser() {
         try {
             var response = userxRestController.createUser(jsonCreateUser);
-            assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+            assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         } catch (Exception e) {
             assertTrue(e instanceof AccessDeniedException);
         }
@@ -156,7 +156,7 @@ class UserxRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testUpdateUser() {
         var response = userxRestController.updateUser(testUsername, jsonUpdateUser);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var user = response.getBody();
         assertNotNull(user);
@@ -218,7 +218,7 @@ class UserxRestControllerTest {
         int originalSize = userService.getAllUsers().size();
 
         var response = userxRestController.deleteUserByUsername(testUsername);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(originalSize-1, userService.getAllUsers().size());
 
         // if username does not exist in database, 404 not found error
@@ -248,7 +248,7 @@ class UserxRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testGetAssignedSS() {
         var response = userxRestController.getAssignedSS(testUsername);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var sensorStations = response.getBody();
         assertNotNull(sensorStations);
@@ -256,7 +256,7 @@ class UserxRestControllerTest {
 
         // if username is not GARDENER or ADMIN, return empty ArrayList
         response = userxRestController.getAssignedSS("max");
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         sensorStations = response.getBody();
         assertNotNull(sensorStations);
