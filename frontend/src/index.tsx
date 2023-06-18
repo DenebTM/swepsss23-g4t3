@@ -38,7 +38,7 @@ import { MessageSnackbars } from '~/components/page/Snackbar/MessageSnackbars'
 import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
 import { isUserLoggedIn } from '~/helpers/jwt'
 import '~/styles/index.css'
-import { theme } from '~/styles/theme'
+import { generateTheme } from '~/styles/theme'
 
 import { PhotoUpload } from './components/photoUpload/PhotoUpload'
 import { AppProvider } from './contexts/AppContext/AppProvider'
@@ -131,19 +131,25 @@ const router = createBrowserRouter([
   authRoute(PAGE_URL.myGreenhouses.href, <MyGreenhouses />),
 ])
 
+const App: React.FC = () => {
+  const theme = React.useMemo(() => generateTheme('light'), [])
+
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider>
+          <AppProvider>
+            <MessageSnackbars />
+            <RouterProvider router={router} />
+          </AppProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </React.StrictMode>
+  )
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider>
-        <AppProvider>
-          <MessageSnackbars />
-          <RouterProvider router={router} />
-        </AppProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
-  </React.StrictMode>
-)
+root.render(<App />)
 
 // enable the mock API only when run with `yarn mock`
 mirageSetup(import.meta.env.DEV && API_DEV_URL === '' ? MOCK_API : '')

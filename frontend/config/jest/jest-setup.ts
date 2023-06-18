@@ -4,7 +4,7 @@ import { vi } from 'vitest'
 import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import { AppRegistry } from '~/api/mirageTypes'
 import { AuthUserRole } from '~/models/user'
-import { theme } from '~/styles/theme'
+import { generateTheme } from '~/styles/theme'
 
 import { mockedSensorStations, testUsername } from './mock-data'
 
@@ -72,7 +72,7 @@ vi.mock('@mui/material/styles', async () => {
 
   return {
     ...mod,
-    useTheme: () => theme,
+    useTheme: () => generateTheme('light'),
   }
 })
 
