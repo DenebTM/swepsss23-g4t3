@@ -9,7 +9,7 @@ test('render MyGreenhouses without crashing', async () => {
 test('expands MyGreenhouses accordion', async () => {
   render(<MyGreenhouses />)
 
-  // Get buttons to expant the settings accordion
+  // Get buttons to expand the settings accordion
   const expandAccordionBtns = screen.getAllByTestId('ExpandMoreIcon')
   expect(expandAccordionBtns.length).toBeGreaterThan(0)
 
