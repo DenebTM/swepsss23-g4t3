@@ -103,6 +103,7 @@ export const SensorStationsTable: React.FC = () => {
       width: 175,
       field: 'aggregationPeriod',
       headerName: 'Aggregation Period (s)',
+      type: 'number',
     },
     {
       ...centerCell,
