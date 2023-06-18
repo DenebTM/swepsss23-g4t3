@@ -60,7 +60,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 await rest_operations.send_sensorvalues_to_backend(sensorstation_id, session)
 
     except BleakError as e:
-        print('couldnt connect to sensorstation') 
+        print('Could not connect to sensorstation') 
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
         await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
         await cancel_ss_task(sensorstation_id)
@@ -109,11 +109,11 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            await logging_operations.log_to_file_and_list('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            await logging_operations.log_to_console('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
             time.sleep(RETRY_TIME)
             
         except aiohttp.ClientResponseError as e:
-            await logging_operations.log_to_file_and_list('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
+            await logging_operations.log_to_console('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
             time.sleep(RETRY_TIME)
 
         except Exception as e:
