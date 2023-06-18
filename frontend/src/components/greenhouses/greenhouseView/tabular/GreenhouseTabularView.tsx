@@ -39,7 +39,6 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
       headerAlign: 'center',
       align: 'center',
       width: 135,
-      filterable: false,
     }
 
   /**
@@ -66,7 +65,6 @@ export const GreenhouseTabularView: React.FC<GreenhouseTabularViewProps> = (
       valueGetter: (params: GridValueGetterParams<Measurement, string>) =>
         dayjs(params.value).toDate(),
       width: 180,
-      filterable: false,
     },
   ]
 
