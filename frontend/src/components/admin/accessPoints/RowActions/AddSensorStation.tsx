@@ -2,11 +2,11 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
+import { useTheme } from '@mui/material/styles'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { GreenhouseIcon } from '~/common'
 import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
-import { theme } from '~/styles/theme'
 
 import { AddSensorStationDialog } from '../../AddSensorStationDialog/AddSensorStationDialog'
 
@@ -25,6 +25,8 @@ interface AddSensorStationProps {
  */
 export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
   (props): JSX.Element => {
+    const theme = useTheme()
+
     const [addSsDialogOpen, setAddSsDialogOpen] = useState(false)
 
     /** Open the dialog to add a sensor station when the icon is clicked */

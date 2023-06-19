@@ -1,12 +1,12 @@
 import React from 'react'
 
 import CssBaseline from '@mui/material/CssBaseline'
+import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box, { BoxTypeMap } from '@mui/system/Box'
 
 import { useUserRole } from '~/hooks/user'
 import { UserRole } from '~/models/user'
-import { theme } from '~/styles/theme'
 
 import { AccessDenied } from './error/AccessDenied'
 import { Sidebar } from './Sidebar/Sidebar'
@@ -30,6 +30,8 @@ interface PageWrapperProps {
  * Shows a loading indicator if `pending` is set to true.
  */
 export const PageWrapper: React.FC<PageWrapperProps> = (props) => {
+  const theme = useTheme()
+
   const userRole = useUserRole()
   const breakSm = useMediaQuery(theme.breakpoints.up('sm'))
   const breakMd = useMediaQuery(theme.breakpoints.up('md'))

@@ -1,12 +1,11 @@
 import React from 'react'
 
 import Button, { ButtonProps } from '@mui/material/Button'
-import { Theme } from '@mui/material/styles'
+import { Theme, useTheme } from '@mui/material/styles'
 import { SystemStyleObject } from '@mui/system/styleFunctionSx'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { isUserLoggedIn } from '~/helpers/jwt'
-import { theme } from '~/styles/theme'
 
 interface SegmentedButtonProps extends ButtonProps {
   /** Icon to show only if the segmented button is currently selected */
@@ -20,6 +19,8 @@ interface SegmentedButtonProps extends ButtonProps {
 }
 /** Component for a single button within a group of segmented buttons */
 export const SegmentedButton: React.FC<SegmentedButtonProps> = (props) => {
+  const theme = useTheme()
+
   const { icon, selected, sx, loggedInOnly, ...buttonProps } = props
 
   /** Styles for a selected button segment */

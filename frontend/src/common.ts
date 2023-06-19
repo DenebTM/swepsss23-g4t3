@@ -6,7 +6,7 @@ import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
-import { theme } from './styles/theme'
+import { customColours } from './styles/colours/themeColours'
 
 /** Enum for the URL parameters controlling the view of a single sensor station.
  */
@@ -165,7 +165,7 @@ export const GreenhouseIcon = YardIcon
 const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
 
 /** Encrypt a sensor station UUID for photo upload */
-const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
+export const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
   encodeURIComponent(CryptoJS.AES.encrypt(String(ssID), SECRET).toString())
 
 /** Decrypt a sensor station UUID for photo upload */
@@ -241,7 +241,7 @@ export interface GreenhouseMetricRange {
 
 export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   temperature: {
-    colour: theme.purple,
+    colour: customColours.purple,
     displayName: 'Temperature',
     valueKey: 'temperature',
     unit: '°C',
@@ -250,7 +250,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   soilMoisture: {
-    colour: theme.tertiary,
+    colour: customColours.tertiary,
     displayName: 'Soil Moisture',
     valueKey: 'soilMoisture',
     unit: '%',
@@ -259,7 +259,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   lightIntensity: {
-    colour: theme.green,
+    colour: customColours.green,
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
@@ -271,7 +271,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
 
 export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   airPressure: {
-    colour: theme.warn,
+    colour: customColours.warn,
     displayName: 'Air Pressure',
     valueKey: 'airPressure',
     unit: 'hPa',
@@ -280,7 +280,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 50,
   },
   humidity: {
-    colour: theme.pink,
+    colour: customColours.pink,
     displayName: 'Humidity',
     valueKey: 'humidity',
     unit: '%',
@@ -289,7 +289,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   airQuality: {
-    colour: theme.blue,
+    colour: customColours.blue,
     displayName: 'Air Quality',
     description: 'Index of Air Quality (IAQ)',
     valueKey: 'airQuality',
@@ -321,3 +321,7 @@ export const ADD_GREENHOUSE_TEXT = 'Add Greenhouse'
 
 /** Helper text to display on buttons for pairing with a new sensor station */
 export const ADD_GREENHOUSE_DESCRIPTION = 'Connect a new greenhouse'
+
+/** Subtitle text for dialog to pair with a new sensor station */
+export const ADD_GREENHOUSE_DIALOG_SUBTITLE =
+  'Pair with a new sensor station via BLE to start monitoring your plants'

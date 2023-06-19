@@ -3,8 +3,7 @@ import React from 'react'
 import CheckIcon from '@mui/icons-material/Check'
 import EditIcon from '@mui/icons-material/Edit'
 import Button, { ButtonProps } from '@mui/material/Button'
-
-import { theme } from '~/styles/theme'
+import { useTheme } from '@mui/material/styles'
 
 interface EditRowButtonProps {
   /** True if currently editing this row */
@@ -18,6 +17,8 @@ interface EditRowButtonProps {
  * Clickable cell to trigger editing the current row of the greenhouses accordion.
  */
 export const EditRowButton: React.FC<EditRowButtonProps> = (props) => {
+  const theme = useTheme()
+
   const buttonProps: ButtonProps = {
     size: 'small',
     sx: {
