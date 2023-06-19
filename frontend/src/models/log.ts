@@ -22,8 +22,10 @@ export enum LogLevel {
   ERROR = 'ERROR',
 }
 
+type LogEntityId = number | string
+
 interface LogEntity {
-  id: number | string
+  id: LogEntityId
   type: EntityType
 }
 
