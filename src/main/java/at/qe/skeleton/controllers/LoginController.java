@@ -39,10 +39,10 @@ public class LoginController {
             throw new BadRequestException("Missing request body");
         }
 
-        if (requestBody.getUsername() == null){
+        if (requestBody.getUsername() == null) {
             throw new BadRequestException("Missing body key \"username\"");
         }
-        if (requestBody.getPassword() == null){
+        if (requestBody.getPassword() == null) {
             throw new BadRequestException("Missing body key \"password\"");
         }
         UsernamePasswordAuthenticationToken authToken =

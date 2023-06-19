@@ -93,3 +93,4 @@ sonarqube-check:
   only:
     - main
     - dev
+    - /sonarqube/
