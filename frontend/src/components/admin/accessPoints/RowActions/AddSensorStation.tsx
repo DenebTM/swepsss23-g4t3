@@ -24,7 +24,7 @@ interface AddSensorStationProps {
  * Memoised using `React.memo` as otherwise DataGrid causes unnecessary rerenders.
  */
 export const AddSensorStation: React.FC<AddSensorStationProps> = React.memo(
-  (props): JSX.Element => {
+  (props): React.ReactElement => {
     const theme = useTheme()
 
     const [addSsDialogOpen, setAddSsDialogOpen] = useState(false)

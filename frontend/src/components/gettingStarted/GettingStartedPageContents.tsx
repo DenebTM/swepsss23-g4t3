@@ -10,8 +10,7 @@ import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/system/Stack'
 
-import { GreenhouseIcon } from '~/common'
-import { PAGE_URL } from '~/common'
+import { GreenhouseIcon, PAGE_URL } from '~/common'
 
 /** Props for icons in the GettingStarted page */
 const iconProps: Partial<SvgIconTypeMap['props']> = {
