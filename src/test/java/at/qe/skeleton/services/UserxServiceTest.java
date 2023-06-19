@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.models.enums.UserRole;
 import at.qe.skeleton.models.Userx;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,6 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import at.qe.skeleton.models.enums.UserRole;
-import at.qe.skeleton.services.UserxService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,29 +32,29 @@ public class UserxServiceTest {
         assertTrue(userService.getAllUsers().size() >= 7, "Insufficient amount of users initialized for test data source");
         for (Userx userx : userService.getAllUsers()) {
             if ("admin".equals(userx.getUsername())) {
-                assertSame(userx.getUserRole(), UserRole.ADMIN, "User \"" + userx + "\" does not have role ADMIN");
+                assertSame(UserRole.ADMIN, userx.getUserRole(), "User \"" + userx + "\" does not have role ADMIN");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
             } else if ("susi".equals(userx.getUsername())) {
-                assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
+                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 assertNull(userx.getUpdateDate(), "User \"" + userx +"\" has a updateDate defined");
             } else if ("max".equals(userx.getUsername())) {
-                assertSame(userx.getUserRole(), UserRole.USER, "User \"" + userx + "\" does not have role USER");
+                assertSame(UserRole.USER, userx.getUserRole(), "User \"" + userx + "\" does not have role USER");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
             } else  if ("elvis".equals(userx.getUsername())) {
-                assertSame(userx.getUserRole(), UserRole.ADMIN, "User \"" + userx + "\" does not have role ADMIN");
+                assertSame(UserRole.ADMIN, userx.getUserRole(), "User \"" + userx + "\" does not have role ADMIN");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
                 assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
             } else if ("hans".equals(userx.getUsername())) {
-                assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
+                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
             } else if ("peter".equals(userx.getUsername())) {
-                assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
+                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
             } else if ("franz".equals(userx.getUsername())) {
-                assertSame(userx.getUserRole(), UserRole.GARDENER, "User \"" + userx + "\" does not have role GARDENER");
+                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
                 assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
             }
         }
@@ -223,9 +221,9 @@ public class UserxServiceTest {
 
     @Test
     public void testIsNotValidPassword() {
-        assertTrue(userService.isNotValidPassword(""));
-        assertTrue(userService.isNotValidPassword("null"));
-        assertTrue(userService.isNotValidPassword(null));
-        assertFalse(userService.isNotValidPassword("validPassword"));
+        assertTrue(UserxService.isNotValidPassword(""));
+        assertTrue(UserxService.isNotValidPassword("null"));
+        assertTrue(UserxService.isNotValidPassword(null));
+        assertFalse(UserxService.isNotValidPassword("validPassword"));
     }
 }

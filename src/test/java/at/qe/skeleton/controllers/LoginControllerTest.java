@@ -3,7 +3,6 @@ package at.qe.skeleton.controllers;
 import at.qe.skeleton.configs.jwtutils.JwtManager;
 import at.qe.skeleton.configs.jwtutils.models.LoginRequestModel;
 import at.qe.skeleton.configs.jwtutils.models.LoginResponseModel;
-import at.qe.skeleton.controllers.LoginController;
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.models.Userx;
 import at.qe.skeleton.repositories.UserxRepository;

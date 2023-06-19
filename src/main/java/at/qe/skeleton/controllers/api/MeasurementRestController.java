@@ -35,6 +35,9 @@ public class MeasurementRestController implements BaseRestController {
     @Autowired
     private LoggingService logger;
 
+    // JSON keys used by PUT route
+    public static final String JSON_KEY_TIMESTAMP = "timestamp";
+
     /**
      * Route to GET current or historic sensor station measurement values
      * @param id
@@ -67,11 +70,11 @@ public class MeasurementRestController implements BaseRestController {
 
         // return one week of measurements by default
         if (from == null) {
-            from = to.minusSeconds(60 * 60 * 24 * 7);
+            from = to.minusSeconds(7 * 24 * 60 * 60L);
         }
 
         // return 400 error if "from"-date is after "to"-date
-        if (from.isAfter(to)){
+        if (from.isAfter(to)) {
             throw new BadRequestException("End date must not be before start date");
         }
 
@@ -83,7 +86,7 @@ public class MeasurementRestController implements BaseRestController {
      * @return An object containing the returned measurements indexed by sensor station
      */
     @GetMapping(value = MEASUREMENTS_PATH)
-    public ResponseEntity<Map<Integer, Measurement>> getAllCurrentMeasurements(){
+    public ResponseEntity<Map<Integer, Measurement>> getAllCurrentMeasurements() {
         return ResponseEntity.ok(measurementService.getAllCurrentMeasurements());
     }
 
@@ -102,13 +105,13 @@ public class MeasurementRestController implements BaseRestController {
         }
 
         Instant timestamp = Instant.now();
-        if (json.containsKey("timestamp")) {
+        if (json.containsKey(JSON_KEY_TIMESTAMP)) {
             try {
-                timestamp = Instant.parse(String.valueOf(json.get("timestamp")));
-            } catch (DateTimeException e){
+                timestamp = Instant.parse(String.valueOf(json.get(JSON_KEY_TIMESTAMP)));
+            } catch (DateTimeException e) {
                 throw new BadRequestException("Invalid timestamp");
             }
-            json.remove("timestamp");
+            json.remove(JSON_KEY_TIMESTAMP);
         }
 
         Measurement newMeasurement = new Measurement();
@@ -119,7 +122,7 @@ public class MeasurementRestController implements BaseRestController {
         try {
             SensorValues newValues = mapper.convertValue(json, SensorValues.class);
             newMeasurement.setData(newValues);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.warn("Rejected invalid measurements: " + e.getMessage(), LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
             throw new BadRequestException("Invalid sensor values");
         }
