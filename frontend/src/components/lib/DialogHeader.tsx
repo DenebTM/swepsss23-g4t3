@@ -21,7 +21,7 @@ interface DialogHeaderProps {
  */
 export const DialogHeader: React.FC<DialogHeaderProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const theme = useTheme()
 
   return (

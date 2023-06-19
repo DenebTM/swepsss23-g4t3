@@ -61,7 +61,7 @@ interface EditableTableRowProps<V extends ValueRange | number> {
  */
 export const EditableTableRow = <V extends ValueRange | number>(
   props: EditableTableRowProps<V>
-): JSX.Element => {
+): React.ReactElement => {
   const [rowValue, setRowValue] = useState<V>(props.value)
 
   return (

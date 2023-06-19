@@ -32,7 +32,7 @@ interface GenerateQrCodeProps {
  * Memoised using `React.memo` as otherwise DataGrid causes rerenders which in turn cause QR code regeneration.
  */
 export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
-  (props): JSX.Element => {
+  (props): React.ReactElement => {
     const theme = useTheme()
 
     const [qrDialogOpen, setQrDialogOpen] = useState(false)

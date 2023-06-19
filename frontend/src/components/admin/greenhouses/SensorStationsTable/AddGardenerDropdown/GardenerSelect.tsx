@@ -30,7 +30,7 @@ export const GardenerSelect: React.FC<GardenerSelectProps> = (props) => {
   const resetSearch = () => setSearch('')
 
   const handleChange = (event: SelectChangeEvent) => {
-    const selectedUser = event.target.value as string
+    const selectedUser: string = event.target.value
 
     assignGardener(props.sensorStation.ssID, selectedUser)
       .then((updatedSs: SensorStation) => {
