@@ -6,10 +6,10 @@ import React, {
   useReducer,
 } from 'react'
 
+import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { SensorStation } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { AppContext, initialAppState } from './AppContext'
 import { appReducer } from './appReducer'
@@ -28,6 +28,8 @@ interface AppProviderProps {
  * Wrapper component to allow accessing global values in child components without prop drilling.
  */
 const AppProvider: React.FC<AppProviderProps> = (props) => {
+  const theme = useTheme()
+
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
   const [appState, dispatch] = useReducer<
     Reducer<AppState, AppReducerAction>,

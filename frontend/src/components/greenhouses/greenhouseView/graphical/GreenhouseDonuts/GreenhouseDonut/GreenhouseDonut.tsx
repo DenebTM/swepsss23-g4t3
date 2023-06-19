@@ -2,12 +2,12 @@ import React from 'react'
 import { ResponsiveContainer } from 'recharts'
 
 import ReportProblemIcon from '@mui/icons-material/ReportProblem'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
 import { GreenhouseMetricRange, roundMetric } from '~/common'
-import { theme } from '~/styles/theme'
 
 import { DonutLabel } from './DonutLabel'
 import { RadialChart } from './RadialChart'
@@ -25,6 +25,8 @@ interface GreenhouseDonutProps {
  * Donut chart showing a single greenhouse metric
  */
 export const GreenhouseDonut: React.FC<GreenhouseDonutProps> = (props) => {
+  const theme = useTheme()
+
   const breakMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const outOfRange =

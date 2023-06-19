@@ -9,10 +9,12 @@ import {
 } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
+import Cookies from 'universal-cookie'
 import { mirageSetup, MOCK_API } from '~/api/mirageSetup'
 import {
   API_DEV_URL,
@@ -38,10 +40,15 @@ import { MessageSnackbars } from '~/components/page/Snackbar/MessageSnackbars'
 import { SnackbarProvider } from '~/contexts/SnackbarContext/SnackbarProvider'
 import { isUserLoggedIn } from '~/helpers/jwt'
 import '~/styles/index.css'
-import { theme } from '~/styles/theme'
+import { generateTheme } from '~/styles/theme'
 
 import { PhotoUpload } from './components/photoUpload/PhotoUpload'
 import { AppProvider } from './contexts/AppContext/AppProvider'
+import {
+  ColourMode,
+  ColourModeContext,
+  IColourModeContext,
+} from './contexts/ColourModeContext/ColourModeContext'
 
 /**
  * Page loader for the login page. Redirects to dashboard if the user is already signed in with a valid token.
@@ -131,19 +138,72 @@ const router = createBrowserRouter([
   authRoute(PAGE_URL.myGreenhouses.href, <MyGreenhouses />),
 ])
 
+// Create app as a React component so that hooks can be used to determine the theme
+const App: React.FC = () => {
+  // automatic dark theme
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+
+  // remember theme mode using cookie
+  const THEME_MODE = 'THEME_MODE'
+  const cookies = new Cookies()
+
+  const [activeMode, setActiveMode] = React.useState<ColourMode>(
+    cookies.get<ColourMode>(THEME_MODE) ?? 'auto'
+  )
+
+  // manual theme override
+  const colourMode = React.useMemo<IColourModeContext>(
+    () => ({
+      activeMode,
+      changeColourMode: () => {
+        const nextColourMode = prefersDarkMode
+          ? // browser prefers dark mode: auto->light->dark->auto
+            activeMode === 'auto'
+            ? 'light'
+            : activeMode === 'light'
+            ? 'dark'
+            : 'auto'
+          : // browser prefers light mode: auto->dark->light->auto
+          activeMode === 'auto'
+          ? 'dark'
+          : activeMode === 'dark'
+          ? 'light'
+          : 'auto'
+
+        setActiveMode(nextColourMode)
+        cookies.set(THEME_MODE, nextColourMode, { sameSite: 'strict' })
+      },
+    }),
+    [activeMode, prefersDarkMode]
+  )
+
+  // generate theme based on active mode
+  const theme = React.useMemo(() => {
+    if (activeMode == 'auto')
+      return generateTheme(prefersDarkMode ? 'dark' : 'light')
+
+    return generateTheme(activeMode)
+  }, [activeMode, prefersDarkMode])
+
+  return (
+    <React.StrictMode>
+      <ColourModeContext.Provider value={colourMode}>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <AppProvider>
+              <MessageSnackbars />
+              <RouterProvider router={router} />
+            </AppProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </ColourModeContext.Provider>
+    </React.StrictMode>
+  )
+}
+
+// Render the app in the browser
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider>
-        <AppProvider>
-          <MessageSnackbars />
-          <RouterProvider router={router} />
-        </AppProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
-  </React.StrictMode>
-)
+root.render(<App />)
 
 // enable the mock API only when run with `yarn mock`
 mirageSetup(import.meta.env.DEV && API_DEV_URL === '' ? MOCK_API : '')

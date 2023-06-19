@@ -3,12 +3,12 @@ import { useNavigate, useRouteError } from 'react-router-dom'
 
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
 import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { isUserLoggedIn } from '~/helpers/jwt'
-import { theme } from '~/styles/theme'
 
 /**
  * If `messageOverride` is specified then return this, otherwise extracts a string
@@ -65,6 +65,8 @@ interface ErrorProps {
  * If message is specified via `props.message`, then displays message rather than errors caught by `useRouteError`.
  */
 export const Error: React.FC<ErrorProps> = (props) => {
+  const theme = useTheme()
+
   const error = useRouteError()
   const navigate = useNavigate()
 

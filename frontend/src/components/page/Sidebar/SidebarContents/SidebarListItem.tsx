@@ -4,15 +4,9 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import { useTheme } from '@mui/material/styles'
 
 import { Tooltip } from '@component-lib/Tooltip'
-import { theme } from '~/styles/theme'
-
-// Style constants
-const iconMarginSides = 10
-const sidebarListItemBorderRadius = 8
-const selectedColor = theme.onSecondaryContainer
-const unselectedColor = theme.onSurfaceVariant
 
 interface SidebarListItemProps {
   children?: React.ReactNode
@@ -30,18 +24,26 @@ interface SidebarListItemProps {
  * Shows only icon if `props.open` is false, otherwise shows the icon and `props.label`
  */
 export const SidebarListItem: React.FC<SidebarListItemProps> = (props) => {
+  const theme = useTheme()
+
+  // Style constants
+  const iconMarginSides = 10
+  const sidebarListItemBorderRadius = 8
+  const selectedColor = theme.onSecondaryContainer
+  const unselectedColor = theme.onSurfaceVariant
+
   const [buttonDisabled, setButtonDisabled] = useState(props.selected)
 
   useEffect(() => setButtonDisabled(props.selected), [props.selected])
 
   const handleButtonClick = (): void => {
     if (typeof props.onClick !== 'undefined') {
-      setButtonDisabled(true)
-
       const clickReturn = props.onClick()
 
+      // Disable clicked button during asynchronous event handling
       if (typeof clickReturn !== 'undefined') {
-        // Disable clicked button during asynchronous event handling
+        setButtonDisabled(true)
+
         clickReturn
           .catch((err: Error) => {
             // For now if logout fails, then log the error to the console and allow users to retry

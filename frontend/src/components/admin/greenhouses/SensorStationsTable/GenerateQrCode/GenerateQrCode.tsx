@@ -6,12 +6,12 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import Link from '@mui/material/Link'
+import { useTheme } from '@mui/material/styles'
 
 import { DialogHeader } from '@component-lib/DialogHeader'
 import { Tooltip } from '@component-lib/Tooltip'
 import { PAGE_URL } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { QrDialogActions } from './QrDialogActions'
 
@@ -33,6 +33,8 @@ interface GenerateQrCodeProps {
  */
 export const GenerateQrCode: React.FC<GenerateQrCodeProps> = React.memo(
   (props): JSX.Element => {
+    const theme = useTheme()
+
     const [qrDialogOpen, setQrDialogOpen] = useState(false)
 
     const uploadUrl = `${window.location.origin}${PAGE_URL.photoUpload.href(

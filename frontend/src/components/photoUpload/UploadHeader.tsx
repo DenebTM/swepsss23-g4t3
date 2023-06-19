@@ -2,13 +2,13 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Link from '@mui/material/Link'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
 import { PlantIcon } from '@component-lib/icons/PlantIcon'
 import { PAGE_URL, SensorStationView } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 interface UploadHeaderProps {
   ssID: SensorStationUuid
@@ -18,6 +18,8 @@ interface UploadHeaderProps {
  * Header component for photo upload page
  */
 export const UploadHeader: React.FC<UploadHeaderProps> = (props) => {
+  const theme = useTheme()
+
   const navigate = useNavigate()
 
   return (
