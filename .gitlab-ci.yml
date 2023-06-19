@@ -82,10 +82,10 @@ sonarqube-check:
     - python3 -m ensurepip
     - pip3 install asyncio aiohttp bleak pyyaml coverage
     - cd raspberry
-    - python -m coverage run --source=. -m unittest discover tests || true
+    - python -m coverage run --source=. --omit='tests/*' -m unittest || true
     - mv .coverage ..
     - cd ..
-    - python -m coverage xml -o raspberry/coverage.xml --omit="raspberry/tests/*"
+    - python -m coverage xml -o raspberry/coverage.xml
 
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
