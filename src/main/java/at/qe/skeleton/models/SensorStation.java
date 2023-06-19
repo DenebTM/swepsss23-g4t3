@@ -140,7 +140,7 @@ public class SensorStation {
     }
 
     public Measurement getCurrentMeasurement() {
-        if (this.getMeasurements() == null || this.getMeasurements().size() == 0) {
+        if (this.getMeasurements() == null || this.getMeasurements().isEmpty()) {
             return null;
         }
         return this.getMeasurements().get(this.getMeasurements().size()-1);
