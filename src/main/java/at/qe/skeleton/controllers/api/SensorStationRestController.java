@@ -240,7 +240,8 @@ public class SensorStationRestController implements BaseRestController {
 
         if (json.containsKey(JSON_KEY_LOWERBOUND)) {
             try {
-                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), json.get(JSON_KEY_LOWERBOUND));
+                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), json.get(JSON_KEY_LOWERBOUND))
+                    .populateNulls(SensorStation.defaultLowerBound);
                 ss.setLowerBound(sensorValuesRepository.save(newLowerBound));
 
                 logger.info("Sensor thresholds (lower) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
@@ -250,7 +251,8 @@ public class SensorStationRestController implements BaseRestController {
         }
         if (json.containsKey(JSON_KEY_UPPERBOUND)) {
             try {
-                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), json.get(JSON_KEY_UPPERBOUND));
+                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), json.get(JSON_KEY_UPPERBOUND))
+                    .populateNulls(SensorStation.defaultUpperBound);
                 ss.setUpperBound(sensorValuesRepository.save(newUpperBound));
 
                 logger.info("Sensor thresholds (upper) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
