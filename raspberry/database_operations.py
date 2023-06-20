@@ -2,7 +2,7 @@ import time
 from db import db_conn
 import common
 import functools
-from logging_operations import log_local_and_remote
+import logging_operations
 
 current_time = int(time.time())
 five_min_ago = current_time - 300
@@ -14,7 +14,7 @@ def catch_db_error(default_val=None, cleanup_handler=lambda: None):
             try:
                 return func(*args, **kwargs)
             except Exception as e:
-                log_local_and_remote('DEBUG', f'{func.__name__} - {e.__class__.__name__}: {e}')
+                logging_operations.log_local_and_remote('DEBUG', f'{func.__name__} - {e.__class__.__name__}: {e}')
                 cleanup_handler()
                 return default_val
         return wrapper
