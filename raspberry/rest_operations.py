@@ -97,16 +97,16 @@ async def clear_warning_on_backend(sensorstation_id, session):
 async def get_thresholds_update_db(sensorstation_id, session):
     async with session.get('/api/sensor-stations/' + str(sensorstation_id)) as response:
         json_data = await response.json()
-        await database_operations.update_sensorstation(json_data)
+        database_operations.update_sensorstation(json_data)
         logging_operations.log_local_and_remote('DEBUG', f'Updated thresholds for sensorstation: {sensorstation_id}. Thresholds: {json_data}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
 
 @retry_connection_error(retries = 3, interval = 5)
 async def send_sensorvalues_to_backend(sensorstation_id, session):
-    averages_dict = await database_operations.get_sensor_data_averages(sensorstation_id)
+    averages_dict = database_operations.get_sensor_data_averages(sensorstation_id)
     if averages_dict:
         averages_dict['timestamp'] = datetime.utcnow().isoformat() + 'Z'
         async with session.post('/api/sensor-stations/' + str(sensorstation_id) + '/measurements', json=averages_dict) as response:
-            await database_operations.clear_sensor_data(sensorstation_id)
+            database_operations.clear_sensor_data(sensorstation_id)
             logging_operations.log_local_and_remote('DEBUG', f'Sent sensor values to web server for sensorstation: {sensorstation_id}. Values: {averages_dict}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
     else:
         logging_operations.log_local_and_remote('ERROR', f'Could not accumulate sensor values for sensorstation: {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))

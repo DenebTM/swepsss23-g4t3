@@ -1,14 +1,14 @@
 import common
 from bleak import BleakError
-from database_operations import get_sensorstation_thresholds, get_sensor_data_averages
+import database_operations
 from rest_operations import send_warning_to_backend, clear_warning_on_backend
 import asyncio
-from logging_operations import log_local, log_local_and_remote
+from logging_operations import log_local_and_remote
 
 async def check_values_for_thresholds(sensorstation_client, sensorstation_id, session):
     try:
-        thresholds_dict = await get_sensorstation_thresholds(sensorstation_id)
-        averages_dict = await get_sensor_data_averages(sensorstation_id)
+        thresholds_dict = database_operations.get_sensorstation_thresholds(sensorstation_id)
+        averages_dict = database_operations.get_sensor_data_averages(sensorstation_id)
 
         if thresholds_dict is None:
             raise ValueError('Received None value for thresholds.')

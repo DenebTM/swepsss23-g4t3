@@ -54,7 +54,7 @@ def get_sensor_data_averages(sensorstation_id):
     return averages_dict
 
 
-@catch_db_error()
+@catch_db_error(cleanup_handler=lambda: db_conn.rollback())
 def clear_sensor_data(sensorstation_id):
     db_conn.execute(
         '''DELETE FROM sensordata
