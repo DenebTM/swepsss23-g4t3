@@ -30,7 +30,7 @@ async def initialize_accesspoint(session):
             json_data = await response.json()
             auth_token = json_data['token'] 
             session.headers.add('Authorization', f'Bearer {auth_token}')
-            logging_operations.log_local_and_remote('INFO', f'Initialized access point for remote IP: {common.web_server_address}')
+            logging_operations.log_local_and_remote('INFO', f'Initialized access point for remote address: {common.web_server_address}')
     except aiohttp.ClientResponseError as e:
         if 'Authorization' in session.headers:
             session.headers.pop('Authorization')
