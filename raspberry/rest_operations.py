@@ -29,7 +29,7 @@ def retry_connection_error(retries=5, interval=3):
 async def initialize_accesspoint(session):
     data = {'name': common.access_point_name, 'serverAddress': common.web_server_address}
     try:
-        async with session.post(accesspoint_html, json=data) as response:
+        async with session.post('/api/access-points', json=data) as response:
             json_data = await response.json()
             auth_token = json_data['token'] 
             session.headers.add('Authorization', f'Bearer {auth_token}')
