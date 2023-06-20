@@ -18,10 +18,7 @@ async def search_for_sensorstations():
                     common.known_ss[ss_uuid] = d.address
                     common.save_known_ss()
             await scanner.stop()
-            if len(sensorstations) > 0:
-                log_local_and_remote('INFO', f'Sensorstations found are : {sensorstations}')
-            else:
-                log_local_and_remote('INFO', 'No sensorstations were found')       
+            log_local_and_remote('DEBUG', f'Scan found stations: {sensorstations}')
         return sensorstations   
     
     except BleakError as e:
