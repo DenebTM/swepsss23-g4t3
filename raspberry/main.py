@@ -45,10 +45,10 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
         transmission_interval = common.polling_interval
         async with BleakClient(sensorstation_mac) as client:
             await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, 'OK')
-            await database_operations.initialize_sensorstation(sensorstation_id)
+            database_operations.initialize_sensorstation(sensorstation_id)
             asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
             while not connection_request.done() and client.is_connected:
-                transmission_interval = await database_operations.get_sensorstation_aggregation_period(sensorstation_id)
+                transmission_interval = database_operations.get_sensorstation_aggregation_period(sensorstation_id)
                 await asyncio.sleep(transmission_interval)
                 await rest_operations.get_thresholds_update_db(sensorstation_id, session)
                 await check_values_for_thresholds(client, sensorstation_id, session)
@@ -65,8 +65,8 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
         cancel_ss_task(sensorstation_id)
 
     except asyncio.CancelledError as e:
-        await database_operations.clear_sensor_data(sensorstation_id)
-        await database_operations.delete_sensorstation(sensorstation_id)
+        database_operations.clear_sensor_data(sensorstation_id)
+        database_operations.delete_sensorstation(sensorstation_id)
         log_local_and_remote('DEBUG', f'Task {sensorstation_id} cancelled and cleaned up')
 
     except Exception as e:
