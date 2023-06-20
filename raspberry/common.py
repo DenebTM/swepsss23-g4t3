@@ -64,7 +64,7 @@ try:
         access_point_name = config['access_point_name']
         default_aggregation_period = config['default_transmission_interval']
 
-except:
+except FileNotFoundError:
     print('conf.yaml not found, proceeding with default configuration.')
     with open('conf.example.yaml', 'r') as f:
         config = yaml.safe_load(f)
