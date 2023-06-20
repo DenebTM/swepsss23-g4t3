@@ -22,7 +22,7 @@ root_logger.addHandler(console_handler)
 
 class BleakLogFilter(logging.Filter):
     def filter(self, rec):
-        return not 'bleak' in rec.name and not 'asyncio' in rec.name
+        return 'bleak' not in rec.name and 'asyncio' not in rec.name
 log_filter = BleakLogFilter()
 root_logger.addFilter(log_filter)
 file_handler.addFilter(log_filter)
