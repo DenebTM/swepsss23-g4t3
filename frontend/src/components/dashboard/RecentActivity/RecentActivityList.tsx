@@ -27,6 +27,9 @@ export const RecentActivityList: React.FC<RecentActivityListProps> = (
   const theme = useTheme()
 
   const logLevelToIcon: { [key in LogLevel]: React.ReactNode } = {
+    [LogLevel.DEBUG]: (
+      <InfoOutlinedIcon sx={{ color: theme.onTertiaryContainer }} />
+    ),
     [LogLevel.INFO]: (
       <InfoOutlinedIcon sx={{ color: theme.onTertiaryContainer }} />
     ),
@@ -38,6 +41,7 @@ export const RecentActivityList: React.FC<RecentActivityListProps> = (
     ),
   }
   const logLevelToIconBackground: { [key in LogLevel]: string } = {
+    [LogLevel.DEBUG]: theme.tertiaryContainer,
     [LogLevel.INFO]: theme.tertiaryContainer,
     [LogLevel.WARN]: theme.warnContainer,
     [LogLevel.ERROR]: theme.errorContainer,
