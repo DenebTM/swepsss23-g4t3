@@ -19,7 +19,7 @@ interface ConfirmAccessPointProps {
  * Memoised using `React.memo` as otherwise DataGrid causes unnecessary rerenders.
  */
 export const ConfirmAccessPoint: React.FC<ConfirmAccessPointProps> = React.memo(
-  (props): JSX.Element => {
+  (props): React.ReactElement => {
     const theme = useTheme()
 
     const addErrorSnackbar = useAddErrorSnackbar()

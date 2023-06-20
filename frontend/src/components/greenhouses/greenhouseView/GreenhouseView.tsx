@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
+import { Spinner } from '@component-lib/Spinner'
 import { PAGE_URL, SensorStationView } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
 import { SensorStationUuid } from '~/models/sensorStation'
@@ -34,26 +35,25 @@ export const GreenhouseView: React.FC = () => {
     setView(getViewFromSearchParams(search))
   }, [search])
 
-  // TODO qqjf add error handling if ssID or view are invalid
-  if (typeof ssID !== 'undefined' && typeof view !== 'undefined') {
-    return (
-      <PageWrapper
-        permittedRoles={PAGE_URL.greenhouseView.permittedRoles(view)}
-      >
-        <GreenhouseViewHeader view={view} ssID={ssID} />
-        {(() => {
-          switch (view) {
-            case SensorStationView.GALLERY:
-              return <GreenhouseGallery ssID={ssID} />
-            case SensorStationView.TABLE:
-              return <GreenhouseTabularView ssID={ssID} />
-            default:
-              return <GreenhouseGraphicalView ssID={ssID} />
-          }
-        })()}
-      </PageWrapper>
-    )
-  } else {
-    return null // TODO add loading state
-  }
+  return (
+    <PageWrapper permittedRoles={PAGE_URL.greenhouseView.permittedRoles(view)}>
+      {typeof ssID !== 'undefined' && typeof view !== 'undefined' ? (
+        <>
+          <GreenhouseViewHeader view={view} ssID={ssID} />
+          {(() => {
+            switch (view) {
+              case SensorStationView.GALLERY:
+                return <GreenhouseGallery ssID={ssID} />
+              case SensorStationView.TABLE:
+                return <GreenhouseTabularView ssID={ssID} />
+              default:
+                return <GreenhouseGraphicalView ssID={ssID} />
+            }
+          })()}
+        </>
+      ) : (
+        <Spinner center />
+      )}
+    </PageWrapper>
+  )
 }

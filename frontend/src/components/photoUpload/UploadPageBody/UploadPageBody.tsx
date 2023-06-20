@@ -28,7 +28,7 @@ export const UploadPageBody: React.FC<UploadPageBodyProps> = (props) => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(
     UploadStatus.READY
   )
-  /** STore whether at least one photo has already been uploaded by the user */
+  /** Store whether at least one photo has already been uploaded by the user */
   const [uploadCompleted, setUploadCompleted] = useState(false)
 
   useEffect(() => {

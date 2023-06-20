@@ -48,7 +48,11 @@ export const GreenhouseAirMetrics: React.FC<GreenhouseAirMetricsProps> = (
   if (sensorStation === null) {
     return <Spinner />
   } else if (measurement === null) {
-    return <div>qqjf TODO no measurement state</div>
+    return (
+      <Typography variant="bodyMedium" color="inherit" align="center">
+        No measurements to display
+      </Typography>
+    )
   } else {
     return (
       <Box minWidth={props.donutHeight} height={props.donutHeight}>

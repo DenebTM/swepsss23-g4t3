@@ -17,6 +17,7 @@ import {
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageTitle } from '~/components/page/PageTitle'
 import { PageWrapper } from '~/components/page/PageWrapper'
+import { useLoadSensorStations } from '~/hooks/appContext'
 
 import { AddSensorStationDialog } from '../AddSensorStationDialog/AddSensorStationDialog'
 import { AdminHomeButton, AdminHomeButtonProps } from './AdminHomeButton'
@@ -28,12 +29,14 @@ const iconFontSize: SvgIconTypeMap['props']['fontSize'] = 'large'
  */
 export const AdminHome: React.FC = () => {
   const navigate = useNavigate()
+  const loadSensorStations = useLoadSensorStations()
+
   const [addSsDialogOpen, setAddSsDialogOpen] = useState(false)
 
   /** Handle closing the dialog to add a sensor station */
   const handleCloseSsDialog = () => {
     setAddSsDialogOpen(false)
-    // qqjf TODO trigger reload
+    loadSensorStations() // Reload sensor stations
   }
 
   const adminHomeLinks: AdminHomeButtonProps[] = [

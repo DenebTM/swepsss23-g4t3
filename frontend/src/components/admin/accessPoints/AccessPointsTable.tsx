@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
 import { alpha, useTheme } from '@mui/material/styles'
-import { gridClasses } from '@mui/x-data-grid'
 import {
+  gridClasses,
   GridColDef,
   GridRenderCellParams,
   GridValueGetterParams,
