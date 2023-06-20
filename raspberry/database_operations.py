@@ -137,7 +137,7 @@ def initialize_sensorstation(sensorstation_id):
 def delete_sensorstation(sensorstation_id):
     db_conn.execute(
         '''DELETE FROM sensorstations
-        WHERE id = ?''',
+        WHERE ssID = ?''',
         (sensorstation_id,)
     )
     db_conn.commit()
