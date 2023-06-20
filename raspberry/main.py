@@ -70,7 +70,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     except asyncio.CancelledError as e:
         await database_operations.clear_sensor_data(sensorstation_id)
         await database_operations.delete_sensorstation(sensorstation_id)
-        log_local('INFO', f'Task {sensorstation_id} cancelled and cleaned up')
+        log_local_and_remote('DEBUG', f'Task {sensorstation_id} cancelled and cleaned up')
 
     except Exception as e:
         log_local_and_remote('ERROR', f'Unexpected error occured in sensor station task {sensorstation_id}: {e}')
