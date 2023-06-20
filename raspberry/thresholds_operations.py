@@ -41,7 +41,6 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
         log_local_and_remote('DEBUG', f'Set warning for {sensor} on station {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
         
         # clear warning if characteristic value was updated to 0
-        # TODO Refactor (i think this currently sets up another handler every single time a warning is set)
         await sensorstation_client.start_notify(
             common.warning_active_uuid,
             lambda _, data: 

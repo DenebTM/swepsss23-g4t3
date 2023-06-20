@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import MagicMock, patch
 import time
 
-#TODO: implement logging testing
 from database_operations import save_sensor_values_to_database, get_sensor_data_averages, get_sensorstation_thresholds, update_sensorstation, get_sensorstation_aggregation_period
 
 SENSORSTATION_ID = 1
