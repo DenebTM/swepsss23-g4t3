@@ -20,6 +20,15 @@ console_handler.setLevel(logging.INFO)
 console_handler.setFormatter(log_formatter)
 root_logger.addHandler(console_handler)
 
+class BleakLogFilter(logging.Filter):
+    def filter(self, rec):
+        return not 'bleak' in rec.name and not 'asyncio' in rec.name
+log_filter = BleakLogFilter()
+root_logger.addFilter(log_filter)
+file_handler.addFilter(log_filter)
+console_handler.addFilter(log_filter)
+
+
 log_data = []
 
 def log_local(level, message):
