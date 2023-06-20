@@ -21,6 +21,7 @@ import { LogLevelSelect } from './LogLevelSelect'
 
 /** Map values from {@link LogLevel} to {@link StatusVariant} for display in {@link StatusCell} */
 const logLevelToStatusVariant: { [key in LogLevel]: StatusVariant } = {
+  [LogLevel.DEBUG]: StatusVariant.OK,
   [LogLevel.INFO]: StatusVariant.INFO,
   [LogLevel.WARN]: StatusVariant.WARNING,
   [LogLevel.ERROR]: StatusVariant.ERROR,
@@ -38,7 +39,11 @@ export const AdminLogsTable: React.FC = () => {
   const [from, setFrom] = useState<DateValue>(dayjs().subtract(1, 'week'))
   const [to, setTo] = useState<DateValue>(dayjs())
   const [logEntries, setLogEntries] = useState<LogEntry[]>()
-  const [level, setLevel] = useState<LogLevel[]>([])
+  const [level, setLevel] = useState<LogLevel[]>([
+    LogLevel.INFO,
+    LogLevel.WARN,
+    LogLevel.ERROR,
+  ])
 
   /** Columns for the logs table */
   const columns: GridColDef<LogEntry, any, LogEntry>[] = [
