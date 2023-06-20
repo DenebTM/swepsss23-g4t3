@@ -25,8 +25,10 @@ async def sensor_station_manager(connection_request, session):
         for ss_id in common.known_ss:
             if ss_id in assigned_ss:
                 if ss_id in ss_tasks and ss_tasks[ss_id].done():
+                    log_local_and_remote('DEBUG', f'sensor_station_manager - Restarting task for {ss_id}')
                     del ss_tasks[ss_id]
                 if not ss_id in ss_tasks:
+                    log_local_and_remote('INFO', f'sensor_station_manager - Starting task for sensor station {ss_id}')
                     ss_status = assigned_ss[ss_id]
                     task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id,
                                                                    first_time=(ss_status == 'PAIRING')))
@@ -34,7 +36,8 @@ async def sensor_station_manager(connection_request, session):
             
             # cancel tasks for sensor stations not assigned to this AP, if present
             else:
-                cancel_ss_task(ss_id)
+                if cancel_ss_task(ss_id):
+                    log_local_and_remote('INFO', f'sensor_station_manager - Stopped task for sensor station {ss_id}')
 
         log_local_and_remote('DEBUG', 'Finished SS Manager Loop')
         await asyncio.sleep(10)
@@ -44,6 +47,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     try:
         transmission_interval = common.polling_interval
         async with BleakClient(sensorstation_mac) as client:
+            log_local_and_remote('INFO', f'Connected to sensor station {sensorstation_id}')
             await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, 'OK')
             database_operations.initialize_sensorstation(sensorstation_id)
             asyncio.create_task(read_sensorvalues(client, sensorstation_id, connection_request))
@@ -59,7 +63,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
         if error_status == 'PAIRING_FAILED':
             log_local_and_remote('ERROR', f'Failed to pair with sensor station {sensorstation_id}', 'SENSOR_STATION', sensorstation_id)
         else:
-            log_local_and_remote('DEBUG', f'Could not find sensor station {sensorstation_id}', 'SENSOR_STATION', sensorstation_id)
+            log_local_and_remote('WARN', f'Could not find sensor station {sensorstation_id}', 'SENSOR_STATION', sensorstation_id)
 
         await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
         cancel_ss_task(sensorstation_id)
@@ -67,7 +71,7 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
     except asyncio.CancelledError as e:
         database_operations.clear_sensor_data(sensorstation_id)
         database_operations.delete_sensorstation(sensorstation_id)
-        log_local_and_remote('DEBUG', f'Task {sensorstation_id} cancelled and cleaned up')
+        log_local_and_remote('DEBUG', f'sensor_station_task ({sensorstation_id}) - Cancelled and cleaned up')
 
     except Exception as e:
         log_local_and_remote('ERROR', f'sensor_station_task ({sensorstation_id}) - Unexpected {e.__class__.__name__}: {e}')
@@ -78,16 +82,26 @@ def cancel_ss_task(sensorstation_id):
         try:
             ss_tasks[sensorstation_id].cancel()
             del ss_tasks[sensorstation_id]
+            return True
         except:
             log_local_and_remote('DEBUG', f'Failed to cancel task for station {sensorstation_id}')
+    
+    return False
 
 
+status = None
 async def polling_loop(connection_request, session):
+    global status
     asyncio.create_task(log_sending_loop(session, connection_request))
     while not connection_request.done():
         new_status = await rest_operations.get_ap_status(session)
-        if new_status is not None:
+        if new_status is not None and new_status != status:
+            if new_status == 'SEARCHING':
+                log_local_and_remote('INFO', 'Started search for sensor stations')
+            if status == 'SEARCHING':
+                log_local_and_remote('INFO', 'Stopped search for sensor stations')
             status = new_status
+
         log_local_and_remote('DEBUG', f'polling_loop - Current AP status is {status}')
         if status == 'OFFLINE':
             connection_request.set_result('Done')
