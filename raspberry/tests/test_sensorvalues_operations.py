@@ -24,12 +24,3 @@ class TestReadSensorValue(unittest.IsolatedAsyncioTestCase):
 
         # assert that saveSensorValuesToDatabase was called once with the expected arguments
         save_sensor_values_to_database.assert_called_once_with(STATION_ID, 10, 10, 10, 10, 10, 10)
-
-#TODO: implement test for logging when something is down
-    # @patch('read_sensorvalues.BleakClient')
-    # async def test_log_on_error(self, BleakClient):
-
-    #     # call function with mock client
-    #     BleakClient().__aenter__.return_value.read_gatt_char.side_effect=BleakError
-
-    #     await read_sensorvalues(BleakClient)
