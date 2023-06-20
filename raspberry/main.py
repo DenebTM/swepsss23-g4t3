@@ -34,14 +34,9 @@ async def sensor_station_manager(connection_request, session):
             
             # cancel tasks for sensor stations not assigned to this AP, if present
             else:
-                if ss_id in ss_tasks:
-                    try:
-                        ss_tasks[ss_id].cancel()
-                        del ss_tasks[ss_id]
-                    except:
-                        print(f'error canceling task for', ss_id)
+                cancel_ss_task(ss_id)
 
-        print('Finished SS Manager Loop')
+        log_local_and_remote('DEBUG', 'Finished SS Manager Loop')
         await asyncio.sleep(10)
 
 async def sensor_station_task(connection_request, session, sensorstation_id, first_time):
@@ -60,12 +55,14 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 await rest_operations.send_sensorvalues_to_backend(sensorstation_id, session)
 
     except BleakError as e:
-        print('Could not connect to sensorstation') 
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
         if error_status == 'PAIRING_FAILED':
             log_local_and_remote('ERROR', f'Failed to pair with sensor station {sensorstation_id}', 'SENSOR_STATION', sensorstation_id)
+        else:
+            log_local_and_remote('DEBUG', f'Could not find sensor station {sensorstation_id}', 'SENSOR_STATION', sensorstation_id)
+
         await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
-        await cancel_ss_task(sensorstation_id)
+        cancel_ss_task(sensorstation_id)
 
     except asyncio.CancelledError as e:
         await database_operations.clear_sensor_data(sensorstation_id)
@@ -73,22 +70,25 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
         log_local_and_remote('DEBUG', f'Task {sensorstation_id} cancelled and cleaned up')
 
     except Exception as e:
-        log_local_and_remote('ERROR', f'Unexpected error occured in sensor station task {sensorstation_id}: {e}')
+        log_local_and_remote('ERROR', f'sensor_station_task ({sensorstation_id}) - Unexpected {e.__class__.__name__}: {e}')
 
-async def cancel_ss_task(sensorstation_id):
+def cancel_ss_task(sensorstation_id):
     global ss_tasks
-    ss_tasks[sensorstation_id].cancel()
-    del ss_tasks[sensorstation_id]
+    if sensorstation_id in ss_tasks:
+        try:
+            ss_tasks[sensorstation_id].cancel()
+            del ss_tasks[sensorstation_id]
+        except:
+            log_local_and_remote('DEBUG', f'Failed to cancel task for station {sensorstation_id}')
 
 
 async def polling_loop(connection_request, session):
     asyncio.create_task(log_sending_loop(session, connection_request))
     while not connection_request.done():
-        print('Inside AP Loop')
         new_status = await rest_operations.get_ap_status(session)
         if new_status is not None:
             status = new_status
-        print('this is inside the ap loop and the status is ' + status)
+        log_local_and_remote('DEBUG', f'polling_loop - Current AP status is {status}')
         if status == 'OFFLINE':
             connection_request.set_result('Done')
         elif status == 'SEARCHING':
