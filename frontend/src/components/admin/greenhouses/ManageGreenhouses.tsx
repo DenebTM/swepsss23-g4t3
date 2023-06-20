@@ -11,6 +11,7 @@ import {
 } from '~/common'
 import { PageHeader } from '~/components/page/PageHeader'
 import { PageWrapper } from '~/components/page/PageWrapper'
+import { useLoadSensorStations } from '~/hooks/appContext'
 
 import { AddSensorStationDialog } from '../AddSensorStationDialog/AddSensorStationDialog'
 import { AdminBreadcrumbs } from '../AdminBreadcrumbs'
@@ -20,12 +21,13 @@ import { SensorStationsTable } from './SensorStationsTable/SensorStationsTable'
  * Sensor station management page for admins
  */
 export const ManageGreenhouses: React.FC = () => {
+  const loadSensorStations = useLoadSensorStations()
   const [addSsDialogOpen, setAddSsDialogOpen] = useState(false)
 
   /** Handle closing the dialog to add a sensor station */
   const handleCloseSsDialog = () => {
     setAddSsDialogOpen(false)
-    // qqjf TODO trigger reload
+    loadSensorStations() // Reload sensor stations
   }
 
   return (

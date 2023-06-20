@@ -19,7 +19,7 @@ interface ConfirmPairingButtonProps {
  */
 export const ConfirmPairingButton: React.FC<ConfirmPairingButtonProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const theme = useTheme()
 
   const addSnackbarMessage = useAddSnackbarMessage()

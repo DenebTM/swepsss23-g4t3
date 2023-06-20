@@ -1,7 +1,11 @@
 import CryptoJS from 'crypto-js'
 
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import YardIcon from '@mui/icons-material/Yard'
+import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 
+import GalleryIcon from '@component-lib/icons/GalleryIcon'
 import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
@@ -329,3 +333,43 @@ export const ADD_GREENHOUSE_DESCRIPTION = 'Connect a new greenhouse'
 /** Subtitle text for dialog to pair with a new sensor station */
 export const ADD_GREENHOUSE_DIALOG_SUBTITLE =
   'Pair with a new sensor station via BLE to start monitoring your plants'
+
+/** Constants for greenhouse view names, icons, and URLs. */
+export const GREENHOUSE_VIEWS: {
+  title: string
+  key: SensorStationView
+  Icon: React.FC<SvgIconTypeMap['props']>
+  url: (sensorStationUuid: SensorStationUuid) => string
+  loggedInOnly: boolean
+}[] = [
+  {
+    title: 'Overview',
+    key: SensorStationView.GRAPHICAL,
+    Icon: DashboardIcon,
+    url: (sensorStationUuid: SensorStationUuid) =>
+      PAGE_URL.greenhouseView.href(
+        sensorStationUuid,
+        SensorStationView.GRAPHICAL
+      ),
+    loggedInOnly: true,
+  },
+  {
+    title: 'Gallery',
+    key: SensorStationView.GALLERY,
+    Icon: GalleryIcon,
+    url: (sensorStationUuid: SensorStationUuid) =>
+      PAGE_URL.greenhouseView.href(
+        sensorStationUuid,
+        SensorStationView.GALLERY
+      ),
+    loggedInOnly: false,
+  },
+  {
+    title: 'Table',
+    key: SensorStationView.TABLE,
+    Icon: StorageOutlinedIcon,
+    url: (sensorStationUuid: SensorStationUuid) =>
+      PAGE_URL.greenhouseView.href(sensorStationUuid, SensorStationView.TABLE),
+    loggedInOnly: true,
+  },
+]

@@ -31,7 +31,7 @@ interface StatusCellProps<R extends GridValidRowModel, T = number> {
  */
 export const StatusCell = <R extends GridValidRowModel, T = string>(
   props: StatusCellProps<R, T>
-): JSX.Element => {
+): React.ReactElement => {
   const theme = useTheme()
 
   const statusDotColours: { [key in StatusVariant]: string } = {

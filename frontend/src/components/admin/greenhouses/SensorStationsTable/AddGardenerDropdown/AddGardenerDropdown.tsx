@@ -31,7 +31,7 @@ interface AddGardenerDropdownProps {
  * Memoised using `React.memo` as otherwise DataGrid causes unnecessary rerenders.
  */
 export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
-  React.memo((props): JSX.Element => {
+  React.memo((props): React.ReactElement => {
     const theme = useTheme()
 
     const addErrorSnackbar = useAddErrorSnackbar()

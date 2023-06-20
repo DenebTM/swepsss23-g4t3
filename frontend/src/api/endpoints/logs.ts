@@ -1,7 +1,6 @@
 import { Server } from 'miragejs'
 import { _get } from '~/api/intercepts'
-import { LogEntry, LogLevel } from '~/models/log'
-import { EntityType } from '~/models/log'
+import { EntityType, LogEntry, LogLevel } from '~/models/log'
 import { Timestamp } from '~/models/timestamp'
 
 import { AppSchema, EndpointReg } from '../mirageTypes'
@@ -28,13 +27,12 @@ export const getLogs = async (
     paramsSerializer: { indexes: null }, // pass level as "level" instead of "level[]"
   })
 
-/** Mocked log functions */
+/** Mocked log functions. Note that filtering is not implemented. */
 export const mockedLogReqs: EndpointReg = (server: Server) => {
   /** Mock {@link getLogs} */
   server.get(API_URI.logs, (schema: AppSchema, request) => {
     const logs = schema.all('logEntry')
 
-    // qqjf TODO add filtering
     return success(logs.models)
   })
 }

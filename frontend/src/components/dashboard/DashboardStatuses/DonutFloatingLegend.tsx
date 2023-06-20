@@ -63,7 +63,7 @@ export const DonutFloatingLegend: React.FC<DonutFloatingLegendProps> = (
         </Typography>
         {props.data.entities.map((entityName, index) => (
           <Typography
-            key={`entity=${index}`}
+            key={`${entityName}-entity-${index}`}
             color={props.data.legendText}
             variant="bodyMedium"
             align="center"

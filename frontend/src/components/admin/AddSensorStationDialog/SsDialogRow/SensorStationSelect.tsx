@@ -25,7 +25,7 @@ interface SensorStationSelectProps {
  */
 export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const theme = useTheme()
 
   const sensorStations = useSensorStations()
@@ -50,14 +50,13 @@ export const SensorStationSelect: React.FC<SensorStationSelectProps> = (
   }, [sensorStations])
 
   const handleChange = (event: SelectChangeEvent<number>) => {
-    const selectedSsId = Number(event.target.value) as SensorStationUuid
+    const selectedSsId: SensorStationUuid = Number(event.target.value)
     props.setSensorStationId(selectedSsId)
   }
 
   if (sensorStations === null) {
-    return <Spinner />
+    return <Spinner center />
   } else {
-    // qqjf TODO handle no sensor stations available
     return (
       <Tooltip
         arrow

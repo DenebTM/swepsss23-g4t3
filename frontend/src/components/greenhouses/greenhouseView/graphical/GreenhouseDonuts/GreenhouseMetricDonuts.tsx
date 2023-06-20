@@ -5,6 +5,7 @@ import ThermostatIcon from '@mui/icons-material/Thermostat'
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined'
 import { useTheme } from '@mui/material/styles'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
+import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
@@ -118,7 +119,14 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
             </Grid>
           </Grid>
         ) : (
-          <div>TODO qqjf no measurements case</div>
+          <Typography
+            variant="bodyMedium"
+            color="inherit"
+            align="center"
+            display="block"
+          >
+            No measurements to display
+          </Typography>
         )}
       </Box>
     )
