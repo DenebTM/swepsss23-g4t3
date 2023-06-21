@@ -214,8 +214,12 @@ export const onEnterKeypress =
   (event: React.KeyboardEvent) =>
     event.key === 'Enter' && callback()
 
-/** Rounding function for metric values. */
-export const roundMetric = (n: number) => n.toFixed(1)
+/**
+ * Rounding function for metric values.
+ * Returns 0 if a measurement value is `null`.
+ */
+export const roundMetric = (n: number | null): string =>
+  n === null ? 'null' : n.toFixed(1)
 
 /**
  * Type for a singe greenhouse metric range.
