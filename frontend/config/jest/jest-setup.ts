@@ -82,6 +82,7 @@ vi.mock('@mui/material/styles', async () => ({
  * Mock the user being logged as an admin for tests
  */
 vi.mock('~/hooks/user', () => ({
+  useIsAdmin: vi.fn().mockImplementation(() => true),
   useUserRole: vi.fn().mockImplementation(() => AuthUserRole.ADMIN),
   useUsername: vi.fn().mockImplementation(() => testUsername),
 }))
