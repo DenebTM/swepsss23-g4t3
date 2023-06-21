@@ -117,15 +117,16 @@ export const GreenhouseAccordionContents: React.FC<
                 <EditableTableRow<ValueRange>
                   key={row.valueKey}
                   ariaLabel={ariaLabel}
-                  editableCell={(
-                    editableCellProps: EditableCellProps<ValueRange>
-                  ) => (
-                    <GreenhouseEditableRangeCell
-                      labelledBy={ariaLabel}
-                      sensorStation={props.sensorStation}
-                      {...row}
-                      {...editableCellProps}
-                    />
+                  editableCell={React.useCallback(
+                    (editableCellProps: EditableCellProps<ValueRange>) => (
+                      <GreenhouseEditableRangeCell
+                        labelledBy={ariaLabel}
+                        sensorStation={props.sensorStation}
+                        {...row}
+                        {...editableCellProps}
+                      />
+                    ),
+                    [row.valueKey, props.sensorStation]
                   )}
                   editing={editing === row.valueKey}
                   saveRow={(v: ValueRange) => saveRow(v, row)}
@@ -146,13 +147,16 @@ export const GreenhouseAccordionContents: React.FC<
           )}
           <EditableTableRow<number>
             ariaLabel={aggregationPeriodAriaLabel}
-            editableCell={(editableCellProps: EditableCellProps<number>) => (
-              <AggregationPeriodEditableCell
-                labelledBy={aggregationPeriodAriaLabel}
-                minAggregationPeriod={minAggregationPeriod}
-                sensorStation={props.sensorStation}
-                {...editableCellProps}
-              />
+            editableCell={React.useCallback(
+              (editableCellProps: EditableCellProps<number>) => (
+                <AggregationPeriodEditableCell
+                  labelledBy={aggregationPeriodAriaLabel}
+                  minAggregationPeriod={minAggregationPeriod}
+                  sensorStation={props.sensorStation}
+                  {...editableCellProps}
+                />
+              ),
+              [props.sensorStation]
             )}
             editing={editing === AGGREGATION_PERIOD}
             saveRow={(newValue: number) =>
