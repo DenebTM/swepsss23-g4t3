@@ -8,6 +8,8 @@ import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import Stack from '@mui/system/Stack'
 
 import { GreenhouseIcon, PAGE_URL } from '~/common'
+import { useUserRole } from '~/hooks/user'
+import { GuestRole } from '~/models/user'
 
 import {
   GettingStartedBody,
@@ -36,6 +38,10 @@ export const GettingStartedPageContents: React.FC = () => {
 
   const navigate = useNavigate()
 
+  const isLoggedIn = useUserRole() !== GuestRole.GUEST
+  const navigateLoggedIn = (href: string) =>
+    navigate(isLoggedIn ? href : PAGE_URL.login.href)
+
   return (
     <Stack spacing={2} sx={{ padding: theme.spacing(2, 0) }}>
       <GettingStartedSection subheading="Connecting an Access Point">
@@ -53,7 +59,7 @@ export const GettingStartedPageContents: React.FC = () => {
             Run 'python3 main.py'. The Access Point will automatically register
             itself with the web server and be displayed on the{' '}
             <Link
-              onClick={() => navigate(PAGE_URL.manageAccessPoints.href)}
+              onClick={() => navigateLoggedIn(PAGE_URL.manageAccessPoints.href)}
               {...linkProps}
             >
               {PAGE_URL.manageAccessPoints.pageTitle}
@@ -79,7 +85,7 @@ export const GettingStartedPageContents: React.FC = () => {
           <GettingStartedLi>
             Navigate to{' '}
             <Link
-              onClick={() => navigate(PAGE_URL.manageAccessPoints.href)}
+              onClick={() => navigateLoggedIn(PAGE_URL.manageAccessPoints.href)}
               {...linkProps}
             >
               {PAGE_URL.manageAccessPoints.pageTitle}
@@ -110,7 +116,7 @@ export const GettingStartedPageContents: React.FC = () => {
         <GettingStartedBody gutterBottom>
           Go to{' '}
           <Link
-            onClick={() => navigate(PAGE_URL.myGreenhouses.href)}
+            onClick={() => navigateLoggedIn(PAGE_URL.myGreenhouses.href)}
             {...linkProps}
           >
             {PAGE_URL.myGreenhouses.pageTitle}
@@ -141,7 +147,7 @@ export const GettingStartedPageContents: React.FC = () => {
           <GettingStartedLi>
             Ensure that the sensor values are within the thresholds set on{' '}
             <Link
-              onClick={() => navigate(PAGE_URL.myGreenhouses.href)}
+              onClick={() => navigateLoggedIn(PAGE_URL.myGreenhouses.href)}
               {...linkProps}
             >
               {PAGE_URL.myGreenhouses.pageTitle}
