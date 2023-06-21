@@ -2,15 +2,19 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import CheckIcon from '@mui/icons-material/Check'
-import Card from '@mui/material/Card'
 import Link, { LinkProps } from '@mui/material/Link'
-import List from '@mui/material/List'
 import { useTheme } from '@mui/material/styles'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
-import Typography from '@mui/material/Typography'
 import Stack from '@mui/system/Stack'
 
 import { GreenhouseIcon, PAGE_URL } from '~/common'
+
+import {
+  GettingStartedBody,
+  GettingStartedLi,
+  GettingStartedOl,
+  GettingStartedSection,
+} from './GettingStartedPageComponents'
 
 /** Props for icons in the GettingStarted page */
 const iconProps: Partial<SvgIconTypeMap['props']> = {
@@ -31,68 +35,6 @@ export const GettingStartedPageContents: React.FC = () => {
   const theme = useTheme()
 
   const navigate = useNavigate()
-
-  /** Reusable component for body text inside getting started page */
-  const GettingStartedBody = (props: {
-    children: React.ReactNode
-    gutterBottom?: boolean
-  }) => (
-    <Typography
-      component="p"
-      variant="bodyMedium"
-      color="onSurface"
-      gutterBottom={props.gutterBottom}
-    >
-      {props.children}
-    </Typography>
-  )
-
-  /** Reusable component for each subsection of the getting started page */
-  const GettingStartedSection = (props: {
-    children: React.ReactNode
-    subheading: string
-  }) => (
-    <Card sx={{ padding: theme.spacing(3) }}>
-      <Typography
-        component="h6"
-        variant="titleLarge"
-        color="onSurfaceVariant"
-        gutterBottom
-      >
-        {props.subheading}
-      </Typography>
-      {props.children}
-    </Card>
-  )
-
-  /** Reusable component for ordered lists inside getting started page */
-  const GettingStartedOl = (props: { children: React.ReactNode }) => (
-    <List
-      component="ol"
-      sx={{
-        lineHeight: 'initial',
-        '> li': {
-          listStyle: 'auto inside',
-          color: theme.onSurface,
-        },
-      }}
-    >
-      {props.children}
-    </List>
-  )
-
-  /** Reusable component for list elements inside getting started page */
-  const GettingStartedLi = (props: { children: React.ReactNode }) => (
-    <li style={{ paddingBottom: 6 }}>
-      <Typography
-        color="onSurface"
-        variant="labelLarge"
-        sx={{ listStyle: 'auto inside' }}
-      >
-        {props.children}
-      </Typography>
-    </li>
-  )
 
   return (
     <Stack spacing={2} sx={{ padding: theme.spacing(2, 0) }}>
