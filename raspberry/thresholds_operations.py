@@ -1,17 +1,19 @@
 import common
 from bleak import BleakError
-from database_operations import get_sensorstation_thresholds, get_sensor_data_averages
+import database_operations
 from rest_operations import send_warning_to_backend, clear_warning_on_backend
 import asyncio
-from logging_operations import log_local, log_local_and_remote
+from logging_operations import log_local_and_remote
 
 async def check_values_for_thresholds(sensorstation_client, sensorstation_id, session):
     try:
-        thresholds_dict = await get_sensorstation_thresholds(sensorstation_id)
-        averages_dict = await get_sensor_data_averages(sensorstation_id)
+        thresholds_dict = database_operations.get_sensorstation_thresholds(sensorstation_id)
+        averages_dict = database_operations.get_sensor_data_averages(sensorstation_id)
 
-        if thresholds_dict is None or averages_dict is None:
-            raise ValueError('Received None value for thresholds or averages.')
+        if thresholds_dict is None:
+            raise ValueError('Received None value for thresholds.')
+        if averages_dict is None:
+            raise ValueError('Received None value for averages.')
 
         for sensor, average_value in averages_dict.items():
             max_threshold = thresholds_dict.get(sensor+'_max')
@@ -36,13 +38,16 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
     try:
         sensor_uuid = common.failure_uuids[sensor]
         await sensorstation_client.write_gatt_char(sensor_uuid, errorCodeByteArray)
-        log_local_and_remote('INFO', f'Activated error signal on sensorstation: {sensorstation_id}, for sensor {sensor}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        log_local_and_remote('DEBUG', f'Set warning for {sensor} on station {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        
+        # clear warning if characteristic value was updated to 0
         await sensorstation_client.start_notify(
             common.warning_active_uuid,
-            lambda char, data: asyncio.create_task(
-                clear_warning_on_backend(sensorstation_id, session, data)
-            )
+            lambda _, data: 
+                asyncio.create_task(clear_warning_on_backend(sensorstation_id, session))
+                    if int.from_bytes(data, 'little', signed=False) == 0
+                    else False
         )
     except BleakError as e:
-        log_local_and_remote('ERROR', f'Could not write to gatt characteristic for sensorstation {sensorstation_id}. Error: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        log_local_and_remote('ERROR', f'Failed to set warning for {sensor} on station {sensorstation_id}: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
            
