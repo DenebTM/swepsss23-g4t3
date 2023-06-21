@@ -27,7 +27,7 @@ async def sensor_station_manager(connection_request, session):
                 if ss_id in ss_tasks and ss_tasks[ss_id].done():
                     log_local_and_remote('DEBUG', f'sensor_station_manager - Restarting task for {ss_id}')
                     del ss_tasks[ss_id]
-                if not ss_id in ss_tasks:
+                if ss_id not in ss_tasks:
                     log_local_and_remote('INFO', f'sensor_station_manager - Starting task for sensor station {ss_id}')
                     ss_status = assigned_ss[ss_id]
                     task = asyncio.create_task(sensor_station_task(connection_request, session, ss_id,
@@ -83,7 +83,7 @@ def cancel_ss_task(sensorstation_id):
             ss_tasks[sensorstation_id].cancel()
             del ss_tasks[sensorstation_id]
             return True
-        except:
+        except Exception:
             log_local_and_remote('DEBUG', f'Failed to cancel task for station {sensorstation_id}')
     
     return False
