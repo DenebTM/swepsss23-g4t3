@@ -32,7 +32,7 @@ public class SensorStation {
     @JsonIgnoreProperties("id")
     private SensorValues upperBound;
 
-    public static SensorValues defaultUpperBound = new SensorValues(null,
+    public static final SensorValues defaultUpperBound = new SensorValues(null,
         100.,
         1300.,
         65.,
@@ -46,7 +46,7 @@ public class SensorStation {
     @JsonIgnoreProperties("id")
     private SensorValues lowerBound;
 
-    public static SensorValues defaultLowerBound = new SensorValues(null,
+    public static final SensorValues defaultLowerBound = new SensorValues(null,
         0.,
         700.,
         0.,
