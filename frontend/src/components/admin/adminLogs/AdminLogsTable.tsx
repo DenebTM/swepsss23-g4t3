@@ -58,7 +58,6 @@ export const AdminLogsTable: React.FC = () => {
           USER: `User '${params.row.origin?.id}'`,
           NULL: '-',
         }[params.row.origin?.type ?? 'NULL']),
-      filterable: false,
     },
     {
       ...centerCell,
