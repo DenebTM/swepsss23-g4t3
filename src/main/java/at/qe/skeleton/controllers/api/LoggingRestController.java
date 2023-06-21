@@ -45,8 +45,14 @@ public class LoggingRestController implements BaseRestController {
      * GET route to filter logs according to a time interval, the logging level or not at all.
      * A JSON is requested that can contain the parameters "from", "to", and "level".
      * If all of these parameters are set to null, all logs are returned ordered by their timestamp.
-     * @param json
-     * @return
+     *
+     * @param from Earliest date to include (UTC timestamp)
+     * @param to Last date to include (UTC timestamp)
+     * @param levels {@link LogLevel}s to include (INFO, WARNING, DEBUG)
+     * @param originType
+     *      {@link LogEntityType} for log entries with a specific origin,
+     *      "any" for all but Spring-internal log entries,
+     *      do not specify (null) for all log entries
      */
     @PreAuthorize("hasAnyAuthority('ADMIN', 'GARDENER', 'USER')")
     @GetMapping("/logs")
@@ -93,6 +99,13 @@ public class LoggingRestController implements BaseRestController {
         );
     }
 
+    /**
+     * POST route for an access point to add its log entries to the backend database.
+     *
+     * @param name Access point sending logs
+     * @param logs Log entries in intermediary {@link LoggingEventJson} format
+     * @return
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(AccessPointRestController.AP_NAME_PATH + "/logs")
     public ResponseEntity<List<LoggingEventJson>> sendLogs(
@@ -117,7 +130,7 @@ public class LoggingRestController implements BaseRestController {
 
             List<LoggingEventProperty> logProps = new ArrayList<>();
 
-            // associate the log entry with the send access point
+            // associate the log entry with the sending access point
             var apLogProp = new LoggingEventProperty(
                 savedLog.getEventId(),
                 LogEntityType.ACCESS_POINT.name(),
@@ -125,6 +138,8 @@ public class LoggingRestController implements BaseRestController {
             );
             logProps.add(propertyRepository.save(apLogProp));
 
+            // additionally associate the log entry with a sensor station, if set
+            // (could also be another access point or user, but in practice it never is)
             if (log.getOrigin() != null) {
                 var remoteLogProp = new LoggingEventProperty(
                     savedLog.getEventId(),
