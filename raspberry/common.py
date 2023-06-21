@@ -65,7 +65,7 @@ try:
         default_aggregation_period = config['default_transmission_interval']
 
 except:
-    print('Caught Exception. Probably conf.yaml doesnt exist yet. Program will start with dev-config')
+    print('conf.yaml not found, proceeding with default configuration.')
     with open('conf.example.yaml', 'r') as f:
         config = yaml.safe_load(f)
         web_server_address = config['web_server_address']
