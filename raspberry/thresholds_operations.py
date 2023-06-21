@@ -33,11 +33,11 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
         
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
-    errorCode = 1
-    errorCodeByteArray = errorCode.to_bytes(1, byteorder='little')
+    error_code = 1
+    error_code_byte_array = error_code.to_bytes(1, byteorder='little')
     try:
         sensor_uuid = common.failure_uuids[sensor]
-        await sensorstation_client.write_gatt_char(sensor_uuid, errorCodeByteArray)
+        await sensorstation_client.write_gatt_char(sensor_uuid, error_code_byte_array)
         log_local_and_remote('DEBUG', f'Set warning for {sensor} on station {sensorstation_id}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
         
         # clear warning if characteristic value was updated to 0
