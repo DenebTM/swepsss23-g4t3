@@ -45,9 +45,15 @@ export const AdminLogsTable: React.FC = () => {
     {
       field: 'origin',
       headerName: 'Origin',
-      width: 120,
+      width: 150,
       valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
-        params.row.origin ? params.row.origin.type.toLowerCase() : 'null',
+        ({
+          ACCESS_POINT: `AP '${params.row.origin?.id}'`,
+          SENSOR_STATION: `Sensor Station ${params.row.origin?.id}`,
+          USER: `User '${params.row.origin?.id}'`,
+          NULL: '-',
+        }[params.row.origin?.type ?? 'NULL']),
+      filterable: false,
     },
     {
       ...centerCell,

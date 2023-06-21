@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, AsyncMock, patch
 from sensorvalues_operations import read_sensorvalues
-from database_operations import save_sensor_values_to_database
 
 STATION_ID = 1
 

@@ -1,13 +1,13 @@
 import asyncio
 import aiohttp
 import time
-import logging_operations
 from bleak import BleakClient, BleakError
 import common
 import database_operations
 from thresholds_operations import check_values_for_thresholds
 from sensorvalues_operations import read_sensorvalues
 from sensorstation_operations import search_for_sensorstations
+from logging_operations import log_local, log_local_and_remote, log_sending_loop
 import rest_operations
 
 RETRY_TIME = 10
@@ -60,19 +60,20 @@ async def sensor_station_task(connection_request, session, sensorstation_id, fir
                 await rest_operations.send_sensorvalues_to_backend(sensorstation_id, session)
 
     except BleakError as e:
-        print('couldnt connect to sensorstation') 
+        print('Could not connect to sensorstation') 
         error_status = 'PAIRING_FAILED' if first_time else 'OFFLINE'
+        if error_status == 'PAIRING_FAILED':
+            log_local_and_remote('ERROR', f'Failed to pair with sensor station {sensorstation_id}', 'SENSOR_STATION', sensorstation_id)
         await rest_operations.send_sensorstation_connection_status(session, sensorstation_id, error_status)
         await cancel_ss_task(sensorstation_id)
-        #TODO: log and send to backend
+
     except asyncio.CancelledError as e:
         await database_operations.clear_sensor_data(sensorstation_id)
         await database_operations.delete_sensorstation(sensorstation_id)
-        print(f'task {sensorstation_id} canceled and cleaned up')
-        #TODO: log this 
+        log_local('INFO', f'Task {sensorstation_id} cancelled and cleaned up')
+
     except Exception as e:
-        #TODO: log and send to backend
-        print('Unexpected error occured in sensor_station_task', e)
+        log_local_and_remote('ERROR', f'Unexpected error occured in sensor station task {sensorstation_id}: {e}')
 
 async def cancel_ss_task(sensorstation_id):
     global ss_tasks
@@ -81,7 +82,7 @@ async def cancel_ss_task(sensorstation_id):
 
 
 async def polling_loop(connection_request, session):
-    asyncio.create_task(logging_operations.log_sending_loop(session, connection_request))
+    asyncio.create_task(log_sending_loop(session, connection_request))
     while not connection_request.done():
         print('Inside AP Loop')
         new_status = await rest_operations.get_ap_status(session)
@@ -99,7 +100,6 @@ async def main():
     while True:
         try:
             async with aiohttp.ClientSession(base_url=common.web_server_address, raise_for_status=True) as session:
-
                 connection_request = asyncio.Future()
                 await rest_operations.initialize_accesspoint(session)
 
@@ -109,15 +109,16 @@ async def main():
                 
         except aiohttp.ClientConnectionError as e:
             connection_request.set_result('Done')
-            await logging_operations.log_to_file_and_list('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
-            time.sleep(RETRY_TIME)
+            log_local('ERROR', f'Could not reach PlantHealth server. Retrying in {RETRY_TIME} seconds')
+            await asyncio.sleep(RETRY_TIME)
             
         except aiohttp.ClientResponseError as e:
-            await logging_operations.log_to_file_and_list('WARN', f'Unauthorized to talk to PlantHealth server. Retry in {RETRY_TIME} seconds.')
-            time.sleep(RETRY_TIME)
+            log_local('WARN', f'Unauthorized to talk to PlantHealth server. Retrying in {RETRY_TIME} seconds.')
+            await asyncio.sleep(RETRY_TIME)
 
         except Exception as e:
-            await logging_operations.log_to_file_and_list('ERROR', f'Unexpected error occured: {e}')
+            log_local_and_remote('ERROR', f'Unexpected {e.__class__.__name__} occured in main: {e}')
+            await asyncio.sleep(RETRY_TIME)
 
 if __name__ == '__main__':
     asyncio.run(main())

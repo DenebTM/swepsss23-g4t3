@@ -51,7 +51,7 @@ async def clear_sensor_data(sensorstation_id):
         )
         db_conn.commit()
     except Exception as e:
-        print(f'couldnt delete sensordata. Error: {e}')
+        print(f'Could not delete sensordata. Error: {e}')
 
 async def get_sensorstation_thresholds(sensorstation_id):
     try:
@@ -133,7 +133,7 @@ async def delete_sensorstation(sensorstation_id):
         )
         db_conn.commit()
     except Exception as e:
-        print(f'couldnt delete sensorstation. Error:{e}')
+        print(f'Could not delete sensorstation. Error:{e}')
 
 
 async def update_sensorstation(sensorstation):

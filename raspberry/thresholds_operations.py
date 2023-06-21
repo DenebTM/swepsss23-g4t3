@@ -3,7 +3,7 @@ from bleak import BleakError
 from database_operations import get_sensorstation_thresholds, get_sensor_data_averages
 from rest_operations import send_warning_to_backend, clear_warning_on_backend
 import asyncio
-import logging_operations
+from logging_operations import log_local, log_local_and_remote
 
 async def check_values_for_thresholds(sensorstation_client, sensorstation_id, session):
     try:
@@ -27,7 +27,7 @@ async def check_values_for_thresholds(sensorstation_client, sensorstation_id, se
                 await send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session)
                 await send_warning_to_backend(sensorstation_id, session)
     except Exception as e:
-        await logging_operations.log_to_file_and_list('WARN', f'Error in threshold check for station {sensorstation_id}: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        log_local_and_remote('WARN', f'Error in threshold check for station {sensorstation_id}: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
         
                         
 async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, sensor, session):
@@ -36,7 +36,7 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
     try:
         sensor_uuid = common.failure_uuids[sensor]
         await sensorstation_client.write_gatt_char(sensor_uuid, errorCodeByteArray)
-        await logging_operations.log_to_file_and_list('INFO', f'Activated error signal on sensorstation: {sensorstation_id}, for sensor {sensor}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        log_local_and_remote('INFO', f'Activated error signal on sensorstation: {sensorstation_id}, for sensor {sensor}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
         await sensorstation_client.start_notify(
             common.warning_active_uuid,
             lambda char, data: asyncio.create_task(
@@ -44,5 +44,5 @@ async def send_warning_to_sensorstation(sensorstation_client, sensorstation_id, 
             )
         )
     except BleakError as e:
-        await logging_operations.log_to_file_and_list('ERROR', f'Couldnt write to gatt characteristic for sensorstation {sensorstation_id}. Error: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
+        log_local_and_remote('ERROR', f'Could not write to gatt characteristic for sensorstation {sensorstation_id}. Error: {e}', entity_type='SENSOR_STATION', entity_id=str(sensorstation_id))
            
