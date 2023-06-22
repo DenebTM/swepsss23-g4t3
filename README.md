@@ -22,7 +22,7 @@ The access point is a Raspberry Pi, also equipped with Bluetooth® as well as Wi
 
 This is a web server, based on the Spring web framework. It serves the frontend web app to the browser and provides a Representational State Transfer (ReST) API for ongoing communication with the aforementioned access points and frontend.
 
-The backend is based on the swe-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, in-memory H2 database (TODO: replace with MySQL; see !112), basic functionality, and much of the Spring Security configuration.
+The backend is based on the swe-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, persistent database, basic functionality, and much of the Spring Security configuration.
 
 ### Frontend
 
