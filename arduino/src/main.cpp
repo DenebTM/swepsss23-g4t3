@@ -11,20 +11,27 @@ using namespace std::chrono_literals;
 #include <sensors/warn.h>
 
 void setup() {
-  Serial.begin(9600);
-  // uncomment the following line to wait for the Serial port to be initialized,
-  // so that error messages during setup don't get lost
-
+  // Serial.begin(9600);
   // while (!Serial) {}
-
-  sensors::bme::setup();
-  sensors::hygro::setup();
-  sensors::light::setup();
 
   led::setup();
 
-  // TODO: Show LED error code if this fails
-  ble::setup();
+  sensors::hygro::setup();
+  sensors::light::setup();
+
+  if (!sensors::bme::setup()) {
+    led::add_status_code(LEDC_BME_SETUP_FAILED, led::CodePriority::HIGH);
+
+    // failure state
+    for (;;) { rtos::ThisThread::sleep_for(1ms); }
+  }
+
+  if (!ble::setup()) {
+    led::add_status_code(LEDC_BLE_SETUP_FAILED, led::CodePriority::HIGH);
+
+    // failure state
+    for (;;) { rtos::ThisThread::sleep_for(1ms); }
+  }
 }
 
 void loop() {

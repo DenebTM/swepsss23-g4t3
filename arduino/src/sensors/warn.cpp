@@ -9,11 +9,12 @@ namespace sensors {
   struct sensor_warnings current_warnings = { 0 };
   struct sensor_warnings last_warnings    = { 0 };
 
-  void warn_update() {
-    if (memcmp(&last_warnings, &current_warnings, sizeof(current_warnings))) {
+  void warn_update(bool force) {
+    if (force ||
+        memcmp(&last_warnings, &current_warnings, sizeof(current_warnings))) {
       memcpy(&last_warnings, &current_warnings, sizeof(current_warnings));
 
-      Serial.println("Sensor warnings have changed!");
+      // Serial.println("Sensor warnings have changed!");
       led::clear_status_codes(led::CodePriority::LOW);
 
       bool any_warnings = false;

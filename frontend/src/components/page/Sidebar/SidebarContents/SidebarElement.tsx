@@ -10,7 +10,7 @@ interface SidebarElement {
   permittedRoles?: UserRole[]
   pageTitle: string
   href: string
-  icon?: JSX.Element
+  icon?: React.ReactElement
 }
 /** A single sidebar element with subelements */
 export type SidebarElementWithChildren = SidebarElement & {

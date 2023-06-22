@@ -21,6 +21,7 @@ import { LogLevelSelect } from './LogLevelSelect'
 
 /** Map values from {@link LogLevel} to {@link StatusVariant} for display in {@link StatusCell} */
 const logLevelToStatusVariant: { [key in LogLevel]: StatusVariant } = {
+  [LogLevel.DEBUG]: StatusVariant.OK,
   [LogLevel.INFO]: StatusVariant.INFO,
   [LogLevel.WARN]: StatusVariant.WARNING,
   [LogLevel.ERROR]: StatusVariant.ERROR,
@@ -38,17 +39,25 @@ export const AdminLogsTable: React.FC = () => {
   const [from, setFrom] = useState<DateValue>(dayjs().subtract(1, 'week'))
   const [to, setTo] = useState<DateValue>(dayjs())
   const [logEntries, setLogEntries] = useState<LogEntry[]>()
-  const [level, setLevel] = useState<LogLevel[]>([])
+  const [level, setLevel] = useState<LogLevel[]>([
+    LogLevel.INFO,
+    LogLevel.WARN,
+    LogLevel.ERROR,
+  ])
 
   /** Columns for the logs table */
   const columns: GridColDef<LogEntry, any, LogEntry>[] = [
     {
       field: 'origin',
       headerName: 'Origin',
-      width: 120,
+      width: 150,
       valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
-        params.row.origin ? params.row.origin.type.toLowerCase() : 'null',
-      filterable: false,
+        ({
+          ACCESS_POINT: `AP '${params.row.origin?.id}'`,
+          SENSOR_STATION: `Sensor Station ${params.row.origin?.id}`,
+          USER: `User '${params.row.origin?.id}'`,
+          NULL: '-',
+        }[params.row.origin?.type ?? 'NULL']),
     },
     {
       ...centerCell,
@@ -61,14 +70,12 @@ export const AdminLogsTable: React.FC = () => {
           variant={logLevelToStatusVariant[params.row.level]}
         />
       ),
-      filterable: false,
     },
     {
       field: 'message',
       headerName: 'Message',
       minWidth: 170,
       flex: 1,
-      filterable: false,
     },
     {
       ...centerCell,
@@ -78,7 +85,6 @@ export const AdminLogsTable: React.FC = () => {
       width: 175,
       valueGetter: (params: GridValueGetterParams<LogEntry, string>) =>
         dayjs(params.value).toDate(),
-      filterable: false,
     },
   ]
 

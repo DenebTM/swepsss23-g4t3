@@ -2,9 +2,8 @@ import React from 'react'
 
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-
-import { theme } from '~/styles/theme'
 
 import { Spinner } from './Spinner'
 
@@ -23,11 +22,13 @@ interface DashboardCardProps {
  * Reusable component for the main elements in the Dashboard and greenhouse graphical overview screen
  */
 export const DashboardCard: React.FC<DashboardCardProps> = (props) => {
+  const theme = useTheme()
+
   return (
     <Card
       sx={{
         height: '100%',
-        minHeight: '200px', // TODO qqjf make this responsive
+        minHeight: '200px',
       }}
     >
       <CardContent

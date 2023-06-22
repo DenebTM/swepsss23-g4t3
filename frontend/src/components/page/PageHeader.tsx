@@ -1,8 +1,7 @@
 import React from 'react'
 
+import { useTheme } from '@mui/material/styles'
 import Box from '@mui/system/Box'
-
-import { theme } from '~/styles/theme'
 
 interface PageHeaderProps {
   /** Contents to left-align */
@@ -16,6 +15,8 @@ interface PageHeaderProps {
  * Displays `props.left` and `props.right` in a full-width flexbox with space between.
  */
 export const PageHeader: React.FC<PageHeaderProps> = (props) => {
+  const theme = useTheme()
+
   return (
     <Box
       sx={{

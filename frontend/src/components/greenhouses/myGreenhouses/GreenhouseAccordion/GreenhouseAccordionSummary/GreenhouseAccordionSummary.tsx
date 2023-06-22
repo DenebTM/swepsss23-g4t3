@@ -2,11 +2,11 @@ import React from 'react'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import { SensorStation } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { AccordionQuickActions } from './AccordionQuickActions'
 
@@ -21,6 +21,8 @@ interface GreenhouseAccordionSummaryProps {
 export const GreenhouseAccordionSummary: React.FC<
   GreenhouseAccordionSummaryProps
 > = (props) => {
+  const theme = useTheme()
+
   return (
     <AccordionSummary
       expandIcon={<ExpandMoreIcon sx={{ color: theme.outline }} />}

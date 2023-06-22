@@ -1,6 +1,5 @@
 package at.qe.skeleton.controllers;
 
-import at.qe.skeleton.controllers.VisitorController;
 import at.qe.skeleton.controllers.errors.BadRequestException;
 import at.qe.skeleton.controllers.errors.NotFoundInDatabaseException;
 import at.qe.skeleton.models.PhotoData;
@@ -25,11 +24,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @WebAppConfiguration
@@ -139,14 +136,14 @@ public class VisitorControllerTest {
         ResponseEntity<PhotoData> res = visitorController.uploadPhoto(mock, 1);
         repoImages = photoDataRepository.findAllBySensorStation(ss);
         int finalSize = repoImages.size();
-        boolean contains = false;
-        for (PhotoData p :
-                repoImages) {
+        boolean imageDataInDb = false;
+        for (PhotoData p : repoImages) {
             if (Arrays.equals(p.getContent(), Objects.requireNonNull(res.getBody()).getContent())) {
-                contains = true;
+                imageDataInDb = true;
             }
         }
-        assertTrue(contains);
+        assertTrue(imageDataInDb);
         assertTrue(initialSize < finalSize);
     }
+
 }

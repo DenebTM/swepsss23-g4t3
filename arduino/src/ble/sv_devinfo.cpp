@@ -1,6 +1,7 @@
 #include <ble/sv_devinfo.h>
 
 #include <hwtimer.h>
+#include <sensors/warn.h>
 #include <station_id.h>
 
 namespace ble {
@@ -46,18 +47,37 @@ namespace ble {
   }
 
   void update_station_id() {
+    static bool was_invalid = false;
+
     uint8_t id = station_id();
 
     if (id != val_stationID) {
-      Serial.println("Station ID changed to " + String(id));
-      val_stationID = id;
+      // Serial.println("Station ID changed to " + String(id));
+
+      // ok if not currently paired
+      if (ble::paired_mac == BLE_NO_PAIRED_DEVICE) {
+        val_stationID = id;
+      }
+
+      // not ok, show visual warning if currently paired
+      else if (!was_invalid) {
+        led::add_status_code(LEDC_STATION_ID_CHANGED, led::CodePriority::HIGH);
+        was_invalid = true;
+        return;
+      }
+    }
+
+    // station ID changed back to expected value; restore status codes without
+    // LED_STATION_ID_CHANGED
+    else if (was_invalid) {
+      was_invalid = false;
+      led::clear_status_codes(led::CodePriority::HIGH);
+      sensors::warn_update(/* force = */ true);
     }
 
     // include current station ID in BLE service and advertising data
     ch_stationID.writeValue(val_stationID);
     BLE.setAdvertisedServiceData(
         strtol(BLE_UUID_DEVINFO, NULL, 16), &ble::val_stationID, 1);
-
-    // TODO: disallow changing station ID while paired, blink warning LED
   }
 } // namespace ble

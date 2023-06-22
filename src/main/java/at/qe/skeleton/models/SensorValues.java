@@ -1,15 +1,19 @@
 package at.qe.skeleton.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@EqualsAndHashCode
 @Table(name = "SENSOR_VALUES")
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class SensorValues {
@@ -38,11 +42,31 @@ public class SensorValues {
     @Column(name = "LIGHT_INTENSITY")
     private Double lightIntensity;
 
-    public SensorValues() {
-    }
-
     public Integer getId() {
         return id;
+    }
+
+    public SensorValues populateNulls(SensorValues defaults) {
+        if (this.humidity == null) {
+            this.humidity = defaults.humidity;
+        }
+        if (this.airPressure == null) {
+            this.airPressure = defaults.airPressure;
+        }
+        if (this.temperature == null) {
+            this.temperature = defaults.temperature;
+        }
+        if (this.airQuality == null) {
+            this.airQuality = defaults.airQuality;
+        }
+        if (this.soilMoisture == null) {
+            this.soilMoisture = defaults.soilMoisture;
+        }
+        if (this.lightIntensity == null) {
+            this.lightIntensity = defaults.lightIntensity;
+        }
+
+        return this;
     }
 
 }

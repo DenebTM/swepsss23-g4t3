@@ -3,12 +3,16 @@
 
 #include <Arduino.h>
 #include <ArduinoBLE.h>
+#include <led.h>
 
 #define BLE_DEVICE_NAME         "PH SensorStation"
 #define BLE_DEVICE_MANUFACTURER "UIBK SE G4T3"
 #define BLE_DEVICE_APPEARANCE   0x3621
 
 #define BLE_NO_PAIRED_DEVICE String("")
+
+static led::StatusCode* const LEDC_BLE_SETUP_FAILED =
+    new led::StatusCode { LED_BLINK_ONCE_SHORT(led::Color::RED) };
 
 namespace ble {
   extern String paired_mac;

@@ -2,11 +2,11 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
+import { useTheme } from '@mui/material/styles'
 import { GridValidRowModel } from '@mui/x-data-grid'
 
 import { DeleteDialog } from '@component-lib/DeleteDialog'
 import { Tooltip } from '@component-lib/Tooltip'
-import { theme } from '~/styles/theme'
 
 /**
  * Props for generically-typed table cell to delete a given entity.
@@ -14,6 +14,8 @@ import { theme } from '~/styles/theme'
  * @param T The type of the id of objects of type R
  */
 interface DeleteCellProps<R extends GridValidRowModel, T = number> {
+  /** Callback to run after successful entity deletion */
+  afterDelete?: () => void
   /** Children will be displayed before the delete icon */
   children?: React.ReactNode
   /** Function to delete a table row by entityId */
@@ -34,7 +36,9 @@ interface DeleteCellProps<R extends GridValidRowModel, T = number> {
  */
 export const DeleteCell = <R extends GridValidRowModel, T = string>(
   props: DeleteCellProps<R, T>
-): JSX.Element => {
+): React.ReactElement => {
+  const theme = useTheme()
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
   /** Open the delete dialog when the delete icon is clicked */
@@ -62,6 +66,7 @@ export const DeleteCell = <R extends GridValidRowModel, T = string>(
               )
             }
           })
+          props.afterDelete?.()
         }}
         open={deleteDialogOpen}
         setOpen={setDeleteDialogOpen}

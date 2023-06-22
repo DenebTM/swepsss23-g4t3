@@ -3,7 +3,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import ThermostatIcon from '@mui/icons-material/Thermostat'
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined'
+import { useTheme } from '@mui/material/styles'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
+import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
@@ -13,7 +15,6 @@ import { GreenhouseMetricRange, NON_AIR_METRICS } from '~/common'
 import { useWindowSize } from '~/hooks/windowSize'
 import { Measurement } from '~/models/measurement'
 import { SensorStation } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { GreenhouseAirMetrics } from './GreenhouseDonut/GreenhouseAirMetrics'
 import { GreenhouseDonut } from './GreenhouseDonut/GreenhouseDonut'
@@ -40,6 +41,8 @@ interface GreenhouseDonutsProps {
 export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
   props
 ) => {
+  const theme = useTheme()
+
   const { sensorStation, measurement } = { ...props }
 
   const donutContainerRef = useRef<HTMLDivElement>()
@@ -116,7 +119,14 @@ export const GreenhouseMetricDonuts: React.FC<GreenhouseDonutsProps> = (
             </Grid>
           </Grid>
         ) : (
-          <div>TODO qqjf no measurements case</div>
+          <Typography
+            variant="bodyMedium"
+            color="inherit"
+            align="center"
+            display="block"
+          >
+            No measurements to display
+          </Typography>
         )}
       </Box>
     )

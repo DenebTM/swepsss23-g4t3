@@ -38,7 +38,7 @@ namespace sensors {
 
   extern struct sensor_warnings current_warnings;
 
-  void warn_update();
+  void warn_update(bool force = false);
 } // namespace sensors
 
 #endif

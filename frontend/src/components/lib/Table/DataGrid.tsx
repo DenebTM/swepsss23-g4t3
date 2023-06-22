@@ -2,7 +2,7 @@ import { cancelable } from 'cancelable-promise'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
-import { SxProps, Theme } from '@mui/material/styles'
+import { SxProps, Theme, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import {
   gridClasses,
@@ -15,7 +15,6 @@ import {
 
 import { Message, MessageType } from '~/contexts/SnackbarContext/types'
 import { useAddSnackbarMessage } from '~/hooks/snackbar'
-import { theme } from '~/styles/theme'
 
 /**
  * Handle changes to editable cells. Note that this function does not need to update rows as this is handled inside MUI's DataGrid component
@@ -133,8 +132,17 @@ interface DataGridProps<R extends GridValidRowModel, V, F, P>
 export const DataGrid = <R extends GridValidRowModel, V, F = V, P = object>(
   props: DataGridProps<R, V, F, P>
 ): React.ReactElement => {
+  const theme = useTheme()
+
   const addSnackbarMessage = useAddSnackbarMessage()
-  const { fetchRows, setRows, rows, initialState, ...gridProps } = props
+  const {
+    fetchRows,
+    setRows,
+    rows,
+    initialState,
+    processRowUpdate,
+    ...gridProps
+  } = props
 
   const [snackbarMessage, setSnackbarMessage] = useState<Message | null>(null)
 
@@ -171,13 +179,34 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V, P = object>(
         })
       })
 
-  /** If updating a row fails, then display a snackbar informing the user. */
-  const onProcessRowUpdateError = (err: Error) =>
-    addSnackbarMessage({
-      header: 'Could not update row',
-      body: err.message,
-      type: MessageType.ERROR,
-    })
+  /**
+   * Add a wrapper to `props.processRowUpdate` to display success or error snackbar when a row is updated
+   * This is needed because MuiDataGrid has prop `onProcessRowUpdateError`, but no prop for success.
+   */
+  const wrappedProcessRowUpdate: RowUpdateFunction<R> | undefined =
+    typeof props.processRowUpdate === 'undefined'
+      ? undefined
+      : (newRow: R, oldRow: R): Promise<R> =>
+          new Promise((resolve, reject) => {
+            props
+              .processRowUpdate?.(newRow, oldRow)
+              .then((data) => {
+                addSnackbarMessage({
+                  header: 'Success',
+                  body: 'Row updated',
+                  type: MessageType.CONFIRM,
+                })
+                resolve(data)
+              })
+              .catch((err: Error) => {
+                addSnackbarMessage({
+                  header: 'Could not update row',
+                  body: err.message,
+                  type: MessageType.ERROR,
+                })
+                reject(err)
+              })
+          })
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -193,7 +222,7 @@ export const DataGrid = <R extends GridValidRowModel, V, F = V, P = object>(
         }}
         isRowSelectable={() => false}
         pageSizeOptions={[10, 25, 100]}
-        onProcessRowUpdateError={onProcessRowUpdateError}
+        processRowUpdate={wrappedProcessRowUpdate}
         loading={typeof props.rows === 'undefined'}
         rows={
           typeof props.rows === 'undefined' || props.rows === null

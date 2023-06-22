@@ -1,8 +1,7 @@
 import React from 'react'
 
+import { useTheme } from '@mui/material/styles'
 import Box from '@mui/system/Box'
-
-import { theme } from '~/styles/theme'
 
 interface DonutLabelProps {
   /** Distance from top of the parent container in px */
@@ -18,6 +17,8 @@ interface DonutLabelProps {
  * Reusable wrapper to relatively position labels over the GreenhouseDonut component
  */
 export const DonutLabel: React.FC<DonutLabelProps> = (props) => {
+  const theme = useTheme()
+
   return (
     <Box
       sx={{

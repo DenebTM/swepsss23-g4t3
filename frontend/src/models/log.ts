@@ -17,13 +17,16 @@ export interface LogEntry {
  * Severity warnings for an {@link LogEntry}
  */
 export enum LogLevel {
+  DEBUG = 'DEBUG',
   INFO = 'INFO',
   WARN = 'WARN',
   ERROR = 'ERROR',
 }
 
+type LogEntityId = number | string
+
 interface LogEntity {
-  id: number
+  id: LogEntityId
   type: EntityType
 }
 

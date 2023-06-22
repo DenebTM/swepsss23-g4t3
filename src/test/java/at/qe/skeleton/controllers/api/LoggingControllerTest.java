@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -19,7 +19,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,7 +46,7 @@ public class LoggingControllerTest {
         int numberOfLogs = loggingService.getAllLogs().size();
 
         var response = loggingController.getLogs(null, null, null, null);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -57,12 +56,12 @@ public class LoggingControllerTest {
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    void testGetLogsFrom(){
+    void testGetLogsFrom() {
         Instant from = parseInstant("2023-05-09");
 
         var response = loggingController.getLogs(from, null, null, null);
         int numberOfLogs = loggingService.getAllLogsFrom(from).size();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -77,7 +76,7 @@ public class LoggingControllerTest {
 
         var response = loggingController.getLogs(null, to, null, null);
         int numberOfLogs = loggingService.getAllLogsTo(to).size();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -93,7 +92,7 @@ public class LoggingControllerTest {
 
         var response = loggingController.getLogs(from, to, null, null);
         int numberOfLogs = loggingService.getAllLogsInTimeInterval(from, to).size();
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         var logs = response.getBody();
         assertNotNull(logs);
@@ -114,7 +113,7 @@ public class LoggingControllerTest {
 
             var response = loggingController.getLogs(null, null, Arrays.asList(level), null);
             int numberOfLogs = serviceLogs.size();
-            assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
 
             var logs = response.getBody();
             assertNotNull(logs);
@@ -128,19 +127,22 @@ public class LoggingControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void testSendLogs() {
-        Assertions.assertThrows(NotFoundInDatabaseException.class, () -> loggingController.sendLogs("someRandomNameThatDoesntExist", List.of()));
+        Assertions.assertThrows(
+            NotFoundInDatabaseException.class,
+            () -> loggingController.sendLogs("someRandomNameThatDoesntExist", List.of())
+        );
 
         List<LoggingEvent> repoLogs = loggingService.getAllLogs();
         List<LoggingEventJson> jsonLogs = new ArrayList<>(repoLogs.size());
 
-        for (LoggingEvent l :
-                repoLogs) {
+        for (LoggingEvent l : repoLogs) {
             jsonLogs.add(new LoggingEventJson(
-                    l.getEventId(),
-                    LocalDateTime.now().toInstant(ZoneOffset.UTC),
-                    LogLevel.INFO,
-                    "Some test message",
-                    new LoggingEventJson.LogEntity(LogEntityType.USER, 1)));
+                l.getEventId(),
+                LocalDateTime.now().toInstant(ZoneOffset.UTC),
+                LogLevel.INFO,
+                "Some test message",
+                new LoggingEventJson.LogEntity(LogEntityType.USER, 1))
+            );
         }
 
         ResponseEntity<List<LoggingEventJson>> foundLogs = loggingController.sendLogs("AP 1", jsonLogs);
@@ -149,6 +151,6 @@ public class LoggingControllerTest {
         List<Long> foundIds = Objects.requireNonNull(foundLogs.getBody()).stream().map(LoggingEventJson::getId).sorted().toList();
 
         Assertions.assertEquals(repoIds, foundIds);
-
     }
+
 }

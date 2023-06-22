@@ -2,9 +2,9 @@ import React, { Dispatch, SetStateAction } from 'react'
 
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
+import { useTheme } from '@mui/material/styles'
 
 import { SensorStation, SensorStationUuid } from '~/models/sensorStation'
-import { theme } from '~/styles/theme'
 
 import { GreenhouseAccordionContents } from './GreenhouseAccordionContents/GreenhouseAccordionContents'
 import { GreenhouseAccordionSummary } from './GreenhouseAccordionSummary/GreenhouseAccordionSummary'
@@ -21,6 +21,8 @@ interface GreenhouseAccordionProps {
 export const GreenhouseAccordion: React.FC<GreenhouseAccordionProps> = (
   props
 ) => {
+  const theme = useTheme()
+
   /** Either expand the current panel or close the panel on click. */
   const handleChange =
     (ssID: SensorStationUuid) =>

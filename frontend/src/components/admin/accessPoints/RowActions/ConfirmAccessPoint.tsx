@@ -2,12 +2,12 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import CheckIcon from '@mui/icons-material/Check'
 import IconButton from '@mui/material/IconButton'
+import { useTheme } from '@mui/material/styles'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { updateAccessPoint } from '~/api/endpoints/accessPoints'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { AccessPoint, ApStatus } from '~/models/accessPoint'
-import { theme } from '~/styles/theme'
 
 interface ConfirmAccessPointProps {
   accessPoint: AccessPoint
@@ -19,7 +19,9 @@ interface ConfirmAccessPointProps {
  * Memoised using `React.memo` as otherwise DataGrid causes unnecessary rerenders.
  */
 export const ConfirmAccessPoint: React.FC<ConfirmAccessPointProps> = React.memo(
-  (props): JSX.Element => {
+  (props): React.ReactElement => {
+    const theme = useTheme()
+
     const addErrorSnackbar = useAddErrorSnackbar()
     const [updating, setUpdating] = useState(false)
 

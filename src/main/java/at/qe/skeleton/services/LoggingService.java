@@ -116,6 +116,6 @@ public class LoggingService {
 
         MDC.put(entityType.name(), entityId.toString());
         logger.error(message);
-
     }
+
 }
