@@ -6,9 +6,9 @@ import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+@Table(name = "logging_event_exception")
 @AllArgsConstructor
 @Getter
-@Table(name = "logging_event_exception")
 public class LoggingEventException {
 
     @Id
@@ -25,4 +25,5 @@ public class LoggingEventException {
     @Column(name = "trace_line", nullable = false)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String mappedValue;
+
 }

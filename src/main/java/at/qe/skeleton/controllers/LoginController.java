@@ -24,6 +24,7 @@ import at.qe.skeleton.services.LoggingService;
  */
 @RestController
 public class LoginController {
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -68,4 +69,5 @@ public class LoginController {
         final String jwt = tokenManager.generateJwtToken(requestBody.getUsername());
         return ResponseEntity.ok().body(new LoginResponseModel(jwt));
     }
+
 }

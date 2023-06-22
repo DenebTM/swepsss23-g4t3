@@ -12,4 +12,4 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public interface BaseRestController {}
+public interface BaseRestController { }

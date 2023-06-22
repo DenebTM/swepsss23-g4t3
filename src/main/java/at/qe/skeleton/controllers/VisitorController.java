@@ -111,4 +111,5 @@ public class VisitorController {
         List<PhotoData> photos = photoDataRepository.findAllBySensorStation(ss);
         return ResponseEntity.ok(photos);
     }
+
 }

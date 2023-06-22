@@ -25,6 +25,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 @Component
 public class JwtManager {
+
     public static final long TOKEN_VALIDITY = 10 * 60 * 60L;
 
     /**
@@ -79,4 +80,5 @@ public class JwtManager {
         final Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
+
 }

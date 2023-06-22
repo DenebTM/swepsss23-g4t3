@@ -52,4 +52,5 @@ public class LoginControllerTest {
         Assertions.assertThrows(BadRequestException.class, () -> loginController.createToken(modelWithNoUsername));
         Assertions.assertThrows(BadRequestException.class, () -> loginController.createToken(modelWithNoPassword));
     }
+
 }

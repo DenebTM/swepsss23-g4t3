@@ -21,6 +21,7 @@ import org.springframework.data.domain.Persistable;
  * course "Software Engineering" offered by the University of Innsbruck.
  */
 @Entity
+@Table(name = "USERX")
 @EqualsAndHashCode
 public class Userx implements Persistable<String>, Serializable, Comparable<Userx> {
 
@@ -152,6 +153,5 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     public int compareTo(Userx o) {
         return this.username.compareTo(o.getUsername());
     }
-
 
 }
