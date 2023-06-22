@@ -36,7 +36,7 @@ This project uses Java 17 and Node.js 18 (installed automatically as part of the
 
 ### Step 1: Install the database
 
-In order for the web server to start, you must be running either MySQL on your system. For this you may either use Docker for this or set up the database manually.
+In order for the web server to start, you must be running a MySQL 8.0 database on your system. For this you may either use Docker for this or set up the database manually.
 
 **(a) Docker** (recommended)
 
