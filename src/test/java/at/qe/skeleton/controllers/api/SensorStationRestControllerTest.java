@@ -357,4 +357,5 @@ class SensorStationRestControllerTest {
         assertNotNull(measurements);
         assertEquals(number, measurements.size());
     }
+
 }

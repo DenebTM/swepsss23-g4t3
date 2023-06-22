@@ -30,6 +30,7 @@ import io.jsonwebtoken.SignatureException;
  */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+
     @Autowired
     private UserxRepository userxRepository;
 
@@ -85,4 +86,5 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
 }
