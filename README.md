@@ -36,7 +36,7 @@ This project uses Java 17 and Node.js 18 (installed automatically as part of the
 
 ### Step 1: Install the database
 
-In order for the web server to start, you must be running either a MySQL or MariaDB on your system. For this you may either use Docker for this or set up the database manually.
+In order for the web server to start, you must be running either MySQL on your system. For this you may either use Docker for this or set up the database manually.
 
 **(a) Docker** (recommended)
 
@@ -57,7 +57,7 @@ docker run --rm                         \
 ```
 
 On Windows, you might have to run the entire command on one line:
-`docker run --name planthealth_dbsrv --rm -v planthealth_db:/var/lib/mysql -p 3306:3306 -e MYSQL_RANDOM_ROOT_PASSWORD="true" -e MYSQL_DATABASE=swe -e MYSQL_USER=swe -e MYSQL_PASSWORD=password mariadb:latest`
+`docker run --name planthealth_dbsrv --rm -v planthealth_db:/var/lib/mysql -p 3306:3306 -e MYSQL_RANDOM_ROOT_PASSWORD="true" -e MYSQL_DATABASE=swe -e MYSQL_USER=swe -e MYSQL_PASSWORD=password mysql:8.0.33`
 
 The database server can be stopped either externally or by pressing Ctrl+\ (backslash).
 
