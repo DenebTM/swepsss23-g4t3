@@ -14,7 +14,9 @@ interface SsDialogRowProps {
  * A single action row in the dialog to pair with a new sensor station.
  * Displays a title, description, row number, and action field passed as children.
  */
-export const SsDialogRow: React.FC<SsDialogRowProps> = (props): JSX.Element => {
+export const SsDialogRow: React.FC<SsDialogRowProps> = (
+  props
+): React.ReactElement => {
   return (
     <Grid container spacing={2} padding={2}>
       <Grid xs={1}>

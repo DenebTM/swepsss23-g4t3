@@ -1,12 +1,12 @@
 import React from 'react'
 
 import Paper from '@mui/material/Paper'
+import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/system/Box'
 
 import { PAGE_URL } from '~/common'
 import { PageWrapper } from '~/components/page/PageWrapper'
-import { theme } from '~/styles/theme'
 
 import { GalleryCta } from './GalleryCta'
 import { LoginForm } from './LoginForm'
@@ -19,6 +19,8 @@ const loginSidewaveWidth = '36%'
  * Login page
  */
 export const Login: React.FC = () => {
+  const theme = useTheme()
+
   const breakpointDownMd = useMediaQuery(theme.breakpoints.down('md'))
   const breakpointDownSm = useMediaQuery(theme.breakpoints.down('sm'))
 

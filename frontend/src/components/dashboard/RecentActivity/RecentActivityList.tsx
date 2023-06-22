@@ -9,27 +9,10 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemText from '@mui/material/ListItemText'
+import { useTheme } from '@mui/material/styles'
 
 import dayjs from 'dayjs'
 import { LogEntry, LogLevel } from '~/models/log'
-import { theme } from '~/styles/theme'
-
-const logLevelToIcon: { [key in LogLevel]: React.ReactNode } = {
-  [LogLevel.INFO]: (
-    <InfoOutlinedIcon sx={{ color: theme.onTertiaryContainer }} />
-  ),
-  [LogLevel.WARN]: (
-    <WarningAmberOutlinedIcon sx={{ color: theme.onWarnContainer }} />
-  ),
-  [LogLevel.ERROR]: (
-    <ReportOutlinedIcon sx={{ color: theme.onErrorContainer }} />
-  ),
-}
-const logLevelToIconBackground: { [key in LogLevel]: string } = {
-  [LogLevel.INFO]: theme.tertiaryContainer,
-  [LogLevel.WARN]: theme.warnContainer,
-  [LogLevel.ERROR]: theme.errorContainer,
-}
 
 interface RecentActivityListProps {
   logEntries: LogEntry[]
@@ -41,6 +24,29 @@ interface RecentActivityListProps {
 export const RecentActivityList: React.FC<RecentActivityListProps> = (
   props
 ) => {
+  const theme = useTheme()
+
+  const logLevelToIcon: { [key in LogLevel]: React.ReactNode } = {
+    [LogLevel.DEBUG]: (
+      <InfoOutlinedIcon sx={{ color: theme.onTertiaryContainer }} />
+    ),
+    [LogLevel.INFO]: (
+      <InfoOutlinedIcon sx={{ color: theme.onTertiaryContainer }} />
+    ),
+    [LogLevel.WARN]: (
+      <WarningAmberOutlinedIcon sx={{ color: theme.onWarnContainer }} />
+    ),
+    [LogLevel.ERROR]: (
+      <ReportOutlinedIcon sx={{ color: theme.onErrorContainer }} />
+    ),
+  }
+  const logLevelToIconBackground: { [key in LogLevel]: string } = {
+    [LogLevel.DEBUG]: theme.tertiaryContainer,
+    [LogLevel.INFO]: theme.tertiaryContainer,
+    [LogLevel.WARN]: theme.warnContainer,
+    [LogLevel.ERROR]: theme.errorContainer,
+  }
+
   return (
     <List sx={{ width: '100%' }}>
       {props.logEntries.slice(0, 4).map((entry: LogEntry) => (

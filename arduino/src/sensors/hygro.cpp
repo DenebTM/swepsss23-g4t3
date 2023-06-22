@@ -41,7 +41,7 @@ void sensors::hygro::update() {
 
     int moisture               = read_hum();
     current_data.soil_moisture = moisture;
-    Serial.println("Soil moisture: " + String(moisture) + "%");
+    // Serial.println("Soil moisture: " + String(moisture) + "%");
   }
 }
 

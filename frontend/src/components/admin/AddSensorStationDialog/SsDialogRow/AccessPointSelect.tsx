@@ -9,8 +9,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { Spinner } from '@component-lib/Spinner'
 import { getAccessPoints } from '~/api/endpoints/accessPoints'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
-import { AccessPoint, AccessPointId } from '~/models/accessPoint'
-import { ApStatus } from '~/models/accessPoint'
+import { AccessPoint, AccessPointId, ApStatus } from '~/models/accessPoint'
 
 const apLabelId = 'select-access-point'
 
@@ -24,7 +23,7 @@ interface AccessPointSelectProps {
  */
 export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
   const addErrorSnackbar = useAddErrorSnackbar()
   const [accessPoints, setAccessPoints] = useState<AccessPoint[] | undefined>()
   const [value, setValue] = useState<AccessPointId>(
@@ -60,7 +59,7 @@ export const AccessPointSelect: React.FC<AccessPointSelectProps> = (
   }, [snackbarError])
 
   const handleChange = (event: SelectChangeEvent) => {
-    const selectedApName = event.target.value as string
+    const selectedApName: string = event.target.value
     const selectedAp = accessPoints?.find((ap) => ap.name === selectedApName)
     props.setAccessPoint(selectedAp)
   }

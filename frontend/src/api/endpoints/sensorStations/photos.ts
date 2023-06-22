@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { Server } from 'miragejs'
+import { Response, Server } from 'miragejs'
 import { _delete, _get } from '~/api/intercepts'
 import { API_DEV_URL, UPLOADED_PHOTO_KEY } from '~/common'
 import { Photo, PhotoId } from '~/models/photo'
@@ -67,12 +67,13 @@ export const mockedSensorStationPhotoReqs: EndpointReg = (server: Server) => {
   server.post(MOCKED_SS_PHOTOS_PATH, (schema: AppSchema, request) => {
     const ssID: SensorStationUuid = Number(request.params.ssID)
     const sensorStation = schema.findBy('sensorStation', { ssID: ssID })
-    if (sensorStation) {
+    if (sensorStation && request.requestBody !== '') {
       const formData: FormData = request.requestBody as unknown as FormData
-      const uploadFile: File = formData.get(UPLOADED_PHOTO_KEY) as File
-
-      // Return the file in the success for now. qqjf TODO update photo models
-      return success(uploadFile)
+      if (formData.get(UPLOADED_PHOTO_KEY) !== null) {
+        return success() // Return an empty success message
+      } else {
+        return new Response(400, {}, 'Photo not found in request')
+      }
     } else {
       return notFound(`sensor station ${ssID}`)
     }

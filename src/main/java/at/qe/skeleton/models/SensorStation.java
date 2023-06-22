@@ -32,10 +32,28 @@ public class SensorStation {
     @JsonIgnoreProperties("id")
     private SensorValues upperBound;
 
+    public static final SensorValues defaultUpperBound = new SensorValues(null,
+        100.,
+        1300.,
+        65.,
+        500.,
+        100.,
+        1200.
+    );
+
     @OneToOne
     @JoinColumn(name = "LOWER_VALUES_ID")
     @JsonIgnoreProperties("id")
     private SensorValues lowerBound;
+
+    public static final SensorValues defaultLowerBound = new SensorValues(null,
+        0.,
+        700.,
+        0.,
+        0.,
+        0.,
+        0.
+    );
 
     @Column(name = "AGGREGATION_PERIOD", nullable = false)
     private Long aggregationPeriod = 30L;
@@ -96,11 +114,23 @@ public class SensorStation {
     }
 
     public SensorValues getUpperBound() {
-        return upperBound;
+        // handle whole object being null
+        if (upperBound == null) {
+            return defaultUpperBound;
+        }
+
+        // handle individual bounds being null
+        return upperBound.populateNulls(defaultUpperBound);
     }
 
     public SensorValues getLowerBound() {
-        return lowerBound;
+        // handle whole object being null
+        if (lowerBound == null) {
+            return defaultLowerBound;
+        }
+
+        // handle individual bounds being null
+        return lowerBound.populateNulls(defaultLowerBound);
     }
 
     public void setSsID(Integer ssID) {
@@ -140,9 +170,10 @@ public class SensorStation {
     }
 
     public Measurement getCurrentMeasurement() {
-        if (this.getMeasurements() == null || this.getMeasurements().size() == 0) {
+        if (this.getMeasurements() == null || this.getMeasurements().isEmpty()) {
             return null;
         }
         return this.getMeasurements().get(this.getMeasurements().size()-1);
     }
+
 }

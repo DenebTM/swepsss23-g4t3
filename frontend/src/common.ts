@@ -1,12 +1,16 @@
 import CryptoJS from 'crypto-js'
 
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import YardIcon from '@mui/icons-material/Yard'
+import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 
+import GalleryIcon from '@component-lib/icons/GalleryIcon'
 import { SensorValues } from '~/models/measurement'
 
 import { SensorStationUuid } from './models/sensorStation'
 import { AuthUserRole, GuestRole, UserRole } from './models/user'
-import { theme } from './styles/theme'
+import { customColours } from './styles/colours/themeColours'
 
 /** Enum for the URL parameters controlling the view of a single sensor station.
  */
@@ -165,7 +169,7 @@ export const GreenhouseIcon = YardIcon
 const SECRET = 'zH4NRP1HMALxxCFnRZABFA7GOJtzU_gIj02alfL1lvI'
 
 /** Encrypt a sensor station UUID for photo upload */
-const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
+export const encryptSensorStationUuid = (ssID: SensorStationUuid): string =>
   encodeURIComponent(CryptoJS.AES.encrypt(String(ssID), SECRET).toString())
 
 /** Decrypt a sensor station UUID for photo upload */
@@ -210,8 +214,12 @@ export const onEnterKeypress =
   (event: React.KeyboardEvent) =>
     event.key === 'Enter' && callback()
 
-/** Rounding function for metric values. */
-export const roundMetric = (n: number) => n.toFixed(1)
+/**
+ * Rounding function for metric values.
+ * Returns 0 if a measurement value is `null`.
+ */
+export const roundMetric = (n: number | null): string =>
+  n === null ? 'null' : n.toFixed(1)
 
 /**
  * Type for a singe greenhouse metric range.
@@ -241,7 +249,7 @@ export interface GreenhouseMetricRange {
 
 export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   temperature: {
-    colour: theme.purple,
+    colour: customColours.purple,
     displayName: 'Temperature',
     valueKey: 'temperature',
     unit: '°C',
@@ -250,7 +258,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   soilMoisture: {
-    colour: theme.tertiary,
+    colour: customColours.tertiary,
     displayName: 'Soil Moisture',
     valueKey: 'soilMoisture',
     unit: '%',
@@ -259,7 +267,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   lightIntensity: {
-    colour: theme.green,
+    colour: customColours.green,
     displayName: 'Light',
     valueKey: 'lightIntensity',
     unit: 'lx',
@@ -271,7 +279,7 @@ export const NON_AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
 
 export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
   airPressure: {
-    colour: theme.warn,
+    colour: customColours.warn,
     displayName: 'Air Pressure',
     valueKey: 'airPressure',
     unit: 'hPa',
@@ -280,7 +288,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 50,
   },
   humidity: {
-    colour: theme.pink,
+    colour: customColours.pink,
     displayName: 'Humidity',
     valueKey: 'humidity',
     unit: '%',
@@ -289,7 +297,7 @@ export const AIR_METRICS: { [key: string]: GreenhouseMetricRange } = {
     step: 5,
   },
   airQuality: {
-    colour: theme.blue,
+    colour: customColours.blue,
     displayName: 'Air Quality',
     description: 'Index of Air Quality (IAQ)',
     valueKey: 'airQuality',
@@ -315,3 +323,53 @@ export const emDash = '—'
 
 /** FormData key for uploaded sensor station photos */
 export const UPLOADED_PHOTO_KEY = 'multipartImage'
+
+/** Title text to display on buttons for pairing with a new sensor station */
+export const ADD_GREENHOUSE_TEXT = 'Add Greenhouse'
+
+/** Helper text to display on buttons for pairing with a new sensor station */
+export const ADD_GREENHOUSE_DESCRIPTION = 'Connect a new greenhouse'
+
+/** Subtitle text for dialog to pair with a new sensor station */
+export const ADD_GREENHOUSE_DIALOG_SUBTITLE =
+  'Pair with a new sensor station via BLE to start monitoring your plants'
+
+/** Constants for greenhouse view names, icons, and URLs. */
+export const GREENHOUSE_VIEWS: {
+  title: string
+  key: SensorStationView
+  Icon: React.FC<SvgIconTypeMap['props']>
+  url: (sensorStationUuid: SensorStationUuid) => string
+  loggedInOnly: boolean
+}[] = [
+  {
+    title: 'Overview',
+    key: SensorStationView.GRAPHICAL,
+    Icon: DashboardIcon,
+    url: (sensorStationUuid: SensorStationUuid) =>
+      PAGE_URL.greenhouseView.href(
+        sensorStationUuid,
+        SensorStationView.GRAPHICAL
+      ),
+    loggedInOnly: true,
+  },
+  {
+    title: 'Gallery',
+    key: SensorStationView.GALLERY,
+    Icon: GalleryIcon,
+    url: (sensorStationUuid: SensorStationUuid) =>
+      PAGE_URL.greenhouseView.href(
+        sensorStationUuid,
+        SensorStationView.GALLERY
+      ),
+    loggedInOnly: false,
+  },
+  {
+    title: 'Table',
+    key: SensorStationView.TABLE,
+    Icon: StorageOutlinedIcon,
+    url: (sensorStationUuid: SensorStationUuid) =>
+      PAGE_URL.greenhouseView.href(sensorStationUuid, SensorStationView.TABLE),
+    loggedInOnly: true,
+  },
+]

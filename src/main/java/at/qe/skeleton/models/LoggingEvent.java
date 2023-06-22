@@ -12,11 +12,11 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "logging_event")
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "logging_event")
+@Getter
+@Setter
 public class LoggingEvent {
 
     @Id

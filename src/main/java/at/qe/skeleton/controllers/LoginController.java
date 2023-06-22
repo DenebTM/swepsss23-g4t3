@@ -24,6 +24,7 @@ import at.qe.skeleton.services.LoggingService;
  */
 @RestController
 public class LoginController {
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -39,10 +40,10 @@ public class LoginController {
             throw new BadRequestException("Missing request body");
         }
 
-        if (requestBody.getUsername() == null){
+        if (requestBody.getUsername() == null) {
             throw new BadRequestException("Missing body key \"username\"");
         }
-        if (requestBody.getPassword() == null){
+        if (requestBody.getPassword() == null) {
             throw new BadRequestException("Missing body key \"password\"");
         }
         UsernamePasswordAuthenticationToken authToken =
@@ -68,4 +69,5 @@ public class LoginController {
         final String jwt = tokenManager.generateJwtToken(requestBody.getUsername());
         return ResponseEntity.ok().body(new LoginResponseModel(jwt));
     }
+
 }

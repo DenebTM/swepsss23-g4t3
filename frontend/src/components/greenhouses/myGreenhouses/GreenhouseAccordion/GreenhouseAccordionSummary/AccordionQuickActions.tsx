@@ -1,15 +1,12 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
 
-import GalleryIcon from '@component-lib/icons/GalleryIcon'
 import { Tooltip } from '@component-lib/Tooltip'
-import { PAGE_URL, SensorStationView } from '~/common'
+import { GREENHOUSE_VIEWS } from '~/common'
 import { SensorStationUuid } from '~/models/sensorStation'
 
 interface AccordionQuickActionsProps {
@@ -25,34 +22,6 @@ export const AccordionQuickActions: React.FC<AccordionQuickActionsProps> = (
 ) => {
   const navigate = useNavigate()
 
-  // qqjf TODO move actions into common
-  const actionIcons = [
-    {
-      title: 'Overview',
-      icon: <DashboardIcon />,
-      url: PAGE_URL.greenhouseView.href(
-        props.sensorStationUuid,
-        SensorStationView.GRAPHICAL
-      ),
-    },
-    {
-      title: 'Gallery',
-      icon: <GalleryIcon />,
-      url: PAGE_URL.greenhouseView.href(
-        props.sensorStationUuid,
-        SensorStationView.GALLERY
-      ),
-    },
-    {
-      title: 'Data Tables',
-      icon: <StorageOutlinedIcon />,
-      url: PAGE_URL.greenhouseView.href(
-        props.sensorStationUuid,
-        SensorStationView.TABLE
-      ),
-    },
-  ]
-
   return (
     <Box
       component="span"
@@ -63,14 +32,14 @@ export const AccordionQuickActions: React.FC<AccordionQuickActionsProps> = (
     >
       <Typography marginRight={1}>Quick actions:</Typography>
       <Box component="span">
-        {actionIcons.map((iconButton) => (
-          <Tooltip arrow title={iconButton.title} key={iconButton.title}>
+        {GREENHOUSE_VIEWS.map((btn) => (
+          <Tooltip arrow title={btn.title} key={btn.title}>
             <IconButton
-              onClick={() => navigate(iconButton.url)}
+              onClick={() => navigate(btn.url(props.sensorStationUuid))}
               color="inherit"
               size="small"
             >
-              {iconButton.icon}
+              <btn.Icon />
             </IconButton>
           </Tooltip>
         ))}

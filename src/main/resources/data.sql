@@ -1,11 +1,11 @@
-INSERT INTO userx (FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_DATE, EMAIL, USER_ROLE) VALUES
-    ('Admin', 'Istrator',    '$2a$12$7EtEJP.p94px6dTVNvMPeOK61pgCNyqcA8X9uetAyR6ohgCmGOcXi', 'admin', '2016-01-01 00:00:00', 'admin@example.at', 'ADMIN'),
-    ('Susi',  'Gruen',       '$2a$12$maZ21vfYESvLGjKiyuYXBOREyo2w.y61hc1NSC6BIBGJKMYFywvla', 'susi',  '2016-01-01 00:00:00', 'susi@example.at',  'GARDENER'),
-    ('Max',   'Mustermann',  '$2a$12$5111Zqs2OXpalPoUfWdbhO3nGJGBc9/tsWtGGrTYkgOn8znsemlUS', 'max',   '2016-01-01 00:00:00', 'max@example.at',   'USER'),
-    ('Elvis', 'The King',    '$2a$12$qxzS0FvYminkczt76S813OvrmYMpfRh/OcmRi2Qh9AlpUbv6aRiiO', 'elvis', '2016-01-01 00:00:00', 'elvis@example.at', 'ADMIN'),
-    ('Hans',  'G',           '$2a$12$mUtI13l8bq9vZ0Ogme7gqO0ZaP7mfyw4OY6/./jWBkeyv6sQCW2FK', 'hans',  '2016-01-01 00:00:00', 'hans@example.at',  'GARDENER'),
-    ('Peter', 'G',           '$2a$12$IQmnsgEXkQ8XxqIPQqdBqOS/T/4wi3P8iMkc56fhPVZQpqaJ5UVQC', 'peter', '2016-01-01 00:00:00', 'peter@example.at', 'GARDENER'),
-    ('Franz', 'g',           '$2a$12$fWwsyvehfVMvcvegf2qMe.pmE5I/bnpJOn063Za9j5bXnldx5g33q', 'franz', '2016-01-01 00:00:00', 'franz@example.at', 'GARDENER')
+INSERT INTO userx (FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_DATE, UPDATE_DATE, EMAIL, USER_ROLE) VALUES
+    ('Admin', 'Istrator',   '$2a$12$7EtEJP.p94px6dTVNvMPeOK61pgCNyqcA8X9uetAyR6ohgCmGOcXi', 'admin', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 'admin@example.at', 'ADMIN'),
+    ('Susi',  'Gruen',      '$2a$12$maZ21vfYESvLGjKiyuYXBOREyo2w.y61hc1NSC6BIBGJKMYFywvla', 'susi',  '2016-01-01 00:00:00', '2016-01-01 00:00:00', 'susi@example.at',  'GARDENER'),
+    ('Max',   'Mustermann', '$2a$12$5111Zqs2OXpalPoUfWdbhO3nGJGBc9/tsWtGGrTYkgOn8znsemlUS', 'max',   '2016-01-01 00:00:00', '2016-01-01 00:00:00', 'max@example.at',   'USER'),
+    ('Elvis', 'The King',   '$2a$12$qxzS0FvYminkczt76S813OvrmYMpfRh/OcmRi2Qh9AlpUbv6aRiiO', 'elvis', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 'elvis@example.at', 'ADMIN'),
+    ('Hans',  'G',          '$2a$12$mUtI13l8bq9vZ0Ogme7gqO0ZaP7mfyw4OY6/./jWBkeyv6sQCW2FK', 'hans',  '2016-01-01 00:00:00', '2016-01-01 00:00:00', 'hans@example.at',  'GARDENER'),
+    ('Peter', 'G',          '$2a$12$IQmnsgEXkQ8XxqIPQqdBqOS/T/4wi3P8iMkc56fhPVZQpqaJ5UVQC', 'peter', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 'peter@example.at', 'GARDENER'),
+    ('Franz', 'g',          '$2a$12$fWwsyvehfVMvcvegf2qMe.pmE5I/bnpJOn063Za9j5bXnldx5g33q', 'franz', '2016-01-01 00:00:00', '2016-01-01 00:00:00', 'franz@example.at', 'GARDENER')
   ON DUPLICATE KEY UPDATE USERNAME=USERNAME;
 
 INSERT INTO access_point (AP_NAME, LAST_UPDATE, SERVER_ADDRESS, CLIENT_ADDRESS, AP_STATUS) VALUES
@@ -13,24 +13,27 @@ INSERT INTO access_point (AP_NAME, LAST_UPDATE, SERVER_ADDRESS, CLIENT_ADDRESS, 
   ON DUPLICATE KEY UPDATE AP_NAME=AP_NAME;
 
 INSERT INTO sensor_values (VALUES_ID, AIR_PRESSURE, AIR_QUALITY, HUMIDITY, LIGHT_INTENSITY, SOIL_MOISTURE, TEMPERATURE) VALUES
-    ( '1', '900', '20', '20', '20', '20', '20'),
-    ( '2', '812',  '0',  '0',  '0',  '0',  '0'),
-    ( '3', '920', '30', '30', '30', '30', '30'),
-    ( '4', '835', '15',  '4', '29', '24', '15'),
-    ( '5', '943', '13', '16', '18',  '6',  '8'),
-    ( '6', '855', '25', '22', '20', '17',  '8'),
-    ( '7', '969', '29', '29', '11',  '9',  '2'),
-    ( '8', '877', '27',  '9', '13', '12', '17'),
-    ( '9', '980', '30', '13',  '9', '20', '13'),
-    ('10', '893',  '3',  '1', '10', '29', '28'),
-    ('11', '900', '20',  '7', '25', '23', '20'),
-    ('12', '811', '21', '17', '23', '27', '16'),
-    ('13', '929', '19', '15', '18', '11',  '6')
+    ( '1',  '900',  '20', '20',   '20', '20', '20'),
+    ( '2',  '812',   '0',  '0',    '0',  '0',  '0'),
+    ( '3',  '920',  '30', '30',   '30', '30', '30'),
+    ( '4',  '835',  '15',  '4',   '29', '24', '15'),
+    ( '5',  '943',  '13', '16',   '18',  '6',  '8'),
+    ( '6',  '855',  '25', '22',   '20', '17',  '8'),
+    ( '7',  '969',  '29', '29',   '11',  '9',  '2'),
+    ( '8',  '877',  '27',  '9',   '13', '12', '17'),
+    ( '9',  '980',  '30', '13',    '9', '20', '13'),
+    ('10',  '893',   '3',  '1',   '10', '29', '28'),
+    ('11',  '900',  '20',  '7',   '25', '23', '20'),
+    ('12',  '811',  '21', '17',   '23', '27', '16'),
+    ('13',  '929',  '19', '15',   '18', '11',  '6'),
+
+    ('14',  '800',   '0', '10',    '0', '15', '10'),
+    ('15', '1100', '100', '90', '1000', '60', '35')
   ON DUPLICATE KEY UPDATE VALUES_ID=VALUES_ID;
 
 INSERT INTO sensor_station (SS_ID, SS_STATUS, AGGREGATION_PERIOD, AP_NAME, UPPER_VALUES_ID, LOWER_VALUES_ID) VALUES
-    ('1', 'OFFLINE', '30', 'Test AP', '1', '2'),
-    ('2', 'OFFLINE', '60', 'Test AP', '3', '2')
+    ('1', 'OFFLINE', '30', 'Test AP', '15', '14'),
+    ('2', 'OFFLINE', '60', 'Test AP', '15', '14')
   ON DUPLICATE KEY UPDATE SS_ID=SS_ID;
 
 INSERT INTO measurement (ID, TIMESTAMP, VALUES_ID, SENSOR_STATION_SS_ID) VALUES

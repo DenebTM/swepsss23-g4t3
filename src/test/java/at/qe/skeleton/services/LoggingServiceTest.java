@@ -3,7 +3,6 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.controllers.api.LoggingControllerTest;
 import at.qe.skeleton.models.LoggingEvent;
 import at.qe.skeleton.models.enums.LogLevel;
-import at.qe.skeleton.services.LoggingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -77,17 +76,18 @@ public class LoggingServiceTest {
         logger.info("info log");
         List<LoggingEvent> infoLogs = loggingService.getLogsByLevelIn(Arrays.asList(LogLevel.INFO));
         for (LoggingEvent l : infoLogs) {
-            Assertions.assertEquals(Arrays.asList(LogLevel.INFO), l.getLevel());
+            Assertions.assertEquals(LogLevel.INFO, l.getLevel());
         }
         logger.warn("warn log");
         List<LoggingEvent> warnLogs = loggingService.getLogsByLevelIn(Arrays.asList(LogLevel.WARN));
         for (LoggingEvent l : warnLogs) {
-            Assertions.assertEquals(Arrays.asList(LogLevel.WARN), l.getLevel());
+            Assertions.assertEquals(LogLevel.WARN, l.getLevel());
         }
         logger.error("error log");
         List<LoggingEvent> errorLogs = loggingService.getLogsByLevelIn(Arrays.asList(LogLevel.ERROR));
         for (LoggingEvent l : errorLogs) {
-            Assertions.assertEquals(Arrays.asList(LogLevel.ERROR), l.getLevel());
+            Assertions.assertEquals(LogLevel.ERROR, l.getLevel());
         }
     }
+
 }

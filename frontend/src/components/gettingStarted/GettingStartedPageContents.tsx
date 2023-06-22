@@ -2,78 +2,21 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import CheckIcon from '@mui/icons-material/Check'
-import Card from '@mui/material/Card'
 import Link, { LinkProps } from '@mui/material/Link'
-import List from '@mui/material/List'
+import { useTheme } from '@mui/material/styles'
 import { SvgIconTypeMap } from '@mui/material/SvgIcon'
-import Typography from '@mui/material/Typography'
 import Stack from '@mui/system/Stack'
 
-import { GreenhouseIcon } from '~/common'
-import { PAGE_URL } from '~/common'
-import { theme } from '~/styles/theme'
+import { GreenhouseIcon, PAGE_URL } from '~/common'
+import { useUserRole } from '~/hooks/user'
+import { GuestRole } from '~/models/user'
 
-/** Reusable component for body text inside getting started page */
-const GettingStartedBody = (props: {
-  children: React.ReactNode
-  gutterBottom?: boolean
-}) => (
-  <Typography
-    component="p"
-    variant="bodyMedium"
-    color="onSurface"
-    gutterBottom={props.gutterBottom}
-  >
-    {props.children}
-  </Typography>
-)
-
-/** Reusable component for each subsection of the getting started page */
-const GettingStartedSection = (props: {
-  children: React.ReactNode
-  subheading: string
-}) => (
-  <Card sx={{ padding: theme.spacing(3) }}>
-    <Typography
-      component="h6"
-      variant="titleLarge"
-      color="onSurfaceVariant"
-      gutterBottom
-    >
-      {props.subheading}
-    </Typography>
-    {props.children}
-  </Card>
-)
-
-/** Reusable component for ordered lists inside getting started page */
-const GettingStartedOl = (props: { children: React.ReactNode }) => (
-  <List
-    component="ol"
-    sx={{
-      lineHeight: 'initial',
-      '> li': {
-        listStyle: 'auto inside',
-        color: theme.onSurface,
-      },
-    }}
-  >
-    {props.children}
-  </List>
-)
-
-/** Reusable component for list elements inside getting started page */
-const GettingStartedLi = (props: { children: React.ReactNode }) => (
-  <li style={{ paddingBottom: 6 }}>
-    <Typography
-      color="onSurface"
-      variant="labelLarge"
-      sx={{ listStyle: 'auto inside' }}
-    >
-      {props.children}
-    </Typography>
-  </li>
-)
+import {
+  GettingStartedBody,
+  GettingStartedLi,
+  GettingStartedOl,
+  GettingStartedSection,
+} from './GettingStartedPageComponents'
 
 /** Props for icons in the GettingStarted page */
 const iconProps: Partial<SvgIconTypeMap['props']> = {
@@ -91,7 +34,13 @@ const linkProps: Partial<LinkProps> = {
  * Page contents for the "Getting Started" page.
  */
 export const GettingStartedPageContents: React.FC = () => {
+  const theme = useTheme()
+
   const navigate = useNavigate()
+
+  const isLoggedIn = useUserRole() !== GuestRole.GUEST
+  const navigateLoggedIn = (href: string) =>
+    navigate(isLoggedIn ? href : PAGE_URL.login.href)
 
   return (
     <Stack spacing={2} sx={{ padding: theme.spacing(2, 0) }}>
@@ -110,7 +59,7 @@ export const GettingStartedPageContents: React.FC = () => {
             Run 'python3 main.py'. The Access Point will automatically register
             itself with the web server and be displayed on the{' '}
             <Link
-              onClick={() => navigate(PAGE_URL.manageAccessPoints.href)}
+              onClick={() => navigateLoggedIn(PAGE_URL.manageAccessPoints.href)}
               {...linkProps}
             >
               {PAGE_URL.manageAccessPoints.pageTitle}
@@ -136,7 +85,7 @@ export const GettingStartedPageContents: React.FC = () => {
           <GettingStartedLi>
             Navigate to{' '}
             <Link
-              onClick={() => navigate(PAGE_URL.manageAccessPoints.href)}
+              onClick={() => navigateLoggedIn(PAGE_URL.manageAccessPoints.href)}
               {...linkProps}
             >
               {PAGE_URL.manageAccessPoints.pageTitle}
@@ -167,7 +116,7 @@ export const GettingStartedPageContents: React.FC = () => {
         <GettingStartedBody gutterBottom>
           Go to{' '}
           <Link
-            onClick={() => navigate(PAGE_URL.myGreenhouses.href)}
+            onClick={() => navigateLoggedIn(PAGE_URL.myGreenhouses.href)}
             {...linkProps}
           >
             {PAGE_URL.myGreenhouses.pageTitle}
@@ -198,7 +147,7 @@ export const GettingStartedPageContents: React.FC = () => {
           <GettingStartedLi>
             Ensure that the sensor values are within the thresholds set on{' '}
             <Link
-              onClick={() => navigate(PAGE_URL.myGreenhouses.href)}
+              onClick={() => navigateLoggedIn(PAGE_URL.myGreenhouses.href)}
               {...linkProps}
             >
               {PAGE_URL.myGreenhouses.pageTitle}

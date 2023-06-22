@@ -10,6 +10,7 @@ import java.io.Serializable;
  * https://www.tutorialspoint.com/spring_security/spring_security_with_jwt.htm
  */
 public class LoginResponseModel implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private final String token;
 
@@ -23,4 +24,5 @@ public class LoginResponseModel implements Serializable {
     public String getToken() {
         return token;
     }
+
 }

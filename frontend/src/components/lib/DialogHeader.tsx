@@ -3,10 +3,9 @@ import React from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/system/Box'
-
-import { theme } from '~/styles/theme'
 
 interface DialogHeaderProps {
   handleClose: () => void
@@ -22,7 +21,9 @@ interface DialogHeaderProps {
  */
 export const DialogHeader: React.FC<DialogHeaderProps> = (
   props
-): JSX.Element => {
+): React.ReactElement => {
+  const theme = useTheme()
+
   return (
     <Box
       sx={{

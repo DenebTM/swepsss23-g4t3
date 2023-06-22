@@ -52,6 +52,12 @@ public class SensorStationRestController implements BaseRestController {
     private static final String SS_ID_GARDENER_PATH = SS_ID_PATH + "/gardeners";
     private static final String SS_ID_PHOTOS_PATH = SS_ID_PATH + "/photos";
 
+    // JSON keys used by PUT route
+    public static final String JSON_KEY_STATUS = "status";
+    public static final String JSON_KEY_AGGPERIOD = "aggregationPeriod";
+    public static final String JSON_KEY_LOWERBOUND = "lowerBound";
+    public static final String JSON_KEY_UPPERBOUND = "upperBound";
+
     private static SensorValues partialValuesUpdate(SensorValues vals, Object json) {
         var mapper = new ObjectMapper();
         @SuppressWarnings({"unchecked"})
@@ -191,13 +197,14 @@ public class SensorStationRestController implements BaseRestController {
             throw new AccessDeniedException("Gardener is not assigned to sensor station");
         }
 
-        if (json.containsKey("status")) {
+        if (json.containsKey(JSON_KEY_STATUS)) {
             try {
                 SensorStationStatus oldStatus = ss.getStatus();
-                SensorStationStatus newStatus = SensorStationStatus.valueOf(String.valueOf(json.get("status")));
-                ss.setStatus(newStatus);
+                SensorStationStatus newStatus = SensorStationStatus.valueOf(String.valueOf(json.get(JSON_KEY_STATUS)));
 
                 if (!newStatus.equals(oldStatus)) {
+                    ss.setStatus(newStatus);
+
                     String message = "Sensor station status changed to " + newStatus.name();
                     if (Arrays.asList(
                         SensorStationStatus.OFFLINE,
@@ -209,33 +216,32 @@ public class SensorStationRestController implements BaseRestController {
                         logger.info(message, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
                     }
                 }
-                ss.setStatus(SensorStationStatus.valueOf(String.valueOf(json.get("status"))));
             } catch (IllegalArgumentException e) {
                 throw new BadRequestException("Invalid status");
             }
         }
 
-        if (json.containsKey("aggregationPeriod")) {
+        if (json.containsKey(JSON_KEY_AGGPERIOD)) {
             try {
                 Long oldAggregationPeriod = ss.getAggregationPeriod();
-                Long newAggregationPeriod = Long.valueOf((Integer)json.get("aggregationPeriod"));
+                Long newAggregationPeriod = Long.valueOf((Integer)json.get(JSON_KEY_AGGPERIOD));
                 if (newAggregationPeriod <= 0) {
-                    throw new BadRequestException("Invalid aggregation period");
-                }
-
-                if (!newAggregationPeriod.equals(oldAggregationPeriod)) {
-                    logger.info("Aggregation period changed by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+                    throw new IllegalArgumentException();
                 }
 
                 ss.setAggregationPeriod(newAggregationPeriod);
+                if (!newAggregationPeriod.equals(oldAggregationPeriod)) {
+                    logger.info("Aggregation period changed by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
+                }
             } catch (IllegalArgumentException e) {
                 throw new BadRequestException("Invalid aggregation period");
             }
         }
 
-        if (json.containsKey("lowerBound")) {
+        if (json.containsKey(JSON_KEY_LOWERBOUND)) {
             try {
-                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), json.get("lowerBound"));
+                SensorValues newLowerBound = partialValuesUpdate(ss.getLowerBound(), json.get(JSON_KEY_LOWERBOUND))
+                    .populateNulls(SensorStation.defaultLowerBound);
                 ss.setLowerBound(sensorValuesRepository.save(newLowerBound));
 
                 logger.info("Sensor thresholds (lower) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
@@ -243,9 +249,10 @@ public class SensorStationRestController implements BaseRestController {
                 throw new BadRequestException("Invalid sensor values for lowerBound");
             }
         }
-        if (json.containsKey("upperBound")) {
+        if (json.containsKey(JSON_KEY_UPPERBOUND)) {
             try {
-                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), json.get("upperBound"));
+                SensorValues newUpperBound = partialValuesUpdate(ss.getUpperBound(), json.get(JSON_KEY_UPPERBOUND))
+                    .populateNulls(SensorStation.defaultUpperBound);
                 ss.setUpperBound(sensorValuesRepository.save(newUpperBound));
 
                 logger.info("Sensor thresholds (upper) updated by " + authenticatedUser, LogEntityType.SENSOR_STATION, ss.getSsID(), getClass());
@@ -290,7 +297,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = SS_ID_GARDENER_PATH)
-    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "id") Integer id){
+    public ResponseEntity<Collection<String>> getGardenersBySS(@PathVariable(value = "id") Integer id) {
         SensorStation ss = ssService.loadSSById(id);
         if (ss == null) {
             throw new NotFoundInDatabaseException(SS, id);
@@ -307,7 +314,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> assignGardenerToSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username) {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
         
         SensorStation ss = ssService.loadSSById(id);
@@ -338,7 +345,7 @@ public class SensorStationRestController implements BaseRestController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = SS_ID_GARDENER_PATH + "/{username}")
-    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username){
+    public ResponseEntity<SensorStation> removeGardenerFromSS(@PathVariable(value = "id") Integer id, @PathVariable(value = "username") String username) {
         String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
         
         SensorStation ss = ssService.loadSSById(id);

@@ -39,7 +39,7 @@
         <!-- Allow Sonarqube to scan frontend code -->
         <sonar.sources>src/main,frontend/src,raspberry</sonar.sources>
         <sonar.tests>src/test,frontend/src/tests</sonar.tests>
-        <sonar.test.inclusions>src/test/**/*.java,frontend/src/tests/**/*.test.ts*</sonar.test.inclusions>
+        <sonar.test.inclusions>src/test/**/*.java,frontend/src/tests/**/*.test.ts*,raspberry/tests/test_*.py</sonar.test.inclusions>
         <sonar.testExecutionReportPaths>frontend/sonar-report.xml</sonar.testExecutionReportPaths>
 
         <sonar.exclusions>frontend/src/tests,raspberry/tests</sonar.exclusions>

@@ -3,13 +3,13 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import IconButton from '@mui/material/IconButton'
+import { useTheme } from '@mui/material/styles'
 
 import { Tooltip } from '@component-lib/Tooltip'
 import { getUsers } from '~/api/endpoints/user'
 import { useAddErrorSnackbar } from '~/hooks/snackbar'
 import { SensorStation } from '~/models/sensorStation'
 import { AuthUserRole, User } from '~/models/user'
-import { theme } from '~/styles/theme'
 
 import { GardenerSelect } from './GardenerSelect'
 
@@ -31,7 +31,9 @@ interface AddGardenerDropdownProps {
  * Memoised using `React.memo` as otherwise DataGrid causes unnecessary rerenders.
  */
 export const AddGardenerDropdown: React.FC<AddGardenerDropdownProps> =
-  React.memo((props): JSX.Element => {
+  React.memo((props): React.ReactElement => {
+    const theme = useTheme()
+
     const addErrorSnackbar = useAddErrorSnackbar()
 
     const [potentialGardeners, setPotentialGardeners] = useState<User[]>()
