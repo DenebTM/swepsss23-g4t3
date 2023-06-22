@@ -52,29 +52,25 @@ public class UserxServiceTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testUpdateUser() {
         String username = "susi";
-        Userx adminUserx = userService.loadUserByUsername("admin");
-        assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
         Userx toBeSavedUserx = userService.loadUserByUsername(username);
         assertNotNull(toBeSavedUserx, "User \"" + username + "\" could not be loaded from test data source");
-
-        assertNull(toBeSavedUserx.getUpdateDate(), "User \"" + username + "\" has a updateDate defined");
+        
+        var initialUpdateDate = toBeSavedUserx.getUpdateDate();
 
         toBeSavedUserx.setEmail("changed-email@whatever.wherever");
         userService.saveUser(toBeSavedUserx);
 
         Userx freshlyLoadedUserx = userService.loadUserByUsername(username);
         assertNotNull(freshlyLoadedUserx, "User \"" + username + "\" could not be loaded from test data source after being saved");
-        assertNotNull(freshlyLoadedUserx.getUpdateDate(), "User \"" + username + "\" does not have a updateDate defined after being saved");
         assertEquals("changed-email@whatever.wherever", freshlyLoadedUserx.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
+
+        assertTrue(freshlyLoadedUserx.getUpdateDate().isAfter(initialUpdateDate), "Update date for \"" + username + "\" did not change after being saved");
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testCreateUser() {
-        Userx adminUserx = userService.loadUserByUsername("admin");
-        assertNotNull(adminUserx, "Admin user could not be loaded from test data source");
-
         String username = "newuser";
         String password = "passwd";
         String fName = "New";
@@ -192,4 +188,5 @@ public class UserxServiceTest {
         assertTrue(UserxService.isNotValidPassword(null));
         assertFalse(UserxService.isNotValidPassword("validPassword"));
     }
+
 }
