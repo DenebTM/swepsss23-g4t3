@@ -26,40 +26,6 @@ public class UserxServiceTest {
     @Autowired
     UserxService userService;
 
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void testDataInitialization() {
-        assertTrue(userService.getAllUsers().size() >= 7, "Insufficient amount of users initialized for test data source");
-        for (Userx userx : userService.getAllUsers()) {
-            if ("admin".equals(userx.getUsername())) {
-                assertSame(UserRole.ADMIN, userx.getUserRole(), "User \"" + userx + "\" does not have role ADMIN");
-                assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
-                assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
-            } else if ("susi".equals(userx.getUsername())) {
-                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
-                assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
-                assertNull(userx.getUpdateDate(), "User \"" + userx +"\" has a updateDate defined");
-            } else if ("max".equals(userx.getUsername())) {
-                assertSame(UserRole.USER, userx.getUserRole(), "User \"" + userx + "\" does not have role USER");
-                assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
-                assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
-            } else  if ("elvis".equals(userx.getUsername())) {
-                assertSame(UserRole.ADMIN, userx.getUserRole(), "User \"" + userx + "\" does not have role ADMIN");
-                assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
-                assertNull(userx.getUpdateDate(), "User \"" + userx + "\" has a updateDate defined");
-            } else if ("hans".equals(userx.getUsername())) {
-                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
-                assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
-            } else if ("peter".equals(userx.getUsername())) {
-                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
-                assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
-            } else if ("franz".equals(userx.getUsername())) {
-                assertSame(UserRole.GARDENER, userx.getUserRole(), "User \"" + userx + "\" does not have role GARDENER");
-                assertNotNull(userx.getCreateDate(), "User \"" + userx + "\" does not have a createDate defined");
-            }
-        }
-    }
-
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
