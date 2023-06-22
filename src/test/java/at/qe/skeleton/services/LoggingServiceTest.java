@@ -89,4 +89,5 @@ public class LoggingServiceTest {
             Assertions.assertEquals(LogLevel.ERROR, l.getLevel());
         }
     }
+
 }

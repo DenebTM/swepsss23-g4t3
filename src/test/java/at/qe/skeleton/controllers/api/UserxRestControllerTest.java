@@ -286,4 +286,5 @@ class UserxRestControllerTest {
             () -> userxRestController.getAssignedSS("max")
         );
     }
+
 }

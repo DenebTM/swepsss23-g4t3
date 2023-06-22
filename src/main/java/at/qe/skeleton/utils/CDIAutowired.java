@@ -18,6 +18,4 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RUNTIME)
 @Target(FIELD)
-public @interface CDIAutowired {
-
-}
+public @interface CDIAutowired { }

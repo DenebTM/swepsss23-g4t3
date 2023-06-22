@@ -79,4 +79,5 @@ public class LoggingTest {
         }
         Assertions.assertNotNull(rs);
     }
+
 }

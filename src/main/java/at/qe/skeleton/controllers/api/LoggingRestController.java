@@ -156,4 +156,5 @@ public class LoggingRestController implements BaseRestController {
 
         return ResponseEntity.ok(returnList);
     }
+
 }

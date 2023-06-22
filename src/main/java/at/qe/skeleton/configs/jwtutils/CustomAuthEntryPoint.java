@@ -15,8 +15,7 @@ import org.springframework.stereotype.Component;
  * https://www.tutorialspoint.com/spring_security/spring_security_with_jwt.htm
  */
 @Component
-public class CustomAuthEntryPoint implements AuthenticationEntryPoint,
-        Serializable {
+public class CustomAuthEntryPoint implements AuthenticationEntryPoint, Serializable {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
@@ -24,4 +23,5 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint,
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                 "You are unauthorized. Please log in.");
     }
+
 }

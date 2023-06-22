@@ -69,4 +69,5 @@ public class SensorStationService {
     public List<String> getGardenersBySS(SensorStation ss) {
         return ss.getGardeners().stream().map(Userx::getUsername).collect(Collectors.toList());
     }
+
 }

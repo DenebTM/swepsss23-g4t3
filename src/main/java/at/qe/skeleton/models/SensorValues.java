@@ -10,10 +10,10 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
+@Table(name = "SENSOR_VALUES")
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "SENSOR_VALUES")
 @Getter
 @Setter
 public class SensorValues {

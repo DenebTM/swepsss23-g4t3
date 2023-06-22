@@ -8,6 +8,7 @@ import java.io.Serializable;
  * https://www.tutorialspoint.com/spring_security/spring_security_with_jwt.htm
  */
 public class LoginRequestModel implements Serializable {
+
     private static final long serialVersionUID = 2636936156391265891L;
     private String username;
     private String password;
@@ -36,4 +37,5 @@ public class LoginRequestModel implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

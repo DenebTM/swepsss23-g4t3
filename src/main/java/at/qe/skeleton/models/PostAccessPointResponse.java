@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@JsonSerialize
 @AllArgsConstructor
 @Getter
-@JsonSerialize
 public class PostAccessPointResponse {
 
     @JsonUnwrapped
