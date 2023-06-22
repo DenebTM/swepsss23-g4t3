@@ -2,6 +2,7 @@ package at.qe.skeleton.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import org.hibernate.type.SqlTypes;
 @IdClass(LoggingEventProperty.CompositeKey.class)
 public class LoggingEventProperty {
     @Getter
+    @EqualsAndHashCode
     public static class CompositeKey implements Serializable {
         private Long eventId;
         private String mappedKey;
