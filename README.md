@@ -22,7 +22,7 @@ The access point is a Raspberry Pi, also equipped with Bluetooth® as well as Wi
 
 This is a web server, based on the Spring web framework. It serves the frontend web app to the browser and provides a Representational State Transfer (ReST) API for ongoing communication with the aforementioned access points and frontend.
 
-The backend is based on the swe-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, in-memory H2 database (TODO: replace with MySQL; see !112), basic functionality, and much of the Spring Security configuration.
+The backend is based on the swe-skeleton project provided by UIBK. It inherits its Maven project structure, Spring Boot core, persistent database, basic functionality, and much of the Spring Security configuration.
 
 ### Frontend
 
@@ -36,7 +36,7 @@ This project uses Java 17 and Node.js 18 (installed automatically as part of the
 
 ### Step 1: Install the database
 
-In order for the web server to start, you must be running either a MySQL or MariaDB on your system. For this you may either use Docker for this or set up the database manually.
+In order for the web server to start, you must be running a MySQL 8.0 database on your system. For this you may either use Docker for this or set up the database manually.
 
 **(a) Docker** (recommended)
 
@@ -57,7 +57,7 @@ docker run --rm                         \
 ```
 
 On Windows, you might have to run the entire command on one line:
-`docker run --name planthealth_dbsrv --rm -v planthealth_db:/var/lib/mysql -p 3306:3306 -e MYSQL_RANDOM_ROOT_PASSWORD="true" -e MYSQL_DATABASE=swe -e MYSQL_USER=swe -e MYSQL_PASSWORD=password mariadb:latest`
+`docker run --name planthealth_dbsrv --rm -v planthealth_db:/var/lib/mysql -p 3306:3306 -e MYSQL_RANDOM_ROOT_PASSWORD="true" -e MYSQL_DATABASE=swe -e MYSQL_USER=swe -e MYSQL_PASSWORD=password mysql:8.0.33`
 
 The database server can be stopped either externally or by pressing Ctrl+\ (backslash).
 
@@ -76,7 +76,7 @@ After this, restart the container.
 
 **(b) Manual setup**
 
-Install and start either MySQL or MariaDB, open a MySQL CLI session as the `root` user, then run the following SQL statements to initialize the database and user:
+Install and start MySQL, open a MySQL CLI session as the `root` user, then run the following SQL statements to initialize the database and user:
 
 ```
 CREATE USER 'swe'@'localhost' identified by 'password';
