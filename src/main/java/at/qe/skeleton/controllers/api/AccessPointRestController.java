@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -171,6 +173,9 @@ public class AccessPointRestController implements BaseRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = AP_NAME_PATH)
     public ResponseEntity<AccessPoint> deleteAPById(@PathVariable(value = "name") String name) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
+
         AccessPoint ap = apService.loadAPByName(name);
         // return a 404 error if the access point to be deleted does not exist
         if (ap == null) {
@@ -178,7 +183,7 @@ public class AccessPointRestController implements BaseRestController {
         }
         apService.deleteAP(ap);
 
-        logger.info("Access point deleted", LogEntityType.ACCESS_POINT, ap.getName(), getClass());
+        logger.info("Access point deleted by " + authenticatedUser, LogEntityType.ACCESS_POINT, ap.getName(), getClass());
 
         return ResponseEntity.ok(ap);
     }
