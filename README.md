@@ -76,7 +76,7 @@ After this, restart the container.
 
 **(b) Manual setup**
 
-Install and start either MySQL or MariaDB, open a MySQL CLI session as the `root` user, then run the following SQL statements to initialize the database and user:
+Install and start MySQL, open a MySQL CLI session as the `root` user, then run the following SQL statements to initialize the database and user:
 
 ```
 CREATE USER 'swe'@'localhost' identified by 'password';
