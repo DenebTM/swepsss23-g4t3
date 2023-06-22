@@ -151,6 +151,6 @@ public class LoggingControllerTest {
         List<Long> foundIds = Objects.requireNonNull(foundLogs.getBody()).stream().map(LoggingEventJson::getId).sorted().toList();
 
         Assertions.assertEquals(repoIds, foundIds);
-
     }
+
 }

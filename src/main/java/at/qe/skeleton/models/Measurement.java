@@ -67,4 +67,5 @@ public class Measurement {
     public void setData(SensorValues data) {
         this.data = data;
     }
+
 }

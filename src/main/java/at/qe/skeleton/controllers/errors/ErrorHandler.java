@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
  */
 @ControllerAdvice
 public class ErrorHandler {
+
     @ExceptionHandler(NotFoundInDatabaseException.class)
     ResponseEntity<String> notFoundHandler(NotFoundInDatabaseException ex, WebRequest request) {
         return ResponseEntity

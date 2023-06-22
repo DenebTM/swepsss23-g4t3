@@ -207,4 +207,5 @@ class AccessPointRestControllerTest {
             () -> apRestController.deleteAPById(name)
         );
     }
+
 }

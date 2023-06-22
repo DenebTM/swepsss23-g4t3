@@ -207,4 +207,5 @@ public class UserxRestController implements BaseRestController {
         // will return [] when trying to get assigned SS for normal users
         return ResponseEntity.ok(userService.getAssignedSS(gardener));
     }
+
 }

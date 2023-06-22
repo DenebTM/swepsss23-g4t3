@@ -82,4 +82,5 @@ public class PhotoData {
         this.sensorStation = sensorStation;
         this.content = content;
     }
+
 }

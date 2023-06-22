@@ -10,6 +10,7 @@ import java.util.Collection;
 
 @Service
 public class AccessPointService {
+
     @Autowired
     AccessPointRepository apRepository;
 

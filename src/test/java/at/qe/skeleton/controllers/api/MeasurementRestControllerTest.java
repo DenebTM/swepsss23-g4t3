@@ -109,4 +109,5 @@ class MeasurementRestControllerTest {
     void testInvalidSSSendMeasurement() {
         assertThrows(NotFoundInDatabaseException.class, () -> mmRestController.sendMeasurement(99, null));
     }
+
 }

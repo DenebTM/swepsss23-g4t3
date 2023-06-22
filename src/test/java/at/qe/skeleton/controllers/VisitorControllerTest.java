@@ -136,14 +136,14 @@ public class VisitorControllerTest {
         ResponseEntity<PhotoData> res = visitorController.uploadPhoto(mock, 1);
         repoImages = photoDataRepository.findAllBySensorStation(ss);
         int finalSize = repoImages.size();
-        boolean contains = false;
-        for (PhotoData p :
-                repoImages) {
+        boolean imageDataInDb = false;
+        for (PhotoData p : repoImages) {
             if (Arrays.equals(p.getContent(), Objects.requireNonNull(res.getBody()).getContent())) {
-                contains = true;
+                imageDataInDb = true;
             }
         }
-        assertTrue(contains);
+        assertTrue(imageDataInDb);
         assertTrue(initialSize < finalSize);
     }
+
 }
