@@ -53,7 +53,7 @@ docker run --rm                         \
   -e MYSQL_DATABASE=swe                 \
   -e MYSQL_USER=swe                     \
   -e MYSQL_PASSWORD=password            \
-  mariadb:latest
+  mysql:8.0.33
 ```
 
 On Windows, you might have to run the entire command on one line:
