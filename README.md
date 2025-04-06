@@ -4,7 +4,7 @@
 
 This project was created as part of the Software Engineering proseminar for the summer semester 2023 at the University of Innsbruck.
 
-Our task was to implement a system for remotely monitoring greenhouses. The four main parts of the system are described below - for more detailed information, please refer to the [project wiki](https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/home).
+Our task was to implement a system for remotely monitoring greenhouses. The four main parts of the system are described below - for more detailed information, please refer to the [project wiki](https://github.com/DenebTM/swepsss23-g4t3/wiki).
 
 ### Sensor station
 
@@ -136,7 +136,7 @@ For additional information, see [frontend/README.md](frontend/README.md)
 
 - Python >=3.9
 - pip3
-- BlueZ 5.66 (see [this guide on OpenOLAT](https://lms.uibk.ac.at/auth/RepositoryEntry/5380538521/CourseNode/107744866999913))
+- BlueZ 5.66
 - ... (see [raspberry/README.md](raspberry/README.md))
 
 The Python code found in [raspberry](raspberry/) should run on most Linux computers equipped with Bluetooth® 4.0 or later, but Bleak may not be compatible with all Bluetooth® adapters.

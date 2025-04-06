@@ -127,7 +127,7 @@ export const GettingStartedPageContents: React.FC = () => {
           different blink codes on the LED, one for each sensor.
           <br />
           The different LED codes are detailed on{' '}
-          <Link href="https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/Sensor%20Station%20LED%20Status%20Codes#sensor-warnings">
+          <Link href="https://github.com/DenebTM/swepsss23-g4t3/wiki/Sensor%20Station%20LED%20Status%20Codes#sensor-warnings">
             this page
           </Link>{' '}
           of the project wiki.

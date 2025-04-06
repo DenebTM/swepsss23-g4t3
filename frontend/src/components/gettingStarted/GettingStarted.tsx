@@ -26,11 +26,11 @@ export const GettingStarted: React.FC = () => {
       </Typography>
       <Typography color="outlineVariant" variant="bodySmall">
         For additional information, please refer to the project{' '}
-        <Link href="https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/wikis/home">
+        <Link href="https://github.com/DenebTM/swepsss23-g4t3/wiki">
           wiki
         </Link>{' '}
         and{' '}
-        <Link href="https://git.uibk.ac.at/informatik/qe/swess23/group4/g4t3/-/blob/690e66b84beca72c807af26bdeec6f2d37fd7929/README.md">
+        <Link href="https://github.com/DenebTM/swepsss23-g4t3/blob/main/README.md">
           README
         </Link>
         .
